@@ -22,7 +22,7 @@ const fill = props.fill || 'currentColor'
   <svg
     viewBox="0 0 3 3"
     xmlns="http://www.w3.org/2000/svg"
-    :class="props.class"
+    :class="props.class + ' text-default-font'"
     :width="size"
     :height="size"
     alt="Blueprint Logo"

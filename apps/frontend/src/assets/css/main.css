@@ -4,3 +4,13 @@
 html {
   @apply font-body text-default-font bg-neutral-950;
 }
+
+h1 {
+  @apply heading-1;
+}
+h2 {
+  @apply heading-2;
+}
+h3 {
+  @apply heading-3;
+}

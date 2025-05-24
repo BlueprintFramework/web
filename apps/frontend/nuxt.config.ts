@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   srcDir: 'src/',
   devtools: { enabled: true },
   modules: ['@nuxt/image', '@nuxt/icon', '@nuxt/fonts', 'reka-ui/nuxt'],
-  css: ['~/assets/css/app.css'],
+  css: ['~/assets/css/main.css'],
   app: {
     head: {
       title: 'Blueprint',

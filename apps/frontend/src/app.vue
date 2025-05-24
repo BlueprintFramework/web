@@ -1,6 +1,7 @@
 <template>
+  <NuxtRouteAnnouncer />
+  <UiNav />
   <div>
-    <NuxtRouteAnnouncer />
     <p>blueprinting so hard i ran out of cyan ink</p>
     <select v-model="$colorMode.preference">
       <option value="system">System</option>

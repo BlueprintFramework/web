@@ -14,7 +14,8 @@
     "@nuxt/icon": "1.13.0",
     "@nuxt/image": "1.10.0",
     "@nuxtjs/color-mode": "3.5.2",
-    "halfmoon": "^2.0.2",
+    "bootstrap": "5.3.6",
+    "halfmoon": "2.0.2",
     "nuxt": "^3.17.4",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1"

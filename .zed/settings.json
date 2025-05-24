@@ -5,5 +5,22 @@
 
 {
   "format_on_save": ["prettier"],
-  "tab_size": 2
+  "tab_size": 2,
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "vue": "html",
+          "*.vue": "html"
+        },
+        "experimental": {
+          "classRegex": [
+            "class=\"([^\"]*)",
+            "class={\"([^\"}]*)",
+            "class=format!({\"([^\"}]*)"
+          ]
+        }
+      }
+    }
+  }
 }

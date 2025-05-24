@@ -13,12 +13,16 @@
     "@nuxt/fonts": "0.11.4",
     "@nuxt/icon": "1.13.0",
     "@nuxt/image": "1.10.0",
-    "@nuxtjs/color-mode": "3.5.2",
-    "bootstrap": "5.3.6",
-    "halfmoon": "2.0.2",
+    "@tailwindcss/vite": "^4.1.7",
     "nuxt": "^3.17.4",
+    "reka-ui": "^2.2.1",
+    "tailwindcss": "^4.1.7",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1"
   },
-  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11"
+  }
 }

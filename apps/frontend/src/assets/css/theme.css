@@ -158,6 +158,10 @@
   --shadow-overlay:
     0px 12px 32px -4px rgba(0, 0, 0, 0.08), 0px 4px 8px -2px rgba(0, 0, 0, 0.08);
 
+  /* === ANIMATIONS === */
+  --animate-marquee: marquee 20s linear infinite;
+  --animate-marquee2: marquee2 20s linear infinite;
+
   /* === BREAKPOINTS === */
   --breakpoint-mobile: 767px;
   --breakpoint-sm: 640px;
@@ -165,6 +169,10 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
+
+  /* === CONTAINERS === */
+  --container-padding: 16px;
+  --container-max-width: 1792px;
 }
 
 /* === UTILITY CLASSES === */
@@ -244,59 +252,30 @@
 @layer base {
   .container {
     width: 100%;
+    max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
   }
+}
 
-  @media (min-width: 640px) {
-    .container {
-      padding-left: calc((100vw + 16px - 640px) / 2);
-      padding-right: calc((100vw + 16px - 640px) / 2);
-    }
+/* === KEYFRAMES === */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
   }
-
-  @media (min-width: 768px) {
-    .container {
-      padding-left: calc((100vw + 16px - 768px) / 2);
-      padding-right: calc((100vw + 16px - 768px) / 2);
-    }
+  100% {
+    transform: translateX(-100%);
   }
+}
 
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: calc((100vw + 16px - 1024px) / 2);
-      padding-right: calc((100vw + 16px - 1024px) / 2);
-    }
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
   }
-
-  @media (min-width: 1280px) {
-    .container {
-      padding-left: calc((100vw + 16px - 1280px) / 2);
-      padding-right: calc((100vw + 16px - 1280px) / 2);
-    }
-  }
-
-  @media (min-width: 1536px) {
-    .container {
-      padding-left: calc((100vw + 16px - 1536px) / 2);
-      padding-right: calc((100vw + 16px - 1536px) / 2);
-    }
-  }
-
-  @media (min-width: 1792px) {
-    .container {
-      padding-left: calc((100vw + 16px - 1792px) / 2);
-      padding-right: calc((100vw + 16px - 1792px) / 2);
-    }
-  }
-
-  @media (min-width: 2048px) {
-    .container {
-      padding-left: calc((100vw + 16px - 2048px) / 2);
-      padding-right: calc((100vw + 16px - 2048px) / 2);
-    }
+  100% {
+    transform: translateX(0%);
   }
 }
 

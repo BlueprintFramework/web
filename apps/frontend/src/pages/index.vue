@@ -7,7 +7,7 @@
 
   <UiMarketingSectionsHighlights />
 
-  <UiMarketingSectionsMarqueeContainer />
+  <UiMarketingSectionsMarquee />
 
   <UiMarketingGridbackground />
 </template>

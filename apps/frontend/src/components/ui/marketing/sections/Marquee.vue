@@ -1,38 +1,19 @@
 <template>
-  <div class="marquee-container absolute left-0 w-full">
-    <div class="relative flex overflow-x-hidden">
+  <div class="marquee-container my-12">
+    <NuxtMarquee :autoFill="true" :pauseOnHover="true">
       <div
-        class="animate-marquee flex items-center justify-between whitespace-nowrap py-12"
+        v-for="(item, index) in items"
+        :key="`item-${index}`"
+        class="mx-4 inline h-[128px] w-[256px]"
       >
-        <div
-          v-for="(item, index) in items"
-          :key="`item-${index}`"
-          class="mx-4 inline"
-        >
-          <UiMarketingSectionsMarqueeItem
-            :name="item.name"
-            :src="item.src"
-            :href="item.href"
-          />
-        </div>
+        <NuxtImg
+          :src="item.src"
+          :height="128"
+          :width="256"
+          class="rounded-2xl"
+        />
       </div>
-
-      <div
-        class="animate-marquee2 absolute top-0 flex items-center justify-between whitespace-nowrap py-12"
-      >
-        <div
-          v-for="(item, index) in items"
-          :key="`item-${index}`"
-          class="mx-4 inline"
-        >
-          <UiMarketingSectionsMarqueeItem
-            :name="item.name"
-            :src="item.src"
-            :href="item.href"
-          />
-        </div>
-      </div>
-    </div>
+    </NuxtMarquee>
   </div>
 </template>
 

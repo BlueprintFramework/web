@@ -1,6 +1,7 @@
 <template>
   <NuxtRouteAnnouncer />
   <div>
+    <Navbar />
     <BrandEmblem />
     <h1>web-rewrite my beloved</h1>
     <p>

@@ -158,10 +158,6 @@
   --shadow-overlay:
     0px 12px 32px -4px rgba(0, 0, 0, 0.08), 0px 4px 8px -2px rgba(0, 0, 0, 0.08);
 
-  /* === ANIMATIONS === */
-  --animate-marquee: marquee 20s linear infinite;
-  --animate-marquee2: marquee2 20s linear infinite;
-
   /* === BREAKPOINTS === */
   --breakpoint-mobile: 767px;
   --breakpoint-sm: 640px;
@@ -257,25 +253,6 @@
     margin-right: auto;
     padding-left: var(--container-padding);
     padding-right: var(--container-padding);
-  }
-}
-
-/* === KEYFRAMES === */
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes marquee2 {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0%);
   }
 }
 

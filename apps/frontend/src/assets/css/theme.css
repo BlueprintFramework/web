@@ -76,15 +76,16 @@
 
   /* === TYPOGRAPHY === */
   /* Font Families */
-  --font-caption: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-caption-bold: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-body-bold: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-heading-3: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-heading-2: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-  --font-heading-1: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  --font-caption: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-caption-bold: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-body-bold: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-h3: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-h2: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-h1: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Funnel Display', ui-sans-serif, system-ui, sans-serif;
   --font-monospace-body:
-    ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas,
+    'Roboto Mono', ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
 
   /* Font Sizes */
@@ -108,20 +109,25 @@
   --font-weight-body-bold: 500;
   --letter-spacing-body-bold: 0em;
 
-  --font-size-heading-3: 16px;
-  --line-height-heading-3: 20px;
-  --font-weight-heading-3: 600;
-  --letter-spacing-heading-3: 0em;
+  --font-size-h3: 16px;
+  --line-height-h3: 20px;
+  --font-weight-h3: 600;
+  --letter-spacing-h3: 0em;
 
-  --font-size-heading-2: 20px;
-  --line-height-heading-2: 24px;
-  --font-weight-heading-2: 600;
-  --letter-spacing-heading-2: 0em;
+  --font-size-h2: 20px;
+  --line-height-h2: 24px;
+  --font-weight-h2: 600;
+  --letter-spacing-h2: 0em;
 
-  --font-size-heading-1: 30px;
-  --line-height-heading-1: 36px;
-  --font-weight-heading-1: 600;
-  --letter-spacing-heading-1: 0em;
+  --font-size-h1: 30px;
+  --line-height-h1: 36px;
+  --font-weight-h1: 600;
+  --letter-spacing-h1: 0em;
+
+  --font-size-display: 60px;
+  --line-height-display: 72px;
+  --font-weight-display: 600;
+  --letter-spacing-display: 0em;
 
   --font-size-monospace-body: 14px;
   --line-height-monospace-body: 20px;
@@ -194,28 +200,36 @@
   letter-spacing: var(--letter-spacing-body-bold);
 }
 
-@utility heading-3 {
-  font-family: var(--font-heading-3);
-  font-size: var(--font-size-heading-3);
-  line-height: var(--line-height-heading-3);
-  font-weight: var(--font-weight-heading-3);
-  letter-spacing: var(--letter-spacing-heading-3);
+@utility h3 {
+  font-family: var(--font-h3);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-h3);
+  letter-spacing: var(--letter-spacing-h3);
 }
 
-@utility heading-2 {
-  font-family: var(--font-heading-2);
-  font-size: var(--font-size-heading-2);
-  line-height: var(--line-height-heading-2);
-  font-weight: var(--font-weight-heading-2);
-  letter-spacing: var(--letter-spacing-heading-2);
+@utility h2 {
+  font-family: var(--font-h2);
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-h2);
+  letter-spacing: var(--letter-spacing-h2);
 }
 
-@utility heading-1 {
-  font-family: var(--font-heading-1);
-  font-size: var(--font-size-heading-1);
-  line-height: var(--line-height-heading-1);
-  font-weight: var(--font-weight-heading-1);
-  letter-spacing: var(--letter-spacing-heading-1);
+@utility h1 {
+  font-family: var(--font-h1);
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-h1);
+  letter-spacing: var(--letter-spacing-h1);
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--letter-spacing-display);
 }
 
 @utility monospace-body {
@@ -268,6 +282,20 @@
     .container {
       padding-left: calc((100vw + 16px - 1536px) / 2);
       padding-right: calc((100vw + 16px - 1536px) / 2);
+    }
+  }
+
+  @media (min-width: 1792px) {
+    .container {
+      padding-left: calc((100vw + 16px - 1792px) / 2);
+      padding-right: calc((100vw + 16px - 1792px) / 2);
+    }
+  }
+
+  @media (min-width: 2048px) {
+    .container {
+      padding-left: calc((100vw + 16px - 2048px) / 2);
+      padding-right: calc((100vw + 16px - 2048px) / 2);
     }
   }
 }

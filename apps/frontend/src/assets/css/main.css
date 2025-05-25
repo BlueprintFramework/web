@@ -6,11 +6,11 @@ html {
 }
 
 h1 {
-  @apply heading-1;
+  @apply h1;
 }
 h2 {
-  @apply heading-2;
+  @apply h2;
 }
 h3 {
-  @apply heading-3;
+  @apply h3;
 }

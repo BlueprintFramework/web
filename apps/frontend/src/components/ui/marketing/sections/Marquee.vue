@@ -1,5 +1,5 @@
 <template>
-  <div class="marquee my-14">
+  <div :class="props?.class" class="marquee h-32">
     <NuxtMarquee :autoFill="true" :pauseOnHover="true" :speed="50">
       <div
         v-for="(item, index) in items"
@@ -33,6 +33,12 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  class: {
+    type: String,
+    required: false,
+  },
+})
 const items = ref([
   {
     name: 'Custom Server Sort',

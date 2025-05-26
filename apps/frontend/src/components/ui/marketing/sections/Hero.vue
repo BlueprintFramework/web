@@ -39,9 +39,7 @@
         class="aspect-video h-full w-full object-cover"
       />
     </div>
-    <div
-      class="order-last border-b border-neutral-700 lg:order-none lg:border-b-0 lg:border-e"
-    >
+    <div class="order-last border-neutral-700 lg:order-none lg:border-e">
       <video
         width="1280"
         height="1024"
@@ -66,7 +64,9 @@
           </span>
         </div>
       </div>
-      <div class="grid h-full p-8 lg:p-16">
+      <div
+        class="grid h-full border-b border-neutral-700 p-8 lg:border-b-0 lg:p-16"
+      >
         <div class="space-y-3 self-center">
           <Icon name="memory:pickaxe" mode="svg" :size="48" />
           <h1>Tools developers know and love</h1>

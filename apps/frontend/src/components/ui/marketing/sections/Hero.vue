@@ -20,9 +20,9 @@
           <Icon name="memory:heart" mode="svg" :size="48" />
           <h1>Engineered for people, not profit</h1>
           <span class="opacity-75">
-            Blueprint is fisically sponsored by a 501(c)(3) nonprofit
-            foundation. We're funded by donations, corporate sponsors and
-            affiliate revenue.
+            Blueprint is fiscally sponsored by The Hack Foundation (d.b.a. Hack
+            Club), a 501(c)(3) nonprofit (EIN: 81-2908499). We're funded by
+            donations, corporate sponsors and affiliate revenue.
           </span>
         </div>
       </div>

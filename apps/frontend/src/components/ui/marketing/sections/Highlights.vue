@@ -1,7 +1,10 @@
 <template>
-  <div :class="props?.class">
+  <div
+    :class="props?.class"
+    class="rounded-3xl border border-neutral-700 bg-neutral-950"
+  >
     <!-- Mobile -->
-    <div class="rounded-3xl border border-neutral-700 bg-neutral-950 md:hidden">
+    <div class="md:hidden">
       <div class="border-b border-neutral-700 p-4">
         <div class="relative mb-4 flex items-center justify-between">
           <h2>{{ features.first.title }}</h2>
@@ -36,9 +39,7 @@
     </div>
 
     <!-- Desktop -->
-    <div
-      class="hidden overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 md:block"
-    >
+    <div class="hidden overflow-hidden md:block">
       <div class="grid grid-cols-3 divide-x divide-neutral-700">
         <div class="relative flex h-full items-center justify-between p-4">
           <h2>{{ features.first.title }}</h2>
@@ -92,7 +93,7 @@ const features = {
     icon: 'memory:cube',
     caption: {
       prefix:
-        'Pterodactyl® themes, plugin installers, player managers, admin tools and much more.',
+        'Pterodactyl themes, plugin installers, player managers, admin tools and much more.',
       main: "There's a Blueprint extension for that.",
     },
   },
@@ -101,7 +102,7 @@ const features = {
     icon: 'memory:application-code',
     caption: {
       prefix:
-        'Our mission is to make Pterodactyl® modifications easier for everyone.',
+        'Our mission is to make Pterodactyl modifications easier for everyone.',
       main: 'Thousands of administrators and developers call Blueprint home.',
     },
   },

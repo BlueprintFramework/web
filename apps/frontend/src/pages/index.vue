@@ -7,8 +7,7 @@
 
   <UiMarketingSectionsHighlights class="my-12" />
   <UiMarketingSectionsMarquee class="my-12" />
-
-  weh
+  <UiMarketingSectionsHero class="my-12" />
 
   <UiMarketingGridbackground />
 </template>

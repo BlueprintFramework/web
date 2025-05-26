@@ -1,10 +1,12 @@
 <template>
   <div
     :class="props?.class"
-    class="grid grid-cols-2 grid-rows-2 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+    class="grid grid-cols-1 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:grid-cols-2 lg:grid-rows-2"
   >
     <div class="grid grid-rows-2">
-      <div class="grid h-full border-b border-e border-neutral-700 p-16">
+      <div
+        class="grid h-full border-b border-neutral-700 p-8 lg:border-e lg:p-16"
+      >
         <div class="space-y-3 self-center">
           <Icon name="memory:anvil" mode="svg" :size="48" />
           <h1>A solid platform for Pterodactyl® mods</h1>
@@ -15,7 +17,9 @@
           </span>
         </div>
       </div>
-      <div class="grid h-full border-b border-e border-neutral-700 p-16">
+      <div
+        class="grid h-full border-b border-neutral-700 p-8 lg:border-e lg:p-16"
+      >
         <div class="space-y-3 self-center">
           <Icon name="memory:heart" mode="svg" :size="48" />
           <h1>Engineered for people, not profit</h1>
@@ -35,7 +39,9 @@
         class="aspect-video h-full w-full object-cover"
       />
     </div>
-    <div class="border-e border-neutral-700">
+    <div
+      class="order-last border-b border-neutral-700 lg:order-none lg:border-b-0 lg:border-e"
+    >
       <video
         width="1280"
         height="1024"
@@ -49,7 +55,7 @@
       </video>
     </div>
     <div class="grid grid-rows-2">
-      <div class="grid h-full border-b border-neutral-700 p-16">
+      <div class="grid h-full border-b border-neutral-700 p-8 lg:p-16">
         <div class="space-y-3 self-center">
           <Icon name="memory:terminal" mode="svg" :size="48" />
           <h1>Powerful CLI utility</h1>
@@ -60,7 +66,7 @@
           </span>
         </div>
       </div>
-      <div class="grid h-full p-16">
+      <div class="grid h-full p-8 lg:p-16">
         <div class="space-y-3 self-center">
           <Icon name="memory:pickaxe" mode="svg" :size="48" />
           <h1>Tools developers know and love</h1>

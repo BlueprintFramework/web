@@ -8,6 +8,7 @@
   <UiMarketingSectionsHighlights class="my-12" />
   <UiMarketingSectionsMarquee class="my-12" />
   <UiMarketingSectionsHero class="my-12" />
+  <UiMarketingSectionsRepositories class="my-12" />
 
   <UiMarketingGridbackground />
 </template>

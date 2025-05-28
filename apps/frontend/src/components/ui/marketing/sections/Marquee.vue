@@ -45,49 +45,41 @@ const items = ref([
     name: 'Custom Server Sort',
     identifier: 'customserversort',
     src: '/img/extensions/customserversort.jpg',
-    href: 'https://blueprint.zip/browse/customserversort',
   },
   {
     name: 'File Search',
     identifier: 'filesearch',
     src: '/img/extensions/filesearch.jpg',
-    href: 'https://blueprint.zip/browse/filesearch',
   },
   {
     name: 'Loader',
     identifier: 'loader',
     src: '/img/extensions/loader.jpg',
-    href: 'https://blueprint.zip/browse/loader',
   },
   {
     name: 'Nebula',
     identifier: 'nebula',
     src: '/img/extensions/nebula.jpg',
-    href: 'https://blueprint.zip/browse/nebula',
   },
   {
     name: 'Server Importer',
     identifier: 'serverimporter',
     src: '/img/extensions/serverimporter.jpg',
-    href: 'https://blueprint.zip/browse/serverimporter',
   },
   {
     name: 'Server Splitter',
     identifier: 'serversplitter',
     src: '/img/extensions/serversplitter.jpg',
-    href: 'https://blueprint.zip/browse/serversplitter',
   },
   {
     name: 'Social Login',
     identifier: 'sociallogin',
     src: '/img/extensions/sociallogin.jpg',
-    href: 'https://blueprint.zip/browse/sociallogin',
   },
   {
     name: 'Subdomains',
     identifier: 'subdomains',
     src: '/img/extensions/subdomains.jpg',
-    href: 'https://blueprint.zip/browse/subdomains',
   },
 ])
 </script>

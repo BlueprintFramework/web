@@ -7,7 +7,7 @@
           <span class="text-xl font-bold">Blueprint</span>
         </NuxtLink>
         <div class="flex items-center justify-between space-x-4">
-          <NuxtLink to="/extensions"> Extensions </NuxtLink>
+          <NuxtLink to="/browse"> Extensions </NuxtLink>
           <NuxtLink to="/docs"> Documentation </NuxtLink>
         </div>
       </div>

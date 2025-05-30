@@ -37,9 +37,7 @@
           />
         </div>
       </h2>
-      <p class="text-default-font">
-        Where everything web happens. API and website.
-      </p>
+      <p>Where everything web happens. API and website.</p>
     </NuxtLink>
     <NuxtLink
       to="https://github.com/blueprintframework/docker"

@@ -14,3 +14,7 @@ h2 {
 h3 {
   @apply h3;
 }
+
+.text-link {
+  @apply hover:text-brand-50 underline transition-colors;
+}

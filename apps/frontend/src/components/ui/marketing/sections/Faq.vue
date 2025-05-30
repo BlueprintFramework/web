@@ -4,36 +4,13 @@
     class="grid grid-cols-2 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
   >
     <div class="border-e border-neutral-700">
-      <div
-        class="hover:text-brand-50 flex flex-row justify-between border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900"
-      >
-        <h2>What's Blueprint?</h2>
-        <Icon name="memory:chevron-down" :size="24" />
-      </div>
-      <div
-        class="hover:text-brand-50 flex flex-row justify-between border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900"
-      >
-        <h2>Where can I discover and download extensions?</h2>
-        <Icon name="memory:chevron-down" :size="24" />
-      </div>
-      <div
-        class="hover:text-brand-50 flex flex-row justify-between border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900"
-      >
-        <h2>Does Blueprint work with Pterodactyl forks?</h2>
-        <Icon name="memory:chevron-down" :size="24" />
-      </div>
-      <div
-        class="hover:text-brand-50 flex flex-row justify-between p-4 transition-colors hover:bg-neutral-900"
-      >
-        <h2>What is Blueprint's financial structure?</h2>
-        <Icon name="memory:chevron-down" :size="24" />
-      </div>
+      <UiAccordion :items="items" />
     </div>
     <div class="relative overflow-hidden">
       <NuxtImg
         src="/img/gradient.jpeg"
         :width="1280"
-        :height="300"
+        :height="450"
         class="h-full w-full object-cover"
       />
       <Icon
@@ -47,10 +24,88 @@
 </template>
 
 <script setup lang="ts">
+import { NuxtLink } from '#components'
+
 const props = defineProps({
   class: {
     type: String,
     required: false,
   },
 })
+
+const items = [
+  {
+    title: "What's Blueprint?",
+    content:
+      'Blueprint is the modding platform for Pterodactyl. We provide developers a head start with industry-leading developer tools and system administrators an easier time managing extensions.',
+  },
+  {
+    title: 'Where can I find extensions?',
+    content: () => {
+      return [
+        h('span', {}, 'You can '),
+        h(
+          NuxtLink,
+          {
+            to: '/browse',
+            class: 'text-link',
+          },
+          'discover extensions verified by us'
+        ),
+        h(
+          'span',
+          {},
+          ' on our site. Extensions not listed may not meet our compatibility and safety standards.'
+        ),
+      ]
+    },
+  },
+  {
+    title: 'Does Blueprint work with Pterodactyl forks?',
+    content:
+      'No. Blueprint does not and will not work with Pterodactyl alternatives, including forks.',
+  },
+  {
+    title: 'Are standalone modifications compatible?',
+    content: () => {
+      return [
+        h('span', {}, 'No. '),
+        h(
+          NuxtLink,
+          {
+            to: '/browse',
+            class: 'text-link',
+          },
+          'Find an alternative'
+        ),
+        h(
+          'span',
+          {},
+          " that's built with Blueprint. If we don't have a viable alternative, contact the modification developer and ask them to port it over."
+        ),
+      ]
+    },
+  },
+  {
+    title: 'Is Blueprint open-source?',
+    content: () => {
+      return [
+        h(
+          'span',
+          {},
+          'Yeah! Our source code is largely under a MIT license and available on '
+        ),
+        h(
+          NuxtLink,
+          {
+            to: 'https://github.com/blueprintframework',
+            class: 'text-link',
+            target: '_blank',
+          },
+          'our GitHub organization.'
+        ),
+      ]
+    },
+  },
+]
 </script>

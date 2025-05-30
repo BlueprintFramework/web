@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { NuxtLink } from '#components'
+import { NuxtLink, UiAccordion } from '#components'
 
 const props = defineProps({
   class: {
@@ -36,12 +36,11 @@ const props = defineProps({
 const items = [
   {
     title: "What's Blueprint?",
-    content:
-      'Blueprint is the modding platform for Pterodactyl. We provide developers a head start with industry-leading developer tools and system administrators an easier time managing extensions.',
+    text: 'Blueprint is the modding platform for Pterodactyl. We provide developers a head start with industry-leading developer tools and system administrators an easier time managing extensions.',
   },
   {
     title: 'Where can I find extensions?',
-    content: () => {
+    inner: () => {
       return [
         h('span', {}, 'You can '),
         h(
@@ -50,7 +49,7 @@ const items = [
             to: '/browse',
             class: 'text-link',
           },
-          'discover extensions verified by us'
+          () => 'discover extensions verified by us'
         ),
         h(
           'span',
@@ -62,12 +61,11 @@ const items = [
   },
   {
     title: 'Does Blueprint work with Pterodactyl forks?',
-    content:
-      'No. Blueprint does not and will not work with Pterodactyl alternatives, including forks.',
+    text: 'No. At this time Blueprint does not work with Pterodactyl alternatives, including forks.',
   },
   {
     title: 'Are standalone modifications compatible?',
-    content: () => {
+    inner: () => {
       return [
         h('span', {}, 'No. '),
         h(
@@ -76,19 +74,19 @@ const items = [
             to: '/browse',
             class: 'text-link',
           },
-          'Find an alternative'
+          () => 'Find a Blueprint-compatible alternative'
         ),
         h(
           'span',
           {},
-          " that's built with Blueprint. If we don't have a viable alternative, contact the modification developer and ask them to port it over."
+          " or ask the modification's developer to port it over. Select standalone modifications may be compatible with Blueprint, provided that their developer actively maintains a Blueprint fork."
         ),
       ]
     },
   },
   {
     title: 'Is Blueprint open-source?',
-    content: () => {
+    inner: () => {
       return [
         h(
           'span',
@@ -102,7 +100,7 @@ const items = [
             class: 'text-link',
             target: '_blank',
           },
-          'our GitHub organization.'
+          () => 'our GitHub organization.'
         ),
       ]
     },

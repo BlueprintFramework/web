@@ -31,12 +31,16 @@
           :ref="(el) => setContentRef(el as Element | null, index)"
           class="p-4 pt-0"
         >
-          <p v-if="typeof item.content == 'string'">
-            {{ item.content }}
+          <p v-if="item.text">
+            {{ item.text }}
           </p>
-          <p v-else>
-            <component :is="item.content" />
-          </p>
+          <template v-else>
+            <component
+              v-for="(vnode, vnodeIndex) in (item.inner as Function)()"
+              :key="vnodeIndex"
+              :is="vnode"
+            />
+          </template>
         </div>
       </div>
     </div>
@@ -46,7 +50,8 @@
 <script setup lang="ts">
 interface AccordionItem {
   title: string
-  content: string | globalThis.VNode
+  text?: string
+  inner?: Function
 }
 
 const props = defineProps<{

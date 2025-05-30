@@ -12,8 +12,12 @@
           <span class="text-xl font-bold">Blueprint</span>
         </NuxtLink>
         <div class="flex items-center justify-between space-x-4">
-          <NuxtLink to="/browse"> Extensions </NuxtLink>
-          <NuxtLink to="/docs"> Documentation </NuxtLink>
+          <NuxtLink to="/browse" class="hover:text-brand-50 transition-colors">
+            Extensions
+          </NuxtLink>
+          <NuxtLink to="/docs" class="hover:text-brand-50 transition-colors">
+            Documentation
+          </NuxtLink>
         </div>
       </div>
     </div>

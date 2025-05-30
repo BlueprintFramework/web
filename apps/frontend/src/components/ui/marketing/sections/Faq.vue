@@ -1,12 +1,12 @@
 <template>
   <div
     :class="props.class"
-    class="grid grid-cols-2 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+    class="grid grid-cols-1 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 md:grid-cols-2"
   >
-    <div class="border-e border-neutral-700">
+    <div class="border-neutral-700 md:border-e">
       <UiAccordion :items="items" />
     </div>
-    <div class="relative overflow-hidden">
+    <div class="relative hidden overflow-hidden md:block">
       <NuxtImg
         src="/img/gradient.jpeg"
         :width="1280"

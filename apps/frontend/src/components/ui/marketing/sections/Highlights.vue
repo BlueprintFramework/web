@@ -3,10 +3,9 @@
     :class="props?.class"
     class="rounded-3xl border border-neutral-700 bg-neutral-950"
   >
-    <!-- Mobile -->
     <div class="md:hidden">
       <div class="border-b border-neutral-700 p-4">
-        <div class="relative mb-4 flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between">
           <h2>{{ features.first.title }}</h2>
           <Icon :name="features.first.icon" class="text-3xl" mode="svg" />
         </div>
@@ -16,7 +15,7 @@
         </span>
       </div>
       <div class="border-b border-neutral-700 p-4">
-        <div class="relative mb-4 flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between">
           <h2>{{ features.second.title }}</h2>
           <Icon :name="features.second.icon" class="text-3xl" mode="svg" />
         </div>
@@ -26,7 +25,7 @@
         </span>
       </div>
       <div class="p-4">
-        <div class="relative mb-4 flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between">
           <h2>{{ features.third.title }}</h2>
           <Icon :name="features.third.icon" class="text-3xl" mode="svg" />
         </div>
@@ -38,18 +37,17 @@
       </div>
     </div>
 
-    <!-- Desktop -->
     <div class="hidden overflow-hidden md:block">
       <div class="grid grid-cols-3 divide-x divide-neutral-700">
-        <div class="relative flex h-full items-center justify-between p-4">
+        <div class="flex h-full items-center justify-between p-4">
           <h2>{{ features.first.title }}</h2>
           <Icon :name="features.first.icon" class="text-3xl" mode="svg" />
         </div>
-        <div class="relative flex h-full items-center justify-between p-4">
+        <div class="flex h-full items-center justify-between p-4">
           <h2>{{ features.second.title }}</h2>
           <Icon :name="features.second.icon" class="text-3xl" mode="svg" />
         </div>
-        <div class="relative flex h-full items-center justify-between p-4">
+        <div class="flex h-full items-center justify-between p-4">
           <h2>{{ features.third.title }}</h2>
           <Icon :name="features.third.icon" class="text-3xl" mode="svg" />
         </div>

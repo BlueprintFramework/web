@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { NuxtLink, UiAccordion } from '#components'
+import { NuxtLink } from '#components'
 
 const props = defineProps({
   class: {

@@ -5,7 +5,7 @@
   >
     <NuxtLink
       to="https://github.com/blueprintframework/framework"
-      class="hover:text-brand-50 group space-y-2 border-neutral-700 p-4 transition-colors hover:bg-neutral-900 sm:border-b md:border-e lg:border-b-0"
+      class="hover:text-brand-50 group space-y-2 border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900 md:border-e lg:border-b-0"
       target="_blank"
     >
       <h2>
@@ -24,7 +24,7 @@
     </NuxtLink>
     <NuxtLink
       to="https://github.com/blueprintframework/web"
-      class="hover:text-brand-50 group space-y-2 border-neutral-700 p-4 transition-colors hover:bg-neutral-900 sm:border-b lg:border-b-0 lg:border-e"
+      class="hover:text-brand-50 group space-y-2 border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900 lg:border-b-0 lg:border-e"
       target="_blank"
     >
       <h2>
@@ -41,7 +41,7 @@
     </NuxtLink>
     <NuxtLink
       to="https://github.com/blueprintframework/docker"
-      class="hover:text-brand-50 group space-y-2 border-neutral-700 p-4 transition-colors hover:bg-neutral-900 sm:border-b md:border-b-0 md:border-e"
+      class="hover:text-brand-50 group space-y-2 border-b border-neutral-700 p-4 transition-colors hover:bg-neutral-900 md:border-b-0 md:border-e"
       target="_blank"
     >
       <h2>

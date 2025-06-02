@@ -4,16 +4,14 @@
       <div class="relative flex items-center justify-between">
         <NuxtLink
           to="/"
-          class="hover:text-brand-50 flex items-center justify-between space-x-2 transition-colors"
+          class="hover:text-brand-50 flex items-center justify-between gap-2 transition-colors"
           :class="emblemClass"
           @mouseover="emblemHover()"
         >
           <BrandEmblem />
           <span class="text-xl font-bold">Blueprint</span>
         </NuxtLink>
-        <div
-          class="flex flex-row items-center justify-between space-x-3 text-sm"
-        >
+        <div class="flex items-center justify-between gap-3 text-sm">
           <NuxtLink
             to="/browse"
             class="hover:text-brand-50 rounded-md border border-neutral-700 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
@@ -27,7 +25,7 @@
             Documentation
           </NuxtLink>
           <div
-            class="flex flex-row items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
+            class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
           >
             <NuxtLink
               to="/auth"
@@ -37,7 +35,7 @@
             </NuxtLink>
             <NuxtLink
               to="/auth?register=true"
-              class="hover:text-brand-50 flex flex-row items-center gap-1 px-2.5 py-0.5 transition-colors"
+              class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
             >
               <span>Sign up</span>
               <Icon name="memory:chevron-right" />

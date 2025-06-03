@@ -34,7 +34,7 @@
               <span>Log in</span>
             </NuxtLink>
             <NuxtLink
-              to="/auth?register=true"
+              to="/auth/register"
               class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
             >
               <span>Sign up</span>

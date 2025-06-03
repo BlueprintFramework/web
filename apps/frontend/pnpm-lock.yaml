@@ -36,6 +36,9 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.14(typescript@5.8.3))
     devDependencies:
+      '@iconify-json/memory':
+        specifier: ^1.2.2
+        version: 1.2.2
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -354,6 +357,9 @@ packages:
 
   '@fastify/busboy@3.1.1':
     resolution: {integrity: sha512-5DGmA8FTdB2XbDeEwc/5ZXBl6UbBAyBOOLlPuBnZ/N1SwdH9Ii+cOX3tBROlDgcTXxjOYnLMVoKk9+FXAw0CJw==}
+
+  '@iconify-json/memory@1.2.2':
+    resolution: {integrity: sha512-T+1Gr/PhsJommnaqmsVFkPBHxqmO9V61wVkHvrju/AzVOOK43uSv1qmX4RgzDf6xnbnIwHk9h4bDfYdjcQ4vXQ==}
 
   '@iconify/collections@1.0.551':
     resolution: {integrity: sha512-5Jy+BoI4nsNE1nHqukQh5ZxxppGThyU3VR794PLmZtbF7YJGYYa4SETnGRl4hz/5lKiTe8OhlXf5Ns45ZGLz5w==}
@@ -4210,6 +4216,10 @@ snapshots:
     optional: true
 
   '@fastify/busboy@3.1.1': {}
+
+  '@iconify-json/memory@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/collections@1.0.551':
     dependencies:

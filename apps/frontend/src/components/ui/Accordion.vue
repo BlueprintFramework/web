@@ -7,7 +7,7 @@
       :class="{ '!border-b-0': index === props.items.length - 1 }"
     >
       <div
-        class="hover:text-brand-50 flex cursor-pointer flex-row items-center justify-between p-4 transition-colors"
+        class="hover:text-brand-50 flex cursor-pointer items-center justify-between p-4 transition-colors"
         @click="toggleAccordion(index)"
       >
         <h2>

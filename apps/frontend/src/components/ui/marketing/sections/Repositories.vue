@@ -9,7 +9,7 @@
       target="_blank"
     >
       <h2>
-        <div class="flex flex-row">
+        <div class="flex">
           blueprintframework/framework
           <Icon
             name="memory:chevron-right"
@@ -28,7 +28,7 @@
       target="_blank"
     >
       <h2>
-        <div class="flex flex-row">
+        <div class="flex">
           blueprintframework/web
           <Icon
             name="memory:chevron-right"
@@ -45,7 +45,7 @@
       target="_blank"
     >
       <h2>
-        <div class="flex flex-row">
+        <div class="flex">
           blueprintframework/docker
           <Icon
             name="memory:chevron-right"
@@ -64,7 +64,7 @@
       target="_blank"
     >
       <h2>
-        <div class="flex flex-row">
+        <div class="flex">
           blueprintframework/templates
           <Icon
             name="memory:chevron-right"

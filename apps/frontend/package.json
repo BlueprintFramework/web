@@ -13,17 +13,17 @@
     "@nuxt/fonts": "0.11.4",
     "@nuxt/icon": "1.13.0",
     "@nuxt/image": "1.10.0",
-    "@tailwindcss/vite": "^4.1.7",
-    "nuxt": "^3.17.4",
+    "@tailwindcss/vite": "^4.1.8",
+    "nuxt": "^3.17.5",
     "nuxt-marquee": "1.0.4",
-    "tailwindcss": "^4.1.7",
-    "vue": "^3.5.14",
+    "tailwindcss": "^4.1.8",
+    "vue": "^3.5.16",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@iconify-json/memory": "^1.2.2",
     "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "prettier-plugin-tailwindcss": "^0.6.12"
   },
   "packageManager": "pnpm@10.11.1"
 }

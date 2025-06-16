@@ -11,6 +11,7 @@
     <UiMarketingSectionsHero />
     <UiMarketingSectionsRepositories />
     <UiMarketingSectionsFaq />
+    <UiMarketingSectionsSponsors />
   </div>
 
   <UiGridbackground />

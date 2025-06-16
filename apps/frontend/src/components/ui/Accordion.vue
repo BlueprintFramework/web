@@ -56,6 +56,7 @@ interface AccordionItem {
 
 const props = defineProps<{
   items: AccordionItem[]
+  open?: boolean
 }>()
 
 const activeIndex = ref(-1)
@@ -66,6 +67,10 @@ const setContentRef = (el: Element | null, index: number) => {
   if (el) {
     contentRefs.value[index] = el
   }
+}
+
+if (props?.open) {
+  activeIndex.value = 0
 }
 
 const toggleAccordion = async (index: number) => {

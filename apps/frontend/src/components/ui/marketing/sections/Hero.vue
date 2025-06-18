@@ -21,7 +21,7 @@
         class="grid h-full border-b border-neutral-700 p-8 lg:border-e lg:p-16"
       >
         <div class="space-y-3 self-center">
-          <Icon name="memory:heart" mode="svg" :size="48" />
+          <Icon name="memory:account-box" mode="svg" :size="48" />
           <h1>Engineered for people, not profit</h1>
           <span class="opacity-75">
             Blueprint is fiscally sponsored by The Hack Foundation (d.b.a. Hack

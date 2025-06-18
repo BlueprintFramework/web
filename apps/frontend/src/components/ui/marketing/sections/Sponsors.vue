@@ -19,7 +19,7 @@
       </div>
     </div>
     <div
-      class="flex min-h-48 items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:30px_30px] bg-[position:-15px_-15px]"
+      class="flex min-h-44 items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:40px_40px] bg-[position:-8px_-8px]"
     >
       <div class="flex w-full justify-center gap-12 p-4">
         <div>

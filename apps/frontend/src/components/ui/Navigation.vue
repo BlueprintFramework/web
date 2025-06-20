@@ -66,3 +66,9 @@ const emblemHover = () => {
   }
 }
 </script>
+
+<style>
+:root {
+  --nav-offset: 3.25rem;
+}
+</style>

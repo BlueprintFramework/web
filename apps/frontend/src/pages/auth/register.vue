@@ -47,9 +47,13 @@
       <span class="text-default-font/50">
         By creating an account, you acknowledge that you have read and agree to
         our
-        <NuxtLink to="" class="text-link">Terms of Service</NuxtLink>
+        <NuxtLink to="/legal/terms" class="text-link"
+          >Terms of Service</NuxtLink
+        >
         and
-        <NuxtLink to="" class="text-link">Privacy Policy</NuxtLink>
+        <NuxtLink to="/legal/privacy" class="text-link"
+          >Privacy Policy</NuxtLink
+        >
       </span>
     </div>
     <button

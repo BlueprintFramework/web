@@ -2,15 +2,7 @@
   <nav class="h-13 fixed z-10 w-full bg-neutral-950">
     <div class="container py-3">
       <div class="relative flex items-center justify-between">
-        <NuxtLink
-          to="/"
-          class="hover:text-brand-50 flex items-center justify-between gap-2 transition-colors"
-          :class="emblemClass"
-          @mouseover="emblemHover()"
-        >
-          <BrandEmblem />
-          <span class="text-xl font-bold">Blueprint</span>
-        </NuxtLink>
+        <BrandWordmark />
         <div class="flex items-center justify-between gap-3 text-sm">
           <NuxtLink
             to="/browse"
@@ -56,22 +48,6 @@
   </nav>
   <div class="h-13"></div>
 </template>
-
-<script setup lang="ts">
-const emblemClass = ref('')
-const emblemAnimating = ref(false)
-
-const emblemHover = () => {
-  if (!emblemAnimating.value) {
-    emblemAnimating.value = true
-    emblemClass.value = 'emblem-animate'
-    setTimeout(() => {
-      emblemClass.value = ''
-      emblemAnimating.value = false
-    }, 800)
-  }
-}
-</script>
 
 <style>
 :root {

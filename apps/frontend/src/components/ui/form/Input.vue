@@ -8,14 +8,12 @@
     </label>
 
     <div class="input-wrapper" :class="wrapperClasses">
-      <span v-if="leadingIcon" class="input-icon input-icon--leading">
-        <Icon
-          :name="leadingIcon"
-          :class="iconClasses"
-          size="42"
-          class="my-auto"
-        />
-      </span>
+      <Icon
+        v-if="leadingIcon"
+        :name="leadingIcon"
+        :class="iconClasses"
+        class="input-icon input-icon--leading scale-85"
+      />
 
       <input
         :id="fieldId"
@@ -391,7 +389,7 @@ watch(
 }
 
 .input-icon {
-  @apply pointer-events-none absolute z-10 flex h-5 w-5 items-center justify-center;
+  @apply pointer-events-none absolute z-10 flex h-11 w-6 items-center justify-center;
 }
 
 .input-icon--leading {

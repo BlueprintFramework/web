@@ -19,30 +19,33 @@
               @validate="void"
             />
           </div>
-          <div class="h-1000 space-y-4 px-4">
+          <div class="space-y-4 px-4 pb-4">
             <div
+              v-for="(categoryData, category) in filteredCategories"
+              :key="category"
               class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
             >
               <div class="flex gap-1.5 p-2 align-middle font-bold">
                 <Icon
-                  name="memory:application-code"
+                  :name="categoryData.icon"
                   :size="22"
                   mode="svg"
                   class="block"
                 />
-                <span> CLI </span>
+                <span>{{ category }}</span>
               </div>
-              <div class="p-2">
-                <button
-                  class="hover:text-brand-50 w-full text-start transition-colors"
+              <div class="space-y-2 p-2">
+                <NuxtLink
+                  v-for="doc in categoryData.docs"
+                  :key="doc.id"
+                  :to="doc.path"
+                  class="hover:text-brand-50 text-default-font/60 block w-full text-start transition-colors"
+                  :class="{
+                    '!text-default-font': route.path == doc.path,
+                  }"
                 >
-                  <span>Commands</span>
-                </button>
-                <button
-                  class="hover:text-brand-50 w-full text-start transition-colors"
-                >
-                  <span>agentic ai b2b saas</span>
-                </button>
+                  <span>{{ doc.title }}</span>
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -67,7 +70,89 @@
 </template>
 
 <script setup lang="ts">
+import { docsCategories, defaultCategory } from '~/assets/docs.config'
+
+const route = useRoute()
 const form = ref({
   search: '',
+})
+
+const { data: docs } = await useAsyncData('docs-sidebar', () => {
+  return queryCollection('docs').all()
+})
+
+// Group docs by category
+const groupedDocs = computed(() => {
+  if (!docs.value) return {}
+
+  const grouped = docs.value.reduce(
+    (acc, doc) => {
+      const categoryKey = doc.category?.toLowerCase() || 'general'
+      const categoryConfig = docsCategories[categoryKey] || defaultCategory
+      const categoryLabel = categoryConfig.label || doc.category || 'General'
+
+      if (!acc[categoryLabel]) {
+        acc[categoryLabel] = {
+          icon: categoryConfig.icon,
+          order: categoryConfig.order || 999,
+          docs: [],
+        }
+      }
+      acc[categoryLabel].docs.push(doc)
+      return acc
+    },
+    {} as Record<string, { icon: string; order: number; docs: any[] }>
+  )
+
+  Object.values(grouped).forEach((category) => {
+    category.docs.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order
+      }
+      if (a.order !== undefined) return -1
+      if (b.order !== undefined) return 1
+      return a.title.localeCompare(b.title)
+    })
+  })
+
+  const sortedGrouped = Object.entries(grouped)
+    .sort(([, a], [, b]) => a.order - b.order)
+    .reduce(
+      (acc, [key, value]) => {
+        acc[key] = value
+        return acc
+      },
+      {} as typeof grouped
+    )
+
+  return sortedGrouped
+})
+
+// Filter categories based on search
+const filteredCategories = computed(() => {
+  const search = form.value.search.toLowerCase()
+  if (!search) return groupedDocs.value
+
+  const filtered: Record<string, { icon: string; order: number; docs: any[] }> =
+    {}
+
+  Object.entries(groupedDocs.value).forEach(([category, data]) => {
+    const matchingDocs = data.docs.filter(
+      (doc) =>
+        doc.title.toLowerCase().includes(search) ||
+        doc.description?.toLowerCase().includes(search) ||
+        category.toLowerCase().includes(search)
+    )
+
+    if (matchingDocs.length > 0) {
+      filtered[category] = {
+        icon: data.icon,
+        order: data.order,
+        docs: matchingDocs,
+      }
+    }
+  })
+
+  return filtered
 })
 </script>

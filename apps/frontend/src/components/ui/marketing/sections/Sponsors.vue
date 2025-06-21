@@ -4,7 +4,9 @@
     class="bg-neutral-950` overflow-hidden rounded-3xl border border-neutral-700"
   >
     <div class="border-b border-neutral-700">
-      <div class="grid grid-cols-2 items-center divide-x divide-neutral-700">
+      <div
+        class="grid items-center divide-y divide-neutral-700 lg:grid-cols-2 lg:divide-x lg:divide-y-0"
+      >
         <div class="flex h-full items-center gap-2 p-4">
           <Icon name="memory:heart" mode="svg" :size="32" />
           <h1>Sponsors</h1>

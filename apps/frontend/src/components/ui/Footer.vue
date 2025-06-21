@@ -18,7 +18,9 @@
         </span>
       </div>
     </div>
-    <span class="text-lg"> The modding platform for Pterodactyl </span>
+    <span class="hidden text-lg md:inline">
+      The modding platform for Pterodactyl
+    </span>
   </div>
 </template>
 

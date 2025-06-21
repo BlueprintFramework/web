@@ -32,7 +32,9 @@
         </NuxtLink>
       </span>
     </div>
-    <div class="flex divide-x divide-neutral-700">
+    <div
+      class="flex flex-col divide-y divide-neutral-700 md:flex-row md:divide-x md:divide-y-0"
+    >
       <button
         type="submit"
         class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
@@ -41,7 +43,7 @@
         <Icon name="memory:chevron-right" mode="svg" :size="24" />
       </button>
       <button
-        class="text-default-font hover:text-brand-50 w-auto cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-xl font-semibold transition-colors hover:bg-neutral-900"
+        class="text-default-font hover:text-brand-50 w-auto cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900"
       >
         Authenticate with GitHub
       </button>

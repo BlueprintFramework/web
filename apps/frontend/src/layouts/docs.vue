@@ -2,8 +2,12 @@
   <div class="flex">
     <div class="flex">
       <div class="w-76">
-        <div class="w-76 fixed z-10 h-full bg-neutral-950 p-4">
-          <div class="flex-col space-y-4">
+        <div
+          class="w-76 fixed z-10 h-full flex-col space-y-4 overflow-scroll bg-neutral-950"
+        >
+          <div
+            class="bg-linear-to-b sticky top-0 space-y-4 border-b border-neutral-700 from-neutral-950/50 to-transparent p-4 backdrop-blur-sm"
+          >
             <BrandWordmark />
             <UiFormInput
               v-model="form.search"
@@ -14,8 +18,32 @@
               placeholder="Search.."
               @validate="void"
             />
-            <div>
-              <!-- docs navigation -->
+          </div>
+          <div class="h-1000 space-y-4 px-4">
+            <div
+              class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
+            >
+              <div class="flex gap-1.5 p-2 align-middle font-bold">
+                <Icon
+                  name="memory:application-code"
+                  :size="22"
+                  mode="svg"
+                  class="block"
+                />
+                <span> CLI </span>
+              </div>
+              <div class="p-2">
+                <button
+                  class="hover:text-brand-50 w-full text-start transition-colors"
+                >
+                  <span>Commands</span>
+                </button>
+                <button
+                  class="hover:text-brand-50 w-full text-start transition-colors"
+                >
+                  <span>agentic ai b2b saas</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -26,7 +54,7 @@
         />
       </div>
     </div>
-    <div class="max-w-200 container px-4 py-12">
+    <div class="max-w-200 container space-y-12 px-4 py-12">
       <slot />
     </div>
   </div>

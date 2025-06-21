@@ -1,7 +1,6 @@
 <template>
   <div class="space-y-2">
-    <h1 class="!display !text-6xl !font-normal">Getting started</h1>
-    <p>Learn how to create your first extension</p>
+    <h1>documentation whoaaa</h1>
   </div>
 </template>
 

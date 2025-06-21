@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './theme.css';
+@plugin '@igorkowalczyk/is-browser';
 
 html {
   @apply font-body text-default-font bg-neutral-950;
@@ -17,4 +18,19 @@ h3 {
 
 .text-link {
   @apply hover:text-brand-50 underline transition-colors;
+}
+
+.bg-stripes {
+  background: linear-gradient(
+    45deg,
+    var(--color-neutral-700) 0.5px,
+    transparent 0.5px,
+    transparent calc(50% - 0.5px),
+    var(--color-neutral-700) calc(50% - 0.5px),
+    var(--color-neutral-700) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px),
+    transparent calc(100% - 0.5px),
+    var(--color-neutral-700) calc(100% - 0.5px)
+  );
+  background-size: 30px 30px;
 }

@@ -9,8 +9,8 @@
       target="_blank"
     >
       <h2>
-        <div class="flex">
-          blueprintframework/framework
+        <div class="flex overflow-hidden">
+          blueprintframework/<wbr class="not-chrome:hidden" />framework
           <Icon
             name="memory:chevron-right"
             :size="24"
@@ -28,8 +28,8 @@
       target="_blank"
     >
       <h2>
-        <div class="flex">
-          blueprintframework/web
+        <div class="flex overflow-hidden">
+          blueprintframework/<wbr class="not-chrome:hidden" />web
           <Icon
             name="memory:chevron-right"
             :size="24"
@@ -47,8 +47,8 @@
       target="_blank"
     >
       <h2>
-        <div class="flex">
-          blueprintframework/docker
+        <div class="flex overflow-hidden">
+          blueprintframework/<wbr class="not-chrome:hidden" />docker
           <Icon
             name="memory:chevron-right"
             :size="24"
@@ -66,8 +66,8 @@
       target="_blank"
     >
       <h2>
-        <div class="flex">
-          blueprintframework/templates
+        <div class="flex overflow-hidden">
+          blueprintframework/<wbr class="not-chrome:hidden" />templates
           <Icon
             name="memory:chevron-right"
             :size="24"

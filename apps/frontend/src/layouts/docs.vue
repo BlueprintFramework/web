@@ -34,7 +34,7 @@
               :key="category"
               class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
             >
-              <div class="flex gap-1.5 p-2 align-middle font-bold">
+              <div class="flex items-center gap-1.5 p-2 font-bold">
                 <Icon
                   :name="categoryData.icon"
                   :size="22"
@@ -66,7 +66,7 @@
         />
       </div>
     </div>
-    <div class="max-w-200 container space-y-12 px-4 py-12">
+    <div class="max-w-200 container space-y-12 overflow-hidden px-4 py-12">
       <slot />
     </div>
   </div>

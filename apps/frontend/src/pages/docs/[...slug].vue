@@ -1,7 +1,7 @@
 <template>
   <div v-if="data" class="space-y-8">
     <div class="space-y-4">
-      <h1 class="!display !text-6xl !font-normal">
+      <h1 class="!display truncate !text-5xl !font-normal md:!text-6xl">
         {{ data.title || 'Untitled' }}
       </h1>
       <p v-if="data.description" class="text-default-font/60 text-lg">
@@ -14,37 +14,37 @@
     </div>
 
     <div
-      class="grid divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 sm:grid-cols-2"
+      class="grid divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
       v-if="prevDoc || nextDoc"
     >
       <NuxtLink
         v-if="prevDoc"
         :to="prevDoc.path"
-        class="hover:text-brand-50 text-nowrap p-4 transition-colors hover:bg-neutral-900"
+        class="hover:text-brand-50 overflow-hidden p-4 transition-colors hover:bg-neutral-900"
       >
-        <h3 class="mb-2 overflow-hidden text-ellipsis text-lg font-medium">
+        <h3 class="mb-2 truncate text-lg font-medium">
           {{ prevDoc.title }}
         </h3>
         <p
           v-if="prevDoc.description"
-          class="text-default-font/50 overflow-hidden text-ellipsis text-sm"
+          class="text-default-font/50 truncate text-sm"
         >
           {{ prevDoc.description }}
         </p>
       </NuxtLink>
-      <div class="bg-stripes h-full w-full" v-else />
+      <div class="bg-stripes hidden h-full w-full sm:block" v-else />
 
       <NuxtLink
         v-if="nextDoc"
         :to="nextDoc.path"
-        class="hover:text-brand-50 text-nowrap p-4 transition-colors hover:bg-neutral-900"
+        class="hover:text-brand-50 overflow-hidden text-nowrap p-4 transition-colors hover:bg-neutral-900"
       >
-        <h3 class="mb-2 overflow-hidden text-ellipsis text-lg font-medium">
+        <h3 class="mb-2 truncate text-lg font-medium">
           {{ nextDoc.title }}
         </h3>
         <p
           v-if="nextDoc.description"
-          class="text-default-font/50 overflow-hidden text-ellipsis text-sm"
+          class="text-default-font/50 truncate text-sm"
         >
           {{ nextDoc.description }}
         </p>

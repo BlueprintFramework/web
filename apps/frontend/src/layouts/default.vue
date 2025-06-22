@@ -1,7 +1,7 @@
 <template>
   <UiNavigation />
-  <div class="container pb-5 pt-8">
+  <div class="container space-y-12 py-12">
     <slot />
-    <UiFooter class="pb-7 pt-12" />
+    <UiFooter />
   </div>
 </template>

@@ -12,5 +12,17 @@ export default defineContentConfig({
         order: z.number().optional(),
       }),
     }),
+
+    guides: defineCollection({
+      type: 'page',
+      source: 'guides/**/*.md',
+      schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        category: z.string().default('uncategorized'),
+        order: z.number().optional(),
+        thumbnail: z.string().optional(),
+      }),
+    }),
   },
 })

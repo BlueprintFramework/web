@@ -2,23 +2,19 @@ export interface CategoryConfig {
   icon: string
   label?: string
   order?: number
+  thumbnail?: string
 }
 
-export const docsCategories: Record<string, CategoryConfig> = {
-  cli: {
+export const guidesCategories: Record<string, CategoryConfig> = {
+  admin: {
     icon: 'memory:terminal',
-    label: 'CLI',
+    label: 'System Administration',
     order: 1,
   },
-  configs: {
-    icon: 'memory:script',
-    label: 'Configurations',
+  dev: {
+    icon: 'memory:cube',
+    label: 'Extension Development',
     order: 2,
-  },
-  lib: {
-    icon: 'memory:application-code',
-    label: 'Extension Library',
-    order: 3,
   },
 }
 

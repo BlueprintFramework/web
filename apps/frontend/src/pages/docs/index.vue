@@ -59,17 +59,16 @@ const categories = computed(() => {
           icon: categoryConfig.icon,
           order: categoryConfig.order || 999,
           docCount: 0,
-          firstDoc: doc._path,
+          firstDoc: doc.path,
         }
       }
       acc[categoryLabel].docCount++
-      // Keep the first doc path (assuming they're sorted)
       if (
         doc.order &&
         (!acc[categoryLabel].docOrder ||
           doc.order < acc[categoryLabel].docOrder)
       ) {
-        acc[categoryLabel].firstDoc = doc._path
+        acc[categoryLabel].firstDoc = doc.path
         acc[categoryLabel].docOrder = doc.order
       }
       return acc
@@ -86,7 +85,6 @@ const categories = computed(() => {
     >
   )
 
-  // Sort categories by their defined order
   const sortedGrouped = Object.entries(grouped)
     .sort(([, a], [, b]) => a.order - b.order)
     .reduce(

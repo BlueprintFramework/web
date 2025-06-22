@@ -8,7 +8,16 @@
           <div
             class="bg-linear-to-b sticky top-0 space-y-4 border-b border-neutral-700 from-neutral-950/50 to-transparent p-4 backdrop-blur-sm"
           >
-            <BrandWordmark />
+            <div class="flex items-center justify-between">
+              <BrandWordmark />
+              <NuxtLink
+                to="/docs"
+                class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
+                :class="{ '!text-default-font': route.path == '/docs' }"
+              >
+                Docs
+              </NuxtLink>
+            </div>
             <UiFormInput
               v-model="form.search"
               name="search"

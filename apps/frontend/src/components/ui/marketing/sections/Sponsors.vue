@@ -24,15 +24,14 @@
       class="flex min-h-44 items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:40px_40px] bg-[position:-8px_-8px]"
     >
       <div class="flex w-full justify-center gap-12 p-4">
-        <div>
-          <h2>Sponsor 1</h2>
-        </div>
-        <div>
-          <h2>Sponsor 2</h2>
-        </div>
-        <div>
-          <h2>Sponsor 3</h2>
-        </div>
+        <NuxtLink
+          to="https://ultraservers.com"
+          target="_blank"
+          class="hover:text-brand-50 flex items-center gap-2 transition-colors"
+        >
+          <SvgUltraservers size="30" />
+          <span class="h2 text-2xl">UltraServers</span>
+        </NuxtLink>
       </div>
     </div>
   </div>

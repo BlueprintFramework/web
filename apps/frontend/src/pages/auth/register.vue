@@ -9,39 +9,43 @@
           v-model="form.firstName"
           name="first_name"
           type="text"
-          :rules="[]"
+          :rules="[validationRules.required()]"
+          :required="true"
           leading-icon="memory:user"
           placeholder="First name"
-          @validate="void"
+          @validate="(event) => handleFieldValidation('firstName', event)"
         />
         <UiFormInput
           v-model="form.lastName"
           name="last_name"
           type="text"
-          :rules="[]"
+          :rules="[validationRules.required()]"
+          :required="true"
           placeholder="Last name"
-          @validate="void"
+          @validate="(event) => handleFieldValidation('lastName', event)"
         />
       </div>
       <UiFormInput
         v-model="form.email"
         name="email"
         type="email"
-        :rules="[]"
+        :rules="[validationRules.required(), validationRules.email()]"
+        :required="true"
         leading-icon="memory:email"
         auto-complete="email"
         placeholder="Email address"
-        @validate="void"
+        @validate="(event) => handleFieldValidation('email', event)"
       />
       <UiFormInput
         v-model="form.password"
         name="password"
         type="password"
-        :rules="[]"
+        :rules="[validationRules.required(), validationRules.password()]"
+        :required="true"
         leading-icon="memory:key"
         auto-complete="password"
         placeholder="Password"
-        @validate="void"
+        @validate="(event) => handleFieldValidation('password', event)"
       />
 
       <span class="text-default-font/50">
@@ -69,14 +73,21 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: 'auth',
-})
+const { rules: validationRules } = useFormValidation()
 
+const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   firstName: '',
   lastName: '',
   email: '',
   password: '',
+})
+
+const handleFieldValidation = (field: string, isValid: boolean) => {
+  fieldValidation.value[field] = isValid
+}
+
+definePageMeta({
+  layout: 'auth',
 })
 </script>

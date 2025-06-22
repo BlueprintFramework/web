@@ -8,11 +8,12 @@
         v-model="form.email"
         name="email"
         type="email"
-        :rules="[]"
+        :rules="[validationRules.required(), validationRules.email()]"
+        :required="true"
         leading-icon="memory:email"
         auto-complete="email"
         placeholder="Email address"
-        @validate="void"
+        @validate="(event) => handleFieldValidation('email', event)"
       />
 
       <span class="text-default-font/50">
@@ -31,11 +32,18 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: 'auth',
-})
+const { rules: validationRules } = useFormValidation()
 
+const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
+})
+
+const handleFieldValidation = (field: string, isValid: boolean) => {
+  fieldValidation.value[field] = isValid
+}
+
+definePageMeta({
+  layout: 'auth',
 })
 </script>

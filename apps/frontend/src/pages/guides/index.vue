@@ -36,11 +36,24 @@
     <div
       v-for="(categoryData, category) in filteredCategories"
       :key="category"
-      class="divide-y divide-neutral-700 rounded-3xl border border-neutral-700"
+      class="divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
     >
-      <div class="flex items-center gap-1.5 p-4 text-2xl font-bold">
-        <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
-        <span>{{ category }}</span>
+      <div class="flex justify-between">
+        <div class="flex items-center gap-1.5 p-4 text-2xl font-bold">
+          <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
+          <span>{{ category }}</span>
+        </div>
+        <div class="border-s border-neutral-700">
+          <NuxtLink :to="`/guides/list/${categoryData.key}`">
+            <button
+              type="submit"
+              class="text-default-font hover:text-brand-50 flex h-full cursor-pointer items-center justify-between gap-1 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+            >
+              <span class="text-xl font-semibold"> View category </span>
+              <Icon name="memory:chevron-right" mode="svg" :size="24" />
+            </button>
+          </NuxtLink>
+        </div>
       </div>
       <div class="flex gap-4 overflow-scroll p-4">
         <NuxtLink
@@ -100,13 +113,17 @@ const groupedGuides = computed(() => {
         acc[categoryLabel] = {
           icon: categoryConfig.icon,
           order: categoryConfig.order || 999,
+          key: categoryKey,
           guides: [],
         }
       }
       acc[categoryLabel].guides.push(guide)
       return acc
     },
-    {} as Record<string, { icon: string; order: number; guides: any[] }>
+    {} as Record<
+      string,
+      { icon: string; order: number; key: string; guides: any[] }
+    >
   )
 
   Object.values(grouped).forEach((category) => {
@@ -140,7 +157,7 @@ const filteredCategories = computed(() => {
 
   const filtered: Record<
     string,
-    { icon: string; order: number; guides: any[] }
+    { icon: string; order: number; key: string; guides: any[] }
   > = {}
 
   Object.entries(groupedGuides.value).forEach(([category, data]) => {
@@ -155,6 +172,7 @@ const filteredCategories = computed(() => {
       filtered[category] = {
         icon: data.icon,
         order: data.order,
+        key: data.key,
         guides: matchingGuides,
       }
     }

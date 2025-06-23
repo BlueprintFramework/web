@@ -15,21 +15,21 @@
         <NuxtImg
           :src="`/img/guides/thumbnails/${data.thumbnail || 'default.jpeg'}`"
           :width="1280"
-          :height="450"
+          :height="350"
           class="h-full w-full object-cover"
         />
       </div>
     </div>
 
     <div
-      class="grid grid-cols-1 divide-x divide-neutral-700 overflow-hidden rounded-b-3xl border border-t-0 border-neutral-700 bg-neutral-950 lg:grid-cols-2"
+      class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-b-3xl border border-t-0 border-neutral-700 bg-neutral-950 xl:grid-cols-2 xl:divide-x"
     >
       <div class="p-4 md:p-8">
         <div class="prose prose-invert max-w-none">
           <ContentRenderer :value="data" />
         </div>
       </div>
-      <div class="bg-stripes hidden lg:block"></div>
+      <div class="bg-stripes hidden xl:block"></div>
     </div>
   </div>
 </template>

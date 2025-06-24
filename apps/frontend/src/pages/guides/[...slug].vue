@@ -1,35 +1,27 @@
 <template>
   <div v-if="data">
     <div
-      class="lg:min-h-50 grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-t-3xl border border-neutral-700 bg-neutral-950 lg:grid-cols-2 lg:divide-x"
+      class="flex divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 xl:divide-x"
     >
-      <div class="flex h-full">
-        <div class="space-y-3 self-center p-4 md:p-8">
+      <div class="bg-stripes flex-1/6 hidden xl:block"></div>
+      <div class="xl:flex-4/6 flex-[100%]">
+        <NuxtImg
+          :src="`/img/guides/thumbnails/${data.thumbnail || 'default.jpeg'}`"
+          :width="1280"
+          :height="275"
+          class="w-full border-b border-neutral-700 object-cover"
+        />
+        <div class="space-y-3 border-b border-neutral-700 p-4 md:p-8">
           <h1 class="!text-4xl">{{ data.title || 'Untitled' }}</h1>
           <span class="opacity-75">
             {{ data.description }}
           </span>
         </div>
-      </div>
-      <div class="hidden lg:block">
-        <NuxtImg
-          :src="`/img/guides/thumbnails/${data.thumbnail || 'default.jpeg'}`"
-          :width="1280"
-          :height="350"
-          class="h-full w-full object-cover"
-        />
-      </div>
-    </div>
-
-    <div
-      class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-b-3xl border border-t-0 border-neutral-700 bg-neutral-950 xl:grid-cols-2 xl:divide-x"
-    >
-      <div class="p-4 md:p-8">
-        <div class="prose prose-invert max-w-none">
+        <div class="prose prose-invert max-w-none p-4 md:p-8">
           <ContentRenderer :value="data" />
         </div>
       </div>
-      <div class="bg-stripes hidden xl:block"></div>
+      <div class="bg-stripes flex-1/6 hidden xl:block"></div>
     </div>
   </div>
 </template>

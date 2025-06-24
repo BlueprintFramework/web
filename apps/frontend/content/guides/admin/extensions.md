@@ -5,41 +5,26 @@ category: admin
 thumbnail: 002.jpeg
 ---
 
-Blueprint extensions must be installed, updated, built and removed via the command line. Shell access is required to perform these actions.
+## Installing an extension
 
-## Install Extensions
-
-Only use extensions from trusted sources such as Blueprint's extension repository, sourceXchange or BuiltByBit. Third-party sources may contain unverified or malicious code.
-
-To install a Blueprint extension, move the `.blueprint` file into your Pterodactyl root directory, usually `/var/www/pterodactyl`.
-
-Then run the following command in your terminal:
+To install a Blueprint extension, move the `identifier.blueprint` file into your Pterodactyl webserver directory (usually `/var/www/pterodactyl`) and install them through the following command:
 
 ```bash
-blueprint -install [extension]
+blueprint -install identifier           # this works
+blueprint -install identifier.blueprint # this also works!!
 ```
 
-Replace `(extension)` with the name of the extension or the exact filename of the `.blueprint` file. This will trigger the installation process.
+## Removing an extension
 
-## Remove Extensions
-
-To uninstall a Blueprint extension, run the following command:
+Uninstalling extensions is dead-simple. Tell our handy CLI which extension you'd like to remove and poof, away it goes.
 
 ```bash
-blueprint -remove [extension]
+blueprint -remove identifier           # <- do this
+blueprint -remove identifier.blueprint # or this ;)
 ```
 
-Replace `(extension)` with the name of the extension you want to remove. This will safely remove the extension and its associated components.
+## Configuring extensions
 
-## Manage extension specific settings
+Got your extensions installed? Sweet, time to set them up! On your admin panel, locate Blueprint's "Extensions" page and click on the extension you'd like to manage. All extensions have their own admin page, some have settings, some don't.
 
-Once an extension is installed, you can configure its settings directly from the Pterodactyl admin dashboard.
-
-1.  Log in to the admin interface.
-
-2.  Click on the puzzle piece icon in the top-right corner to open the Extensions Overview.
-
-3.  From here, select the extension you wish to manage.
-    This will open a configuration view where you can adjust extension-specific options.
-
-Settings interfaces are defined by the extension developer and may vary depending on the extension. Some even don't have settings at all.
+![](/img/guides/extensions.jpeg)

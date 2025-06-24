@@ -10,7 +10,7 @@
     </div>
 
     <div class="prose prose-invert max-w-none">
-      <ContentRenderer :value="data" />
+      <ContentRenderer :value="data" class="prose-content" />
     </div>
 
     <div

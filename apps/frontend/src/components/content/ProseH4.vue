@@ -1,6 +1,10 @@
 <template>
   <h4 :id="props.id" style="font-size: 22px">
-    <a v-if="props.id && generate" :href="`#${props.id}`">
+    <a
+      v-if="props.id && generate"
+      :href="`#${props.id}`"
+      class="hover:text-brand-50 transition-colors"
+    >
       <slot />
     </a>
     <slot v-else />

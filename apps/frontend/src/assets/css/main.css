@@ -34,3 +34,10 @@ h3 {
   );
   background-size: 30px 30px;
 }
+
+.prose-content > *:first-child {
+  margin-top: 0 !important;
+}
+.prose-content > *:last-child {
+  margin-bottom: 0 !important;
+}

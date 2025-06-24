@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="prose prose-invert w-full md:p-8">
-          <ContentRenderer :value="data" class="space-y-2" />
+          <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>
       </div>
       <div class="bg-stripes flex-1/6 hidden xl:block" />

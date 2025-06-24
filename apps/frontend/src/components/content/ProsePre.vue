@@ -73,7 +73,7 @@ const copyPreContent = async () => {
   }, 2000)
 }
 </script>
-<style>
+<style scoped>
 pre code .line {
   display: block;
 }

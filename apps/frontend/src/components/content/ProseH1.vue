@@ -1,6 +1,10 @@
 <template>
   <h1 :id="props.id" style="font-size: 38px" class="mb-4 mt-7">
-    <a v-if="generate" :href="`#${props.id}`">
+    <a
+      v-if="generate"
+      :href="`#${props.id}`"
+      class="hover:text-brand-50 transition-colors"
+    >
       <slot />
     </a>
     <slot v-else />
@@ -21,3 +25,9 @@ const generate = computed(
       (typeof headings?.anchorLinks === 'object' && headings?.anchorLinks?.h1))
 )
 </script>
+
+<style scoped>
+* + h1 {
+  margin-top: 1.75rem;
+}
+</style>

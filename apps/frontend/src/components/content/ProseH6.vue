@@ -1,5 +1,9 @@
 <template>
-  <h6 :id="props.id" style="font-size: 14px">
+  <h6
+    :id="props.id"
+    style="font-size: 14px"
+    class="hover:text-brand-50 transition-colors"
+  >
     <a v-if="props.id && generate" :href="`#${props.id}`">
       <slot />
     </a>

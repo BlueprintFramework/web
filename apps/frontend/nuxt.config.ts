@@ -20,6 +20,14 @@ export default defineNuxtConfig({
       },
     },
   },
-
   vite: { plugins: [tailwindcss()] },
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: 'github-dark',
+        },
+      },
+    },
+  },
 })

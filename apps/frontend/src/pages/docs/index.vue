@@ -9,7 +9,7 @@
     </p>
   </div>
   <div
-    class="grid divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+    class="grid divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950"
   >
     <div
       v-for="(categoryData, category) in categories"
@@ -28,7 +28,7 @@
   </div>
   <NuxtImg
     src="/img/documentation.jpeg"
-    class="hidden w-full rounded-3xl border border-neutral-700 bg-neutral-950 object-cover sm:block"
+    class="hidden w-full rounded-2xl border border-neutral-700 bg-neutral-950 object-cover sm:block"
     :height="600"
     :width="1280"
   />

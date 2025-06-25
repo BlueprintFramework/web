@@ -16,7 +16,7 @@ Navigation:
     AdditionalAccountItems:
     AfterSubNavigation:
   Routes:
-  # - { Name: "", Path: "", Type: "account/server", Component: "", AdminOnly: "boolean" }
+  # - { Name: '', Path: '', Type: 'account|server', Component: '', AdminOnly: 'true|false' }
 
 Dashboard:
   Global:

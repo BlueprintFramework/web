@@ -55,7 +55,7 @@
           </NuxtLink>
         </div>
       </div>
-      <div class="flex gap-4 overflow-scroll p-4">
+      <div class="flex gap-4 overflow-x-scroll p-4">
         <NuxtLink
           v-for="guide in categoryData.guides"
           :key="guide.id"

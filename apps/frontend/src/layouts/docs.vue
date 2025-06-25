@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="w-76">
         <div
-          class="w-76 fixed z-10 h-full flex-col space-y-4 overflow-y-scroll bg-neutral-950"
+          class="w-76 scrollbar-none fixed z-10 h-full flex-col space-y-4 overflow-y-scroll bg-neutral-950"
         >
           <div
             class="bg-linear-to-b sticky top-0 space-y-4 border-b border-neutral-700 from-neutral-950/50 to-transparent p-4 backdrop-blur-sm"

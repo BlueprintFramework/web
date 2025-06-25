@@ -20,7 +20,14 @@ export default defineNuxtConfig({
       },
     },
   },
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    server: {
+      proxy: {
+        '/api': 'http://localhost:8000',
+      },
+    },
+  },
   content: {
     build: {
       markdown: {

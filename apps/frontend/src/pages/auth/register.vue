@@ -4,27 +4,16 @@
       <h1 class="!text-4xl">Hi there!</h1>
     </div>
     <div class="space-y-4 p-4">
-      <div class="grid grid-cols-2 gap-4">
-        <UiFormInput
-          v-model="form.firstName"
-          name="first_name"
-          type="text"
-          :rules="[validationRules.required()]"
-          :required="true"
-          leading-icon="memory:user"
-          placeholder="First name"
-          @validate="(event) => handleFieldValidation('firstName', event)"
-        />
-        <UiFormInput
-          v-model="form.lastName"
-          name="last_name"
-          type="text"
-          :rules="[validationRules.required()]"
-          :required="true"
-          placeholder="Last name"
-          @validate="(event) => handleFieldValidation('lastName', event)"
-        />
-      </div>
+      <UiFormInput
+        v-model="form.displayName"
+        name="displayname"
+        type="text"
+        :rules="[validationRules.required()]"
+        :required="true"
+        leading-icon="memory:user"
+        placeholder="Display name"
+        @validate="(event) => handleFieldValidation('displayName', event)"
+      />
       <UiFormInput
         v-model="form.email"
         name="email"
@@ -77,8 +66,7 @@ const { rules: validationRules } = useFormValidation()
 
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
-  firstName: '',
-  lastName: '',
+  displayName: '',
   email: '',
   password: '',
 })

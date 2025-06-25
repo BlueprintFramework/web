@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                    SELECT version, percentage\n                    FROM (\n                        SELECT\n                            data->'blueprint'->>'version' AS version,\n                            (COUNT(*) * 100.0 / (\n                                SELECT COUNT(*)\n                                FROM telemetry_data\n                                WHERE id IN (\n                                    SELECT latest_telemetry_data_id\n                                    FROM telemetry_panels_with_latest\n                                )\n                                AND created > NOW() - INTERVAL '2 days'\n                            ))::float8 AS percentage\n                        FROM telemetry_data\n                        WHERE\n                            id IN (\n                                SELECT latest_telemetry_data_id\n                                FROM telemetry_panels_with_latest\n                            )\n                            AND created > NOW() - INTERVAL '2 days'\n                        GROUP BY version\n                    ) x\n                    WHERE x.version LIKE 'beta-202_-__'\n                    ORDER BY x.percentage DESC\n                    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "version",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "percentage",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "46c6123ada38b3b7b0f8dc9cf6dbe3a8111f5af189a55179d15163c871e4a67a"
+}

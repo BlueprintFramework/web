@@ -1,0 +1,28 @@
+services:
+  web:
+    container_name: blueprint-api_web
+    image: ghcr.io/blueprintframework/api:latest
+    restart: unless-stopped
+    volumes:
+      - ./.env:/app/server/.env
+    depends_on:
+      - db
+      - cache
+    ports:
+      - 50000:8000
+
+  db:
+    container_name: blueprint-api_db
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=blueprint_api
+      - POSTGRES_PASSWORD=local
+      - POSTGRES_DB=blueprint_api
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+
+  cache:
+    container_name: blueprint-api_cache
+    image: redis:7
+    restart: unless-stopped

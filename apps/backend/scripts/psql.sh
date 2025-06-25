@@ -1,0 +1,1 @@
+docker exec -u postgres -it blueprint-api_db psql -U blueprint_api blueprint_api $@

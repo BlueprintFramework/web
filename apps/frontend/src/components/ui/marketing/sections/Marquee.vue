@@ -20,12 +20,7 @@
                 class="top-6/12 left-6/12 -translate-3/6 absolute"
               />
             </div>
-            <NuxtImg
-              :src="item.src"
-              :height="128"
-              :width="256"
-              :alt="item.name"
-            />
+            <NuxtImg src="" :height="128" :width="256" :alt="item.name" />
           </div>
         </NuxtLink>
       </div>
@@ -52,62 +47,34 @@ const items = ref([
   {
     name: 'Custom Server Sort',
     identifier: 'customserversort',
-    src: '/img/extensions/customserversort.jpg',
-    ipx_src: img('/img/extensions/customserversort.jpg', {
-      height: 128,
-      width: 256,
-    }),
   },
   {
     name: 'File Search',
     identifier: 'filesearch',
-    src: '/img/extensions/filesearch.jpg',
-    ipx_src: img('/img/extensions/filesearch.jpg', { height: 128, width: 256 }),
   },
   {
     name: 'Loader',
     identifier: 'loader',
-    src: '/img/extensions/loader.jpg',
-    ipx_src: img('/img/extensions/loader.jpg', { height: 128, width: 256 }),
   },
   {
     name: 'Nebula',
     identifier: 'nebula',
-    src: '/img/extensions/nebula.jpg',
-    ipx_src: img('/img/extensions/nebula.jpg', { height: 128, width: 256 }),
   },
   {
     name: 'Server Importer',
     identifier: 'serverimporter',
-    src: '/img/extensions/serverimporter.jpg',
-    ipx_src: img('/img/extensions/serverimporter.jpg', {
-      height: 128,
-      width: 256,
-    }),
   },
   {
     name: 'Server Splitter',
     identifier: 'serversplitter',
-    src: '/img/extensions/serversplitter.jpg',
-    ipx_src: img('/img/extensions/serversplitter.jpg', {
-      height: 128,
-      width: 256,
-    }),
   },
   {
     name: 'Social Login',
     identifier: 'sociallogin',
-    src: '/img/extensions/sociallogin.jpg',
-    ipx_src: img('/img/extensions/sociallogin.jpg', {
-      height: 128,
-      width: 256,
-    }),
   },
   {
     name: 'Subdomains',
     identifier: 'subdomains',
-    src: '/img/extensions/subdomains.jpg',
-    ipx_src: img('/img/extensions/subdomains.jpg', { height: 128, width: 256 }),
   },
 ])
 </script>

@@ -1,0 +1,44 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                    SELECT\n                        COUNT(*) AS total_panels,\n                        SUM((data->'blueprint'->>'docker')::boolean::int) AS docker_panels,\n                        SUM(jsonb_array_length(data->'blueprint'->'extensions')) AS sum_extensions,\n                        MAX(jsonb_array_length(data->'blueprint'->'extensions')) AS max_extensions,\n                        AVG(jsonb_array_length(data->'blueprint'->'extensions'))::float8 AS avg_extensions\n                    FROM telemetry_data\n                    WHERE\n                        id IN (\n                            SELECT latest_telemetry_data_id\n                            FROM telemetry_panels_with_latest\n                        )\n                        AND created > NOW() - INTERVAL '2 days'\n                    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total_panels",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "docker_panels",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "sum_extensions",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "max_extensions",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "avg_extensions",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "62f4301e8fdfc7e4ce5b490cb06200bf5fea0aba2a1dd651a18026fcbaf16b13"
+}

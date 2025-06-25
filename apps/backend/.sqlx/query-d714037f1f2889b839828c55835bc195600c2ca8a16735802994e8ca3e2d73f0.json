@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO telemetry_data (panel_id, telemetry_version, ip, continent, country, data, created)\n                VALUES ($1, $2, $3, $4, $5, $6, $7)\n                ON CONFLICT DO NOTHING\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Int2",
+        "Bpchar",
+        "Bpchar",
+        "Bpchar",
+        "Jsonb",
+        "Timestamp"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d714037f1f2889b839828c55835bc195600c2ca8a16735802994e8ca3e2d73f0"
+}

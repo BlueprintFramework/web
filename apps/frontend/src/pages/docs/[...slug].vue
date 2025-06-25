@@ -14,7 +14,7 @@
     </div>
 
     <div
-      class="grid divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
+      class="grid divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
       v-if="prevDoc || nextDoc"
     >
       <NuxtLink

@@ -28,3 +28,7 @@ blueprint -remove identifier.blueprint # or this ;)
 Got your extensions installed? Sweet, time to set them up! On your admin panel, locate Blueprint's "Extensions" page and click on the extension you'd like to manage. All extensions have their own admin page, some have settings, some don't.
 
 ![](/img/guides/extensions.jpeg)
+
+On extension admin pages you can also find Blueprint's settings overlay. With the settings overlay, you can configure permissions for each extension.
+
+![](/img/guides/permissions.jpeg)

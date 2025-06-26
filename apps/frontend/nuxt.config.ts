@@ -20,6 +20,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  icon: {
+    localApiEndpoint: '/__nuxt_icon',
+  },
   vite: {
     plugins: [tailwindcss()],
     server: {

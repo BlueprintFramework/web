@@ -20,7 +20,13 @@
                 class="top-6/12 left-6/12 -translate-3/6 absolute"
               />
             </div>
-            <NuxtImg src="" :height="128" :width="256" :alt="item.name" />
+            <NuxtImg
+              :src="`https://s3.blueprint.zip/extensions/lowres/${item.identifier}.jpeg`"
+              :height="128"
+              :width="256"
+              :alt="item.name"
+              class="aspect-[2/1] object-cover"
+            />
           </div>
         </NuxtLink>
       </div>

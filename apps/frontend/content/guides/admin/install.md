@@ -6,12 +6,12 @@ thumbnail: 001.jpeg
 order: -1
 ---
 
-## Installation script
+## Automatic installation
 
 Quickly get Blueprint up and running with the install script.
 
 ```bash
-bash <(curl https://get.bpfw.io)
+bash <(curl https://get.blueprintframe.work)
 ```
 
 ## Manual installation

@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-marquee',
     '@nuxt/content',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -40,6 +42,18 @@ export default defineNuxtConfig({
         highlight: {
           theme: 'github-dark',
         },
+      },
+    },
+  },
+  site: {
+    url: 'https://blueprint.zip',
+    name: 'Blueprint',
+  },
+  nitro: {
+    routeRules: {
+      '/api/**': {
+        prerender: false,
+        headers: { 'cache-control': 'no-cache' },
       },
     },
   },

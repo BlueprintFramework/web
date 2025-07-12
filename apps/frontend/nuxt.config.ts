@@ -23,6 +23,9 @@ export default defineNuxtConfig({
   icon: {
     localApiEndpoint: '/__nuxt_icon',
   },
+  imports: {
+    dirs: ['types/**/*.ts', 'types/**/*.d.ts'],
+  },
   vite: {
     plugins: [tailwindcss()],
     server: {

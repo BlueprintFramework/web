@@ -6,6 +6,4 @@ category: configs
 
 ```yaml [Console.yml]
 - { Signature: '', Description: '', Path: '', Interval: '' }
-- { Signature: '', Description: '', Path: '', Interval: '' }
-- { Signature: '', Description: '', Path: '', Interval: '' }
 ```

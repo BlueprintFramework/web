@@ -38,6 +38,15 @@
         <div class="prose prose-invert w-full md:p-8">
           <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>
+        <!-- prettier-ignore -->
+        <div class="hidden grid-cols-6 border-t border-neutral-700 p-4 text-center md:grid font-bold">
+          <pre class="text-red-400">[  ^ ^]</pre>
+          <pre class="text-orange-300">[- -  ]</pre>
+          <pre class="text-yellow-200">[  # #]</pre>
+          <pre class="text-green-400">[> <  ]</pre>
+          <pre class="text-blue-400">[  / /]</pre>
+          <pre class="text-purple-400">[* *  ]</pre>
+        </div>
       </div>
       <div class="bg-stripes flex-1/6 hidden xl:block" />
     </div>

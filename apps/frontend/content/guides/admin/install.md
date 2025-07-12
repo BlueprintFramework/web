@@ -6,17 +6,7 @@ thumbnail: 001.jpeg
 order: -1
 ---
 
-## Automatic installation
-
-Quickly get Blueprint up and running with the install script.
-
-```bash
-bash <(curl https://get.blueprintframe.work)
-```
-
-## Manual installation
-
-### Navigate
+## Navigate
 
 Define your Pterodactyl directory, we'll use this later in the guide. If your Pterodactyl webserver **is not** located in this directory, change the path.
 
@@ -25,7 +15,7 @@ export PTERODACTL_DIRECTORY=/var/www/pterodactyl
 cd $PTERODACTL_DIRECTORY
 ```
 
-### Dependencies
+## Dependencies
 
 Blueprint, just like Pterodactyl, relies on a few dependencies to function. Install them through the commands below.
 
@@ -40,7 +30,7 @@ npm i -g yarn
 yarn install
 ```
 
-### Download and install Blueprint
+## Download and install Blueprint
 
 Download the latest version of Blueprint onto your server by either downloading the latest release [from GitHub](https://github.com/BlueprintFramework/framework/releases/latest) or running the commands below (which will save the file as `release.zip` and extract it).
 
@@ -49,7 +39,7 @@ wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releas
 unzip -o release.zip
 ```
 
-### Configure Blueprint
+## Configure Blueprint
 
 This step allows Blueprint to function and know where itself and Pterodactyl are located and which permissions to use. Create a file called `.blueprintrc` inside of your Pterodactyl directory to begin.
 
@@ -66,7 +56,7 @@ OWNERSHIP="www-data:www-data";
 USERSHELL="/bin/bash";' >> $PTERODACTL_DIRECTORY/.blueprintrc
 ```
 
-### Run Blueprint
+## Run Blueprint
 
 All that's left is giving `blueprint.sh` execute permissions and running it. Blueprint will then do the necessary commands to operate correctly automatically.
 
@@ -76,3 +66,7 @@ bash $PTERODACTL_DIRECTORY/blueprint.sh
 ```
 
 Optionally you can enable Bash autocompletion by adding `source blueprint;` into your `.bashrc` (or `.zshrc` when using ZSH).
+
+## That's it!
+
+You've completed the Blueprint installation guide! [Browse our extensions list](/browse) or [check out another guide](/guides).

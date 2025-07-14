@@ -1,12 +1,7 @@
 <template>
-  <div
-    class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 xl:grid-cols-2 xl:divide-x"
-  >
-    <div class="flex items-center gap-3 p-4 md:p-8">
-      <Icon :name="categoryConfig.icon" :size="48" mode="svg" class="block" />
-      <h1 class="!text-4xl">{{ categoryConfig.label }}</h1>
-    </div>
-    <div class="bg-stripes hidden xl:block" />
+  <div class="flex items-center gap-3">
+    <Icon :name="categoryConfig.icon" :size="48" mode="svg" class="block" />
+    <h1 class="!text-4xl">{{ categoryConfig.label }}</h1>
   </div>
 
   <div

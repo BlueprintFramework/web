@@ -389,7 +389,7 @@ watch(
 }
 
 .input-icon {
-  @apply pointer-events-none absolute z-10 flex h-11 w-6 items-center justify-center;
+  @apply z-5 pointer-events-none absolute flex h-11 w-6 items-center justify-center;
 }
 
 .input-icon--leading {

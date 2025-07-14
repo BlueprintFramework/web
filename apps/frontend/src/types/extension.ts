@@ -5,7 +5,7 @@ export interface Extension {
   name: string
   identifier: string
   summary: string
-  platforms: ExtensionPlatforms[]
+  platforms: Record<string, ExtensionPlatforms[]>
   versions: ExtensionVersions[]
   keywords: string[]
   banner: string
@@ -26,7 +26,7 @@ export interface ExtensionPlatforms {
   price: number
   currency: string
   reviews?: number
-  rating?: number
+  rating?: number | null
 }
 
 export interface ExtensionAuthor {

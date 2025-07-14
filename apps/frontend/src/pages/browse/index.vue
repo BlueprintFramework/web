@@ -4,7 +4,7 @@
     <pre class="text-2xl font-bold">[* *  ]</pre>
   </div>
   <div class="flex flex-row gap-4">
-    <div class="w-1/5 md:w-2/5 lg:w-1/5">
+    <div class="w-75">
       <div
         class="sticky top-[calc(var(--nav-offset)+1rem)] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
       >
@@ -95,44 +95,47 @@
         </div>
       </div>
     </div>
-    <div
-      class="grid w-full grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 md:w-3/5 lg:w-4/5 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-    >
-      <UiExtensioncard
-        v-if="pending"
-        v-for="n in 28"
-        class="flex flex-col bg-neutral-950"
-      />
-      <UiExtensioncard
-        v-else
-        v-for="extension in filteredAndSortedExtensions"
-        :key="extension.id"
-        :extension="extension"
-        class="flex flex-col bg-neutral-950"
-      />
+    <div class="w-[calc(100%-18.75rem)]">
       <div
-        v-if="!pending && filteredAndSortedExtensions.length === 0"
-        class="col-span-full flex flex-col items-center justify-center bg-neutral-950 p-12 text-center"
+        class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
-        <Icon
-          name="memory:search"
-          :size="48"
-          class="text-default-font/30 mb-4"
+        <UiExtensioncard
+          v-if="pending"
+          v-for="n in 28"
+          class="flex flex-col bg-neutral-950"
         />
-        <h3 class="mb-2 text-xl font-semibold">No extensions found</h3>
-        <p class="text-default-font/60">
-          {{
-            !form.showExtensions && !form.showThemes
-              ? 'Enable at least one filter to see results'
-              : 'Try adjusting your search or filters'
-          }}
-        </p>
-      </div>
-      <div class="min-h-5 w-[calc(400%+3px)] bg-neutral-950">
-        <div class="bg-stripes h-full w-full" />
+        <UiExtensioncard
+          v-else
+          v-for="extension in filteredAndSortedExtensions"
+          :key="extension.id"
+          :extension="extension"
+          class="flex flex-col bg-neutral-950"
+        />
+        <div
+          v-if="!pending && filteredAndSortedExtensions.length === 0"
+          class="col-span-full flex flex-col items-center justify-center bg-neutral-950 p-12 text-center"
+        >
+          <Icon
+            name="memory:search"
+            :size="48"
+            class="text-default-font/30 mb-4"
+          />
+          <h3 class="mb-2 text-xl font-semibold">No extensions found</h3>
+          <p class="text-default-font/60">
+            {{
+              !form.showExtensions && !form.showThemes
+                ? 'Enable at least one filter to see results'
+                : 'Try adjusting your search or filters'
+            }}
+          </p>
+        </div>
+        <div class="min-h-5 w-[calc(400%+3px)] bg-neutral-950">
+          <div class="bg-stripes h-full w-full" />
+        </div>
       </div>
     </div>
   </div>
+
   <div
     class="absolute inset-0 top-[var(--nav-offset)] -z-10 h-[50vh] w-full bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:30px_30px]"
     style="background-position-x: -5px"

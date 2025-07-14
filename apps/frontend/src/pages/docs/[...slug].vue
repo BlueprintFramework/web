@@ -1,7 +1,9 @@
 <template>
   <div v-if="data" class="space-y-8">
     <div class="space-y-4">
-      <h1 class="!display truncate !text-5xl !font-normal md:!text-6xl">
+      <h1
+        class="!display leading-14 md:leading-18 truncate !text-5xl !font-normal md:!text-6xl"
+      >
         {{ data.title || 'Untitled' }}
       </h1>
       <p v-if="data.description" class="text-default-font/60 text-lg">

@@ -55,6 +55,9 @@ export default defineNuxtConfig({
         prerender: false,
         headers: { 'cache-control': 'no-cache' },
       },
+      '/browse/**': {
+        prerender: false,
+      },
     },
   },
 })

@@ -49,7 +49,9 @@
               type="submit"
               class="text-default-font hover:text-brand-50 flex h-full cursor-pointer items-center justify-between gap-1 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
             >
-              <span class="text-xl font-semibold"> View category </span>
+              <span class="hidden text-xl font-semibold md:inline">
+                View category
+              </span>
               <Icon name="memory:chevron-right" mode="svg" :size="24" />
             </button>
           </NuxtLink>

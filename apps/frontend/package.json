@@ -19,7 +19,7 @@
     "@nuxtjs/sitemap": "7.4.3",
     "@tailwindcss/vite": "^4.1.8",
     "better-sqlite3": "^11.10.0",
-    "nuxt": "^3.17.5",
+    "nuxt": "^4.0.0",
     "nuxt-marquee": "1.0.4",
     "tailwindcss": "^4.1.8",
     "ufo": "^1.6.1",

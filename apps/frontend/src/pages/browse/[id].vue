@@ -82,7 +82,9 @@
                       <p>{{ version.downloads }}</p>
                     </div>
                   </div>
-                  <p class="">Released on</p>
+                  <p class="">
+                    {{ formatDate(version.created) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -109,7 +111,6 @@ const { data: extension, pending } = await useAsyncData<Extension>(
   }
 )
 
-// Platform configuration with imported components
 const platformConfig = {
   BUILTBYBIT: {
     name: 'BuiltByBit',
@@ -125,7 +126,6 @@ const platformConfig = {
   },
 } as const
 
-// Computed property to get available platforms with their config
 const availablePlatforms = computed(() => {
   if (!extension.value?.platforms) {
     return []
@@ -145,14 +145,19 @@ const availablePlatforms = computed(() => {
     }))
 })
 
-// Helper function to format price with currency as text
 const formatPrice = (price: number, currency: string): string => {
-  // Show "Free" for zero price, otherwise format with currency as text
   if (price === 0) {
     return 'Free'
   }
 
   return `${price.toFixed(2)} ${currency}`
+}
+
+const formatDate = (date: string): string => {
+  const parsed = new Date(Date.parse(date))
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'full',
+  }).format(parsed)
 }
 
 useSeoMeta({

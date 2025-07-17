@@ -56,10 +56,59 @@
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
           >
             <div class="flex items-center justify-between gap-2 p-2 text-lg">
-              <span>Statistics</span>
-              <Icon name="pixelarticons:chart" />
+              <span>Info</span>
+              <Icon name="pixelarticons:align-left" />
             </div>
-            <div class="p-2">hello :p</div>
+            <div class="p-2">
+              <div class="flex items-center gap-1 font-bold">
+                <Icon name="pixelarticons:calendar-month" />
+                <div>
+                  Released on
+                  <span class="text-default-font/60 font-normal">
+                    {{ formatDate(extension.created) }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 font-bold">
+                <Icon name="pixelarticons:user" />
+                <div>
+                  Created by
+                  <span class="text-default-font/60 font-normal">
+                    {{ extension.author.name }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 font-bold">
+                <Icon name="pixelarticons:chart-bar" />
+                <div>
+                  Used by
+                  <span class="text-default-font/60 font-normal">
+                    ~{{ extension.stats.panels }} installations
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex gap-1 pt-2">
+                <div
+                  class="flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-0.5 text-xs"
+                >
+                  <template v-if="extension.type == 'EXTENSION'">
+                    <Icon name="memory:cube" />
+                    Extension
+                  </template>
+                  <template v-else-if="extension.type == 'THEME'">
+                    <Icon name="memory:image" />
+                    Theme
+                  </template>
+                </div>
+                <div
+                  class="flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-0.5 text-xs"
+                >
+                  <Icon name="pixelarticons:label" />
+                  {{ extension.identifier }}
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
@@ -88,13 +137,13 @@
                   <div class="flex items-center justify-between">
                     <p class="text-lg font-bold">{{ version.name }}</p>
                     <div
-                      class="text-md text-default-font/50 flex items-center gap-1.5"
+                      class="text-md text-default-font/60 flex items-center gap-1.5"
                     >
                       <Icon name="pixelarticons:download" />
                       <p>{{ version.downloads }}</p>
                     </div>
                   </div>
-                  <p class="">
+                  <p class="text-default-font/60">
                     {{ formatDate(version.created) }}
                   </p>
                 </div>

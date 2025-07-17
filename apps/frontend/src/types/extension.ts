@@ -5,7 +5,7 @@ export interface Extension {
   name: string
   identifier: string
   summary: string
-  platforms: Record<string, ExtensionPlatforms[]>
+  platforms: Record<string, ExtensionPlatforms>
   versions: ExtensionVersions[]
   keywords: string[]
   banner: string

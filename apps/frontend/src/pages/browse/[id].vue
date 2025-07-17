@@ -1,5 +1,5 @@
 <template>
-  <div v-if="extension">
+  <div v-if="extension" class="space-y-12">
     <div
       class="overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
     >
@@ -39,6 +39,58 @@
                 {{ formatPrice(platform.data.price, platform.data.currency) }}
               </span>
             </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex gap-4 rounded-3xl border border-neutral-700 bg-neutral-950"
+    >
+      <div class="w-full p-4">e</div>
+      <div class="min-w-100">
+        <div class="p-4 ps-0">
+          <div
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
+          >
+            <div class="flex items-center justify-between gap-2 p-2 text-lg">
+              <span>Version history</span>
+              <Icon name="pixelarticons:git-pull-request" />
+            </div>
+            <div class="max-h-75 overflow-y-scroll">
+              <div
+                v-for="version in extension.versions"
+                class="flex items-center"
+              >
+                <div class="text-brand-50 min-w-8">
+                  <SvgCommit
+                    :type="
+                      extension.versions.indexOf(version) == 0
+                        ? 'start'
+                        : 'default'
+                    "
+                    class="h-full w-full"
+                  />
+                </div>
+                <div class="w-full py-2 pe-3">
+                  <div class="flex items-center justify-between">
+                    <p class="text-lg font-bold">{{ version.name }}</p>
+                    <div
+                      class="text-md text-default-font/50 flex items-center gap-1.5"
+                    >
+                      <Icon name="pixelarticons:arrow-bar-down" />
+                      <p>{{ version.downloads }}</p>
+                    </div>
+                  </div>
+                  <p class="">Released on</p>
+                </div>
+              </div>
+            </div>
+            <div class="h-0 border-t-0">
+              <div
+                class="bg-linear-to-b z-5 -top-15 h-15 relative from-transparent to-neutral-950"
+              ></div>
+            </div>
           </div>
         </div>
       </div>

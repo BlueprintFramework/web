@@ -15,14 +15,8 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  class: {
-    type: String,
-    required: false,
-  },
-  size: {
-    type: String || Number,
-    required: false,
-  },
-})
+const props = defineProps<{
+  class?: string
+  size?: string | number
+}>()
 </script>

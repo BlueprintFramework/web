@@ -9,7 +9,7 @@
           class="h-125 w-full object-cover"
         />
         <div
-          class="min-w-100 flex flex-col justify-between divide-y divide-neutral-700"
+          class="min-w-100 max-w-100 flex flex-col justify-between divide-y divide-neutral-700"
         >
           <div class="p-4">
             <h1 class="truncate">
@@ -45,11 +45,22 @@
     </div>
 
     <div
-      class="flex gap-4 rounded-3xl border border-neutral-700 bg-neutral-950"
+      class="flex divide-x divide-neutral-700 rounded-3xl border border-neutral-700 bg-neutral-950"
     >
-      <div class="w-full p-4">e</div>
-      <div class="min-w-100">
-        <div class="p-4 ps-0">
+      <div class="w-full">
+        <div class="p-4">e</div>
+      </div>
+      <div class="min-w-100 max-w-100">
+        <div class="space-y-4 p-4">
+          <div
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
+          >
+            <div class="flex items-center justify-between gap-2 p-2 text-lg">
+              <span>Statistics</span>
+              <Icon name="pixelarticons:chart" />
+            </div>
+            <div class="p-2">hello :p</div>
+          </div>
           <div
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
           >
@@ -59,6 +70,7 @@
             </div>
             <div class="max-h-75 overflow-y-scroll">
               <div
+                v-if="extension.versions[0]"
                 v-for="version in extension.versions"
                 class="flex items-center"
               >
@@ -78,7 +90,7 @@
                     <div
                       class="text-md text-default-font/50 flex items-center gap-1.5"
                     >
-                      <Icon name="pixelarticons:arrow-bar-down" />
+                      <Icon name="pixelarticons:download" />
                       <p>{{ version.downloads }}</p>
                     </div>
                   </div>
@@ -87,11 +99,17 @@
                   </p>
                 </div>
               </div>
+              <div class="p-2" v-else>
+                <p class="text-default-font/60">
+                  Our robots are hard at work collecting information about this
+                  extension, come back later!
+                </p>
+              </div>
             </div>
-            <div class="h-0 border-t-0">
+            <div class="h-0 border-t-0" v-if="extension.versions[1]">
               <div
                 class="bg-linear-to-b z-5 -top-15 h-15 relative from-transparent to-neutral-950"
-              ></div>
+              />
             </div>
           </div>
         </div>

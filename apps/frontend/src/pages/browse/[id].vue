@@ -27,20 +27,42 @@
             type="submit"
             class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between border-b border-neutral-700 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
           >
-            <div class="text-xl font-semibold">
-              <span>Buy on BuiltByBit</span>
+            <div class="flex items-center gap-2">
+              <SvgBuiltbybit />
+              <div class="text-xl font-semibold">
+                <span>BuiltByBit</span>
+              </div>
             </div>
-            <Icon name="memory:chevron-right" mode="svg" :size="24" />
           </button>
           <button
             type="submit"
             class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between border-b border-neutral-700 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
           >
-            <div class="text-xl font-semibold">
-              <span>Buy on sourceXchange</span>
+            <div class="flex items-center gap-2">
+              <SvgSourcexchange />
+              <div class="text-xl font-semibold">
+                <span>sourceXchange</span>
+              </div>
             </div>
-            <Icon name="memory:chevron-right" mode="svg" :size="24" />
           </button>
+          <button
+            type="submit"
+            class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between border-b border-neutral-700 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+          >
+            <div class="flex items-center gap-2">
+              <SvgGithub />
+              <div class="text-xl font-semibold">
+                <span>GitHub</span>
+              </div>
+            </div>
+            <span class="text-default-font/60">
+              {{
+                `${extension.platforms.BUILTBYBIT.price} ${extension.platforms.BUILTBYBIT.currency}`
+              }}
+            </span>
+          </button>
+
+          <div class="bg-stripes h-full w-full" />
         </div>
       </div>
     </div>

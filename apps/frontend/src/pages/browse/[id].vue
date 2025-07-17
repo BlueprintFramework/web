@@ -4,52 +4,42 @@
       class="overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
     >
       <div class="flex divide-x divide-neutral-700">
-        <div class="w-full">
-          <NuxtImg
-            :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
-            class="h-100 w-full border-b border-neutral-700 object-cover"
-          />
-          <div class="w-full space-y-3 p-8">
+        <NuxtImg
+          :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
+          class="h-125 w-full object-cover"
+        />
+        <div
+          class="min-w-100 flex flex-col justify-between divide-y divide-neutral-700"
+        >
+          <div class="p-4">
             <h1 class="truncate">
               {{ extension.name }}
             </h1>
             <p class="text-default-font/75 text-lg">
               {{ extension.summary }}
             </p>
-            <div class="text-default-font/60 flex gap-3">
-              <p class="flex items-center gap-2">
-                <Icon name="memory:account" />
-                {{ extension.author.name }}
-              </p>
-              <span>•</span>
-              <p class="flex items-center gap-2">
-                <Icon name="memory:chart-bar" />
-                {{ extension.stats.panels }}
-              </p>
-            </div>
           </div>
-        </div>
-        <div class="min-w-100">
-          <a
-            v-for="platform in availablePlatforms"
-            :key="platform.key"
-            :href="platform.data.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between border-b border-neutral-700 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
-          >
-            <div class="flex items-center gap-2">
-              <component :is="platform.icon" />
-              <div class="text-xl font-semibold">
-                <span>{{ platform.name }}</span>
-              </div>
-            </div>
-            <span class="text-default-font/60">
-              {{ formatPrice(platform.data.price, platform.data.currency) }}
-            </span>
-          </a>
-
           <div class="bg-stripes h-full w-full" />
+          <div class="divide-y divide-neutral-700">
+            <a
+              v-for="platform in availablePlatforms"
+              :key="platform.key"
+              :href="platform.data.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+            >
+              <div class="flex items-center gap-2">
+                <component :is="platform.icon" />
+                <div class="text-xl font-semibold">
+                  <span>{{ platform.name }}</span>
+                </div>
+              </div>
+              <span class="text-default-font/60">
+                {{ formatPrice(platform.data.price, platform.data.currency) }}
+              </span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

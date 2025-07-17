@@ -45,10 +45,10 @@
     </div>
 
     <div
-      class="flex divide-x divide-neutral-700 rounded-3xl border border-neutral-700 bg-neutral-950"
+      class="flex divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
     >
       <div class="w-full">
-        <div class="p-4">e</div>
+        <div class="bg-stripes h-full w-full p-4"></div>
       </div>
       <div class="min-w-100 max-w-100">
         <div class="space-y-4 p-4">

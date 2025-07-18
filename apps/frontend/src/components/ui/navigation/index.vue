@@ -54,64 +54,39 @@
           'opacity-100': mobileNavigation,
         }"
       >
-        <NuxtLink
+        <UiNavigationMobilelink
           to="/browse"
-          class="group flex items-center justify-between gap-2 opacity-0 transition-all delay-100 duration-500"
-          :class="{
-            'opacity-100': mobileNavigation,
-          }"
-        >
-          <span class="group-hover:text-brand-50 text-3xl transition-colors"
-            >Extensions</span
-          >
-        </NuxtLink>
-        <NuxtLink
+          label="Extensions"
+          :delay="100"
+          :visible="mobileNavigation"
+        />
+        <UiNavigationMobilelink
           to="/guides"
-          class="hover:text-brand-50 group flex items-center justify-between gap-2 opacity-0 transition-all delay-150 duration-500"
-          :class="{
-            'opacity-100': mobileNavigation,
-          }"
-        >
-          <span class="group-hover:text-brand-50 text-3xl transition-colors"
-            >Guides</span
-          >
-        </NuxtLink>
-        <NuxtLink
+          label="Guides"
+          :delay="150"
+          :visible="mobileNavigation"
+        />
+        <UiNavigationMobilelink
           to="/docs"
-          class="hover:text-brand-50 group flex items-center justify-between gap-2 opacity-0 transition-all delay-200 duration-500"
-          :class="{
-            'opacity-100': mobileNavigation,
-          }"
-        >
-          <span class="group-hover:text-brand-50 text-3xl transition-colors"
-            >Documentation</span
-          >
-        </NuxtLink>
+          label="Documentation"
+          :delay="200"
+          :visible="mobileNavigation"
+        />
 
         <div class="py-5" />
 
-        <NuxtLink
+        <UiNavigationMobilelink
           to="/auth"
-          class="hover:text-brand-50 delay-250 group flex items-center justify-between gap-2 opacity-0 transition-all duration-500"
-          :class="{
-            'opacity-100': mobileNavigation,
-          }"
-        >
-          <span class="group-hover:text-brand-50 text-3xl transition-colors"
-            >Log in</span
-          >
-        </NuxtLink>
-        <NuxtLink
-          to="/auth"
-          class="hover:text-brand-50 group flex items-center justify-between gap-2 opacity-0 transition-all delay-300 duration-500"
-          :class="{
-            'opacity-100': mobileNavigation,
-          }"
-        >
-          <span class="group-hover:text-brand-50 text-3xl transition-colors"
-            >Sign up</span
-          >
-        </NuxtLink>
+          label="Log in"
+          :delay="250"
+          :visible="mobileNavigation"
+        />
+        <UiNavigationMobilelink
+          to="/auth/register"
+          label="Sign up"
+          :delay="300"
+          :visible="mobileNavigation"
+        />
       </div>
     </div>
 

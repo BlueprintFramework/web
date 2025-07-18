@@ -92,7 +92,9 @@
 
     <div
       class="bg-linear-to-r relative top-0 h-[1px] w-full from-neutral-800 via-neutral-500 to-neutral-800 transition-all duration-500 md:static"
-      :class="{ 'top-[calc(100dvh_-_var(--nav-offset))]': mobileNavigation }"
+      :class="{
+        'top-[calc(100dvh_-_var(--nav-offset))]': mobileNavigation,
+      }"
     />
   </nav>
   <div class="h-13"></div>

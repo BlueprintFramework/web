@@ -24,7 +24,11 @@
             <a
               v-for="platform in availablePlatforms"
               :key="platform.key"
-              :href="platform.data.url"
+              :href="
+                platform.data.url +
+                (platform.key == 'BUILTBYBIT' ? '?ref=581299&' : '?') +
+                `utm_source=blueprint.zip&utm_medium=listing&utm_content=blueprint_${extension.identifier}`
+              "
               target="_blank"
               rel="noopener noreferrer"
               class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"

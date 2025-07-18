@@ -39,11 +39,18 @@
       class="divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
     >
       <div class="flex justify-between">
-        <div class="flex items-center gap-1.5 p-4 text-2xl font-bold">
+        <div class="hidden items-center gap-1.5 p-4 text-2xl font-bold sm:flex">
           <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
           <span>{{ category }}</span>
         </div>
-        <div class="border-s border-neutral-700">
+        <NuxtLink
+          :to="`/guides/list/${categoryData.key}`"
+          class="hover:text-brand-50 flex w-full items-center gap-1.5 p-4 text-2xl font-bold transition-colors hover:bg-neutral-900 sm:hidden"
+        >
+          <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
+          <span>{{ category }}</span>
+        </NuxtLink>
+        <div class="hidden border-s border-neutral-700 sm:inline">
           <NuxtLink :to="`/guides/list/${categoryData.key}`">
             <button
               type="submit"

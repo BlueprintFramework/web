@@ -7,7 +7,7 @@
   >
     <div class="container py-3">
       <div class="relative flex items-center justify-between">
-        <BrandWordmark />
+        <BrandWordmark @click="mobileNavigation = false" />
 
         <div class="hidden items-center justify-between gap-3 text-sm md:flex">
           <UiNavigationLink to="/browse" label="Extensions" />
@@ -48,6 +48,7 @@
       </div>
 
       <div
+        @click="mobileNavigation = false"
         class="absolute pt-10 opacity-0 transition-opacity md:hidden"
         :class="{
           'opacity-100': mobileNavigation,
@@ -93,12 +94,6 @@
   </nav>
   <div class="h-13"></div>
 </template>
-
-<style>
-:root {
-  --nav-offset: 3.25rem;
-}
-</style>
 
 <script setup lang="ts">
 const mobileNavigation = ref(false)

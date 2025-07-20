@@ -4,7 +4,8 @@
     <pre class="text-2xl font-bold">[* *  ]</pre>
   </div>
   <div class="flex flex-row gap-4">
-    <div class="w-75">
+    <!-- Desktop filters -->
+    <div class="w-75 hidden lg:block">
       <div
         class="sticky top-[calc(var(--nav-offset)+1rem)] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
       >
@@ -95,7 +96,8 @@
         </div>
       </div>
     </div>
-    <div class="w-[calc(100%-18.75rem)]">
+
+    <div class="w-full lg:w-[calc(100%-18.75rem)]">
       <div
         class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
@@ -131,6 +133,30 @@
         </div>
         <div class="min-h-5 w-[calc(400%+3px)] bg-neutral-950">
           <div class="bg-stripes h-full w-full" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile filters -->
+  <div class="fixed bottom-0 left-0 z-10 m-0 w-full">
+    <div class="container">
+      <div
+        class="rounded-t-3xl border border-b-0 border-neutral-700 bg-neutral-950"
+      >
+        <div class="flex">
+          <div class="w-full p-4">
+            <UiFormInput
+              v-model="form.search"
+              name="search"
+              type="text"
+              :rules="[]"
+              leading-icon="memory:search"
+              placeholder="Search.."
+              @validate="void"
+            />
+          </div>
+          <div class="p-4"></div>
         </div>
       </div>
     </div>
@@ -203,3 +229,13 @@ const filteredAndSortedExtensions = computed(() => {
   return filtered
 })
 </script>
+
+<style>
+@reference "~/assets/css/main.css";
+
+@media (max-width: 1024px) {
+  :root {
+    --extend-footer: 5rem;
+  }
+}
+</style>

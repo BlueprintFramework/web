@@ -16,6 +16,11 @@ h3 {
   @apply h3;
 }
 
+:root {
+  --nav-offset: 3.25rem;
+  --extend-footer: 0;
+}
+
 .text-link {
   @apply hover:text-brand-50 underline transition-colors;
 }

@@ -1,7 +1,7 @@
 <template>
   <div
     :class="props.class"
-    class="flex items-center justify-between text-neutral-500"
+    class="flex items-center justify-between pb-[var(--extend-footer)] text-neutral-500"
   >
     <div class="flex gap-3">
       <BrandEmblem />

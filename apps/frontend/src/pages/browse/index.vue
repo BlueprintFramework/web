@@ -22,76 +22,7 @@
         </div>
         <div class="divide-y divide-neutral-700">
           <div class="space-y-4 p-4">
-            <div
-              class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
-            >
-              <div class="flex items-center gap-1.5 p-2 font-bold">
-                <Icon
-                  name="memory:format-text-single-line"
-                  :size="22"
-                  mode="svg"
-                  class="block"
-                />
-                <span>Sort by</span>
-              </div>
-              <div class="space-y-2 p-2">
-                <button
-                  v-for="sortOption in sortOptions"
-                  :key="sortOption.value"
-                  @click="form.sortBy = sortOption.value"
-                  class="hover:text-brand-50 text-default-font/60 block w-full cursor-pointer text-start transition-colors"
-                  :class="{
-                    '!text-default-font': form.sortBy === sortOption.value,
-                  }"
-                >
-                  <span>{{ sortOption.label }}</span>
-                </button>
-              </div>
-            </div>
-            <div>
-              <div
-                @click="form.showExtensions = !form.showExtensions"
-                class="hover:text-brand-50 cursor-pointer rounded-t-2xl border border-neutral-700 p-2 transition-colors"
-                :class="
-                  form.showExtensions
-                    ? 'bg-neutral-900'
-                    : 'text-default-font/50 bg-neutral-950'
-                "
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <Icon name="memory:cube" :size="24" />
-                    <span>Extensions</span>
-                  </div>
-                  <Icon
-                    name="memory:check"
-                    class="text-default-font transition-opacity"
-                    :class="form.showExtensions ? 'opacity-100' : 'opacity-0'"
-                  />
-                </div>
-              </div>
-              <div
-                @click="form.showThemes = !form.showThemes"
-                class="hover:text-brand-50 cursor-pointer rounded-b-2xl border border-t-0 border-neutral-700 p-2 transition-colors"
-                :class="
-                  form.showThemes
-                    ? 'bg-neutral-900'
-                    : 'text-default-font/50 bg-neutral-950'
-                "
-              >
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-1.5">
-                    <Icon name="memory:image" :size="24" />
-                    <span>Themes</span>
-                  </div>
-                  <Icon
-                    name="memory:check"
-                    class="text-default-font transition-opacity"
-                    :class="form.showThemes ? 'opacity-100' : 'opacity-0'"
-                  />
-                </div>
-              </div>
-            </div>
+            <UiBrowseFilters :form="form" />
           </div>
         </div>
       </div>
@@ -139,12 +70,15 @@
   </div>
 
   <!-- Mobile filters -->
-  <div class="fixed bottom-0 left-0 z-10 m-0 w-full">
+  <div
+    class="fixed bottom-0 left-0 z-10 m-0 w-full lg:hidden"
+    ref="drawerContainer"
+  >
     <div class="container">
       <div
-        class="rounded-t-3xl border border-b-0 border-neutral-700 bg-neutral-950"
+        class="overflow-hidden rounded-t-3xl border border-b-0 border-neutral-700 bg-neutral-950"
       >
-        <div class="flex">
+        <div class="flex divide-x divide-neutral-700">
           <div class="w-full p-4">
             <UiFormInput
               v-model="form.search"
@@ -156,7 +90,28 @@
               @validate="void"
             />
           </div>
-          <div class="p-4"></div>
+          <button
+            class="p-4 transition-colors hover:bg-neutral-900"
+            @click="toggleDrawer"
+          >
+            <Icon
+              name="memory:chevron-up"
+              mode="svg"
+              :size="28"
+              class="transition-transform duration-300"
+              :class="{ 'rotate-180': drawer.open }"
+            />
+          </button>
+        </div>
+
+        <div
+          ref="drawerContent"
+          class="overflow-hidden duration-300"
+          :style="{ height: drawer.height }"
+        >
+          <div class="space-y-4 border-t border-neutral-700 p-4">
+            <UiBrowseFilters :form="form" />
+          </div>
         </div>
       </div>
     </div>
@@ -174,18 +129,19 @@ const { data: extensions, pending } = await useAsyncData<Extension[]>(
   }
 )
 
+const drawerContainer = ref<HTMLElement>()
+const drawerContent = ref<HTMLElement>()
+const drawer = reactive({
+  open: false,
+  height: '0px',
+})
+
 const form = ref({
   search: '',
   sortBy: 'popularity',
   showExtensions: true,
   showThemes: true,
 })
-
-const sortOptions = [
-  { value: 'popularity', label: 'Most Popular' },
-  { value: 'name', label: 'Name (A-Z)' },
-  { value: 'created', label: 'Newest First' },
-]
 
 const filteredAndSortedExtensions = computed(() => {
   if (!extensions.value) return []
@@ -228,11 +184,43 @@ const filteredAndSortedExtensions = computed(() => {
 
   return filtered
 })
+
+const toggleDrawer = async () => {
+  if (!drawerContent.value) return
+
+  if (drawer.open) {
+    drawer.height = '0px'
+    drawer.open = false
+  } else {
+    drawer.open = true
+
+    await nextTick()
+
+    const contentHeight = drawerContent.value.scrollHeight
+    drawer.height = `${contentHeight}px`
+  }
+}
+
+onMounted(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      drawerContainer.value &&
+      !drawerContainer.value.contains(event.target as Node) &&
+      drawer.open
+    ) {
+      toggleDrawer()
+    }
+  }
+
+  document.addEventListener('click', handleClickOutside)
+
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+  })
+})
 </script>
 
-<style>
-@reference "~/assets/css/main.css";
-
+<style scoped>
 @media (max-width: 1024px) {
   :root {
     --extend-footer: 5rem;

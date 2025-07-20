@@ -8,7 +8,6 @@
     <div class="container py-3">
       <div class="relative flex items-center justify-between">
         <BrandWordmark @click="mobileNavigation = false" />
-
         <div class="hidden items-center justify-between gap-3 text-sm md:flex">
           <UiNavigationLink to="/browse" label="Extensions" />
           <UiNavigationLink to="/guides" label="Guides" />
@@ -31,7 +30,6 @@
             </NuxtLink>
           </div>
         </div>
-
         <button
           @click="mobileNavigation = !mobileNavigation"
           alt="Toggle navigation menu"
@@ -47,44 +45,48 @@
         </button>
       </div>
 
-      <div
-        @click="mobileNavigation = false"
-        class="absolute pt-10 opacity-0 transition-opacity md:hidden"
-        :class="{
-          'opacity-100': mobileNavigation,
-        }"
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-4"
       >
-        <UiNavigationMobilelink
-          to="/browse"
-          label="Extensions"
-          :visible="mobileNavigation"
-        />
-        <UiNavigationMobilelink
-          to="/guides"
-          label="Guides"
-          :visible="mobileNavigation"
-        />
-        <UiNavigationMobilelink
-          to="/docs"
-          label="Documentation"
-          :visible="mobileNavigation"
-        />
-
-        <div class="py-5" />
-
-        <UiNavigationMobilelink
-          to="/auth"
-          label="Log in"
-          :visible="mobileNavigation"
-        />
-        <UiNavigationMobilelink
-          to="/auth/register"
-          label="Sign up"
-          :visible="mobileNavigation"
-        />
-      </div>
+        <div
+          v-show="mobileNavigation"
+          @click="mobileNavigation = false"
+          class="absolute pt-10 md:hidden"
+        >
+          <UiNavigationMobilelink
+            to="/browse"
+            label="Extensions"
+            :visible="mobileNavigation"
+          />
+          <UiNavigationMobilelink
+            to="/guides"
+            label="Guides"
+            :visible="mobileNavigation"
+          />
+          <UiNavigationMobilelink
+            to="/docs"
+            label="Documentation"
+            :visible="mobileNavigation"
+          />
+          <div class="py-5" />
+          <UiNavigationMobilelink
+            to="/auth"
+            label="Log in"
+            :visible="mobileNavigation"
+          />
+          <UiNavigationMobilelink
+            to="/auth/register"
+            label="Sign up"
+            :visible="mobileNavigation"
+          />
+        </div>
+      </Transition>
     </div>
-
     <div
       class="bg-linear-to-r relative top-0 h-[1px] w-full from-neutral-800 via-neutral-500 to-neutral-800 transition-all duration-500 md:static"
       :class="{
@@ -94,7 +96,14 @@
   </nav>
   <div class="h-13"></div>
 </template>
-
 <script setup lang="ts">
 const mobileNavigation = ref(false)
+
+watch(mobileNavigation, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
 </script>

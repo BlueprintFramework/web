@@ -71,7 +71,7 @@
 
   <!-- Mobile filters -->
   <div
-    class="fixed bottom-0 left-0 z-10 m-0 w-full lg:hidden"
+    class="z-15 fixed bottom-0 left-0 m-0 w-full lg:hidden"
     ref="drawerContainer"
   >
     <div class="container">
@@ -116,6 +116,21 @@
       </div>
     </div>
   </div>
+
+  <Transition
+    enter-active-class="transition-opacity duration-300"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-200"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      class="fixed left-0 top-0 z-10 h-full w-full bg-neutral-950/50"
+      @click="toggleDrawer()"
+      v-show="drawer.open"
+    />
+  </Transition>
 
   <UiGridbackground />
 </template>
@@ -200,27 +215,9 @@ const toggleDrawer = async () => {
     drawer.height = `${contentHeight}px`
   }
 }
-
-onMounted(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      drawerContainer.value &&
-      !drawerContainer.value.contains(event.target as Node) &&
-      drawer.open
-    ) {
-      toggleDrawer()
-    }
-  }
-
-  document.addEventListener('click', handleClickOutside)
-
-  onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside)
-  })
-})
 </script>
 
-<style scoped>
+<style>
 @media (max-width: 1024px) {
   :root {
     --extend-footer: 5rem;

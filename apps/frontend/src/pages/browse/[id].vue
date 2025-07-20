@@ -67,9 +67,9 @@
               <div class="flex items-center gap-1 font-bold">
                 <Icon name="pixelarticons:calendar-month" />
                 <div>
-                  Released on
+                  Released
                   <span class="text-default-font/60 font-normal">
-                    {{ formatDate(extension.created) }}
+                    <NuxtTime :datetime="extension.created" />
                   </span>
                 </div>
               </div>
@@ -148,7 +148,7 @@
                     </div>
                   </div>
                   <p class="text-default-font/60">
-                    {{ formatDate(version.created) }}
+                    <NuxtTime :datetime="version.created" relative />
                   </p>
                 </div>
               </div>
@@ -222,13 +222,6 @@ const formatPrice = (price: number, currency: string): string => {
   }
 
   return `${price.toFixed(2)} ${currency}`
-}
-
-const formatDate = (date: string): string => {
-  const parsed = new Date(Date.parse(date))
-  return new Intl.DateTimeFormat('en-GB', {
-    dateStyle: 'full',
-  }).format(parsed)
 }
 
 useSeoMeta({

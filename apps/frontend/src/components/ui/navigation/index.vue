@@ -7,7 +7,7 @@
   >
     <div class="container py-3">
       <div class="relative flex items-center justify-between">
-        <BrandWordmark @click="mobileNavigation = false" />
+        <BrandWordmark />
 
         <div class="hidden items-center justify-between gap-3 text-sm md:flex">
           <UiNavigationLink to="/browse" label="Extensions" />
@@ -48,7 +48,6 @@
       </div>
 
       <div
-        @click="mobileNavigation = false"
         class="absolute pt-10 opacity-0 transition-opacity md:hidden"
         :class="{
           'opacity-100': mobileNavigation,
@@ -57,19 +56,16 @@
         <UiNavigationMobilelink
           to="/browse"
           label="Extensions"
-          :delay="100"
           :visible="mobileNavigation"
         />
         <UiNavigationMobilelink
           to="/guides"
           label="Guides"
-          :delay="150"
           :visible="mobileNavigation"
         />
         <UiNavigationMobilelink
           to="/docs"
           label="Documentation"
-          :delay="200"
           :visible="mobileNavigation"
         />
 
@@ -78,13 +74,11 @@
         <UiNavigationMobilelink
           to="/auth"
           label="Log in"
-          :delay="250"
           :visible="mobileNavigation"
         />
         <UiNavigationMobilelink
           to="/auth/register"
           label="Sign up"
-          :delay="300"
           :visible="mobileNavigation"
         />
       </div>

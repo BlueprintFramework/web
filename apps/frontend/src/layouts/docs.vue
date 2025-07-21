@@ -17,13 +17,13 @@
 
   <!-- Mobile navigation button -->
   <div
-    class="fixed left-0 top-2.5 overflow-hidden rounded-e-3xl border border-l-0 border-neutral-700 bg-neutral-950"
+    class="fixed left-0 top-2.5 overflow-hidden rounded-e-full border border-l-0 border-neutral-700 bg-neutral-950"
   >
     <button
       @click="mobileVisible = true"
       class="hover:text-brand-50 p-2 pl-4 transition-colors hover:bg-neutral-900"
     >
-      <Icon name="memory:chevron-right" mode="svg" :size="28" />
+      <Icon name="pixelarticons:menu" mode="svg" :size="28" />
     </button>
   </div>
 
@@ -80,7 +80,7 @@
                   @click="mobileVisible = false"
                   class="hover:text-brand-50 p-4 transition-colors hover:bg-neutral-900"
                 >
-                  <Icon name="memory:chevron-left" mode="svg" :size="28" />
+                  <Icon name="pixelarticons:close" mode="svg" :size="28" />
                 </button>
                 <div class="flex w-full items-center justify-between p-4">
                   <NuxtLink

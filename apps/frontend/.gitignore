@@ -18,6 +18,7 @@ logs
 .fleet
 .idea
 .pnpm-workspace.yaml
+pnpm-workspace.yaml
 
 # Local env files
 .env

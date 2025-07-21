@@ -6,20 +6,26 @@
       <div class="flex divide-x divide-neutral-700">
         <NuxtImg
           :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
-          class="h-125 w-full object-cover"
+          class="max-h-125 hidden aspect-video w-full object-cover lg:block"
         />
         <div
-          class="min-w-100 max-w-100 flex flex-col justify-between divide-y divide-neutral-700"
+          class="lg:min-w-100 lg:max-w-100 flex w-full flex-col justify-between divide-y divide-neutral-700"
         >
           <div class="p-4">
-            <h1 class="truncate">
+            <h1 class="truncate !text-2xl lg:!text-3xl">
               {{ extension.name }}
             </h1>
-            <p class="text-default-font/75 text-lg">
+            <p class="text-default-font/75 text-md lg:text-lg">
               {{ extension.summary }}
             </p>
           </div>
-          <div class="bg-stripes h-full w-full" />
+          <div class="h-full w-full">
+            <div class="bg-stripes hidden h-full w-full lg:block" />
+            <NuxtImg
+              :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
+              class="max-h-125 block aspect-video w-full object-cover lg:hidden"
+            />
+          </div>
           <div class="divide-y divide-neutral-700">
             <a
               v-for="platform in availablePlatforms"
@@ -33,15 +39,15 @@
               rel="noopener noreferrer"
               class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
             >
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 truncate">
                 <component :is="platform.icon" />
-                <div class="text-xl font-semibold">
-                  <span>{{ platform.name }}</span>
+                <div class="truncate text-xl font-semibold">
+                  <p class="truncate">{{ platform.name }}</p>
                 </div>
               </div>
-              <span class="text-default-font/60">
+              <p class="text-default-font/60">
                 {{ formatPrice(platform.data.price, platform.data.currency) }}
-              </span>
+              </p>
             </a>
           </div>
         </div>
@@ -49,12 +55,14 @@
     </div>
 
     <div
-      class="flex divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+      class="flex flex-col divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:flex-row lg:divide-x"
     >
       <div class="w-full">
         <div class="bg-stripes h-full w-full p-4"></div>
       </div>
-      <div class="min-w-100 max-w-100">
+      <div
+        class="lg:min-w-100 lg:max-w-100 order-first border-b border-neutral-700 lg:order-last lg:border-b-0"
+      >
         <div class="space-y-4 p-4">
           <div
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"

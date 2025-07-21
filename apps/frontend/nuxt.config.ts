@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
     server: {
       proxy: {
-        '/api': 'https://api.blueprintframe.work',
+        '/api': 'localhost:8000',
       },
     },
   },

@@ -1,72 +1,160 @@
 <template>
+  <!-- Mobile overlay -->
+  <Transition
+    enter-active-class="transition-opacity duration-300"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-200"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-show="mobileVisible && !isDesktop"
+      @click="mobileVisible = false"
+      class="fixed left-0 top-0 z-40 h-screen w-screen bg-neutral-950/50 md:hidden"
+    />
+  </Transition>
+
+  <!-- Mobile navigation button -->
+  <div
+    class="fixed left-0 top-2.5 overflow-hidden rounded-e-3xl border border-l-0 border-neutral-700 bg-neutral-950"
+  >
+    <button
+      @click="mobileVisible = true"
+      class="hover:text-brand-50 p-2 pl-4 transition-colors hover:bg-neutral-900"
+    >
+      <Icon name="memory:chevron-right" mode="svg" :size="28" />
+    </button>
+  </div>
+
   <div class="flex">
-    <div class="flex">
-      <div class="w-76">
-        <div
-          class="w-76 scrollbar-none fixed z-10 h-full flex-col space-y-4 overflow-y-scroll bg-neutral-950"
+    <div class="fixed z-50 flex md:static">
+      <div class="md:w-76">
+        <Transition
+          enter-active-class="transition-all duration-300 ease-out"
+          enter-from-class="-translate-x-full"
+          enter-to-class="translate-x-0"
+          leave-active-class="transition-all duration-300 ease-in"
+          leave-from-class="translate-x-0"
+          leave-to-class="-translate-x-full"
         >
           <div
-            class="bg-linear-to-b sticky top-0 space-y-4 border-b border-neutral-700 from-neutral-950/50 to-transparent p-4 backdrop-blur-sm"
+            v-show="mobileVisible || isDesktop"
+            class="md:w-76 scrollbar-none fixed z-50 h-full max-w-md flex-col space-y-4 overflow-y-scroll border-r border-neutral-700 bg-neutral-950 md:max-w-[unset] md:border-none"
           >
-            <div class="flex items-center justify-between">
-              <BrandWordmark />
-              <NuxtLink
-                to="/docs"
-                class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
-                :class="{ '!text-default-font': route.path == '/docs' }"
-              >
-                Docs
-              </NuxtLink>
-            </div>
-            <UiFormInput
-              v-model="form.search"
-              name="search"
-              type="text"
-              :rules="[]"
-              leading-icon="memory:search"
-              placeholder="Search.."
-              @validate="void"
-            />
-          </div>
-          <div class="space-y-4 px-4 pb-4">
+            <!-- Desktop sidebar header -->
             <div
-              v-for="(categoryData, category) in filteredCategories"
-              :key="category"
-              class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
+              v-if="isDesktop"
+              class="bg-linear-to-b sticky top-0 space-y-4 border-b border-neutral-700 from-neutral-950/50 to-transparent p-4 backdrop-blur-sm"
             >
-              <div class="flex items-center gap-1.5 p-2 font-bold">
-                <Icon
-                  :name="categoryData.icon"
-                  :size="22"
-                  mode="svg"
-                  class="block"
-                />
-                <span>{{ category }}</span>
-              </div>
-              <div class="space-y-2 p-2">
+              <div class="flex items-center justify-between">
+                <BrandWordmark />
                 <NuxtLink
-                  v-for="doc in categoryData.docs"
-                  :key="doc.id"
-                  :to="doc.path"
-                  class="hover:text-brand-50 text-default-font/60 block w-full text-start transition-colors"
-                  :class="{
-                    '!text-default-font': route.path == doc.path,
-                  }"
+                  to="/docs"
+                  class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
+                  :class="{ '!text-default-font': route.path == '/docs' }"
                 >
-                  <span>{{ doc.title }}</span>
+                  Docs
                 </NuxtLink>
               </div>
+              <UiFormInput
+                v-model="form.search"
+                name="search"
+                type="text"
+                :rules="[]"
+                leading-icon="memory:search"
+                placeholder="Search.."
+                @validate="void"
+              />
+            </div>
+
+            <!-- Mobile sidebar header -->
+            <div
+              v-else
+              class="bg-linear-to-b sticky top-0 border-b border-neutral-700 from-neutral-950/50 to-transparent backdrop-blur-sm"
+            >
+              <div
+                class="flex divide-x divide-neutral-700 border-b border-neutral-700"
+              >
+                <button
+                  @click="mobileVisible = false"
+                  class="hover:text-brand-50 p-4 transition-colors hover:bg-neutral-900"
+                >
+                  <Icon name="memory:chevron-left" mode="svg" :size="28" />
+                </button>
+                <div class="flex w-full items-center justify-between p-4">
+                  <NuxtLink
+                    to="/"
+                    class="hover:text-brand-50 transition-colors"
+                  >
+                    <BrandEmblem />
+                  </NuxtLink>
+                  <NuxtLink
+                    to="/docs"
+                    class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
+                    :class="{ '!text-default-font': route.path == '/docs' }"
+                    @click="mobileVisible = false"
+                  >
+                    Docs
+                  </NuxtLink>
+                </div>
+              </div>
+              <div class="p-4">
+                <UiFormInput
+                  v-model="form.search"
+                  name="search"
+                  type="text"
+                  :rules="[]"
+                  leading-icon="memory:search"
+                  placeholder="Search.."
+                  @validate="void"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-4 px-4 pb-4">
+              <div
+                v-for="(categoryData, category) in filteredCategories"
+                :key="category"
+                class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
+              >
+                <div class="flex items-center gap-1.5 p-2 font-bold">
+                  <Icon
+                    :name="categoryData.icon"
+                    :size="22"
+                    mode="svg"
+                    class="block"
+                  />
+                  <span>{{ category }}</span>
+                </div>
+                <div class="space-y-2 p-2">
+                  <NuxtLink
+                    v-for="doc in categoryData.docs"
+                    :key="doc.id"
+                    :to="doc.path"
+                    class="hover:text-brand-50 text-default-font/60 block w-full text-start transition-colors"
+                    :class="{
+                      '!text-default-font': route.path == doc.path,
+                    }"
+                    @click="mobileVisible = false"
+                  >
+                    <span>{{ doc.title }}</span>
+                  </NuxtLink>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </div>
-      <div>
+      <div class="hidden md:block">
         <div
           class="bg-linear-to-b fixed h-full w-[1px] from-neutral-800 via-neutral-500 to-neutral-800"
         />
       </div>
     </div>
-    <div class="max-w-200 container space-y-12 overflow-hidden px-4 py-12">
+    <div
+      class="max-w-200 container space-y-12 overflow-hidden px-4 pb-12 pt-16 md:pt-12"
+    >
       <slot />
     </div>
   </div>
@@ -80,8 +168,12 @@
 
 <script setup lang="ts">
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
+import { useMediaQuery } from '@vueuse/core'
 
 const route = useRoute()
+const isDesktop = useMediaQuery('(min-width: 768px)')
+
+const mobileVisible = ref(false)
 const form = ref({
   search: '',
 })

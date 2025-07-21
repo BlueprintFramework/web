@@ -39,7 +39,7 @@
       <NuxtLink
         v-if="nextDoc"
         :to="nextDoc.path"
-        class="hover:text-brand-50 overflow-hidden text-nowrap p-4 transition-colors hover:bg-neutral-900"
+        class="hover:text-brand-50 overflow-hidden p-4 transition-colors hover:bg-neutral-900"
       >
         <h3 class="mb-2 truncate text-lg font-medium">
           {{ nextDoc.title }}
@@ -51,7 +51,7 @@
           {{ nextDoc.description }}
         </p>
       </NuxtLink>
-      <div class="bg-stripes h-full w-full" v-else />
+      <div class="bg-stripes hidden h-full w-full sm:block" v-else />
     </div>
   </div>
 </template>

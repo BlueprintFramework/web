@@ -18,6 +18,7 @@
     "@nuxtjs/robots": "5.4.0",
     "@nuxtjs/sitemap": "7.4.3",
     "@tailwindcss/vite": "^4.1.11",
+    "@vueuse/core": "^13.5.0",
     "better-sqlite3": "^11.10.0",
     "nuxt": "^4.0.1",
     "nuxt-marquee": "1.0.4",

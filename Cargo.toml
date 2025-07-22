@@ -1,0 +1,9 @@
+[workspace]
+resolver = "2"
+members = ["apps/backend"]
+
+[profile.dev]
+debug = false
+
+[profile.release]
+debug = "limited"

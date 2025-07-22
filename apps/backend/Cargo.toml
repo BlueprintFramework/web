@@ -1,18 +1,12 @@
 [package]
 name = "api"
-version = "2.5.0"
+version = "3.0.0"
 edition = "2024"
-
-[profile.dev]
-debug = false
-
-[profile.release]
-debug = "limited"
 
 [dependencies]
 axum = "0.8.1"
 colored = "3.0.0"
-sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring-webpki", "postgres", "chrono", "uuid"] }
+sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring-webpki", "postgres", "chrono", "ipnetwork", "uuid"] }
 dotenvy = "0.15.7"
 rustis = "0.13.3"
 serde = { version = "1.0.218", features = ["derive"] }
@@ -30,3 +24,9 @@ sha2 = "0.10.8"
 sentry-tower = { version = "0.37.0", features = ["http", "axum-matched-path"] }
 sha1 = "0.10.6"
 tower = "0.5.2"
+include_dir = "0.7.4"
+infer = "0.19.0"
+rand = "0.9.2"
+validator = { version = "0.20.0", features = ["derive"] }
+tower-cookies = "0.11.0"
+lettre = { version = "0.11.17", default-features = false, features = ["builder", "pool", "smtp-transport", "tokio1-rustls-tls", "tokio1"] }

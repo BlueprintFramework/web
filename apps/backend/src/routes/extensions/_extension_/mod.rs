@@ -8,7 +8,7 @@ mod index {
     use axum::{extract::Path, http::StatusCode};
 
     #[utoipa::path(get, path = "/", responses(
-        (status = OK, body = Extension),
+        (status = OK, body = crate::models::extension::ApiExtension),
         (status = NOT_FOUND, body = inline(ApiError)),
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
@@ -33,17 +33,16 @@ mod index {
             })
             .await;
 
-        if extension.is_none() {
-            return (
+        match extension {
+            Some(extension) => (
+                StatusCode::OK,
+                axum::Json(serde_json::to_value(extension.into_api_object()).unwrap()),
+            ),
+            None => (
                 StatusCode::NOT_FOUND,
                 axum::Json(serde_json::to_value(ApiError::new(&["extension not found"])).unwrap()),
-            );
+            ),
         }
-
-        (
-            StatusCode::OK,
-            axum::Json(serde_json::to_value(&extension).unwrap()),
-        )
     }
 }
 

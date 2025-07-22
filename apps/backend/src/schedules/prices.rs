@@ -174,7 +174,12 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
                     .url
                     .split('.')
                     .next_back()
-                    .unwrap()
+                    .ok_or_else(|| {
+                        std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            format!("Invalid BBB URL: {}", key.url.bright_cyan()),
+                        )
+                    })?
                     .trim_end_matches(|c: char| !c.is_ascii_digit())
                     .parse()
                     .unwrap_or_default();
@@ -376,13 +381,15 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
 
 pub async fn run(state: State) {
     loop {
-        if let Err(e) = run_inner(state.clone()).await {
+        if let Err(err) = run_inner(state.clone()).await {
+            sentry::capture_error(err.as_ref());
+
             crate::logger::log(
                 crate::logger::LoggerLevel::Error,
                 format!(
                     "{} {}",
                     "failed to update extension prices".red(),
-                    e.to_string().red()
+                    err.to_string().red()
                 ),
             );
         }

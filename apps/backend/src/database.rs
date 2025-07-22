@@ -1,6 +1,5 @@
 use colored::Colorize;
 use sqlx::postgres::PgPoolOptions;
-use std::sync::Arc;
 
 pub struct Database {
     write: sqlx::PgPool,
@@ -8,7 +7,7 @@ pub struct Database {
 }
 
 impl Database {
-    pub async fn new(env: Arc<crate::env::Env>) -> Self {
+    pub async fn new(env: &crate::env::Env) -> Self {
         let start = std::time::Instant::now();
 
         let instance = Self {
@@ -65,7 +64,7 @@ impl Database {
             tokio::spawn(async move {
                 let start = std::time::Instant::now();
 
-                sqlx::migrate!("./migrations").run(&writer).await.unwrap();
+                sqlx::migrate!("../../migrations").run(&writer).await.unwrap();
 
                 crate::logger::log(
                     crate::logger::LoggerLevel::Info,
@@ -86,19 +85,33 @@ impl Database {
 
                     let start = std::time::Instant::now();
 
-                    sqlx::query("REFRESH MATERIALIZED VIEW mv_extension_stats")
+                    match sqlx::query("REFRESH MATERIALIZED VIEW mv_extension_stats")
                         .execute(&writer)
                         .await
-                        .unwrap();
+                    {
+                        Ok(_) => {
+                            crate::logger::log(
+                                crate::logger::LoggerLevel::Info,
+                                format!(
+                                    "{} views refreshed {}",
+                                    "database".bright_cyan(),
+                                    format!("({}ms)", start.elapsed().as_millis()).bright_black()
+                                ),
+                            );
+                        }
+                        Err(err) => {
+                            sentry::capture_error(&err);
 
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Info,
-                        format!(
-                            "{} views refreshed {}",
-                            "database".bright_cyan(),
-                            format!("({}ms)", start.elapsed().as_millis()).bright_black()
-                        ),
-                    );
+                            crate::logger::log(
+                                crate::logger::LoggerLevel::Error,
+                                format!(
+                                    "{} {}",
+                                    "failed to refresh database views".red(),
+                                    err.to_string().red()
+                                ),
+                            );
+                        }
+                    }
                 }
             });
         }

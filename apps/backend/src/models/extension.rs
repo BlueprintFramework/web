@@ -1,16 +1,26 @@
-use super::{BaseModel, author::Author};
+use super::{BaseModel, user::User};
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow, prelude::Type, types::chrono::NaiveDateTime};
 use std::collections::BTreeMap;
 use utoipa::ToSchema;
 
 #[derive(ToSchema, Serialize, Deserialize, Type)]
-#[serde(rename_all = "UPPERCASE")]
-#[schema(rename_all = "UPPERCASE")]
+#[serde(rename_all = "lowercase")]
+#[schema(rename_all = "lowercase")]
 #[sqlx(type_name = "extension_type", rename_all = "UPPERCASE")]
 pub enum ExtensionType {
     Theme,
     Extension,
+}
+
+#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[serde(rename_all = "lowercase")]
+#[schema(rename_all = "lowercase")]
+#[sqlx(type_name = "extension_status", rename_all = "UPPERCASE")]
+pub enum ExtensionStatus {
+    Approved,
+    Ready,
+    Pending,
 }
 
 #[derive(ToSchema, Serialize, Deserialize)]
@@ -36,20 +46,22 @@ pub struct ExtensionStats {
     pub panels: i64,
 }
 
-#[derive(ToSchema, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Extension {
     pub id: i32,
-    pub author: Author,
+    pub author: User,
 
     pub r#type: ExtensionType,
+    pub status: ExtensionStatus,
+    pub deny_reason: Option<String>,
+    pub unlisted: bool,
 
     pub name: String,
     pub identifier: String,
     pub summary: String,
+    pub description: Option<String>,
 
-    #[schema(inline)]
     pub platforms: BTreeMap<String, ExtensionPlatform>,
-    #[schema(inline)]
     pub versions: Vec<ExtensionVersion>,
 
     pub keywords: Vec<String>,
@@ -57,7 +69,6 @@ pub struct Extension {
 
     pub created: NaiveDateTime,
 
-    #[schema(inline)]
     pub stats: ExtensionStats,
 }
 
@@ -76,6 +87,18 @@ impl BaseModel for Extension {
                 format!("{}type", prefix.unwrap_or_default()),
             ),
             (
+                format!("{}.status", table),
+                format!("{}status", prefix.unwrap_or_default()),
+            ),
+            (
+                format!("{}.deny_reason", table),
+                format!("{}deny_reason", prefix.unwrap_or_default()),
+            ),
+            (
+                format!("{}.unlisted", table),
+                format!("{}unlisted", prefix.unwrap_or_default()),
+            ),
+            (
                 format!("{}.name", table),
                 format!("{}name", prefix.unwrap_or_default()),
             ),
@@ -86,6 +109,10 @@ impl BaseModel for Extension {
             (
                 format!("{}.summary", table),
                 format!("{}summary", prefix.unwrap_or_default()),
+            ),
+            (
+                format!("{}.description", table),
+                format!("{}description", prefix.unwrap_or_default()),
             ),
             (
                 format!("{}.platforms", table),
@@ -113,7 +140,7 @@ impl BaseModel for Extension {
             ),
         ]);
 
-        columns.extend(Author::columns(Some("author_"), None));
+        columns.extend(User::columns(Some("author_"), None));
 
         columns
     }
@@ -124,11 +151,15 @@ impl BaseModel for Extension {
 
         Self {
             id: row.get(format!("{}id", prefix).as_str()),
-            author: Author::map(Some("author_"), row),
+            author: User::map(Some("author_"), row),
             r#type: row.get(format!("{}type", prefix).as_str()),
+            status: row.get(format!("{}status", prefix).as_str()),
+            deny_reason: row.get(format!("{}deny_reason", prefix).as_str()),
+            unlisted: row.get(format!("{}unlisted", prefix).as_str()),
             name: row.get(format!("{}name", prefix).as_str()),
             identifier: row.get(format!("{}identifier", prefix).as_str()),
             summary: row.get(format!("{}summary", prefix).as_str()),
+            description: row.get(format!("{}description", prefix).as_str()),
             platforms: serde_json::from_value(row.get(format!("{}platforms", prefix).as_str()))
                 .unwrap_or_default(),
             versions: serde_json::from_value(row.get(format!("{}versions", prefix).as_str()))
@@ -153,7 +184,6 @@ impl Extension {
         versions
     }
 
-    #[inline]
     pub async fn all(database: &crate::database::Database) -> Vec<Self> {
         sqlx::query(&format!(
             r#"
@@ -176,7 +206,6 @@ impl Extension {
         .collect()
     }
 
-    #[inline]
     pub async fn by_identifier(
         database: &crate::database::Database,
         identifier: &str,
@@ -201,7 +230,6 @@ impl Extension {
         data.map(|data| Self::map(None, &data)).ok()
     }
 
-    #[inline]
     pub async fn by_id(database: &crate::database::Database, id: i32) -> Option<Self> {
         let data = sqlx::query(&format!(
             r#"
@@ -222,4 +250,54 @@ impl Extension {
 
         data.map(|data| Self::map(None, &data)).ok()
     }
+
+    #[inline]
+    pub fn into_api_object(self) -> ApiExtension {
+        ApiExtension {
+            id: self.id,
+            author: self.author.into_api_object(),
+            r#type: self.r#type,
+            status: self.status,
+            unlisted: self.unlisted,
+            name: self.name,
+            identifier: self.identifier,
+            summary: self.summary,
+            description: self.description,
+            platforms: self.platforms,
+            versions: self.versions,
+            keywords: self.keywords,
+            banner: self.banner,
+            stats: self.stats,
+            created: self.created.and_utc(),
+        }
+    }
+}
+
+#[derive(ToSchema, Serialize)]
+#[schema(title = "Extension")]
+pub struct ApiExtension {
+    pub id: i32,
+    pub author: super::user::ApiUser,
+
+    pub r#type: ExtensionType,
+    pub status: ExtensionStatus,
+    pub unlisted: bool,
+
+    pub name: String,
+    pub identifier: String,
+    pub summary: String,
+    pub description: Option<String>,
+
+    #[schema(inline)]
+    pub platforms: BTreeMap<String, ExtensionPlatform>,
+    #[schema(inline)]
+    pub versions: Vec<ExtensionVersion>,
+
+    pub keywords: Vec<String>,
+    pub banner: String,
+
+    #[schema(inline)]
+    pub stats: ExtensionStats,
+
+    pub created: chrono::DateTime<chrono::Utc>,
 }

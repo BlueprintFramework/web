@@ -21,7 +21,6 @@ pub struct Env {
     pub bind: String,
     pub port: u16,
 
-    pub internal_key: String,
     pub telemetry_ratelimit_per_day: i64,
 
     pub update_prices: bool,
@@ -98,10 +97,6 @@ impl Env {
                 .parse()
                 .unwrap(),
 
-            internal_key: std::env::var("INTERNAL_KEY")
-                .expect("INTERNAL_KEY is required")
-                .trim_matches('"')
-                .to_string(),
             telemetry_ratelimit_per_day: std::env::var("RATELIMIT_PER_DAY")
                 .unwrap_or("2".to_string())
                 .parse()

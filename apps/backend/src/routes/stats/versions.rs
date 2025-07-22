@@ -46,11 +46,14 @@ mod get {
                 .await
                 .unwrap();
 
-                let total = data.iter().map(|row| row.percentage.unwrap()).sum::<f64>();
+                let total = data
+                    .iter()
+                    .map(|row| row.percentage.unwrap_or_default())
+                    .sum::<f64>();
                 for row in data {
                     versions.insert(
                         row.version.unwrap(),
-                        (row.percentage.unwrap() / total * 10000.0).round() / 100.0,
+                        (row.percentage.unwrap_or_default() / total * 10000.0).round() / 100.0,
                     );
                 }
 

@@ -8,19 +8,19 @@ mod get {
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Serialize, Deserialize)]
-    struct Flag {
+    struct ResponseFlag {
         pub enabled: f64,
         pub disabled: f64,
     }
 
     #[utoipa::path(get, path = "/", responses(
-        (status = OK, body = inline(BTreeMap<String, Flag>)),
+        (status = OK, body = inline(BTreeMap<String, ResponseFlag>)),
     ))]
     pub async fn route(state: GetState) -> axum::Json<serde_json::Value> {
         let flags = state
             .cache
             .cached("stats::flags", 3600, || async {
-                let mut flags: BTreeMap<String, Flag> = BTreeMap::new();
+                let mut flags: BTreeMap<String, ResponseFlag> = BTreeMap::new();
 
                 let data = sqlx::query!(
                     r#"
@@ -54,9 +54,10 @@ mod get {
                 for row in data {
                     flags.insert(
                         row.flag.unwrap(),
-                        Flag {
-                            enabled: (row.percentage.unwrap() * 100.0).round() / 100.0,
-                            disabled: 100.0 - (row.percentage.unwrap() * 100.0).round() / 100.0,
+                        ResponseFlag {
+                            enabled: (row.percentage.unwrap_or_default() * 100.0).round() / 100.0,
+                            disabled: 100.0
+                                - (row.percentage.unwrap_or_default() * 100.0).round() / 100.0,
                         },
                     );
                 }

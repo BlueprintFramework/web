@@ -43,12 +43,14 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
 pub async fn run(state: State) {
     loop {
         if let Err(err) = run_inner(state.clone()).await {
+            sentry::capture_error(err.as_ref());
+
             crate::logger::log(
                 crate::logger::LoggerLevel::Error,
                 format!(
                     "{} {}",
-                    "github".black(),
-                    format!("failed to fetch releases: {}", err).bright_red()
+                    "failed to update github releases".red(),
+                    err.to_string().red()
                 ),
             );
         }

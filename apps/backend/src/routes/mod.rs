@@ -1,17 +1,14 @@
-mod author;
-mod extensions;
-mod latest;
-mod stats;
-mod telemetry;
-
-use axum::{http::HeaderMap, routing::post};
-use reqwest::StatusCode;
 use serde::Serialize;
-use sqlx::Row;
 use std::{sync::Arc, time::Instant};
 use tokio::sync::RwLock;
 use utoipa::ToSchema;
 use utoipa_axum::router::OpenApiRouter;
+
+mod extensions;
+mod latest;
+mod stats;
+mod telemetry;
+pub mod user;
 
 #[derive(ToSchema, Serialize)]
 pub struct ApiError<'a> {
@@ -58,32 +55,6 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/latest", latest::router(state))
         .nest("/extensions", extensions::router(state))
         .nest("/stats", stats::router(state))
-        .nest("/author", author::router(state))
-        .route(
-            "/__internal/sql",
-            post(
-                |state: GetState, headers: HeaderMap, body: String| async move {
-                    if headers.get("Authorization")
-                        != Some(&state.env.internal_key.parse().unwrap())
-                    {
-                        return (
-                            StatusCode::UNAUTHORIZED,
-                            axum::Json(ApiError::new(&["unauthorized"]).to_value()),
-                        );
-                    }
-
-                    let rows = sqlx::query(
-                        format!("SELECT json_agg(t) FROM ({}) t", body.replace(";", "")).as_str(),
-                    )
-                    .fetch_all(state.database.write())
-                    .await
-                    .unwrap();
-
-                    let data: serde_json::Value = rows.first().unwrap().get(0);
-
-                    (StatusCode::OK, axum::Json(data))
-                },
-            ),
-        )
+        .nest("/user", user::router(state))
         .with_state(state.clone())
 }

@@ -5,14 +5,13 @@ use rustis::commands::{SetCondition, SetExpiration, StringCommands};
 use rustis::resp::cmd;
 use serde::{Serialize, de::DeserializeOwned};
 use std::future::Future;
-use std::sync::Arc;
 
 pub struct Cache {
     pub client: Client,
 }
 
 impl Cache {
-    pub async fn new(env: Arc<crate::env::Env>) -> Self {
+    pub async fn new(env: &crate::env::Env) -> Self {
         let start = std::time::Instant::now();
 
         let instance = Self {

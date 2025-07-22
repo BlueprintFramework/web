@@ -7,7 +7,7 @@ mod get {
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Serialize, Deserialize)]
-    struct Extensions {
+    struct ResponseExtensions {
         total: i64,
         max: i32,
         average: f64,
@@ -20,7 +20,7 @@ mod get {
         standalone: i64,
 
         #[schema(inline)]
-        extensions: Extensions,
+        extensions: ResponseExtensions,
     }
 
     #[utoipa::path(get, path = "/", responses(
@@ -52,14 +52,14 @@ mod get {
                 .unwrap();
 
                 Response {
-                    total: data.total_panels.unwrap(),
-                    docker: data.docker_panels.unwrap(),
-                    standalone: data.total_panels.unwrap() - data.docker_panels.unwrap(),
+                    total: data.total_panels.unwrap_or_default(),
+                    docker: data.docker_panels.unwrap_or_default(),
+                    standalone: data.total_panels.unwrap_or_default() - data.docker_panels.unwrap_or_default(),
 
-                    extensions: Extensions {
-                        total: data.sum_extensions.unwrap(),
-                        max: data.max_extensions.unwrap(),
-                        average: (data.avg_extensions.unwrap() * 100.0).round() / 100.0,
+                    extensions: ResponseExtensions {
+                        total: data.sum_extensions.unwrap_or_default(),
+                        max: data.max_extensions.unwrap_or_default(),
+                        average: (data.avg_extensions.unwrap_or_default() * 100.0).round() / 100.0,
                     },
                 }
             })

@@ -1,3 +1,28 @@
+use crate::routes::ApiError;
+use axum::{
+    ServiceExt,
+    body::Body,
+    extract::{ConnectInfo, Request},
+    http::{HeaderMap, StatusCode},
+    middleware::Next,
+    response::Response,
+    routing::get,
+};
+use colored::Colorize;
+use include_dir::{Dir, include_dir};
+use sentry_tower::SentryHttpLayer;
+use serde_json::json;
+use sha2::Digest;
+use std::{net::SocketAddr, path::Path, sync::Arc, time::Instant};
+use tokio::sync::RwLock;
+use tower::Layer;
+use tower_cookies::CookieManagerLayer;
+use tower_http::{
+    catch_panic::CatchPanicLayer, cors::CorsLayer, normalize_path::NormalizePathLayer,
+};
+use utoipa::openapi::security::{ApiKey, ApiKeyValue, SecurityScheme};
+use utoipa_axum::router::OpenApiRouter;
+
 mod cache;
 mod database;
 mod env;
@@ -6,31 +31,11 @@ mod models;
 mod routes;
 mod schedules;
 mod telemetry;
-
-use axum::{
-    ServiceExt,
-    body::Body,
-    extract::Request,
-    http::{HeaderMap, StatusCode},
-    middleware::Next,
-    response::Response,
-    routing::get,
-};
-use colored::Colorize;
-use sentry_tower::SentryHttpLayer;
-use serde_json::json;
-use sha2::Digest;
-use std::{net::IpAddr, sync::Arc, time::Instant};
-use tokio::sync::RwLock;
-use tower::Layer;
-use tower_http::{
-    catch_panic::CatchPanicLayer, cors::CorsLayer, normalize_path::NormalizePathLayer,
-};
-use utoipa::openapi::security::{ApiKey, ApiKeyValue, SecurityScheme};
-use utoipa_axum::router::OpenApiRouter;
+mod utils;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const GIT_COMMIT: &str = env!("CARGO_GIT_COMMIT");
+const FRONTEND_ASSETS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/../frontend/.output/public");
 
 fn handle_panic(_err: Box<dyn std::any::Any + Send + 'static>) -> Response<Body> {
     logger::log(
@@ -49,10 +54,16 @@ fn handle_panic(_err: Box<dyn std::any::Any + Send + 'static>) -> Response<Body>
         .unwrap()
 }
 
-async fn handle_request(req: Request<Body>, next: Next) -> Result<Response, StatusCode> {
-    let ip = extract_ip(req.headers())
-        .map(|ip| ip.to_string())
-        .unwrap_or_else(|| "unknown".to_string());
+pub type GetIp = axum::extract::Extension<std::net::IpAddr>;
+
+async fn handle_request(
+    connect_info: ConnectInfo<SocketAddr>,
+    mut req: Request<Body>,
+    next: Next,
+) -> Result<Response, StatusCode> {
+    let ip = crate::utils::extract_ip(req.headers()).unwrap_or_else(|| connect_info.ip());
+
+    req.extensions_mut().insert(ip);
 
     logger::log(
         logger::LoggerLevel::Info,
@@ -103,27 +114,6 @@ async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {
     Ok(Response::from_parts(parts, Body::from(body_bytes)))
 }
 
-#[inline]
-pub fn extract_ip(headers: &HeaderMap) -> Option<IpAddr> {
-    let ip = headers
-        .get("x-real-ip")
-        .or_else(|| headers.get("x-forwarded-for"))
-        .map(|ip| ip.to_str().unwrap_or_default())
-        .unwrap_or_default();
-
-    if ip.is_empty() {
-        return None;
-    }
-
-    let ip = if ip.contains(',') {
-        ip.split(',').next().unwrap_or_default().trim().to_string()
-    } else {
-        ip.to_string()
-    };
-
-    ip.parse().ok()
-}
-
 #[tokio::main]
 async fn main() {
     let env = env::Env::parse();
@@ -138,9 +128,9 @@ async fn main() {
         },
     ));
 
+    let database = Arc::new(database::Database::new(&env).await);
+    let cache = Arc::new(cache::Cache::new(&env).await);
     let env = Arc::new(env);
-    let database = Arc::new(database::Database::new(env.clone()).await);
-    let cache = Arc::new(cache::Cache::new(env.clone()).await);
 
     let state = Arc::new(routes::AppState {
         start_time: Instant::now(),
@@ -150,7 +140,7 @@ async fn main() {
 
         database: database.clone(),
         cache: cache.clone(),
-        telemetry: telemetry::TelemetryLogger::new(database.clone(), cache.clone(), env.clone()),
+        telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),
         env,
     });
 
@@ -161,7 +151,18 @@ async fn main() {
             loop {
                 tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
-                state.telemetry.process().await.unwrap_or_default();
+                if let Err(err) = state.telemetry.process().await {
+                    sentry::capture_error(err.as_ref());
+
+                    crate::logger::log(
+                        crate::logger::LoggerLevel::Error,
+                        format!(
+                            "{} {}",
+                            "failed to process telemetry".red(),
+                            err.to_string().red()
+                        ),
+                    );
+                }
             }
         });
     }
@@ -174,17 +175,13 @@ async fn main() {
     let app = OpenApiRouter::new()
         .nest("/api", routes::router(&state))
         .route(
-            "/",
+            "/api",
             get(|| async move {
                 let mut headers = HeaderMap::new();
 
                 headers.insert("Content-Type", "text/html".parse().unwrap());
 
-                (
-                    StatusCode::OK,
-                    headers,
-                    include_str!("../static/index.html"),
-                )
+                (StatusCode::OK, headers, include_str!("../static/api.html"))
             }),
         )
         .route(
@@ -192,18 +189,56 @@ async fn main() {
             "/send/{panel}/{data}",
             get(|| async move { (StatusCode::OK, axum::Json(json!({}))) }),
         )
-        .fallback(|| async {
-            (
-                StatusCode::NOT_FOUND,
-                axum::Json(json!({
-                    "success": false,
-                    "errors": ["route not found"]
-                })),
-            )
+        .fallback(|req: Request<Body>| async move {
+            if !req.uri().path().starts_with("/api") {
+                let path = Path::new(&req.uri().path()[1..]);
+
+                let entry = match FRONTEND_ASSETS.get_entry(path) {
+                    Some(entry) => entry,
+                    None => FRONTEND_ASSETS.get_entry("404.html").unwrap(),
+                };
+
+                let file = match entry {
+                    include_dir::DirEntry::File(file) => file,
+                    include_dir::DirEntry::Dir(dir) => match dir.get_file("index.html") {
+                        Some(index_file) => index_file,
+                        None => FRONTEND_ASSETS.get_file("404.html").unwrap(),
+                    },
+                };
+
+                return Response::builder()
+                    .header(
+                        "Content-Type",
+                        match infer::get(file.contents()) {
+                            Some(kind) => kind.mime_type(),
+                            _ => match file.path().extension() {
+                                Some(ext) => match ext.to_str() {
+                                    Some("html") => "text/html",
+                                    Some("js") => "application/javascript",
+                                    Some("css") => "text/css",
+                                    Some("json") => "application/json",
+                                    _ => "application/octet-stream",
+                                },
+                                None => "application/octet-stream",
+                            },
+                        },
+                    )
+                    .body(Body::from(file.contents()))
+                    .unwrap();
+            }
+
+            Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .header("Content-Type", "application/json")
+                .body(Body::from(
+                    ApiError::new(&["route not found"]).to_value().to_string(),
+                ))
+                .unwrap()
         })
         .layer(CatchPanicLayer::custom(handle_panic))
         .layer(CorsLayer::very_permissive())
         .layer(axum::middleware::from_fn(handle_request))
+        .layer(CookieManagerLayer::new())
         .route_layer(axum::middleware::from_fn(handle_etag))
         .route_layer(SentryHttpLayer::with_transaction())
         .with_state(state.clone());
@@ -245,7 +280,7 @@ async fn main() {
 
     axum::serve(
         listener,
-        ServiceExt::<Request>::into_make_service(
+        ServiceExt::<Request>::into_make_service_with_connect_info::<SocketAddr>(
             NormalizePathLayer::trim_trailing_slash().layer(router),
         ),
     )

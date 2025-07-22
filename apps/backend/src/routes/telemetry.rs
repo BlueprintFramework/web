@@ -13,7 +13,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
             "/",
             post(
                 |state: GetState, headers: HeaderMap, axum::Json::<TelemetryData>(data)| async move {
-                    let ip = match crate::extract_ip(&headers) {
+                    let ip = match crate::utils::extract_ip(&headers) {
                         Some(ip) => ip,
                         None => {
                             return (

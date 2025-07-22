@@ -64,7 +64,10 @@ impl Database {
             tokio::spawn(async move {
                 let start = std::time::Instant::now();
 
-                sqlx::migrate!("../../migrations").run(&writer).await.unwrap();
+                sqlx::migrate!("../../migrations")
+                    .run(&writer)
+                    .await
+                    .unwrap();
 
                 crate::logger::log(
                     crate::logger::LoggerLevel::Info,

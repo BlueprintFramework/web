@@ -27,39 +27,39 @@ impl BaseModel for User {
 
         BTreeMap::from([
             (
-                format!("{}.id", table),
+                format!("{table}.id"),
                 format!("{}id", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.github_id", table),
+                format!("{table}.github_id"),
                 format!("{}github_id", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.name", table),
+                format!("{table}.name"),
                 format!("{}name", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.email", table),
+                format!("{table}.email"),
                 format!("{}email", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.email_pending", table),
+                format!("{table}.email_pending"),
                 format!("{}email_pending", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.email_verification", table),
+                format!("{table}.email_verification"),
                 format!("{}email_verification", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.support", table),
+                format!("{table}.support"),
                 format!("{}support", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.admin", table),
+                format!("{table}.admin"),
                 format!("{}admin", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.created", table),
+                format!("{table}.created"),
                 format!("{}created", prefix.unwrap_or_default()),
             ),
         ])
@@ -70,15 +70,15 @@ impl BaseModel for User {
         let prefix = prefix.unwrap_or_default();
 
         Self {
-            id: row.get(format!("{}id", prefix).as_str()),
-            github_id: row.get(format!("{}github_id", prefix).as_str()),
-            name: row.get(format!("{}name", prefix).as_str()),
-            email: row.get(format!("{}email", prefix).as_str()),
-            email_pending: row.get(format!("{}email_pending", prefix).as_str()),
-            email_verification: row.get(format!("{}email_verification", prefix).as_str()),
-            support: row.get(format!("{}support", prefix).as_str()),
-            admin: row.get(format!("{}admin", prefix).as_str()),
-            created: row.get(format!("{}created", prefix).as_str()),
+            id: row.get(format!("{prefix}id").as_str()),
+            github_id: row.get(format!("{prefix}github_id").as_str()),
+            name: row.get(format!("{prefix}name").as_str()),
+            email: row.get(format!("{prefix}email").as_str()),
+            email_pending: row.get(format!("{prefix}email_pending").as_str()),
+            email_verification: row.get(format!("{prefix}email_verification").as_str()),
+            support: row.get(format!("{prefix}support").as_str()),
+            admin: row.get(format!("{prefix}admin").as_str()),
+            created: row.get(format!("{prefix}created").as_str()),
         }
     }
 }

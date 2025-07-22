@@ -1,10 +1,10 @@
-mod _extension_;
-mod latest;
-
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod index {
+mod _extension_;
+mod latest;
+
+mod get {
     use crate::{models::extension::Extension, routes::GetState};
 
     #[utoipa::path(get, path = "/", responses(
@@ -31,8 +31,8 @@ mod index {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
+        .routes(routes!(get::route))
         .nest("/{extension}", _extension_::router(state))
         .nest("/latest", latest::router(state))
-        .routes(routes!(index::route))
         .with_state(state.clone())
 }

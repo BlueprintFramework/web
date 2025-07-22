@@ -79,55 +79,55 @@ impl BaseModel for Extension {
 
         let mut columns = BTreeMap::from([
             (
-                format!("{}.id", table),
+                format!("{table}.id"),
                 format!("{}id", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.type", table),
+                format!("{table}.type"),
                 format!("{}type", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.status", table),
+                format!("{table}.status"),
                 format!("{}status", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.deny_reason", table),
+                format!("{table}.deny_reason"),
                 format!("{}deny_reason", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.unlisted", table),
+                format!("{table}.unlisted"),
                 format!("{}unlisted", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.name", table),
+                format!("{table}.name"),
                 format!("{}name", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.identifier", table),
+                format!("{table}.identifier"),
                 format!("{}identifier", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.summary", table),
+                format!("{table}.summary"),
                 format!("{}summary", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.description", table),
+                format!("{table}.description"),
                 format!("{}description", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.platforms", table),
+                format!("{table}.platforms"),
                 format!("{}platforms", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.versions", table),
+                format!("{table}.versions"),
                 format!("{}versions", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.keywords", table),
+                format!("{table}.keywords"),
                 format!("{}keywords", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.banner", table),
+                format!("{table}.banner"),
                 format!("{}banner", prefix.unwrap_or_default()),
             ),
             (
@@ -135,7 +135,7 @@ impl BaseModel for Extension {
                 format!("{}stats", prefix.unwrap_or_default()),
             ),
             (
-                format!("{}.created", table),
+                format!("{table}.created"),
                 format!("{}created", prefix.unwrap_or_default()),
             ),
         ]);
@@ -150,24 +150,24 @@ impl BaseModel for Extension {
         let prefix = prefix.unwrap_or_default();
 
         Self {
-            id: row.get(format!("{}id", prefix).as_str()),
+            id: row.get(format!("{prefix}id").as_str()),
             author: User::map(Some("author_"), row),
-            r#type: row.get(format!("{}type", prefix).as_str()),
-            status: row.get(format!("{}status", prefix).as_str()),
-            deny_reason: row.get(format!("{}deny_reason", prefix).as_str()),
-            unlisted: row.get(format!("{}unlisted", prefix).as_str()),
-            name: row.get(format!("{}name", prefix).as_str()),
-            identifier: row.get(format!("{}identifier", prefix).as_str()),
-            summary: row.get(format!("{}summary", prefix).as_str()),
-            description: row.get(format!("{}description", prefix).as_str()),
-            platforms: serde_json::from_value(row.get(format!("{}platforms", prefix).as_str()))
+            r#type: row.get(format!("{prefix}type").as_str()),
+            status: row.get(format!("{prefix}status").as_str()),
+            deny_reason: row.get(format!("{prefix}deny_reason").as_str()),
+            unlisted: row.get(format!("{prefix}unlisted").as_str()),
+            name: row.get(format!("{prefix}name").as_str()),
+            identifier: row.get(format!("{prefix}identifier").as_str()),
+            summary: row.get(format!("{prefix}summary").as_str()),
+            description: row.get(format!("{prefix}description").as_str()),
+            platforms: serde_json::from_value(row.get(format!("{prefix}platforms").as_str()))
                 .unwrap_or_default(),
-            versions: serde_json::from_value(row.get(format!("{}versions", prefix).as_str()))
+            versions: serde_json::from_value(row.get(format!("{prefix}versions").as_str()))
                 .unwrap_or_default(),
-            keywords: row.get(format!("{}keywords", prefix).as_str()),
-            banner: row.get(format!("{}banner", prefix).as_str()),
-            stats: serde_json::from_value(row.get(format!("{}stats", prefix).as_str())).unwrap(),
-            created: row.get(format!("{}created", prefix).as_str()),
+            keywords: row.get(format!("{prefix}keywords").as_str()),
+            banner: row.get(format!("{prefix}banner").as_str()),
+            stats: serde_json::from_value(row.get(format!("{prefix}stats").as_str())).unwrap(),
+            created: row.get(format!("{prefix}created").as_str()),
         }
     }
 }
@@ -191,9 +191,7 @@ impl Extension {
             FROM extensions
             JOIN users ON extensions.author_id = users.id
             LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
-            WHERE
-                NOT unlisted
-                AND status = 'approved'
+            WHERE NOT unlisted AND status = 'APPROVED'
             ORDER BY id ASC
             "#,
             Self::columns_sql(None, None)

@@ -1,7 +1,7 @@
-mod versions;
-
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
+
+mod versions;
 
 mod get {
     use crate::{
@@ -12,7 +12,7 @@ mod get {
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = crate::models::extension::ApiExtension),
-        (status = NOT_FOUND, body = inline(ApiError)),
+        (status = NOT_FOUND, body = ApiError),
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
@@ -22,7 +22,7 @@ mod get {
     ) -> (StatusCode, axum::Json<serde_json::Value>) {
         let extension = state
             .cache
-            .cached(&format!("extensions::{}", extension), 300, || async {
+            .cached(&format!("extensions::{extension}"), 300, || async {
                 match extension.parse::<i32>() {
                     Ok(id) => {
                         if id < 1 {
@@ -62,7 +62,7 @@ mod get {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
-        .nest("/versions", versions::router(state))
         .routes(routes!(get::route))
+        .nest("/versions", versions::router(state))
         .with_state(state.clone())
 }

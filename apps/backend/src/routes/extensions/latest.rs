@@ -1,7 +1,7 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod index {
+mod get {
     use crate::{models::extension::Extension, routes::GetState};
     use axum::http::StatusCode;
     use indexmap::IndexMap;
@@ -35,6 +35,6 @@ mod index {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
-        .routes(routes!(index::route))
+        .routes(routes!(get::route))
         .with_state(state.clone())
 }

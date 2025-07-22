@@ -72,12 +72,12 @@ async fn handle_request(
             format!("HTTP {}", req.method()).green().bold(),
             req.uri().path().cyan(),
             if let Some(query) = req.uri().query() {
-                format!("?{}", query)
+                format!("?{query}")
             } else {
                 "".to_string()
             }
             .bright_cyan(),
-            format!("({})", ip).bright_black(),
+            format!("({ip})").bright_black(),
         ),
     );
 
@@ -122,7 +122,7 @@ async fn main() {
         env.sentry_url.clone(),
         sentry::ClientOptions {
             server_name: env.server_name.clone().map(|s| s.into()),
-            release: Some(format!("{}:{}", VERSION, GIT_COMMIT).into()),
+            release: Some(format!("{VERSION}:{GIT_COMMIT}").into()),
             traces_sample_rate: 1.0,
             ..Default::default()
         },
@@ -134,7 +134,7 @@ async fn main() {
 
     let state = Arc::new(routes::AppState {
         start_time: Instant::now(),
-        version: format!("{}:{}", VERSION, GIT_COMMIT),
+        version: format!("{VERSION}:{GIT_COMMIT}"),
 
         github_releases: RwLock::new(Vec::new()),
 

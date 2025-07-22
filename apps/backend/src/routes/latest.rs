@@ -15,7 +15,7 @@ mod get {
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = inline(Response)),
-        (status = NOT_FOUND, body = inline(ApiError)),
+        (status = NOT_FOUND, body = ApiError),
     ))]
     pub async fn route(state: GetState) -> (StatusCode, axum::Json<serde_json::Value>) {
         let releases = state.github_releases.read().await;

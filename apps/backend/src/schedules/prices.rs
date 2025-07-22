@@ -59,7 +59,7 @@ fn clean_version_name(name: &str) -> String {
         .to_string()
 }
 
-async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
+async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
     let start = std::time::Instant::now();
 
     let mut count = 0;
@@ -71,7 +71,7 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
             state
                 .client()
                 .get("https://www.sourcexchange.net/api/products/blueprint")
-                .header("Authorization", format!("Bearer {}", sxc_token))
+                .header("Authorization", format!("Bearer {sxc_token}"))
                 .send()
                 .await?
                 .json::<serde_json::Value>()
@@ -199,10 +199,9 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
                 match state
                     .client()
                     .get(format!(
-                        "https://api.builtbybit.com/v1/resources/{}",
-                        product_id
+                        "https://api.builtbybit.com/v1/resources/{product_id}"
                     ))
-                    .header("Authorization", format!("Private {}", bbb_token))
+                    .header("Authorization", format!("Private {bbb_token}"))
                     .send()
                     .await?
                     .json::<BbbProductResponse>()
@@ -212,10 +211,9 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
                         match state
                             .client()
                             .get(format!(
-                                "https://api.builtbybit.com/v1/resources/{}/versions",
-                                product_id
+                                "https://api.builtbybit.com/v1/resources/{product_id}/versions"
                             ))
-                            .header("Authorization", format!("Private {}", bbb_token))
+                            .header("Authorization", format!("Private {bbb_token}"))
                             .send()
                             .await?
                             .json::<BbbProductVersionResponse>()
@@ -294,7 +292,7 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
 
             match state
                 .client()
-                .get(format!("https://api.github.com/repos/{}/releases", repo))
+                .get(format!("https://api.github.com/repos/{repo}/releases"))
                 .send()
                 .await?
                 .json::<Vec<GithubRelease>>()
@@ -381,7 +379,7 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
 
 pub async fn run(state: State) {
     loop {
-        if let Err(err) = run_inner(state.clone()).await {
+        if let Err(err) = run_inner(&state).await {
             sentry::capture_error(err.as_ref());
 
             crate::logger::log(

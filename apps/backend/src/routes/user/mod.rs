@@ -74,7 +74,7 @@ pub async fn auth(
 
                     crate::logger::log(
                         crate::logger::LoggerLevel::Error,
-                        format!("Failed to update user session: {}", err),
+                        format!("Failed to update user session: {err}"),
                     );
                 }
             }

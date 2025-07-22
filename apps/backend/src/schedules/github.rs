@@ -7,7 +7,7 @@ struct GithubRelease {
     pub tag_name: String,
 }
 
-async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
+async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
     let start = std::time::Instant::now();
 
     let releases = state
@@ -42,7 +42,7 @@ async fn run_inner(state: State) -> Result<(), Box<dyn std::error::Error>> {
 
 pub async fn run(state: State) {
     loop {
-        if let Err(err) = run_inner(state.clone()).await {
+        if let Err(err) = run_inner(&state).await {
             sentry::capture_error(err.as_ref());
 
             crate::logger::log(

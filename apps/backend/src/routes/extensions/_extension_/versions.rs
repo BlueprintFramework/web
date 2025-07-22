@@ -12,7 +12,7 @@ mod get {
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = IndexMap<String, f64>),
-        (status = NOT_FOUND, body = inline(ApiError)),
+        (status = NOT_FOUND, body = ApiError),
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
@@ -22,7 +22,7 @@ mod get {
     ) -> (StatusCode, axum::Json<serde_json::Value>) {
         let extension = match state
             .cache
-            .cached(&format!("extensions::{}", extension), 300, || async {
+            .cached(&format!("extensions::{extension}"), 300, || async {
                 match extension.parse::<i32>() {
                     Ok(id) => {
                         if id < 1 {

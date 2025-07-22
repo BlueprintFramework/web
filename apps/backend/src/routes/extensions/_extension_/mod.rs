@@ -3,8 +3,11 @@ mod versions;
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod index {
-    use crate::{models::extension::Extension, routes::ApiError, routes::GetState};
+mod get {
+    use crate::{
+        models::extension::{Extension, ExtensionStatus},
+        routes::{ApiError, GetState},
+    };
     use axum::{extract::Path, http::StatusCode};
 
     #[utoipa::path(get, path = "/", responses(
@@ -34,10 +37,21 @@ mod index {
             .await;
 
         match extension {
-            Some(extension) => (
-                StatusCode::OK,
-                axum::Json(serde_json::to_value(extension.into_api_object()).unwrap()),
-            ),
+            Some(extension) => {
+                if !extension.unlisted && extension.status == ExtensionStatus::Approved {
+                    (
+                        StatusCode::OK,
+                        axum::Json(serde_json::to_value(extension.into_api_object()).unwrap()),
+                    )
+                } else {
+                    (
+                        StatusCode::NOT_FOUND,
+                        axum::Json(
+                            serde_json::to_value(ApiError::new(&["extension not found"])).unwrap(),
+                        ),
+                    )
+                }
+            }
             None => (
                 StatusCode::NOT_FOUND,
                 axum::Json(serde_json::to_value(ApiError::new(&["extension not found"])).unwrap()),
@@ -49,6 +63,6 @@ mod index {
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .nest("/versions", versions::router(state))
-        .routes(routes!(index::route))
+        .routes(routes!(get::route))
         .with_state(state.clone())
 }

@@ -13,7 +13,7 @@ pub enum ExtensionType {
     Extension,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 #[schema(rename_all = "lowercase")]
 #[sqlx(type_name = "extension_status", rename_all = "UPPERCASE")]
@@ -189,11 +189,11 @@ impl Extension {
             r#"
             SELECT {}
             FROM extensions
-            JOIN authors ON extensions.author_id = authors.id
+            JOIN users ON extensions.author_id = users.id
             LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
             WHERE
-                NOT pending
-                AND NOT hidden
+                NOT unlisted
+                AND status = 'approved'
             ORDER BY id ASC
             "#,
             Self::columns_sql(None, None)
@@ -214,20 +214,18 @@ impl Extension {
             r#"
             SELECT {}
             FROM extensions
-            JOIN authors ON extensions.author_id = authors.id
+            JOIN users ON extensions.author_id = users.id
             LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
-            WHERE
-                extensions.identifier = $1
-                AND NOT extensions.pending
-                AND NOT extensions.hidden
+            WHERE extensions.identifier = $1
             "#,
             Self::columns_sql(None, None)
         ))
         .bind(identifier)
-        .fetch_one(database.read())
-        .await;
+        .fetch_optional(database.read())
+        .await
+        .unwrap();
 
-        data.map(|data| Self::map(None, &data)).ok()
+        data.map(|data| Self::map(None, &data))
     }
 
     pub async fn by_id(database: &crate::database::Database, id: i32) -> Option<Self> {
@@ -235,20 +233,18 @@ impl Extension {
             r#"
             SELECT {}
             FROM extensions
-            JOIN authors ON extensions.author_id = authors.id
+            JOIN users ON extensions.author_id = users.id
             LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
-            WHERE
-                extensions.id = $1
-                AND NOT extensions.pending
-                AND NOT extensions.hidden
+            WHERE extensions.id = $1
             "#,
             Self::columns_sql(None, None)
         ))
         .bind(id)
-        .fetch_one(database.read())
-        .await;
+        .fetch_optional(database.read())
+        .await
+        .unwrap();
 
-        data.map(|data| Self::map(None, &data)).ok()
+        data.map(|data| Self::map(None, &data))
     }
 
     #[inline]

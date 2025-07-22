@@ -43,5 +43,7 @@ END $$;
 CREATE TYPE "public"."extension_status" AS ENUM('APPROVED', 'READY', 'PENDING');
 
 ALTER TABLE "extensions" DROP COLUMN "pending";
+ALTER TABLE "extensions" ADD COLUMN "description" text;
 ALTER TABLE "extensions" RENAME COLUMN "hidden" TO "unlisted";
 ALTER TABLE "extensions" ADD COLUMN "status" "extension_status" NOT NULL DEFAULT 'APPROVED';
+ALTER TABLE "extensions" ADD COLUMN "deny_reason" varchar(255);

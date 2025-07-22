@@ -121,7 +121,7 @@ mod get {
 
     #[derive(ToSchema, Serialize)]
     struct Response {
-        author: crate::models::user::ApiFullUser,
+        user: crate::models::user::ApiFullUser,
 
         #[schema(inline)]
         extensions: ResponseExtensions,
@@ -149,7 +149,7 @@ mod get {
 
         axum::Json(
             serde_json::to_value(Response {
-                author: user.0.into_api_full_object(),
+                user: user.0.into_api_full_object(),
                 extensions: ResponseExtensions {
                     total: data.total.unwrap_or_default(),
                     unlisted: data.unlisted.unwrap_or_default(),

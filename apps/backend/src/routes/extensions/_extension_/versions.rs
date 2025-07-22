@@ -1,8 +1,11 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod index {
-    use crate::{models::extension::Extension, routes::ApiError, routes::GetState};
+mod get {
+    use crate::{
+        models::extension::{Extension, ExtensionStatus},
+        routes::{ApiError, GetState},
+    };
     use axum::{extract::Path, http::StatusCode};
     use indexmap::IndexMap;
     use sqlx::Row;
@@ -33,7 +36,18 @@ mod index {
             })
             .await
         {
-            Some(extension) => extension,
+            Some(extension) => {
+                if !extension.unlisted && extension.status == ExtensionStatus::Approved {
+                    extension
+                } else {
+                    return (
+                        StatusCode::NOT_FOUND,
+                        axum::Json(
+                            serde_json::to_value(ApiError::new(&["extension not found"])).unwrap(),
+                        ),
+                    );
+                }
+            }
             None => {
                 return (
                     StatusCode::NOT_FOUND,
@@ -82,6 +96,6 @@ mod index {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
-        .routes(routes!(index::route))
+        .routes(routes!(get::route))
         .with_state(state.clone())
 }

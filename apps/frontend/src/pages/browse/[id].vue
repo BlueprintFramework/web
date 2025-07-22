@@ -187,7 +187,6 @@ const { data: extension, pending } = await useAsyncData<Extension>(
   () => $fetch<Extension>(`/api/extensions/${route.params.id}`),
   {
     server: false,
-    lazy: true,
   }
 )
 

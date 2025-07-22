@@ -141,7 +141,6 @@ const { data: extensions, pending } = await useAsyncData<Extension[]>(
   () => $fetch<Extension[]>('/api/extensions'),
   {
     server: false,
-    lazy: true,
   }
 )
 

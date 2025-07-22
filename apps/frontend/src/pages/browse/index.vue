@@ -177,9 +177,9 @@ const filteredAndSortedExtensions = computed(() => {
   }
 
   filtered = filtered.filter((extension) => {
-    if (extension.type === 'EXTENSION' && !form.value.showExtensions)
+    if (extension.type === 'extension' && !form.value.showExtensions)
       return false
-    if (extension.type === 'THEME' && !form.value.showThemes) return false
+    if (extension.type === 'theme' && !form.value.showThemes) return false
     return true
   })
 

@@ -104,11 +104,11 @@
                 <div
                   class="flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-0.5 text-xs"
                 >
-                  <template v-if="extension.type == 'EXTENSION'">
+                  <template v-if="extension.type == 'extension'">
                     <Icon name="memory:cube" />
                     Extension
                   </template>
-                  <template v-else-if="extension.type == 'THEME'">
+                  <template v-else-if="extension.type == 'theme'">
                     <Icon name="memory:image" />
                     Theme
                   </template>

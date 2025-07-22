@@ -37,4 +37,4 @@ export interface ExtensionAuthor {
   created: string
 }
 
-export type ExtensionType = 'THEME' | 'EXTENSION'
+export type ExtensionType = 'theme' | 'extension'

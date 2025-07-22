@@ -4,6 +4,8 @@ use axum::{body::Body, extract::Request, http::StatusCode, middleware::Next, res
 use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
+mod sessions;
+
 #[derive(Clone)]
 pub enum AuthMethod {
     Session(UserSession),
@@ -161,6 +163,7 @@ mod get {
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .routes(routes!(get::route))
+        .nest("/sessions", sessions::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

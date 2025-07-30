@@ -29,18 +29,18 @@ ALTER TABLE "users" DROP COLUMN "website";
 CREATE UNIQUE INDEX "users_email_idx" ON "users" USING btree ("email");
 
 DO $$ BEGIN
- ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 
 DO $$ BEGIN
- ALTER TABLE "extensions" ADD CONSTRAINT "extensions_author_id_users_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "extensions" ADD CONSTRAINT "extensions_author_id_users_id_fk" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 
-CREATE TYPE "public"."extension_status" AS ENUM('APPROVED', 'READY', 'PENDING');
+CREATE TYPE "extension_status" AS ENUM('APPROVED', 'READY', 'PENDING');
 
 ALTER TABLE "extensions" DROP COLUMN "pending";
 ALTER TABLE "extensions" ADD COLUMN "description" text;

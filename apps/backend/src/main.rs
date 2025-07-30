@@ -14,6 +14,7 @@ use sentry_tower::SentryHttpLayer;
 use serde_json::json;
 use sha2::Digest;
 use std::{net::SocketAddr, path::Path, sync::Arc, time::Instant};
+use tikv_jemallocator::Jemalloc;
 use tokio::sync::RwLock;
 use tower::Layer;
 use tower_cookies::CookieManagerLayer;
@@ -32,6 +33,9 @@ mod routes;
 mod schedules;
 mod telemetry;
 mod utils;
+
+#[global_allocator]
+static ALLOC: Jemalloc = Jemalloc;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const GIT_COMMIT: &str = env!("CARGO_GIT_COMMIT");

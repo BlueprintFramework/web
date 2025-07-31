@@ -29,7 +29,7 @@
       >
         <div
           :ref="(el) => setContentRef(el as Element | null, index)"
-          class="p-4 pt-0"
+          class="text-default-font/75 p-4 pt-0"
         >
           <p v-if="item.text">
             {{ item.text }}

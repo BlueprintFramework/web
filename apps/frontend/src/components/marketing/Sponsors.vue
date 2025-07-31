@@ -16,7 +16,7 @@
             We develop, maintain and create open-source software used by a wide
             range of users.
           </span>
-          Support our future by
+          Support our work by
           <a
             class="text-link"
             href="https://hcb.hackclub.com/donations/start/blueprint"

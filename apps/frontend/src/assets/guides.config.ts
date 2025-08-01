@@ -16,6 +16,11 @@ export const guidesCategories: Record<string, CategoryConfig> = {
     label: 'Extension Development',
     order: 2,
   },
+  community: {
+    icon: 'memory:comment-user',
+    label: 'Community Guides',
+    order: 3,
+  },
 }
 
 export const defaultCategory: CategoryConfig = {

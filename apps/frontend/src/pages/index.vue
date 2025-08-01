@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-4">
+  <div class="space-y-8 md:space-y-2 md:py-4">
     <NuxtLink to="/guides/admin/install" class="group block">
       <div
         class="flex w-full justify-between overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 transition-colors group-hover:bg-neutral-900"

@@ -3,7 +3,7 @@ title: Update Blueprint
 description: Switch to the latest version of Blueprint within minutes
 author: Emma
 category: admin
-thumbnail: 007.jpeg
+thumbnail: githubreleases.jpeg
 ---
 
 ::card

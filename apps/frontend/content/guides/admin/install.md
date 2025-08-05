@@ -3,7 +3,7 @@ title: Install Blueprint
 description: Get Blueprint installed onto your Pterodactyl panel
 author: Emma
 category: admin
-thumbnail: 001.jpeg
+thumbnail: cli.jpeg
 order: -1
 ---
 

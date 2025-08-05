@@ -3,7 +3,7 @@ title: Update Pterodactyl
 description: Update Pterodactyl and Blueprint to the latest version
 author: Emma
 category: admin
-thumbnail: 006.jpeg
+thumbnail: pterodactyldocs.jpeg
 ---
 
 ## Enter maintenance mode

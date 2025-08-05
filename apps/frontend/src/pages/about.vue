@@ -58,20 +58,21 @@
     <div
       class="rounded-3xl border border-neutral-700 lg:rounded-t-none lg:border-t-0"
     >
-      <div class="grid grid-cols-2 divide-x divide-neutral-700">
+      <div
+        class="grid grid-cols-1 divide-y divide-neutral-700 md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
         <div class="space-y-4 p-8 lg:p-16">
-          <h1>Our impact</h1>
+          <h1>Impact</h1>
           <p class="text-default-font/75">
             Blueprint has played a vital role in both setting Pterodactyl
             modding standards and holding them up.
           </p>
         </div>
         <div class="space-y-4 p-8 lg:p-16">
-          <h1>Our community</h1>
+          <h1>Community</h1>
           <p class="text-default-font/75">
             Blueprint's community is a mix of developers, system administrators,
-            freelancers and hosting providers. We're there anyone looking to
-            explore Pterodactyl modding or just have a chat!
+            freelancers and hosting providers.
           </p>
         </div>
       </div>

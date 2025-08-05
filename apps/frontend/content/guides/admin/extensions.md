@@ -1,6 +1,7 @@
 ---
 title: Manage extensions
 description: Install, remove, and configure Blueprint extensions
+author: Emma
 category: admin
 thumbnail: 002.jpeg
 ---

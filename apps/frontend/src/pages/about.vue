@@ -1,9 +1,4 @@
 <template>
-  <div>
-    hii :3 this is work in progress and these polaroids will be replaced with
-    ones made at our why2025 village :P
-  </div>
-
   <div class="space-y-12 lg:space-y-0">
     <div
       class="grid grid-cols-1 divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 lg:grid-cols-2 lg:divide-x lg:divide-y-0 lg:rounded-b-none"
@@ -64,14 +59,19 @@
       class="rounded-3xl border border-neutral-700 lg:rounded-t-none lg:border-t-0"
     >
       <div class="grid grid-cols-2 divide-x divide-neutral-700">
-        <div class="p-16">
-          <h1>Over the years we've achieved:</h1>
-        </div>
-        <div class="space-y-4 p-16">
+        <div class="space-y-4 p-8 lg:p-16">
           <h1>Our impact</h1>
           <p class="text-default-font/75">
             Blueprint has played a vital role in both setting Pterodactyl
             modding standards and holding them up.
+          </p>
+        </div>
+        <div class="space-y-4 p-8 lg:p-16">
+          <h1>Our community</h1>
+          <p class="text-default-font/75">
+            Blueprint's community is a mix of developers, system administrators,
+            freelancers and hosting providers. We're there anyone looking to
+            explore Pterodactyl modding or just have a chat!
           </p>
         </div>
       </div>

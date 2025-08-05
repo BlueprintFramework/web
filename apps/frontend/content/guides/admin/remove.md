@@ -4,6 +4,7 @@ description: Uninstall Blueprint from your machine
 author: Emma
 category: admin
 thumbnail: old_man_yells_at_blueprint.jpg
+order:
 ---
 
 ::card

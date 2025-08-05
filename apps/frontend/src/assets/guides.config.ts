@@ -21,6 +21,11 @@ export const guidesCategories: Record<string, CategoryConfig> = {
     label: 'Community Guides',
     order: 3,
   },
+  docker: {
+    icon: 'memory:cube-unfolded',
+    label: 'Blueprint Docker',
+    order: 4,
+  },
 }
 
 export const defaultCategory: CategoryConfig = {

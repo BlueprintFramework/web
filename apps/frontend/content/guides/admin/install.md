@@ -12,9 +12,9 @@ order: -1
 Define your Pterodactyl directory, we'll use this later in the guide. If your Pterodactyl webserver **is not** located in this directory, change the path.
 
 ```bash
-# Use this command to set a $PTERODACTL_DIRECTORY variable
+# Use this command to set a $PTERODACTYL_DIRECTORY variable
 # for use later in this guide.
-export PTERODACTL_DIRECTORY=/var/www/pterodactyl
+export PTERODACTYL_DIRECTORY=/var/www/pterodactyl
 ```
 
 ## Dependencies
@@ -43,10 +43,10 @@ Download the latest version of Blueprint onto your server by either downloading 
 
 ```bash
 # Navigate to your Pterodactyl directory
-cd $PTERODACTL_DIRECTORY
+cd $PTERODACTYL_DIRECTORY
 
 # Download and unzip Blueprint's latest release
-wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O $PTERODACTL_DIRECTORY/release.zip
+wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O $PTERODACTYL_DIRECTORY/release.zip
 unzip -o release.zip
 ```
 
@@ -56,7 +56,7 @@ This step allows Blueprint to function and know where itself and Pterodactyl are
 
 ```bash
 # Creates a .blueprintrc file in your Pterodactyl directory
-touch $PTERODACTL_DIRECTORY/.blueprintrc
+touch $PTERODACTYL_DIRECTORY/.blueprintrc
 ```
 
 Modify the `$WEBUSER`, `$USERSHELL` and `$PERMISSIONS` values to match your environment. Provided below is the standard configuration for Debian-based systems, but you might need to make your own modifications.
@@ -66,7 +66,7 @@ Modify the `$WEBUSER`, `$USERSHELL` and `$PERMISSIONS` values to match your envi
 echo \
 'WEBUSER="www-data";
 OWNERSHIP="www-data:www-data";
-USERSHELL="/bin/bash";' > $PTERODACTL_DIRECTORY/.blueprintrc
+USERSHELL="/bin/bash";' > $PTERODACTYL_DIRECTORY/.blueprintrc
 ```
 
 ## Run Blueprint
@@ -75,10 +75,10 @@ All that's left is giving `blueprint.sh` execute permissions and running it. Blu
 
 ```bash
 # Give blueprint.sh execute permissions
-chmod +x $PTERODACTL_DIRECTORY/blueprint.sh
+chmod +x $PTERODACTYL_DIRECTORY/blueprint.sh
 
 # Run blueprint.sh
-bash $PTERODACTL_DIRECTORY/blueprint.sh
+bash $PTERODACTYL_DIRECTORY/blueprint.sh
 ```
 
 Optionally you can enable Bash autocompletion by adding `source blueprint;` into your `.bashrc` (or `.zshrc` when using ZSH).

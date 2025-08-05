@@ -6,24 +6,14 @@ category: admin
 thumbnail: 006.jpeg
 ---
 
-## Define Pterodactyl directory
-
-Define your Pterodactyl directory, we'll use this later in the guide. If your Pterodactyl webserver **is not** located in this directory, change the path.
-
-```bash
-# Use this command to set a $PTERODACTL_DIRECTORY variable
-# for use later in this guide.
-export PTERODACTL_DIRECTORY=/var/www/pterodactyl
-
-# Navigate to your Pterodactyl directory
-cd $PTERODACTYL_DIRECTORY
-```
-
 ## Enter maintenance mode
 
 Before updating Pterodactyl, you should always put it into maintenance mode. Not doing so can cause users stumbling onto unexpected errors and ensures everything can be updated before users encounter potentially new features.
 
 ```bash
+# Navigate to your Pterodactyl directory
+cd /var/www/pterodactyl
+
 # Puts your panel into maintenance mode
 php artisan down
 ```

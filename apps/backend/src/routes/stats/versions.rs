@@ -2,13 +2,16 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use crate::routes::GetState;
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::GetState,
+    };
     use indexmap::IndexMap;
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = inline(HashMap<String, f64>)),
     ))]
-    pub async fn route(state: GetState) -> axum::Json<serde_json::Value> {
+    pub async fn route(state: GetState) -> ApiResponseResult {
         let versions = state
             .cache
             .cached("stats::versions", 3600, || async {
@@ -43,8 +46,7 @@ mod get {
                     "#,
                 )
                 .fetch_all(state.database.read())
-                .await
-                .unwrap();
+                .await?;
 
                 let total = data
                     .iter()
@@ -57,11 +59,11 @@ mod get {
                     );
                 }
 
-                versions
+                Ok(versions)
             })
-            .await;
+            .await?;
 
-        axum::Json(serde_json::to_value(versions).unwrap())
+        ApiResponse::json(versions).ok()
     }
 }
 

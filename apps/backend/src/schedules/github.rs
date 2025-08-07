@@ -7,7 +7,7 @@ struct GithubRelease {
     pub tag_name: String,
 }
 
-async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
+async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
     let releases = state
@@ -23,18 +23,15 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
         .map(|release| release.tag_name)
         .collect();
 
-    crate::logger::log(
-        crate::logger::LoggerLevel::Info,
+    tracing::info!(
+        "{} releases refreshed {}",
+        "github".black(),
         format!(
-            "{} releases refreshed {}",
-            "github".black(),
-            format!(
-                "({} releases, {}ms)",
-                state.github_releases.read().await.len(),
-                start.elapsed().as_millis()
-            )
-            .bright_black()
-        ),
+            "({} releases, {}ms)",
+            state.github_releases.read().await.len(),
+            start.elapsed().as_millis()
+        )
+        .bright_black()
     );
 
     Ok(())
@@ -43,16 +40,8 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
 pub async fn run(state: State) {
     loop {
         if let Err(err) = run_inner(&state).await {
-            sentry::capture_error(err.as_ref());
-
-            crate::logger::log(
-                crate::logger::LoggerLevel::Error,
-                format!(
-                    "{} {}",
-                    "failed to update github releases".red(),
-                    err.to_string().red()
-                ),
-            );
+            tracing::error!("failed to update github releases: {:#?}", err);
+            sentry_anyhow::capture_anyhow(&err);
         }
 
         tokio::time::sleep(tokio::time::Duration::from_secs(60 * 60)).await;

@@ -1,6 +1,15 @@
 use super::{ApiError, GetState, State};
-use crate::models::{user::User, user_session::UserSession};
-use axum::{body::Body, extract::Request, http::StatusCode, middleware::Next, response::Response};
+use crate::{
+    models::{user::User, user_session::UserSession},
+    response::ApiResponse,
+};
+use axum::{
+    body::Body,
+    extract::Request,
+    http::StatusCode,
+    middleware::Next,
+    response::{IntoResponse, Response},
+};
 use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
@@ -35,50 +44,46 @@ pub async fn auth(
 
         let user = User::by_session(&state.database, session_id.value()).await;
         let (user, session) = match user {
-            Some(data) => data,
-            None => {
-                return Ok(Response::builder()
-                    .status(StatusCode::UNAUTHORIZED)
-                    .header("Content-Type", "application/json")
-                    .body(Body::from(
-                        serde_json::to_string(&ApiError::new(&["invalid session"])).unwrap(),
-                    ))
-                    .unwrap());
+            Ok(Some(data)) => data,
+            Ok(None) => {
+                return Ok(ApiResponse::error("invalid session")
+                    .with_status(StatusCode::UNAUTHORIZED)
+                    .into_response());
             }
+            Err(err) => return Ok(ApiResponse::from(err).into_response()),
         };
 
-        tokio::spawn({
-            let state = state.clone();
-            let user_agent = crate::utils::slice_up_to(
-                req.headers()
-                    .get("User-Agent")
-                    .and_then(|ua| ua.to_str().ok())
-                    .unwrap_or("unknown"),
-                255,
-            )
-            .to_string();
-
-            async move {
-                if let Err(err) = sqlx::query!(
-                    "UPDATE user_sessions
-                    SET ip = $1, user_agent = $2, last_used = NOW()
-                    WHERE id = $3",
-                    sqlx::types::ipnetwork::IpNetwork::from(ip.0),
-                    user_agent,
-                    session.id,
+        state
+            .database
+            .batch_action("update_user_session", session.id, {
+                let state = state.clone();
+                let user_agent = crate::utils::slice_up_to(
+                    req.headers()
+                        .get("User-Agent")
+                        .and_then(|ua| ua.to_str().ok())
+                        .unwrap_or("unknown"),
+                    255,
                 )
-                .execute(state.database.write())
-                .await
-                {
-                    sentry::capture_error(&err);
+                .to_string();
 
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Error,
-                        format!("Failed to update user session: {err}"),
-                    );
+                async move {
+                    if let Err(err) = sqlx::query!(
+                        "UPDATE user_sessions
+                        SET ip = $1, user_agent = $2, last_used = NOW()
+                        WHERE id = $3",
+                        sqlx::types::ipnetwork::IpNetwork::from(ip.0),
+                        user_agent,
+                        session.id,
+                    )
+                    .execute(state.database.write())
+                    .await
+                    {
+                        tracing::warn!(user = user.id, "failed to update user session: {:#?}", err);
+                        sentry::capture_error(&err);
+                    }
                 }
-            }
-        });
+            })
+            .await;
 
         cookies.add(
             Cookie::build(("session", session_id.value().to_string()))

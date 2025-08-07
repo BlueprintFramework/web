@@ -2,20 +2,23 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use crate::{models::extension::Extension, routes::GetState};
-    use axum::http::StatusCode;
+    use crate::{
+        models::extension::Extension,
+        response::{ApiResponse, ApiResponseResult},
+        routes::GetState,
+    };
     use indexmap::IndexMap;
 
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = IndexMap<String, String>)
     ))]
-    pub async fn route(state: GetState) -> (StatusCode, axum::Json<serde_json::Value>) {
+    pub async fn route(state: GetState) -> ApiResponseResult {
         let data = state
             .cache
             .cached("extensions::all", 300, || async {
-                Extension::all(&state.database).await
+                Extension::all(&state.database).await.map_err(|e| e.into())
             })
-            .await;
+            .await?;
 
         let mut latest_versions: IndexMap<String, String> = IndexMap::new();
         for extension in data {
@@ -26,10 +29,7 @@ mod get {
             }
         }
 
-        (
-            StatusCode::OK,
-            axum::Json(serde_json::to_value(&latest_versions).unwrap()),
-        )
+        ApiResponse::json(latest_versions).ok()
     }
 }
 

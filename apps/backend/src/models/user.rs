@@ -110,8 +110,11 @@ impl User {
     pub async fn by_session(
         database: &crate::database::Database,
         session: &str,
-    ) -> Option<(Self, super::user_session::UserSession)> {
-        let (key_id, key) = session.split_once(':')?;
+    ) -> Result<Option<(Self, super::user_session::UserSession)>, sqlx::Error> {
+        let (key_id, key) = match session.split_once(':') {
+            Some((id, key)) => (id, key),
+            None => return Ok(None),
+        };
 
         let row = sqlx::query(&format!(
             r#"
@@ -126,22 +129,21 @@ impl User {
         .bind(key_id)
         .bind(key)
         .fetch_optional(database.read())
-        .await
-        .unwrap();
+        .await?;
 
-        row.map(|row| {
+        Ok(row.map(|row| {
             (
                 Self::map(None, &row),
                 super::user_session::UserSession::map(Some("session_"), &row),
             )
-        })
+        }))
     }
 
     pub async fn by_email_password(
         database: &crate::database::Database,
         email: &str,
         password: &str,
-    ) -> Option<Self> {
+    ) -> Result<Option<Self>, sqlx::Error> {
         let row = sqlx::query(&format!(
             r#"
             SELECT {}
@@ -153,10 +155,9 @@ impl User {
         .bind(email)
         .bind(password)
         .fetch_optional(database.read())
-        .await
-        .unwrap();
+        .await?;
 
-        row.map(|row| Self::map(None, &row))
+        Ok(row.map(|row| Self::map(None, &row)))
     }
 
     #[inline]

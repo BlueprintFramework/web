@@ -104,13 +104,13 @@ impl TelemetryLogger {
 
         let ratelimit_key = format!("blueprint_api::ratelimit::{ip}");
 
-        let count = self.cache.client.incr(&ratelimit_key).await.unwrap();
+        let count = self.cache.client.incr(&ratelimit_key).await.ok()?;
         if count == 1 {
             self.cache
                 .client
                 .expire(&ratelimit_key, 86400, ExpireOption::None)
                 .await
-                .unwrap();
+                .ok()?;
         }
 
         if count > self.env.telemetry_ratelimit_per_day {
@@ -173,7 +173,7 @@ impl TelemetryLogger {
         Ok(result)
     }
 
-    pub async fn process(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn process(&self) -> Result<(), anyhow::Error> {
         let mut processing = self.processing.lock().await;
         let length = processing.len();
 
@@ -225,18 +225,15 @@ impl TelemetryLogger {
             .execute(self.database.write())
             .await {
                 Ok(_) => {},
-                Err(e) => {
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Error,
-                        format!("{} {}", "failed to insert telemetry panel data".red(), e),
-                    );
+                Err(err) => {
+                    tracing::error!("failed to insert telemetry panel data: {:#?}", err);
 
                     self.processing
                         .lock()
                         .await
                         .append(&mut telemetry);
 
-                    return Err(Box::new(e));
+                    return Err(err.into());
                 }
             }
         }
@@ -259,28 +256,22 @@ impl TelemetryLogger {
             .execute(self.database.write())
             .await {
                 Ok(_) => {},
-                Err(e) => {
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Error,
-                        format!("{} {}", "failed to insert telemetry data".red(), e),
-                    );
+                Err(err) => {
+                    tracing::error!("failed to insert telemetry data: {:#?}", err);
 
                     self.processing
                         .lock()
                         .await
                         .append(&mut telemetry);
 
-                    return Err(Box::new(e));
+                    return Err(err.into());
                 }
             }
         }
 
-        crate::logger::log(
-            crate::logger::LoggerLevel::Info,
-            format!(
-                "processed {} telemetry entries",
-                telemetry.len().to_string().cyan()
-            ),
+        tracing::info!(
+            "processed {} telemetry entries",
+            telemetry.len().to_string().cyan()
         );
 
         Ok(())

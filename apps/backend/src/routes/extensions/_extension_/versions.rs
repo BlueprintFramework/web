@@ -4,6 +4,7 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 mod get {
     use crate::{
         models::extension::{Extension, ExtensionStatus},
+        response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState},
     };
     use axum::{extract::Path, http::StatusCode};
@@ -16,45 +17,40 @@ mod get {
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
-    pub async fn route(
-        state: GetState,
-        Path(extension): Path<String>,
-    ) -> (StatusCode, axum::Json<serde_json::Value>) {
+    pub async fn route(state: GetState, Path(extension): Path<String>) -> ApiResponseResult {
         let extension = match state
             .cache
             .cached(&format!("extensions::{extension}"), 300, || async {
                 match extension.parse::<i32>() {
                     Ok(id) => {
                         if id < 1 {
-                            None
+                            Ok(None)
                         } else {
-                            Extension::by_id(&state.database, id).await
+                            Extension::by_id(&state.database, id)
+                                .await
+                                .map_err(|e| e.into())
                         }
                     }
-                    Err(_) => Extension::by_identifier(&state.database, &extension).await,
+                    Err(_) => Extension::by_identifier(&state.database, &extension)
+                        .await
+                        .map_err(|e| e.into()),
                 }
             })
-            .await
+            .await?
         {
             Some(extension) => {
                 if !extension.unlisted && extension.status == ExtensionStatus::Approved {
                     extension
                 } else {
-                    return (
-                        StatusCode::NOT_FOUND,
-                        axum::Json(
-                            serde_json::to_value(ApiError::new(&["extension not found"])).unwrap(),
-                        ),
-                    );
+                    return ApiResponse::error("extension not found")
+                        .with_status(StatusCode::NOT_FOUND)
+                        .ok();
                 }
             }
             None => {
-                return (
-                    StatusCode::NOT_FOUND,
-                    axum::Json(
-                        serde_json::to_value(ApiError::new(&["extension not found"])).unwrap(),
-                    ),
-                );
+                return ApiResponse::error("extension not found")
+                    .with_status(StatusCode::NOT_FOUND)
+                    .ok();
             }
         };
 
@@ -77,8 +73,7 @@ mod get {
         .bind(extension.id)
         .bind(extension.versions().into_iter().collect::<Vec<_>>())
         .fetch_all(state.database.read())
-        .await
-        .unwrap();
+        .await?;
 
         for row in data {
             versions.insert(
@@ -87,10 +82,7 @@ mod get {
             );
         }
 
-        (
-            StatusCode::OK,
-            axum::Json(serde_json::to_value(&versions).unwrap()),
-        )
+        ApiResponse::json(versions).ok()
     }
 }
 

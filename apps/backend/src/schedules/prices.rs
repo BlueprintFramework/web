@@ -59,11 +59,11 @@ fn clean_version_name(name: &str) -> String {
         .to_string()
 }
 
-async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
+async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
     let mut count = 0;
-    let mut extensions = Extension::all(&state.database).await;
+    let mut extensions = Extension::all(&state.database).await?;
     let mut sxc_products: Vec<SxcProduct> = vec![];
 
     if let Some(sxc_token) = &state.env.sxc_token {
@@ -87,13 +87,7 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
     for extension in extensions.iter_mut() {
         count += 1;
 
-        crate::logger::log(
-            crate::logger::LoggerLevel::Info,
-            format!(
-                "updating extension prices of {}",
-                extension.name.bright_cyan()
-            ),
-        );
+        tracing::info!("updating extension prices of {}", extension.name);
 
         for version in extension.versions.iter_mut() {
             version.downloads = 0;
@@ -155,13 +149,10 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
                         };
                     }
                     Err(err) => {
-                        crate::logger::log(
-                            crate::logger::LoggerLevel::Error,
-                            format!(
-                                "failed to get sourcexchange versions for {}:\n{:#?}",
-                                extension.name.bright_cyan(),
-                                err
-                            ),
+                        tracing::error!(
+                            "failed to get sourcexchange versions for {}: {:#?}",
+                            extension.name,
+                            err
                         );
                     }
                 };
@@ -261,26 +252,20 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
                                 };
                             }
                             Err(err) => {
-                                crate::logger::log(
-                                    crate::logger::LoggerLevel::Error,
-                                    format!(
-                                        "failed to get builtbybit versions for {}:\n{:#?}",
-                                        extension.name.bright_cyan(),
-                                        err
-                                    ),
+                                tracing::error!(
+                                    "failed to get builtbybit versions for {}: {:#?}",
+                                    extension.name,
+                                    err
                                 );
                             }
                         }
                     }
                     Err(err) => {
-                        crate::logger::log(
-                            crate::logger::LoggerLevel::Error,
-                            format!(
-                                "failed to get builtbybit product for {} (#{}):\n{:#?}",
-                                extension.name.bright_cyan(),
-                                product_id,
-                                err
-                            ),
+                        tracing::error!(
+                            "failed to get builtbybit product for {} (#{}): {:#?}",
+                            extension.name,
+                            product_id,
+                            err
                         );
                     }
                 };
@@ -343,13 +328,10 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
                     };
                 }
                 Err(err) => {
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Error,
-                        format!(
-                            "failed to get github releases for {}:\n{:#?}",
-                            extension.name.bright_cyan(),
-                            err
-                        ),
+                    tracing::error!(
+                        "failed to get github releases for {}: {:#?}",
+                        extension.name,
+                        err
                     );
                 }
             }
@@ -366,12 +348,9 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
-    crate::logger::log(
-        crate::logger::LoggerLevel::Info,
-        format!(
-            "product prices refreshed {}",
-            format!("({} prices, {}ms)", count, start.elapsed().as_millis()).bright_black()
-        ),
+    tracing::info!(
+        "product prices refreshed {}",
+        format!("({} prices, {}ms)", count, start.elapsed().as_millis()).bright_black()
     );
 
     Ok(())
@@ -380,16 +359,8 @@ async fn run_inner(state: &State) -> Result<(), Box<dyn std::error::Error>> {
 pub async fn run(state: State) {
     loop {
         if let Err(err) = run_inner(&state).await {
-            sentry::capture_error(err.as_ref());
-
-            crate::logger::log(
-                crate::logger::LoggerLevel::Error,
-                format!(
-                    "{} {}",
-                    "failed to update extension prices".red(),
-                    err.to_string().red()
-                ),
-            );
+            tracing::error!("failed to update extension information: {:#?}", err);
+            sentry_anyhow::capture_anyhow(&err);
         }
 
         tokio::time::sleep(tokio::time::Duration::from_secs(60 * 60 * 2)).await;

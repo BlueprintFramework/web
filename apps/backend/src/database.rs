@@ -1,9 +1,14 @@
 use colored::Colorize;
 use sqlx::postgres::PgPoolOptions;
+use std::{collections::HashMap, sync::Arc};
+use tokio::sync::Mutex;
 
+type EmptyFuture = Box<dyn Future<Output = ()> + Send>;
 pub struct Database {
     write: sqlx::PgPool,
     read: Option<sqlx::PgPool>,
+
+    batch_actions: Arc<Mutex<HashMap<(&'static str, i32), EmptyFuture>>>,
 }
 
 impl Database {
@@ -38,6 +43,7 @@ impl Database {
             } else {
                 None
             },
+            batch_actions: Arc::new(Mutex::new(HashMap::new())),
         };
 
         let version: (String,) = sqlx::query_as("SELECT split_part(version(), ' ', 4)")
@@ -45,19 +51,36 @@ impl Database {
             .await
             .unwrap();
 
-        crate::logger::log(
-            crate::logger::LoggerLevel::Info,
+        tracing::info!(
+            "{} connected {}",
+            "database".bright_cyan(),
             format!(
-                "{} connected {}",
-                "database".bright_cyan(),
-                format!(
-                    "(postgres@{}, {}ms)",
-                    version.0[..version.0.len() - 1].bright_black(),
-                    start.elapsed().as_millis()
-                )
-                .bright_black()
-            ),
+                "(postgres@{}, {}ms)",
+                version.0[..version.0.len() - 1].bright_black(),
+                start.elapsed().as_millis()
+            )
+            .bright_black()
         );
+
+        tokio::spawn({
+            let batch_actions = instance.batch_actions.clone();
+
+            async move {
+                loop {
+                    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+
+                    let mut actions = batch_actions.lock().await;
+                    for (key, action) in actions.drain() {
+                        tracing::debug!(
+                            "executing batch action for {}:{}",
+                            key.0.bright_cyan(),
+                            key.1
+                        );
+                        Box::into_pin(action).await;
+                    }
+                }
+            }
+        });
 
         if env.database_migrate {
             let writer = instance.write.clone();
@@ -69,13 +92,9 @@ impl Database {
                     .await
                     .unwrap();
 
-                crate::logger::log(
-                    crate::logger::LoggerLevel::Info,
-                    format!(
-                        "{} migrated {}",
-                        "database".bright_cyan(),
-                        format!("({}ms)", start.elapsed().as_millis()).bright_black()
-                    ),
+                tracing::info!(
+                    "database migrations completed successfully ({}ms)",
+                    start.elapsed().as_millis()
                 );
             });
         }
@@ -93,26 +112,14 @@ impl Database {
                         .await
                     {
                         Ok(_) => {
-                            crate::logger::log(
-                                crate::logger::LoggerLevel::Info,
-                                format!(
-                                    "{} views refreshed {}",
-                                    "database".bright_cyan(),
-                                    format!("({}ms)", start.elapsed().as_millis()).bright_black()
-                                ),
+                            tracing::info!(
+                                "database views refreshed successfully ({}ms)",
+                                start.elapsed().as_millis()
                             );
                         }
                         Err(err) => {
+                            tracing::error!("failed to refresh database views: {:#?}", err);
                             sentry::capture_error(&err);
-
-                            crate::logger::log(
-                                crate::logger::LoggerLevel::Error,
-                                format!(
-                                    "{} {}",
-                                    "failed to refresh database views".red(),
-                                    err.to_string().red()
-                                ),
-                            );
                         }
                     }
                 }
@@ -130,5 +137,14 @@ impl Database {
     #[inline]
     pub fn read(&self) -> &sqlx::PgPool {
         self.read.as_ref().unwrap_or(&self.write)
+    }
+
+    #[inline]
+    pub async fn batch_action<F>(&self, key: &'static str, id: i32, action: F)
+    where
+        F: Future<Output = ()> + Send + 'static,
+    {
+        let mut actions = self.batch_actions.lock().await;
+        actions.insert((key, id), Box::new(action));
     }
 }

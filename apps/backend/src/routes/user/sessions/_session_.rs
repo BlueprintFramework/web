@@ -4,6 +4,7 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 mod delete {
     use crate::{
         models::user_session::UserSession,
+        response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState, user::GetUser},
     };
     use axum::{extract::Path, http::StatusCode};
@@ -27,23 +28,21 @@ mod delete {
         state: GetState,
         user: GetUser,
         Path(session): Path<i32>,
-    ) -> (StatusCode, axum::Json<serde_json::Value>) {
-        let session = match UserSession::by_user_id_id(&state.database, user.id, session).await {
+    ) -> ApiResponseResult {
+        let session = match UserSession::by_user_id_id(&state.database, user.id, session).await? {
             Some(session) => session,
             None => {
-                return (
-                    StatusCode::NOT_FOUND,
-                    axum::Json(ApiError::new(&["session not found"]).to_value()),
-                );
+                return ApiResponse::error("session not found")
+                    .with_status(StatusCode::NOT_FOUND)
+                    .ok();
             }
         };
 
-        UserSession::delete_by_id(&state.database, session.id).await;
+        UserSession::delete_by_id(&state.database, session.id).await?;
 
-        (
-            StatusCode::OK,
-            axum::Json(serde_json::to_value(Response {}).unwrap()),
-        )
+        ApiResponse::json(Response {})
+            .with_status(StatusCode::OK)
+            .ok()
     }
 }
 

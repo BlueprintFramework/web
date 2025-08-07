@@ -2,7 +2,10 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use crate::routes::GetState;
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::GetState,
+    };
     use serde::{Deserialize, Serialize};
     use std::collections::BTreeMap;
     use utoipa::ToSchema;
@@ -16,7 +19,7 @@ mod get {
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = inline(BTreeMap<String, ResponseFlag>)),
     ))]
-    pub async fn route(state: GetState) -> axum::Json<serde_json::Value> {
+    pub async fn route(state: GetState) -> ApiResponseResult {
         let flags = state
             .cache
             .cached("stats::flags", 3600, || async {
@@ -48,8 +51,7 @@ mod get {
                     "#,
                 )
                 .fetch_all(state.database.read())
-                .await
-                .unwrap();
+                .await?;
 
                 for row in data {
                     flags.insert(
@@ -62,11 +64,11 @@ mod get {
                     );
                 }
 
-                flags
+                Ok(flags)
             })
-            .await;
+            .await?;
 
-        axum::Json(serde_json::to_value(flags).unwrap())
+        ApiResponse::json(flags).ok()
     }
 }
 

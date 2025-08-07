@@ -184,8 +184,8 @@ impl Extension {
         versions
     }
 
-    pub async fn all(database: &crate::database::Database) -> Vec<Self> {
-        sqlx::query(&format!(
+    pub async fn all(database: &crate::database::Database) -> Result<Vec<Self>, sqlx::Error> {
+        let rows = sqlx::query(&format!(
             r#"
             SELECT {}
             FROM extensions
@@ -197,18 +197,16 @@ impl Extension {
             Self::columns_sql(None, None)
         ))
         .fetch_all(database.read())
-        .await
-        .unwrap()
-        .into_iter()
-        .map(|row| Self::map(None, &row))
-        .collect()
+        .await?;
+
+        Ok(rows.into_iter().map(|row| Self::map(None, &row)).collect())
     }
 
     pub async fn by_identifier(
         database: &crate::database::Database,
         identifier: &str,
-    ) -> Option<Self> {
-        let data = sqlx::query(&format!(
+    ) -> Result<Option<Self>, sqlx::Error> {
+        let row = sqlx::query(&format!(
             r#"
             SELECT {}
             FROM extensions
@@ -220,14 +218,16 @@ impl Extension {
         ))
         .bind(identifier)
         .fetch_optional(database.read())
-        .await
-        .unwrap();
+        .await?;
 
-        data.map(|data| Self::map(None, &data))
+        Ok(row.map(|data| Self::map(None, &data)))
     }
 
-    pub async fn by_id(database: &crate::database::Database, id: i32) -> Option<Self> {
-        let data = sqlx::query(&format!(
+    pub async fn by_id(
+        database: &crate::database::Database,
+        id: i32,
+    ) -> Result<Option<Self>, sqlx::Error> {
+        let row = sqlx::query(&format!(
             r#"
             SELECT {}
             FROM extensions
@@ -239,10 +239,9 @@ impl Extension {
         ))
         .bind(id)
         .fetch_optional(database.read())
-        .await
-        .unwrap();
+        .await?;
 
-        data.map(|data| Self::map(None, &data))
+        Ok(row.map(|data| Self::map(None, &data)))
     }
 
     #[inline]

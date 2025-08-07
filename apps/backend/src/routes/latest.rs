@@ -2,7 +2,10 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use crate::routes::{ApiError, GetState};
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::{ApiError, GetState},
+    };
     use axum::http::StatusCode;
     use serde::Serialize;
     use utoipa::ToSchema;
@@ -17,29 +20,20 @@ mod get {
         (status = OK, body = inline(Response)),
         (status = NOT_FOUND, body = ApiError),
     ))]
-    pub async fn route(state: GetState) -> (StatusCode, axum::Json<serde_json::Value>) {
+    pub async fn route(state: GetState) -> ApiResponseResult {
         let releases = state.github_releases.read().await;
 
-        if releases.is_empty() {
-            return (
-                StatusCode::NOT_FOUND,
-                axum::Json(
-                    serde_json::to_value(ApiError::new(&["no releases found (please retry)"]))
-                        .unwrap(),
-                ),
-            );
+        if let Some(first) = releases.first() {
+            ApiResponse::json(Response {
+                name: first,
+                history: &releases[1..],
+            })
+            .ok()
+        } else {
+            ApiResponse::error("no releases found (please retry)")
+                .with_status(StatusCode::NOT_FOUND)
+                .ok()
         }
-
-        (
-            StatusCode::OK,
-            axum::Json(
-                serde_json::to_value(Response {
-                    name: releases.first().unwrap(),
-                    history: &releases[1..],
-                })
-                .unwrap(),
-            ),
-        )
     }
 }
 

@@ -6,6 +6,7 @@ mod versions;
 mod get {
     use crate::{
         models::extension::{Extension, ExtensionStatus},
+        response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState},
     };
     use axum::{extract::Path, http::StatusCode};
@@ -16,46 +17,40 @@ mod get {
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
-    pub async fn route(
-        state: GetState,
-        Path(extension): Path<String>,
-    ) -> (StatusCode, axum::Json<serde_json::Value>) {
+    pub async fn route(state: GetState, Path(extension): Path<String>) -> ApiResponseResult {
         let extension = state
             .cache
             .cached(&format!("extensions::{extension}"), 300, || async {
                 match extension.parse::<i32>() {
                     Ok(id) => {
                         if id < 1 {
-                            None
+                            Ok(None)
                         } else {
-                            Extension::by_id(&state.database, id).await
+                            Extension::by_id(&state.database, id)
+                                .await
+                                .map_err(|e| e.into())
                         }
                     }
-                    Err(_) => Extension::by_identifier(&state.database, &extension).await,
+                    Err(_) => Extension::by_identifier(&state.database, &extension)
+                        .await
+                        .map_err(|e| e.into()),
                 }
             })
-            .await;
+            .await?;
 
         match extension {
             Some(extension) => {
                 if !extension.unlisted && extension.status == ExtensionStatus::Approved {
-                    (
-                        StatusCode::OK,
-                        axum::Json(serde_json::to_value(extension.into_api_object()).unwrap()),
-                    )
+                    ApiResponse::json(extension.into_api_object()).ok()
                 } else {
-                    (
-                        StatusCode::NOT_FOUND,
-                        axum::Json(
-                            serde_json::to_value(ApiError::new(&["extension not found"])).unwrap(),
-                        ),
-                    )
+                    ApiResponse::error("extension not found")
+                        .with_status(StatusCode::NOT_FOUND)
+                        .ok()
                 }
             }
-            None => (
-                StatusCode::NOT_FOUND,
-                axum::Json(serde_json::to_value(ApiError::new(&["extension not found"])).unwrap()),
-            ),
+            None => ApiResponse::error("extension not found")
+                .with_status(StatusCode::NOT_FOUND)
+                .ok(),
         }
     }
 }

@@ -18,17 +18,17 @@ use tikv_jemallocator::Jemalloc;
 use tokio::sync::RwLock;
 use tower::Layer;
 use tower_cookies::CookieManagerLayer;
-use tower_http::{
-    catch_panic::CatchPanicLayer, cors::CorsLayer, normalize_path::NormalizePathLayer,
-};
+use tower_http::{cors::CorsLayer, normalize_path::NormalizePathLayer};
 use utoipa::openapi::security::{ApiKey, ApiKeyValue, SecurityScheme};
 use utoipa_axum::router::OpenApiRouter;
 
 mod cache;
+mod captcha;
 mod database;
 mod env;
-mod logger;
+mod mail;
 mod models;
+mod response;
 mod routes;
 mod schedules;
 mod telemetry;
@@ -41,23 +41,6 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 const GIT_COMMIT: &str = env!("CARGO_GIT_COMMIT");
 const FRONTEND_ASSETS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/../frontend/.output/public");
 
-fn handle_panic(_err: Box<dyn std::any::Any + Send + 'static>) -> Response<Body> {
-    logger::log(
-        logger::LoggerLevel::Error,
-        "a request panic has occurred".bright_red().to_string(),
-    );
-
-    Response::builder()
-        .status(StatusCode::INTERNAL_SERVER_ERROR)
-        .header("Content-Type", "application/json")
-        .body(Body::from(
-            routes::ApiError::new(&["internal server error"])
-                .to_value()
-                .to_string(),
-        ))
-        .unwrap()
-}
-
 pub type GetIp = axum::extract::Extension<std::net::IpAddr>;
 
 async fn handle_request(
@@ -69,20 +52,16 @@ async fn handle_request(
 
     req.extensions_mut().insert(ip);
 
-    logger::log(
-        logger::LoggerLevel::Info,
-        format!(
-            "{} {}{} {}",
-            format!("HTTP {}", req.method()).green().bold(),
-            req.uri().path().cyan(),
-            if let Some(query) = req.uri().query() {
-                format!("?{query}")
-            } else {
-                "".to_string()
-            }
-            .bright_cyan(),
-            format!("({ip})").bright_black(),
-        ),
+    tracing::info!(
+        "http {} {}{}",
+        req.method().to_string().to_lowercase(),
+        req.uri().path().cyan(),
+        if let Some(query) = req.uri().query() {
+            format!("?{query}")
+        } else {
+            "".to_string()
+        }
+        .bright_cyan()
     );
 
     Ok(next.run(req).await)
@@ -120,7 +99,7 @@ async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {
 
 #[tokio::main]
 async fn main() {
-    let env = env::Env::parse();
+    let (_env_guard, env) = env::Env::parse();
 
     let _guard = sentry::init((
         env.sentry_url.clone(),
@@ -156,16 +135,8 @@ async fn main() {
                 tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 
                 if let Err(err) = state.telemetry.process().await {
-                    sentry::capture_error(err.as_ref());
-
-                    crate::logger::log(
-                        crate::logger::LoggerLevel::Error,
-                        format!(
-                            "{} {}",
-                            "failed to process telemetry".red(),
-                            err.to_string().red()
-                        ),
-                    );
+                    tracing::error!("failed to process telemetry: {:#?}", err);
+                    sentry_anyhow::capture_anyhow(&err);
                 }
             }
         });
@@ -239,31 +210,27 @@ async fn main() {
                 ))
                 .unwrap()
         })
-        .layer(CatchPanicLayer::custom(handle_panic))
         .layer(CorsLayer::very_permissive())
         .layer(axum::middleware::from_fn(handle_request))
         .layer(CookieManagerLayer::new())
         .route_layer(axum::middleware::from_fn(handle_etag))
-        .route_layer(SentryHttpLayer::with_transaction())
+        .route_layer(SentryHttpLayer::new().enable_transaction())
         .with_state(state.clone());
 
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", &state.env.bind, state.env.port))
         .await
         .unwrap();
 
-    logger::log(
-        logger::LoggerLevel::Info,
+    tracing::info!(
+        "{} listening on {} {}",
+        "http server".bright_red(),
+        state.env.bind.cyan(),
         format!(
-            "{} listening on {} {}",
-            "http server".bright_red(),
-            listener.local_addr().unwrap().to_string().cyan(),
-            format!(
-                "(app@{}, {}ms)",
-                VERSION,
-                state.start_time.elapsed().as_millis()
-            )
-            .bright_black()
-        ),
+            "(app@{}, {}ms)",
+            VERSION,
+            state.start_time.elapsed().as_millis()
+        )
+        .bright_black()
     );
 
     let (router, mut openapi) = app.split_for_parts();

@@ -2,7 +2,10 @@ use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod get {
-    use crate::routes::GetState;
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::GetState,
+    };
     use serde::{Deserialize, Serialize};
     use utoipa::ToSchema;
 
@@ -26,7 +29,7 @@ mod get {
     #[utoipa::path(get, path = "/", responses(
         (status = OK, body = inline(Response)),
     ))]
-    pub async fn route(state: GetState) -> axum::Json<serde_json::Value> {
+    pub async fn route(state: GetState) -> ApiResponseResult {
         let response = state
             .cache
             .cached("stats::panels", 3600, || async {
@@ -48,10 +51,9 @@ mod get {
                     "#,
                 )
                 .fetch_one(state.database.read())
-                .await
-                .unwrap();
+                .await?;
 
-                Response {
+                Ok(Response {
                     total: data.total_panels.unwrap_or_default(),
                     docker: data.docker_panels.unwrap_or_default(),
                     standalone: data.total_panels.unwrap_or_default() - data.docker_panels.unwrap_or_default(),
@@ -61,11 +63,11 @@ mod get {
                         max: data.max_extensions.unwrap_or_default(),
                         average: (data.avg_extensions.unwrap_or_default() * 100.0).round() / 100.0,
                     },
-                }
+                })
             })
-            .await;
+            .await?;
 
-        axum::Json(serde_json::to_value(response).unwrap())
+        ApiResponse::json(response).ok()
     }
 }
 

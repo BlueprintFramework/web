@@ -6,6 +6,7 @@ mod _session_;
 mod get {
     use crate::{
         models::{Pagination, PaginationParams, user_session::UserSession},
+        response::{ApiResponse, ApiResponseResult},
         routes::{
             ApiError, GetState,
             user::{GetAuthMethod, GetUser},
@@ -40,12 +41,11 @@ mod get {
         auth: GetAuthMethod,
         user: GetUser,
         Query(params): Query<PaginationParams>,
-    ) -> (StatusCode, axum::Json<serde_json::Value>) {
+    ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&params) {
-            return (
-                StatusCode::UNAUTHORIZED,
-                axum::Json(ApiError::new_strings_value(errors)),
-            );
+            return ApiResponse::json(ApiError::new_strings_value(errors))
+                .with_status(StatusCode::UNAUTHORIZED)
+                .ok();
         }
 
         let sessions = UserSession::by_user_id_with_pagination(
@@ -54,26 +54,21 @@ mod get {
             params.page,
             params.per_page,
         )
-        .await;
+        .await?;
 
-        (
-            StatusCode::OK,
-            axum::Json(
-                serde_json::to_value(Response {
-                    sessions: Pagination {
-                        total: sessions.total,
-                        per_page: sessions.per_page,
-                        page: sessions.page,
-                        data: sessions
-                            .data
-                            .into_iter()
-                            .map(|session| session.into_api_object(&auth))
-                            .collect(),
-                    },
-                })
-                .unwrap(),
-            ),
-        )
+        ApiResponse::json(Response {
+            sessions: Pagination {
+                total: sessions.total,
+                per_page: sessions.per_page,
+                page: sessions.page,
+                data: sessions
+                    .data
+                    .into_iter()
+                    .map(|session| session.into_api_object(&auth))
+                    .collect(),
+            },
+        })
+        .ok()
     }
 }
 

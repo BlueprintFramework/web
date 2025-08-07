@@ -1,5 +1,5 @@
-use super::{ApiError, GetState, State};
-use crate::telemetry::TelemetryData;
+use super::{GetState, State};
+use crate::{response::ApiResponse, telemetry::TelemetryData};
 use axum::{
     http::{HeaderMap, StatusCode},
     routing::post,
@@ -16,22 +16,20 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     let ip = match crate::utils::extract_ip(&headers) {
                         Some(ip) => ip,
                         None => {
-                            return (
-                                StatusCode::BAD_REQUEST,
-                                axum::Json(ApiError::new(&["invalid ip"]).to_value()),
-                            );
+                            return ApiResponse::error("invalid ip")
+                                .with_status(StatusCode::BAD_REQUEST)
+                                .ok();
                         }
                     };
 
                     let telemetry = state.telemetry.log(ip, data).await;
                     if telemetry.is_none() {
-                        return (
-                            StatusCode::TOO_MANY_REQUESTS,
-                            axum::Json(ApiError::new(&["too many requests"]).to_value()),
-                        );
+                        return ApiResponse::error("too many requests")
+                            .with_status(StatusCode::TOO_MANY_REQUESTS)
+                            .ok();
                     }
 
-                    (StatusCode::OK, axum::Json(json!({})))
+                    ApiResponse::json(json!({})).ok()
                 },
             ),
         )

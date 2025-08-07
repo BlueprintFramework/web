@@ -1,4 +1,5 @@
 use dotenvy::dotenv;
+use tracing_subscriber::fmt::writer::MakeWriterExt;
 
 #[derive(Clone)]
 pub enum RedisMode {
@@ -7,10 +8,42 @@ pub enum RedisMode {
 }
 
 #[derive(Clone)]
+pub enum MailMode {
+    None,
+    Smtp {
+        host: String,
+        port: u16,
+        username: Option<String>,
+        password: Option<String>,
+        use_tls: bool,
+
+        from_address: String,
+        from_name: Option<String>,
+    },
+}
+
+#[derive(Clone)]
+pub enum CaptchaProvider {
+    None,
+    Turnstile {
+        site_key: String,
+        secret_key: String,
+    },
+    Recaptcha {
+        v3: bool,
+        site_key: String,
+        secret_key: String,
+    },
+}
+
+#[derive(Clone)]
 pub struct Env {
     pub redis_url: Option<String>,
     pub redis_sentinels: Option<Vec<String>>,
     pub redis_mode: RedisMode,
+
+    pub mail_mode: MailMode,
+    pub captcha_provider: CaptchaProvider,
 
     pub sentry_url: Option<String>,
     pub database_migrate: bool,
@@ -27,12 +60,14 @@ pub struct Env {
     pub sxc_token: Option<String>,
     pub bbb_token: Option<String>,
 
+    pub app_debug: bool,
+    pub app_log_directory: String,
     pub app_url: String,
     pub server_name: Option<String>,
 }
 
 impl Env {
-    pub fn parse() -> Env {
+    pub fn parse() -> (tracing_appender::non_blocking::WorkerGuard, Env) {
         dotenv().ok();
 
         let redis_mode = match std::env::var("REDIS_MODE")
@@ -44,7 +79,7 @@ impl Env {
             _ => panic!("Invalid REDIS_MODE"),
         };
 
-        Self {
+        let env = Self {
             redis_url: match redis_mode {
                 RedisMode::Redis => Some(
                     std::env::var("REDIS_URL")
@@ -66,6 +101,75 @@ impl Env {
                 ),
             },
             redis_mode,
+
+            mail_mode: match std::env::var("MAIL_MODE")
+                .unwrap_or("none".to_string())
+                .trim_matches('"')
+            {
+                "none" => MailMode::None,
+                "smtp" => MailMode::Smtp {
+                    host: std::env::var("MAIL_SMTP_HOST")
+                        .expect("MAIL_SMTP_HOST is required")
+                        .trim_matches('"')
+                        .to_string(),
+                    port: std::env::var("MAIL_SMTP_PORT")
+                        .expect("MAIL_SMTP_PORT is required")
+                        .trim_matches('"')
+                        .parse()
+                        .unwrap(),
+                    username: std::env::var("MAIL_SMTP_USERNAME")
+                        .ok()
+                        .map(|s| s.trim_matches('"').to_string()),
+                    password: std::env::var("MAIL_SMTP_PASSWORD")
+                        .ok()
+                        .map(|s| s.trim_matches('"').to_string()),
+                    use_tls: std::env::var("MAIL_SMTP_USE_TLS")
+                        .unwrap_or("true".to_string())
+                        .trim_matches('"')
+                        .parse()
+                        .unwrap(),
+                    from_address: std::env::var("MAIL_FROM_ADDRESS")
+                        .expect("MAIL_FROM_ADDRESS is required")
+                        .trim_matches('"')
+                        .to_string(),
+                    from_name: std::env::var("MAIL_FROM_NAME")
+                        .ok()
+                        .map(|s| s.trim_matches('"').to_string()),
+                },
+                _ => panic!("Invalid MAIL_MODE"),
+            },
+            captcha_provider: match std::env::var("CAPTCHA_PROVIDER")
+                .unwrap_or("none".to_string())
+                .trim_matches('"')
+            {
+                "none" => CaptchaProvider::None,
+                "turnstile" => CaptchaProvider::Turnstile {
+                    site_key: std::env::var("CAPTCHA_TURNSTILE_SITE_KEY")
+                        .expect("CAPTCHA_TURNSTILE_SITE_KEY is required")
+                        .trim_matches('"')
+                        .to_string(),
+                    secret_key: std::env::var("CAPTCHA_TURNSTILE_SECRET_KEY")
+                        .expect("CAPTCHA_TURNSTILE_SECRET_KEY is required")
+                        .trim_matches('"')
+                        .to_string(),
+                },
+                "recaptcha" => CaptchaProvider::Recaptcha {
+                    v3: std::env::var("CAPTCHA_RECAPTCHA_V3")
+                        .unwrap_or("false".to_string())
+                        .trim_matches('"')
+                        .parse()
+                        .unwrap(),
+                    site_key: std::env::var("CAPTCHA_RECAPTCHA_SITE_KEY")
+                        .expect("CAPTCHA_RECAPTCHA_SITE_KEY is required")
+                        .trim_matches('"')
+                        .to_string(),
+                    secret_key: std::env::var("CAPTCHA_RECAPTCHA_SECRET_KEY")
+                        .expect("CAPTCHA_RECAPTCHA_SECRET_KEY is required")
+                        .trim_matches('"')
+                        .to_string(),
+                },
+                _ => panic!("Invalid CAPTCHA_PROVIDER"),
+            },
 
             sentry_url: std::env::var("SENTRY_URL")
                 .ok()
@@ -113,6 +217,16 @@ impl Env {
             bbb_token: std::env::var("BBB_TOKEN")
                 .ok()
                 .map(|s| s.trim_matches('"').to_string()),
+
+            app_debug: std::env::var("APP_DEBUG")
+                .unwrap_or("false".to_string())
+                .trim_matches('"')
+                .parse()
+                .unwrap(),
+            app_log_directory: std::env::var("APP_LOG_DIRECTORY")
+                .unwrap_or("logs".to_string())
+                .trim_matches('"')
+                .to_string(),
             app_url: std::env::var("APP_URL")
                 .expect("APP_URL is required")
                 .trim_matches('"')
@@ -120,6 +234,50 @@ impl Env {
             server_name: std::env::var("SERVER_NAME")
                 .ok()
                 .map(|s| s.trim_matches('"').to_string()),
+        };
+
+        if !std::path::Path::new(&env.app_log_directory).exists() {
+            std::fs::create_dir_all(&env.app_log_directory)
+                .expect("failed to create log directory");
         }
+
+        let latest_log_path = std::path::Path::new(&env.app_log_directory).join("panel.log");
+        let latest_file = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&latest_log_path)
+            .expect("failed to open latest log file");
+
+        let rolling_appender = tracing_appender::rolling::Builder::new()
+            .filename_prefix("panel")
+            .filename_suffix("log")
+            .max_log_files(30)
+            .rotation(tracing_appender::rolling::Rotation::DAILY)
+            .build(&env.app_log_directory)
+            .expect("failed to create rolling log file appender");
+
+        let (file_appender, _guard) = tracing_appender::non_blocking::NonBlockingBuilder::default()
+            .buffered_lines_limit(50)
+            .lossy(false)
+            .finish(latest_file.and(rolling_appender));
+
+        tracing::subscriber::set_global_default(
+            tracing_subscriber::fmt()
+                .with_timer(tracing_subscriber::fmt::time::ChronoLocal::rfc_3339())
+                .with_writer(std::io::stdout.and(file_appender))
+                .with_target(false)
+                .with_level(true)
+                .with_file(true)
+                .with_line_number(true)
+                .with_max_level(if env.app_debug {
+                    tracing::Level::DEBUG
+                } else {
+                    tracing::Level::INFO
+                })
+                .finish(),
+        )
+        .unwrap();
+
+        (_guard, env)
     }
 }

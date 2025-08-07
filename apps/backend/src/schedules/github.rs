@@ -24,8 +24,7 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
         .collect();
 
     tracing::info!(
-        "{} releases refreshed {}",
-        "github".black(),
+        "github releases refreshed {}",
         format!(
             "({} releases, {}ms)",
             state.github_releases.read().await.len(),

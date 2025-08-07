@@ -48,7 +48,7 @@ mod post {
         .await?;
 
         if rows.rows_affected() == 0 {
-            return ApiResponse::error("no pending email found")
+            return ApiResponse::error("no pending email found or invalid token")
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }

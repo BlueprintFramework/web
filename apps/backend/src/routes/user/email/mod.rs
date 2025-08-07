@@ -19,6 +19,8 @@ mod patch {
         #[validate(email)]
         #[schema(format = "email")]
         email: String,
+
+        captcha: Option<String>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -29,12 +31,19 @@ mod patch {
     ))]
     pub async fn route(
         state: GetState,
+        ip: crate::GetIp,
         user: GetUser,
         axum::Json(data): axum::Json<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
             return ApiResponse::json(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
+                .ok();
+        }
+
+        if let Err(error) = state.captcha.verify(ip, data.captcha).await {
+            return ApiResponse::error(&error)
+                .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
 

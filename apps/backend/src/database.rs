@@ -87,15 +87,16 @@ impl Database {
             tokio::spawn(async move {
                 let start = std::time::Instant::now();
 
-                sqlx::migrate!("../../migrations")
-                    .run(&writer)
-                    .await
-                    .unwrap();
-
-                tracing::info!(
-                    "database migrations completed successfully ({}ms)",
-                    start.elapsed().as_millis()
-                );
+                match sqlx::migrate!("../../migrations").run(&writer).await {
+                    Ok(_) => tracing::info!(
+                        "database migrations completed successfully ({}ms)",
+                        start.elapsed().as_millis()
+                    ),
+                    Err(err) => {
+                        tracing::error!("failed to run database migrations: {:#?}", err);
+                        sentry::capture_error(&err);
+                    }
+                }
             });
         }
 

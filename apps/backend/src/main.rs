@@ -124,7 +124,9 @@ async fn main() {
         database: database.clone(),
         cache: cache.clone(),
         telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),
-        env,
+        env: env.clone(),
+        mail: Arc::new(mail::Mail::new(env.clone())),
+        captcha: Arc::new(captcha::Captcha::new(env)),
     });
 
     {

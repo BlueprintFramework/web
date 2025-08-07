@@ -5,7 +5,7 @@ use crate::{
 };
 use axum::{
     body::Body,
-    extract::Request,
+    extract::{MatchedPath, Request},
     http::StatusCode,
     middleware::Next,
     response::{IntoResponse, Response},
@@ -13,6 +13,7 @@ use axum::{
 use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
+mod email;
 mod sessions;
 
 #[derive(Clone)]
@@ -27,6 +28,7 @@ pub async fn auth(
     state: GetState,
     ip: crate::GetIp,
     cookies: Cookies,
+    matched_path: MatchedPath,
     mut req: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
@@ -86,10 +88,10 @@ pub async fn auth(
             .await;
 
         cookies.add(
-            Cookie::build(("session", session_id.value().to_string()))
+            Cookie::build(("blueprint_session", session_id.value().to_string()))
                 .http_only(true)
                 .same_site(tower_cookies::cookie::SameSite::Lax)
-                .secure(true)
+                .secure(state.env.app_url.starts_with("https://"))
                 .path("/")
                 .expires(
                     tower_cookies::cookie::time::OffsetDateTime::now_utc()
@@ -98,23 +100,33 @@ pub async fn auth(
                 .build(),
         );
 
+        const IGNORED_VERIFICATION_PATHS: &[&str] = &["/api/user", "/api/user/email/verify"];
+
+        if user.email_verification.is_some()
+            && user.email_pending.is_none()
+            && !IGNORED_VERIFICATION_PATHS.contains(&matched_path.as_str())
+        {
+            return Ok(ApiResponse::error("email verification required")
+                .with_status(StatusCode::UNAUTHORIZED)
+                .into_response());
+        }
+
         req.extensions_mut().insert(user);
         req.extensions_mut().insert(AuthMethod::Session(session));
     } else {
-        return Ok(Response::builder()
-            .status(StatusCode::UNAUTHORIZED)
-            .header("Content-Type", "application/json")
-            .body(Body::from(
-                serde_json::to_string(&ApiError::new(&["invalid authorization method"])).unwrap(),
-            ))
-            .unwrap());
+        return Ok(ApiResponse::error("invalid authorization method")
+            .with_status(StatusCode::UNAUTHORIZED)
+            .into_response());
     }
 
     Ok(next.run(req).await)
 }
 
 mod get {
-    use crate::routes::{GetState, user::GetUser};
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::{GetState, user::GetUser},
+    };
     use serde::Serialize;
     use utoipa::ToSchema;
 
@@ -137,7 +149,7 @@ mod get {
     ), security(
         ("api_key" = [])
     ))]
-    pub async fn route(state: GetState, user: GetUser) -> axum::Json<serde_json::Value> {
+    pub async fn route(state: GetState, user: GetUser) -> ApiResponseResult {
         let data = sqlx::query!(
             r#"
             SELECT
@@ -149,19 +161,16 @@ mod get {
             user.id
         )
         .fetch_one(state.database.read())
-        .await
-        .unwrap();
+        .await?;
 
-        axum::Json(
-            serde_json::to_value(Response {
-                user: user.0.into_api_full_object(),
-                extensions: ResponseExtensions {
-                    total: data.total.unwrap_or_default(),
-                    unlisted: data.unlisted.unwrap_or_default(),
-                },
-            })
-            .unwrap(),
-        )
+        ApiResponse::json(Response {
+            user: user.0.into_api_full_object(),
+            extensions: ResponseExtensions {
+                total: data.total.unwrap_or_default(),
+                unlisted: data.unlisted.unwrap_or_default(),
+            },
+        })
+        .ok()
     }
 }
 
@@ -169,6 +178,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .routes(routes!(get::route))
         .nest("/sessions", sessions::router(state))
+        .nest("/email", email::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

@@ -4,6 +4,7 @@ use tokio::sync::RwLock;
 use utoipa::ToSchema;
 use utoipa_axum::router::OpenApiRouter;
 
+mod auth;
 mod extensions;
 mod latest;
 mod stats;
@@ -39,6 +40,8 @@ pub struct AppState {
     pub cache: Arc<crate::cache::Cache>,
     pub telemetry: crate::telemetry::TelemetryLogger,
     pub env: Arc<crate::env::Env>,
+    pub mail: Arc<crate::mail::Mail>,
+    pub captcha: Arc<crate::captcha::Captcha>,
 }
 
 impl AppState {
@@ -60,5 +63,6 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/extensions", extensions::router(state))
         .nest("/stats", stats::router(state))
         .nest("/user", user::router(state))
+        .nest("/auth", auth::router(state))
         .with_state(state.clone())
 }

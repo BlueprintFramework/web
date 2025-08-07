@@ -1,8 +1,13 @@
 use super::BaseModel;
+use rand::distr::SampleString;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow, types::chrono::NaiveDateTime};
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::LazyLock};
 use utoipa::ToSchema;
+
+pub static NAME_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_]+$").expect("Failed to compile username regex"));
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct User {
@@ -89,10 +94,12 @@ impl User {
         name: &str,
         email: &str,
         password: &str,
-    ) -> Result<Self, sqlx::Error> {
+    ) -> Result<(Self, String), sqlx::Error> {
+        let email_verification = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 16);
+
         let row = sqlx::query(&format!(
             r#"
-            INSERT INTO users (name, email, password)
+            INSERT INTO users (name, email, email_verification, password)
             VALUES ($1, $2, crypt($3, gen_salt('bf', 8)))
             RETURNING {}
             "#,
@@ -100,11 +107,31 @@ impl User {
         ))
         .bind(name)
         .bind(email)
+        .bind(&email_verification)
         .bind(password)
         .fetch_one(database.write())
         .await?;
 
-        Ok(Self::map(None, &row))
+        Ok((Self::map(None, &row), email_verification))
+    }
+
+    pub async fn by_email(
+        database: &crate::database::Database,
+        email: &str,
+    ) -> Result<Option<Self>, sqlx::Error> {
+        let row = sqlx::query(&format!(
+            r#"
+            SELECT {}
+            FROM users
+            WHERE email = $1
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(email)
+        .fetch_optional(database.read())
+        .await?;
+
+        Ok(row.map(|row| Self::map(None, &row)))
     }
 
     pub async fn by_session(
@@ -158,6 +185,26 @@ impl User {
         .await?;
 
         Ok(row.map(|row| Self::map(None, &row)))
+    }
+
+    pub async fn update_password(
+        &self,
+        database: &crate::database::Database,
+        password: &str,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query(
+            r#"
+            UPDATE users
+            SET password = crypt($2, gen_salt('bf'))
+            WHERE users.id = $1
+            "#,
+        )
+        .bind(self.id)
+        .bind(password)
+        .execute(database.write())
+        .await?;
+
+        Ok(())
     }
 
     #[inline]

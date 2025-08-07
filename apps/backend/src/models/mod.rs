@@ -6,6 +6,7 @@ use validator::Validate;
 
 pub mod extension;
 pub mod user;
+pub mod user_password_reset;
 pub mod user_session;
 
 #[derive(ToSchema, Validate, Deserialize)]

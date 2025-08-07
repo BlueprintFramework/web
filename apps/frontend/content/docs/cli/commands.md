@@ -8,7 +8,7 @@ category: cli
 
 ### Install Extension
 
-Install or update a Blueprint extension
+Install or update one or multiple extensions. Blueprint will automatically determine whether or not to update an extension.
 
 ```bash
 # Usage
@@ -20,7 +20,7 @@ blueprint -install modpackinstaller minecraftplayermanager
 
 ### Remove Extension
 
-Remove a Blueprint extension
+Remove one or more extensions from your panel.
 
 ```bash
 # Usage
@@ -32,7 +32,7 @@ blueprint -remove mcplugins cats
 
 ### Query Extension
 
-Get information about a specific Blueprint extension
+Query extension metadata.
 
 ```bash
 # Usage
@@ -46,7 +46,7 @@ blueprint -query nebula
 
 ### Initialize
 
-Initialize Blueprint extension development files
+Initialize Blueprint extension development files. This command generates and prefills development files in `.blueprint/dev` based on a template.
 
 ```bash
 # Usage
@@ -58,7 +58,7 @@ blueprint -init
 
 ### Build
 
-Install or update your extension development files
+Install or update your extension development files, as if you were installing it as a packaged extension.
 
 ```bash
 # Usage
@@ -70,7 +70,7 @@ blueprint -build
 
 ### Watch
 
-Watch for changes and automatically rebuild your extension development files
+Watch for changes and automatically rebuild your extension development files.
 
 ```bash
 # Usage
@@ -82,7 +82,7 @@ blueprint -watch
 
 ### Regenerate dist
 
-Rebuild extension development dist directory
+Rebuild extension development dist directory, primarily used for type safety in IDEs.
 
 ```bash
 # Usage
@@ -94,7 +94,7 @@ blueprint -dist
 
 ### Export
 
-Package your extension and optionally generate a temporary download link
+Package your extension and optionally generate a temporary download link through the `expose` argument.
 
 ```bash
 # Usage
@@ -107,7 +107,7 @@ blueprint -export expose
 
 ### Wipe
 
-Remove your extension development files
+Permanently deletes all development files stored in `.blueprint/dev`.
 
 ```bash
 # Usage
@@ -121,7 +121,7 @@ blueprint -wipe
 
 ### Version
 
-Returns the Blueprint installation's version
+Returns the installed Blueprint version.
 
 ```bash
 # Usage
@@ -133,7 +133,7 @@ blueprint -version
 
 ### Help
 
-Displays the CLI help menu
+Displays the CLI's help menu.
 
 ```bash
 # Usage
@@ -145,7 +145,7 @@ blueprint -help
 
 ### Info
 
-Print neofetch-like information about your Blueprint installation
+Print information about your Blueprint installation, structured in a neofetch-like format.
 
 ```bash
 # Usage
@@ -157,7 +157,7 @@ blueprint -info
 
 ### Debug
 
-Print given amount of debug lines
+Print given amount of debug lines.
 
 ```bash
 # Usage
@@ -171,7 +171,7 @@ blueprint -debug 100
 
 ### Upgrade
 
-Update or reset to another release
+Update or reset to another release, optionally a GitHub repository.
 
 ```bash
 # Usage
@@ -184,7 +184,7 @@ blueprint -upgrade remote blueprintframework/framework
 
 ### Rerun Install
 
-Rerun the Blueprint installation script
+Rerun the Blueprint installation script.
 
 ```bash
 # Usage

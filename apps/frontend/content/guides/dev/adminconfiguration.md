@@ -1,8 +1,10 @@
 ---
 title: Admin configuration
 description: Add configuration options to your extension's admin page
+author:
 category: dev
-thumbnail: 009.jpeg
+thumbnail: adminconfiguration.jpeg
+order:
 ---
 
 ...

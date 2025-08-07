@@ -1,8 +1,10 @@
 ---
 title: Admin page
 description: Create your extension's admin page
+author:
 category: dev
-thumbnail: 004.jpeg
+thumbnail: adminpage.jpeg
+order:
 ---
 
 ...

@@ -1,8 +1,10 @@
 ---
 title: React components
 description: Add your own components to specific places in the Pterodactyl panel
+author:
 category: dev
-thumbnail: 013.jpeg
+thumbnail: components.jpeg
+order:
 ---
 
 ...

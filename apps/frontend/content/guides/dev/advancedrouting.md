@@ -1,8 +1,10 @@
 ---
 title: Advanced routing
 description: Add your own web routes accessible from everywhere within Blueprint
+author:
 category: dev
-thumbnail: 010.jpeg
+thumbnail: routes.jpeg
+order:
 ---
 
 ...

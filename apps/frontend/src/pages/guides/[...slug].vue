@@ -14,6 +14,10 @@
         <span class="opacity-75">
           {{ data.description }}
         </span>
+        <div class="flex items-center gap-1.5 pt-3 opacity-75">
+          <Icon name="memory:account" mode="svg" :size="22" />
+          <span> {{ data.author }} </span>
+        </div>
       </div>
     </div>
     <div
@@ -33,6 +37,10 @@
             <span class="opacity-75">
               {{ data.description }}
             </span>
+            <div class="flex items-center gap-1.5 pt-3 opacity-75">
+              <Icon name="memory:account" mode="svg" :size="22" />
+              <span> {{ data.author }} </span>
+            </div>
           </div>
         </div>
         <div class="prose prose-invert w-full md:p-8">

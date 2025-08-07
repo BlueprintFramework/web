@@ -5,20 +5,25 @@ export interface CategoryConfig {
 }
 
 export const docsCategories: Record<string, CategoryConfig> = {
+  concepts: {
+    icon: 'memory:lightbulb',
+    label: 'Concepts',
+    order: 1,
+  },
   cli: {
     icon: 'memory:terminal',
     label: 'CLI',
-    order: 1,
+    order: 2,
   },
   configs: {
     icon: 'memory:script',
     label: 'Configurations',
-    order: 2,
+    order: 3,
   },
   lib: {
     icon: 'memory:application-code',
     label: 'Extension Library',
-    order: 3,
+    order: 4,
   },
 }
 

@@ -16,7 +16,7 @@
             We develop, maintain and create open-source software used by a wide
             range of users.
           </span>
-          Support our future by
+          Support our work by
           <a
             class="text-link"
             href="https://hcb.hackclub.com/donations/start/blueprint"
@@ -28,16 +28,25 @@
       </div>
     </div>
     <div
-      class="flex min-h-44 items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:40px_40px] bg-[position:-8px_-8px]"
+      class="flex items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:40px_40px] bg-[position:-8px_-8px] md:min-h-44"
     >
-      <div class="flex w-full justify-center gap-12 p-4">
+      <div
+        class="flex w-full flex-col justify-center gap-4 p-4 md:flex-row md:gap-12 md:p-6"
+      >
+        <NuxtLink
+          to="https://pyro.host"
+          target="_blank"
+          class="hover:text-brand-50 flex items-center transition-colors"
+        >
+          <SvgPyro size="30" />
+        </NuxtLink>
         <NuxtLink
           to="https://ultraservers.com"
           target="_blank"
           class="hover:text-brand-50 flex items-center gap-2 transition-colors"
         >
-          <SvgUltraservers size="30" />
-          <span class="h2 text-2xl">UltraServers</span>
+          <SvgUltraservers size="32" />
+          <span class="h2 text-[1.6rem]">UltraServers</span>
         </NuxtLink>
       </div>
     </div>

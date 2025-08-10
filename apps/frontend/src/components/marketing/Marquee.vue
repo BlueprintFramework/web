@@ -84,22 +84,3 @@ const items = ref([
   },
 ])
 </script>
-
-<style scoped>
-.marquee {
-  mask: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  -webkit-mask: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
-</style>

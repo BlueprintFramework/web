@@ -50,3 +50,20 @@ h3 {
 .scrollbar-none::-webkit-scrollbar {
   max-width: 0px;
 }
+
+.marquee {
+  mask: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}

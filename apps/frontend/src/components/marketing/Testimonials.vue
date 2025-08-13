@@ -1,31 +1,51 @@
 <template>
-  <div :class="props?.class" class="marquee space-y-4">
-    <NuxtMarquee
-      v-for="(testimonials, index) in allTestimonials"
-      :autoFill="true"
-      :speed="35"
-      :direction="index % 2 == 0 ? 'left' : 'right'"
-    >
-      <div
-        v-for="(testimonial, index) in testimonials"
-        :key="`item-${index}`"
-        class="w-100 h-50 mx-2 overflow-hidden rounded-3xl border border-neutral-700"
+  <div :class="props?.class" class="rounded-3xl border border-neutral-700 p-4">
+    <div class="marquee space-y-4">
+      <NuxtMarquee
+        v-for="(testimonials, index) in allTestimonials"
+        :autoFill="true"
+        :speed="35"
+        :direction="index % 2 == 0 ? 'left' : 'right'"
       >
-        <div class="flex h-full w-full flex-col divide-y divide-neutral-700">
-          <div class="p-2">
-            <h2 class="m-0 truncate">{{ testimonial.name }}</h2>
+        <div
+          v-for="(testimonial, index) in testimonials"
+          :key="`item-${index}`"
+          class="w-100 h-50 mx-2 overflow-hidden rounded-3xl border border-neutral-700"
+        >
+          <div class="flex h-full w-full flex-col divide-y divide-neutral-700">
+            <div class="flex items-center justify-between">
+              <div class="truncate p-2">
+                <h2 class="m-0 truncate">
+                  {{ testimonial.name }}
+                </h2>
+              </div>
+              <div
+                class="flex h-full items-center gap-1 border-s border-neutral-700 p-2"
+              >
+                <template v-for="n in 5" :key="n" class="star">
+                  <template v-if="n <= testimonial.rating">
+                    <Icon name="memory:checkbox-intermediate" :size="20" />
+                  </template>
+                  <template v-else>
+                    <Icon name="memory:checkbox-blank opacity-60" :size="20" />
+                  </template>
+                </template>
+              </div>
+            </div>
+            <div class="p-2">
+              <p class="text-default-font/70 m-0 p-0">
+                {{ testimonial.content }}
+              </p>
+            </div>
           </div>
-          <div class="p-2">
-            <p class="m-0 p-0">{{ testimonial.content }}</p>
+          <div class="h-0 border-t-0">
+            <div
+              class="bg-linear-to-b z-5 -top-15 h-15 relative from-transparent to-neutral-950"
+            />
           </div>
         </div>
-        <div class="h-0 border-t-0">
-          <div
-            class="bg-linear-to-b z-5 -top-15 h-15 relative from-transparent to-neutral-950"
-          />
-        </div>
-      </div>
-    </NuxtMarquee>
+      </NuxtMarquee>
+    </div>
   </div>
 </template>
 
@@ -105,6 +125,12 @@ const allTestimonials = [
         'Blueprint gives you the flexibility Pterodactyl needs. You can mod your installation reliably and to an extent not possible with Pterodactyl out of the box or other modifications. In recent updates, the developer made it easier to install and manage, even easier than Pterodactyl itself.',
       rating: 4,
     },
+    {
+      name: 'Auri',
+      content:
+        'Blueprint is a great modding platform & it makes it easy to install & manage extensions',
+      rating: 5,
+    },
   ],
   [
     {
@@ -172,6 +198,12 @@ const allTestimonials = [
       content:
         'Been using Blueprint for a bit over a year, it just works, everytime. You never have to worry about conflicts or updates, it always does exactly what you want. Easy and Reliable.',
       rating: 5,
+    },
+    {
+      name: 'BassRhombus',
+      content:
+        'Blueprint has made managing my servers not only easier, but more reliable. Blueprint makes add-ons way easier to install/remove with no downtime or backups required. Much easier than having to edit panel files the old way',
+      rating: 4,
     },
   ],
 ]

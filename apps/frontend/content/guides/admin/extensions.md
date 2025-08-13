@@ -10,7 +10,7 @@ order:
 ## Installing an extension
 
 ::card
-Using Blueprint Docker? You'll want to place the extension in the `extensions` directory instead.
+Using Blueprint Docker? You'll want to place the extension in the `/srv/pterodactyl/extensions` directory instead.
 ::
 
 To install a Blueprint extension, move the `identifier.blueprint` file into your Pterodactyl webserver directory (usually `/var/www/pterodactyl`) and install them through the following command:

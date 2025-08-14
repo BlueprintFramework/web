@@ -7,88 +7,170 @@ thumbnail: blueprintdocker.jpg
 order: -1
 ---
 
-## Introduction
+## Create directory and pull files
 
-::card
+First, make a `/srv/pterodactyl` directory and `cd` into it. Then, proceed to fetch Blueprint's `docker-compose.yml` and save it in that directory.
 
-#### Supported Architectures
+```bash
+# Creates a /srv/pterodactyl directory and navigates into it
+mkdir -p /srv/pterodactyl
+cd /srv/pterodactyl
 
-**AMD64** :white_check_mark:<br>
-**ARM64** :white_check_mark:<br>
-::
-
-Note: While the panel and Wings images provided will run fine on Arm64, most game servers _will not_, so if you are running Wings on an Arm64 machine, that's something to be aware of.
-
-::card
-
-#### Wings on Raspberry Pi
-
-Running Wings on a Raspberry Pi 4 or 5 may require additional work since Wings requires Docker cgroups, which are not present in the Ubuntu releases, only in Debian 11/12.
-
-Install the Debian Lite OS on your Raspberry Pi and install Docker. Add the following arguments in `/boot/firmware/cmdline.txt` (or `/boot/cmdline.txt` on Debian 11)
-
-```txt [/boot/firmware/cmdline.txt]
-cgroup_memory=1 cgroup_enable=memory systemd.unified_cgroup_hierarchy=0
+# Downloads Blueprint's docker-compose.yml into the current directory
+wget https://docker.bpfw.io/docker-compose.yml
 ```
 
-::
+## Environment configuration
 
-#### What is the difference between docker-compose.yml and classic-docker-compose.yml?
+Before we can get the stack running, you need to create and fill out a few environment variables. While you can see the full list [on the GitHub repository](https://raw.githubusercontent.com/BlueprintFramework/docker/refs/heads/Master/.env), we'll go through the options category-by-category through the next few steps.
 
-`classic-docker-compose.yml` stays as close to the stock Pterodactyl compose file as possible. This means it still has the obsolete "version" attribute, has no health checks, and does not use a .env file for configuration. This file is simpler to look at and understand, mostly because it doesn't give you the same level of control and information as the recommended docker-compose.yml file.<br>
-`docker-compose.yml` (recommended) can and has been improved over time. If you are using this version, download and configure the .env file as well; most if not all configuration can be done through the .env file.
-
-## Installation
-
-#### Bringing your compose stack online
-
-Download the compose file of your choice where you want your app to live (`/srv/pterodactyl` by default). If you chose docker-compose.yml, download the .env file to the same directory and configure it. If you chose classic-docker-compose.yml, configure the compose file only; you do not need the .env file.<br>
-**Note: This is not a drag and drop service; you need to configure it. For example, if you're setting up a panel-only machine, remove the wings service.**<br>
-When you are done configuring, `cd /srv/pterodactyl` and bring the stack up with `docker compose up -d`
-
-#### Is this your first time running Wings inside of Docker?
-
-One thing to be prepared for is that Wings uses the host system's Docker Engine through the mounted socket; it does not use Docker in Docker. What this means is the directory where you store your data, if you wish to customize it, must be set to the same value for both host and container in the mounts, and then you must make the values in your config.yml match; otherwise the Wings container would see one directory, then when a new container is created that isn't affected by this docker-compose.yml's mounts, it won't see the same directory. Here's an example:<br>
-
-\- Mount in docker-compose.yml: `"${BASE_DIR}/:${BASE_DIR}/"`.<br>
-\- Let's say, for the purposes of this example, that you set `BASE_DIR` in your .env file to **/srv/pterodactyl**. If you want to mount Wings server data in another location, just add any other mount, making sure both sides of the mount match. Now when you create your node, you would select somewhere inside the mount you made for `Daemon Server File Directory`, e.g. `/srv/pterodacty/wings/servers`.<br>
-\- After Wings runs successfully the first time, more options will appear in your `config.yml` file. They will look like this:
-
-```yaml
-root_directory: /var/lib/pterodactyl
-log_directory: /var/log/pterodactyl
-data: /srv/pterodactyl/wings/servers
-archive_directory: /var/lib/pterodactyl/archives
-backup_directory: /var/lib/pterodactyl/backups
-tmp_directory: /tmp/pterodactyl
+```bash
+# Creates and opens .env with nano
+touch .env
+nano .env
 ```
 
-As you can see, only `data` gets set to your configured location. You can make the others match by changing `/var/lib/pterodactyl` to match your base directory, again for the example `/srv/pterodactyl`. Optionally, you can change the log location too if you'd like to keep **_everything_** possible inside one directory, which is one of the benefits of using containers. Once you're done, it may look like:
+Now, paste in the environment variables documented below. You can functionally copy them as-is.
 
-```yaml
-root_directory: /srv/pterodactyl
+### Application
+
+These environment variables relate to your Pterodactyl webserver. Adjust them if needed.
+
+```bash [/srv/pterodactyl/.env]
+# Base directory, /srv/pterodactyl by default
+BASE_DIR=/srv/pterodactyl
+
+# Fully Qualified Domain Name (FQDN) of your panel, or simply
+# said, your panel's website url
+FQDN="https://pterodactyl.local"
+
+# Timezone to use. List of timezones available at:
+# http://php.net/manual/en/timezones.php
+TIMEZONE=Europe/Amsterdam
+
+# Application environment. Can be either 'production' or
+# 'testing'
+APP_ENV=production
+
+# Port to host the panel on. To use another port, allocate
+# one in your docker-compose.yml and assign it here
+PANEL_PORT=443
+```
+
+### Captcha
+
+Configure whether or not to show a captcha, and optionally add your api keys here.
+
+```bash [/srv/pterodactyl/.env]
+# Toggle whether to enable recaptcha or not
+RECAPTCHA_ENABLED=false
+
+# Recaptcha API keys. You can generate custom site keys at
+# https://www.google.com/recaptcha/admin
+RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+```
+
+### Mail
+
+Set up email for your panel, SMTP details and from which domain to send the email.
+
+```bash [/srv/pterodactyl/.env]
+# Domain name to send emails from
+DOMAIN=example.com
+
+# Email driver. To effectively disable the mail feature,
+# set it to 'array' instead of 'smtp'
+MAIL_DRIVER=array
+
+# SMTP details
+SMTP_SERVER=
+SMTP_PORT=
+SMTP_ENCRYPTION=tls
+SMTP_USERNAME=
+SMTP_APIKEY=
+```
+
+### Wings
+
+Lastly, a few environment variables for your Wings installation.
+
+```bash [/srv/pterodactyl/.env]
+# Port to use for Wings
+WINGS_PORT=8080
+
+# Port Wings will use to listen for SFTP connections
+WINGS_SFTP_PORT=2022
+```
+
+## Wings mounts
+
+Create a file called `wings/config.yml`. This file will take care of Wings's mounts.
+
+```bash
+# Create wings directory and config.yml file
+mkdir wings
+touch wings/config.yml
+
+# Echo mounts configuration into wings/config.yml
+echo \
+'root_directory: /srv/pterodactyl
 log_directory: /srv/pterodactyl/wings/logs
 data: /srv/pterodactyl/wings/servers
 archive_directory: /srv/pterodactyl/archives
 backup_directory: /srv/pterodactyl/backups
-tmp_directory: /tmp/pterodactyl
+tmp_directory: /tmp/pterodactyl' \
+> wings/config.yml
 ```
 
-#### Creating your first user
+Lastly, a few environment variables for your Wings installation.
 
-`cd` into the directory containing your compose file, e.g. `cd /srv/pterodactyl`
+```bash [/srv/pterodactyl/.env]
+# Port to use for Wings
+WINGS_PORT=8080
+
+# Port Wings will use to listen for SFTP connections
+WINGS_SFTP_PORT=2022
+```
+
+## Start the stack
+
+Once your done filling out everything, start your stack through Docker Compose.
 
 ```bash
+# Starts the stack
+docker compose up -d
+```
+
+## Create your first user
+
+To actually use your panel, you want to create a user. Use the command shown below to make one.
+
+```bash
+# Creates a user
 docker compose exec panel php artisan p:user:make
 ```
 
-#### Interacting with Blueprint
+## Alias Blueprint command
 
-Setting this alias will let you follow guides written for Blueprint. You can then interact with blueprint inside your container from the blueprint command on your host system. If your compose file is not in `/srv/pterodactyl/docker-compose.yml`, change the path to where yours is.
+To use Blueprint simply by running the `blueprint` command on your host machine, create an alias.
 
 ```bash
-# Set alias for current session
-alias blueprint="docker compose -f /srv/pterodactyl/docker-compose.yml exec panel blueprint"
-# Append to the end of your .bashrc file to make it persistent
+# Alias Blueprint in your bashrc
 echo 'alias blueprint="docker compose -f /srv/pterodactyl/docker-compose.yml exec panel blueprint"' >> ~/.bashrc
+
+# Source your .bashrc
+source ~/.bashrc
+
+# Test the Blueprint command. This should output the installed
+# Blueprint version
+blueprint -v
 ```
+
+::card
+Got Blueprint working but stuck wondering how you should go about installing extensions? You can find the answer in the [Manage extensions guide](/guides/admin/extensions#installing-an-extension).
+::
+
+## That's it!
+
+You've completed the Blueprint Docker installation guide! [Browse our extensions list](/browse) or [check out other related guides](/guides/list/docker).

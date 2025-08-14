@@ -1,7 +1,7 @@
 ---
 title: Restic backups
 description: Regularly back up your panel with Restic
-author:
+author: Loki
 category: docker
 thumbnail: restic.jpeg
 order:
@@ -12,6 +12,7 @@ So, you installed your first extension. Congratulations! Blueprint is now keepin
 ::
 
 #### First, we'll install Restic to handle backups
+
 Why Restic? Compression, de-duplication, and incremental backups. Save on space compared to simply archiving the directory each time.<br>
 The package name is usually `restic`, e.g.
 ::card
@@ -30,6 +31,7 @@ The package name is usually `restic`, e.g.
 ::
 
 #### Make a directory and script for backups
+
 ```bash
 mkdir -p /srv/backups/pterodactyl
 export RESTIC_PASSWORD="CHANGE_ME"
@@ -45,15 +47,18 @@ chmod +x /srv/backups/backup.sh
 ```
 
 #### Set a crontab to back up your panel (choose a time when it will be least likely to be being used)
+
 ```bash
 (crontab -l 2>/dev/null; echo "59 23 * * * /srv/backups/backup.sh") | crontab -
 ```
 
 #### Well, great. I have daily backups now, and they're set to keep at most 30 backups at a time. How can I restore from one of them?
-You can list snapshots with ``restic snapshots --repo /srv/backups/pterodactyl``<br>
-You're looking for a value for **ID** that looks something like ``46adb587``. **Time** will be right next to each ID, so you can see what day your backups are from.
+
+You can list snapshots with `restic snapshots --repo /srv/backups/pterodactyl`<br>
+You're looking for a value for **ID** that looks something like `46adb587`. **Time** will be right next to each ID, so you can see what day your backups are from.
 
 #### Once you've determined which snapshot you want to restore, stop your compose stack, restore your data, and start your stack again
+
 ```bash
 docker compose -f /srv/pterodactyl/docker-compose.yml down
 # Clear the directory so the restoration will be clean ⚠ DESTRUCTIVE ACTION

@@ -103,36 +103,6 @@ WINGS_PORT=8080
 WINGS_SFTP_PORT=2022
 ```
 
-## Wings mounts
-
-Create a file called `wings/config.yml`. This file will take care of Wings's mounts.
-
-```bash
-# Create wings directory and config.yml file
-mkdir wings
-touch wings/config.yml
-
-# Echo mounts configuration into wings/config.yml
-echo \
-'root_directory: /srv/pterodactyl
-log_directory: /srv/pterodactyl/wings/logs
-data: /srv/pterodactyl/wings/servers
-archive_directory: /srv/pterodactyl/archives
-backup_directory: /srv/pterodactyl/backups
-tmp_directory: /tmp/pterodactyl' \
-> wings/config.yml
-```
-
-Lastly, a few environment variables for your Wings installation.
-
-```bash [/srv/pterodactyl/.env]
-# Port to use for Wings
-WINGS_PORT=8080
-
-# Port Wings will use to listen for SFTP connections
-WINGS_SFTP_PORT=2022
-```
-
 ## Start the stack
 
 Once your done filling out everything, start your stack through Docker Compose.
@@ -170,6 +140,12 @@ blueprint -v
 ::card
 Got Blueprint working but stuck wondering how you should go about installing extensions? You can find the answer in the [Manage extensions guide](/guides/admin/extensions#installing-an-extension).
 ::
+
+## Connecting Wings
+
+TO BE DOCUMENTED
+
+This should guide the user through making a node and pasting the correct items into the wings config
 
 ## That's it!
 

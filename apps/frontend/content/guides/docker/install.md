@@ -207,20 +207,6 @@ system:
 - backup_directory: /var/lib/pterodactyl/backups
 ```
 
-## Create your first admin user
-
-To actually use your panel, you want to create a user. Use the command shown below to make one.
-
-```bash
-# Creates a user and prints out the password
-docker compose exec panel php artisan p:user:make \
-  --email="user@example.com" \
-  --username="your-awesome-username" \
-  --name-first="Jane" \
-  --name-last="Doe" \
-  --admin=1
-```
-
 ## Alias Blueprint command
 
 To use Blueprint simply by running the `blueprint` command on your host machine, create an alias.
@@ -240,6 +226,22 @@ blueprint -v
 ::card
 Got Blueprint working but stuck wondering how you should go about installing extensions? You can find the answer in the [Manage extensions guide](/guides/admin/extensions#installing-an-extension).
 ::
+
+## Create your first user
+
+To actually use your panel, you want to create a user. Use the command shown below to make one.
+
+```bash
+# Creates a user and prints out the password
+docker compose exec panel php artisan p:user:make \
+  --email="user@example.com" \
+  --username="your-awesome-username" \
+  --name-first="Jane" \
+  --name-last="Doe" \
+  --admin=1
+```
+
+Open up [`172.21.0.4`](http://172.21.0.4) in your browser, and sign in with your account.
 
 ## That's it!
 

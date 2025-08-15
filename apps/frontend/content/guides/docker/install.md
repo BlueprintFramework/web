@@ -169,7 +169,7 @@ docker compose exec panel php artisan p:node:make \
   --name="Node" \
   --description="My awesome node" \
   --locationId=1 \
-  --fqdn=$FQDN \
+  --fqdn=localhost \
   --public=1 \
   --scheme=http \
   --proxy=0 \

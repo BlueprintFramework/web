@@ -1,7 +1,7 @@
 ---
 title: Install Blueprint Docker
 description: Get started with Blueprint Docker
-author: Emma and Loki
+author: Loki and Emma
 category: docker
 thumbnail: blueprintdocker.jpg
 order: -1

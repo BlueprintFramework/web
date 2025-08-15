@@ -45,9 +45,11 @@ BASE_DIR=/srv/pterodactyl
 APP_NAME="Pterodactyl"
 
 # Fully Qualified Domain Name (FQDN) of your panel, or simply
-# said, your panel's website url. We've set this to the IP
-# address bind defined in docker-compose.yml
-FQDN="http://172.21.0.4"
+# put, the FIRST address leading to your panel. If you're accessing
+# your panel through a proxy, you'd put the proxy's endpoint. If you're
+# home-hosting this, you'd put your public IP or a domain leading to it.
+# If you're testing it out inside a temporary virtual machine, you'd probably use http://localhost
+FQDN="http://localhost"
 
 # Timezone to use. List of timezones available at:
 # http://php.net/manual/en/timezones.php
@@ -58,8 +60,9 @@ TIMEZONE=Europe/Amsterdam
 APP_ENV=production
 
 # Port to host the panel on. To use another port, allocate
-# one in your docker-compose.yml and assign it here
-PANEL_PORT=80
+# one in your docker-compose.yml and assign it here. We recommend
+# using Cloudflare DNS and enabling automatic redirection to https.
+PANEL_PORT=443
 ```
 
 ### Captcha
@@ -166,7 +169,7 @@ docker compose exec panel php artisan p:node:make \
   --name="Node" \
   --description="My awesome node" \
   --locationId=1 \
-  --fqdn=172.20.0.5 \
+  --fqdn=$FQDN \
   --public=1 \
   --scheme=http \
   --proxy=0 \
@@ -194,6 +197,7 @@ docker compose restart wings
 ```
 
 With Wings restarted, open up your `wings/config.yml` file, it should have a few additional options to mess with. Let's focus on the directory definitions, since those need to be adjusted to your Docker environment.
+Change the paths as you see them changed below.
 
 ```diff [/srv/pterodactyl/wings/config.yml]
 system:
@@ -241,7 +245,7 @@ docker compose exec panel php artisan p:user:make \
   --admin=1
 ```
 
-Open up [`172.21.0.4`](http://172.21.0.4) in your browser, and sign in with your account.
+Open up [`localhost`](http://localhost) in your browser, and sign in with your account.
 
 ## That's it!
 

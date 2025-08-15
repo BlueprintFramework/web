@@ -1,7 +1,7 @@
 ---
 title: Install Blueprint Docker
 description: Get started with Blueprint Docker
-author: Loki and Emma
+author: Emma and Loki
 category: docker
 thumbnail: blueprintdocker.jpg
 order: -1
@@ -40,9 +40,14 @@ These environment variables relate to your Pterodactyl webserver. Adjust them if
 # Base directory, /srv/pterodactyl by default
 BASE_DIR=/srv/pterodactyl
 
+# Name of your application, will show up on your panel and
+# emails sent from it
+APP_NAME="Pterodactyl"
+
 # Fully Qualified Domain Name (FQDN) of your panel, or simply
-# said, your panel's website url
-FQDN="https://pterodactyl.local"
+# said, your panel's website url. We've set this to the IP
+# address bind defined in docker-compose.yml
+FQDN="http://172.21.0.4"
 
 # Timezone to use. List of timezones available at:
 # http://php.net/manual/en/timezones.php
@@ -54,7 +59,7 @@ APP_ENV=production
 
 # Port to host the panel on. To use another port, allocate
 # one in your docker-compose.yml and assign it here
-PANEL_PORT=443
+PANEL_PORT=80
 ```
 
 ### Captcha
@@ -77,7 +82,7 @@ Set up email for your panel, SMTP details and from which domain to send the emai
 
 ```bash [/srv/pterodactyl/.env]
 # Domain name to send emails from
-DOMAIN=example.com
+DOMAIN=blueprint.local
 
 # Email driver. To effectively disable the mail feature,
 # set it to 'array' instead of 'smtp'
@@ -93,14 +98,31 @@ SMTP_APIKEY=
 
 ### Wings
 
-Lastly, a few environment variables for your Wings installation.
+Define the ports used for Wings and it's SFTP server.
 
-```bash [/srv/pterodactyl/.env]
-# Port to use for Wings
-WINGS_PORT=8080
+```bash
+# Run to define $WINGS_PORT and $WINGS_SFTP_PORT variables to write
+# to your .env and use later in the guide.
+export WINGS_PORT=8080
+export WINGS_SFTP_PORT=2022
 
-# Port Wings will use to listen for SFTP connections
-WINGS_SFTP_PORT=2022
+# Write environment variables to .env
+echo "WINGS_PORT=$WINGS_PORT\nWINGS_SFTP_PORT=$WINGS_SFTP_PORT" >> .env
+```
+
+::card
+After you've set up Wings later in the guide, changing `WINGS_PORT` and `WINGS_SFTP_PORT` will require changing them in the panel UI and `wings/config.yml` too.
+::
+
+### Keys
+
+Lastly, generate keys for your panel database and redis/valkey.
+
+```bash
+echo "MARIADB_ROOT_PASS=\"$(openssl rand -base64 32)\"" >> .env
+echo "MARIADB_USER_PASS=\"$(openssl rand -base64 32)\"" >> .env
+echo "VALKEY_PASS=\"$(openssl rand -base64 32)\"" >> .env
+echo "HASH_SALT=\"$(openssl rand -base64 32)\"" >> .env
 ```
 
 ## Start the stack
@@ -112,13 +134,91 @@ Once your done filling out everything, start your stack through Docker Compose.
 docker compose up -d
 ```
 
-## Create your first user
+## Connect Wings
+
+Before we can _run anything_ in Pterodactyl, we'll have to "create a node", where your node in this case is Wings. Before we can do that, though, we'll have to make a location too.
+
+### Create a new location
+
+The following command creates a location on your panel. If you want to, you can adjust the `--short` and `--long` arguments to a more descriptive location.
+
+```bash
+# Creates a location called 'earth' with description
+# 'Somewhere on planet earth'
+docker compose exec panel php artisan p:location:make \
+  --short=earth \
+  --long="Somewhere on planet earth"
+```
+
+Since this is our first location, it will have the ID of `1`.
+
+### Create a new node
+
+With our newly created location, we can use the following command to create a node.
+
+::card
+In this step, we are using the `$WINGS_PORT` and `$WINGS_SFTP_PORT` environment variables defined earlier. If these variables are no longer in your local shell environment, grab them from your `.env` and replace them with the right ports inside of the command below.
+::
+
+```bash
+# Creates a new node on the panel
+docker compose exec panel php artisan p:node:make \
+  --name="Node" \
+  --description="My awesome node" \
+  --locationId=1 \
+  --fqdn=172.20.0.5 \
+  --public=1 \
+  --scheme=http \
+  --proxy=0 \
+  --maintenance=0 \
+  --maxMemory=4096 \
+  --overallocateMemory=0 \
+  --maxDisk=10240 \
+  --overallocateDisk=0 \
+  --uploadSize=100 \
+  --daemonListeningPort=$WINGS_PORT \
+  --daemonSFTPPort=$WINGS_SFTP_PORT \
+  --daemonBase=/srv/pterodactyl/wings/pterodactyl
+```
+
+### Configure Wings
+
+With the node defined in Pterodactyl, the panel has now generated a Wings configuration for us. We'll need to write that configuration to `wings/config.yml`.
+
+```bash
+# Write Wings configuration for node 1 to wings/config.yml
+docker compose exec panel php artisan p:node:configuration 1 > wings/config.yml
+
+# Restart Wings
+docker compose restart wings
+```
+
+With Wings restarted, open up your `wings/config.yml` file, it should have a few additional options to mess with. Let's focus on the directory definitions, since those need to be adjusted to your Docker environment.
+
+```diff [/srv/pterodactyl/wings/config.yml]
+system:
++ root_directory: /srv/pterodactyl
++ log_directory: /srv/pterodactyl/wings/logs
++ archive_directory: /srv/pterodactyl/archives
++ backup_directory: /srv/pterodactyl/backups
+- root_directory: /var/lib/pterodactyl
+- log_directory: /var/log/pterodactyl
+- archive_directory: /var/lib/pterodactyl/archives
+- backup_directory: /var/lib/pterodactyl/backups
+```
+
+## Create your first admin user
 
 To actually use your panel, you want to create a user. Use the command shown below to make one.
 
 ```bash
-# Creates a user
-docker compose exec panel php artisan p:user:make
+# Creates a user and prints out the password
+docker compose exec panel php artisan p:user:make \
+  --email="user@example.com" \
+  --username="your-awesome-username" \
+  --name-first="Jane" \
+  --name-last="Doe" \
+  --admin=1
 ```
 
 ## Alias Blueprint command
@@ -140,12 +240,6 @@ blueprint -v
 ::card
 Got Blueprint working but stuck wondering how you should go about installing extensions? You can find the answer in the [Manage extensions guide](/guides/admin/extensions#installing-an-extension).
 ::
-
-## Connecting Wings
-
-TO BE DOCUMENTED
-
-This should guide the user through making a node and pasting the correct items into the wings config
 
 ## That's it!
 

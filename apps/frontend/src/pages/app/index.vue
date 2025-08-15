@@ -2,7 +2,7 @@
   <h1>Hi Emma!</h1>
 
   <div
-    class="grid grid-cols-4 divide-x divide-neutral-700 rounded-3xl border border-neutral-700"
+    class="grid grid-cols-4 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
   >
     <div class="space-y-2 p-4">
       <div class="flex items-center gap-1.5">

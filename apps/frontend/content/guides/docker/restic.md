@@ -48,7 +48,7 @@ restic init --repo /srv/backups/pterodactyl
 With your directory initialized, create a backup script with the below command and give it 'execute' permission so that we can run it.
 
 ```bash
-# Generates and saves $RESTIC_PASSWORD to /srv/backups/.env
+# Generates and saves $RESTIC_PASSWORD to /srv/backups/.resticenv
 echo -e "RESTIC_PASSWORD=\"$(openssl rand -base64 32)\"" >> /srv/backups/.resticenv
 
 # Writes script to /srv/backups/backup.sh

@@ -48,7 +48,8 @@ APP_NAME="Pterodactyl"
 # put, the FIRST address leading to your panel. If you're accessing
 # your panel through a proxy, you'd put the proxy's endpoint. If you're
 # home-hosting this, you'd put your public IP or a domain leading to it.
-# If you're testing it out inside a temporary virtual machine, you'd probably use http://localhost
+# If you're testing it out on your local machine only, you'd probably
+# use http://localhost
 FQDN="http://localhost"
 
 # Timezone to use. List of timezones available at:
@@ -164,14 +165,22 @@ In this step, we are using the `$WINGS_PORT` and `$WINGS_SFTP_PORT` environment 
 ::
 
 ```bash
+# Define your FQDN and URL scheme for Wings to use. These options
+# are similar to the one you defined for the panel earlier.
+#
+# This is the FIRST address leading to your Wings node. If Wings is
+# behind a proxy, use the proxy's domain name.
+export $WINGS_SCHEME="http" #Can be either http or https
+export $WINGS_FQDN="localhost"
+
 # Creates a new node on the panel
 docker compose exec panel php artisan p:node:make \
   --name="Node" \
   --description="My awesome node" \
   --locationId=1 \
-  --fqdn=localhost \
+  --fqdn="$WINGS_FQDN" \
   --public=1 \
-  --scheme=http \
+  --scheme="$WINGS_SCHEME" \
   --proxy=0 \
   --maintenance=0 \
   --maxMemory=4096 \

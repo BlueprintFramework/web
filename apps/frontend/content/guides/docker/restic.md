@@ -80,7 +80,7 @@ With a cronjob you can schedule backups to be made every day, automatically.
 
 ## All done!
 
-You've set up daily Restic backups. They are set to keep at most `30` backups at a time. You might be wondering, however, how you could restore one of those backups..
+You've set up daily Restic backups. They are set to keep at most `30` backups at a time. You might be wondering, however, how you could restore one of those backups.
 
 ### Listing backups
 
@@ -106,7 +106,7 @@ source /srv/backups/.resticenv
 docker compose -f /srv/pterodactyl/docker-compose.yml down
 
 # Clears the directory so the restoration will be clean
-# WARNING: This is a destructive action
+# ⚠ DESTRUCTIVE ACTION
 rm -rf /var/lib/docker/volumes/pterodactyl_app/_data/.[!.]* /var/lib/docker/volumes/pterodactyl_app/_data/*
 
 # Restores a Restic backup. Make sure to replace 3xamp13 with the backup ID

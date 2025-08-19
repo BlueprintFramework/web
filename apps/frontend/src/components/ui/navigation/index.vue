@@ -40,7 +40,10 @@
               class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 transition-colors"
             >
               <Icon name="memory:account" />
-              <span>{{ user?.name }}</span>
+              <span> {{ user?.name }} </span>
+              <span v-if="user?.admin" class="text-default-font/60">
+                (admin)
+              </span>
             </NuxtLink>
             <NuxtLink
               @click="logout"
@@ -116,9 +119,11 @@
             class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-3xl border border-neutral-700"
           >
             <div class="flex items-center gap-1.5 p-2 font-bold">
-              <span class="text-nowrap">Signed in as</span>
               <Icon name="memory:account" />
-              <span class="truncate">{{ user?.name }}</span>
+              <span class="truncate"> {{ user?.name }} </span>
+              <span v-if="user?.admin" class="text-default-font/60 font-normal">
+                (admin)
+              </span>
             </div>
             <div
               class="flex flex-col gap-2 p-2 opacity-0 transition-opacity duration-500"

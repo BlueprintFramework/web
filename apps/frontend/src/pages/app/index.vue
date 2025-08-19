@@ -11,6 +11,8 @@
     </div>
   </div>
 
+  <UiAppVerifyemail v-if="user?.email_pending != null" />
+
   <div
     class="grid grid-cols-4 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
   >

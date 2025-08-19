@@ -31,14 +31,24 @@
               <Icon name="memory:chevron-right" />
             </NuxtLink>
           </div>
-          <NuxtLink
+          <div
             v-else
-            to="/app"
-            class="hover:text-brand-50 flex items-center gap-1 rounded-md border border-neutral-700 bg-neutral-800 px-2.5 py-0.5 transition-colors"
+            class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
           >
-            <Icon name="memory:account" />
-            <span>{{ user?.name }}</span>
-          </NuxtLink>
+            <NuxtLink
+              to="/app"
+              class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 transition-colors"
+            >
+              <Icon name="memory:account" />
+              <span>{{ user?.name }}</span>
+            </NuxtLink>
+            <NuxtLink
+              @click="logout"
+              class="flex min-h-[26px] cursor-pointer items-center bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-red-950 hover:text-red-400"
+            >
+              <Icon name="memory:logout" mode="svg" />
+            </NuxtLink>
+          </div>
         </div>
         <button
           @click="mobileNavigation = !mobileNavigation"
@@ -101,13 +111,38 @@
               :visible="mobileNavigation"
             />
           </template>
-          <template v-else>
-            <UiNavigationMobilelink
-              to="/app"
-              label="Dashboard"
-              :visible="mobileNavigation"
-            />
-          </template>
+          <div
+            v-else
+            class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-3xl border border-neutral-700"
+          >
+            <div class="flex items-center gap-1.5 p-2 font-bold">
+              <span class="text-nowrap">Signed in as</span>
+              <Icon name="memory:account" />
+              <span class="truncate">{{ user?.name }}</span>
+            </div>
+            <div
+              class="flex flex-col gap-2 p-2 opacity-0 transition-opacity duration-500"
+              :class="mobileNavigation ? 'opacity-100' : ''"
+            >
+              <NuxtLink
+                to="/app"
+                class="hover:text-brand-50 block w-full text-start transition-colors"
+                :class="
+                  route.path == '/app'
+                    ? 'text-default-font'
+                    : 'text-default-font/60'
+                "
+              >
+                <span>Dashboard</span>
+              </NuxtLink>
+              <NuxtLink
+                @click="logout"
+                class="text-default-font/60 block w-full cursor-pointer text-start transition-colors hover:text-red-400"
+              >
+                <span>Logout</span>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
       </Transition>
     </div>
@@ -121,7 +156,9 @@
   <div class="h-13"></div>
 </template>
 <script setup lang="ts">
-const { isAuthenticated, user } = useAuth()
+const { isAuthenticated, user, logout } = useAuth()
+const route = useRoute()
+
 const mobileNavigation = ref(false)
 
 watch(mobileNavigation, (isOpen) => {

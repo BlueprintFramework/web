@@ -12,6 +12,18 @@ export const useFormValidation = () => {
       trigger: 'blur',
     }),
 
+    name: (
+      message = 'Can only contain alphabetical characters, numbers and underscores'
+    ): ValidationRule => ({
+      validator: (value: string) => {
+        if (!value) return true
+        const nameRegex = /^[a-zA-Z0-9_]+$/
+        return nameRegex.test(value)
+      },
+      message,
+      trigger: 'blur',
+    }),
+
     email: (
       message = 'Please enter a valid email address'
     ): ValidationRule => ({
@@ -37,16 +49,6 @@ export const useFormValidation = () => {
         const passwordRegex =
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
         return passwordRegex.test(value)
-      },
-      message,
-      trigger: 'blur',
-    }),
-
-    phone: (message = 'Please enter a valid phone number'): ValidationRule => ({
-      validator: (value: string) => {
-        if (!value) return true
-        const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/
-        return phoneRegex.test(value)
       },
       message,
       trigger: 'blur',

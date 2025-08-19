@@ -34,13 +34,16 @@
   />
 </template>
 <script setup lang="ts">
-import { docsCategories, defaultCategory } from '~/assets/docs.config'
 definePageMeta({
   layout: 'docs',
 })
+
+import { docsCategories, defaultCategory } from '~/assets/docs.config'
+
 const { data: docs } = await useAsyncData('docs-index', () => {
   return queryCollection('docs').all()
 })
+
 const categories = computed(() => {
   if (!docs.value) return {}
   const grouped = docs.value.reduce(
@@ -48,6 +51,7 @@ const categories = computed(() => {
       const categoryKey = doc.category?.toLowerCase() || 'general'
       const categoryConfig = docsCategories[categoryKey] || defaultCategory
       const categoryLabel = categoryConfig.label || doc.category || 'General'
+
       if (!acc[categoryLabel]) {
         acc[categoryLabel] = {
           icon: categoryConfig.icon,
@@ -56,7 +60,9 @@ const categories = computed(() => {
           firstDoc: doc.path,
         }
       }
+
       acc[categoryLabel].docCount++
+
       if (
         doc.order &&
         (!acc[categoryLabel].docOrder ||
@@ -65,6 +71,7 @@ const categories = computed(() => {
         acc[categoryLabel].firstDoc = doc.path
         acc[categoryLabel].docOrder = doc.order
       }
+
       return acc
     },
     {} as Record<
@@ -78,6 +85,7 @@ const categories = computed(() => {
       }
     >
   )
+
   const sortedGrouped = Object.entries(grouped)
     .sort(([, a], [, b]) => a.order - b.order)
     .reduce(
@@ -87,6 +95,7 @@ const categories = computed(() => {
       },
       {} as typeof grouped
     )
+
   return sortedGrouped
 })
 </script>

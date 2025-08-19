@@ -32,6 +32,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'auth',
+  middleware: 'guest',
+})
+
 const { rules: validationRules } = useFormValidation()
 
 const fieldValidation = ref<Record<string, boolean>>({})
@@ -42,8 +47,4 @@ const form = ref({
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
-
-definePageMeta({
-  layout: 'auth',
-})
 </script>

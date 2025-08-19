@@ -1,5 +1,8 @@
 <template>
-  <form class="w-full divide-y divide-neutral-700 border-y border-neutral-700">
+  <form
+    @submit.prevent="handleLogin"
+    class="w-full divide-y divide-neutral-700 border-y border-neutral-700"
+  >
     <div class="p-4">
       <h1 class="!text-4xl">Welcome back!</h1>
     </div>
@@ -13,6 +16,7 @@
         leading-icon="memory:email"
         auto-complete="email"
         placeholder="Email address"
+        :disabled="loading"
         @validate="(event) => handleFieldValidation('email', event)"
       />
       <UiFormInput
@@ -24,6 +28,7 @@
         leading-icon="memory:key"
         auto-complete="password"
         placeholder="Password"
+        :disabled="loading"
         @validate="(event) => handleFieldValidation('password', event)"
       />
 
@@ -38,6 +43,9 @@
       class="flex flex-col divide-y divide-neutral-700 md:flex-row md:divide-x md:divide-y-0"
     >
       <button
+        :disabled="
+          !fieldValidation.email || !fieldValidation.password || loading
+        "
         type="submit"
         class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
       >
@@ -46,7 +54,9 @@
       </button>
       <NuxtLink>
         <button
-          class="text-default-font hover:text-brand-50 w-auto cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900"
+          :disabled="loading"
+          type="button"
+          class="text-default-font hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 md:w-auto"
         >
           Authenticate with GitHub
         </button>
@@ -56,8 +66,15 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: 'auth',
+  middleware: 'guest',
+})
+
+const { login } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const loading = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
@@ -68,7 +85,15 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
 
-definePageMeta({
-  layout: 'auth',
-})
+const handleLogin = async () => {
+  loading.value = true
+  try {
+    await login(form.value.email, form.value.password)
+  } catch (error) {
+    //TODO: Properly handle API errors
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>

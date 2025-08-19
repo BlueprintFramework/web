@@ -190,6 +190,11 @@ const { data: extension, pending } = await useAsyncData<Extension>(
   }
 )
 
+useSeoMeta({
+  title: () => extension.value?.name,
+  description: () => extension.value?.summary,
+})
+
 const platformConfig = {
   BUILTBYBIT: {
     name: 'BuiltByBit',
@@ -231,9 +236,4 @@ const formatPrice = (price: number, currency: string): string => {
 
   return `${price.toFixed(2)} ${currency}`
 }
-
-useSeoMeta({
-  title: () => extension.value?.name,
-  description: () => extension.value?.summary,
-})
 </script>

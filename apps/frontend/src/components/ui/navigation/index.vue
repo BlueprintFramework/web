@@ -12,7 +12,7 @@
           <UiNavigationLink to="/browse" label="Extensions" />
           <UiNavigationLink to="/guides" label="Guides" />
           <UiNavigationLink to="/docs" label="Documentation" />
-          <UiNavigationLink to="/about" label="Organization" />
+          <UiNavigationLink to="/about" label="About" />
           <div
             class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
           >
@@ -76,7 +76,7 @@
           />
           <UiNavigationMobilelink
             to="/about"
-            label="Organization"
+            label="About"
             :visible="mobileNavigation"
           />
           <div class="py-5" />

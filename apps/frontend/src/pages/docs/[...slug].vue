@@ -57,8 +57,6 @@
 </template>
 
 <script setup>
-import { docsCategories } from '~/assets/docs.config'
-
 definePageMeta({
   layout: 'docs',
 })

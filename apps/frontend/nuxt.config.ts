@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-20',
   srcDir: 'src/',
   devtools: { enabled: true },
+  ssr: false,
   modules: [
     '@nuxt/icon',
     '@nuxt/fonts',

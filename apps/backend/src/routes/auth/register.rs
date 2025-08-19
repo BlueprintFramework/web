@@ -97,8 +97,7 @@ mod post {
 
         state
             .mail
-            .send(data.email, "Blueprint - Account Created".to_string(), mail)
-            .await;
+            .send(data.email, "Blueprint - Account Created".to_string(), mail);
 
         cookies.add(
             Cookie::build(("blueprint_session", key))

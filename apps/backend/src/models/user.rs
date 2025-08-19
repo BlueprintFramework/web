@@ -100,7 +100,7 @@ impl User {
         let row = sqlx::query(&format!(
             r#"
             INSERT INTO users (name, email, email_verification, password)
-            VALUES ($1, $2, crypt($3, gen_salt('bf', 8)))
+            VALUES ($1, $2, $3, crypt($4, gen_salt('bf', 8)))
             RETURNING {}
             "#,
             Self::columns_sql(None, None)

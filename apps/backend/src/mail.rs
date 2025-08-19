@@ -24,7 +24,7 @@ impl Mail {
         Self { env }
     }
 
-    async fn get_transport(&self) -> Result<Transport, Box<dyn std::error::Error + Send + Sync>> {
+    fn get_transport(&self) -> Result<Transport, Box<dyn std::error::Error + Send + Sync>> {
         match &self.env.mail_mode {
             crate::env::MailMode::None => Ok(Transport::None),
             crate::env::MailMode::Smtp {
@@ -69,8 +69,8 @@ impl Mail {
         }
     }
 
-    pub async fn send(&self, destination: String, subject: String, body: String) {
-        let transport = match self.get_transport().await {
+    pub fn send(&self, destination: String, subject: String, body: String) {
+        let transport = match self.get_transport() {
             Ok(transport) => transport,
             Err(e) => {
                 tracing::error!("failed to get mail transport: {:#?}", e);

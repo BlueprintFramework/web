@@ -66,14 +66,11 @@ mod patch {
             .replace("{{user_name}}", &user.name)
             .replace("{{verification_code}}", &email_verification);
 
-        state
-            .mail
-            .send(
-                data.email,
-                "Blueprint - Email Verification".to_string(),
-                mail,
-            )
-            .await;
+        state.mail.send(
+            data.email,
+            "Blueprint - Email Verification".to_string(),
+            mail,
+        );
 
         ApiResponse::json(Response {}).ok()
     }

@@ -78,8 +78,7 @@ mod post {
 
             state
                 .mail
-                .send(user.email, "Blueprint - Password Reset".to_string(), mail)
-                .await;
+                .send(user.email, "Blueprint - Password Reset".to_string(), mail);
         });
 
         ApiResponse::json(Response {}).ok()

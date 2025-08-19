@@ -14,6 +14,7 @@ use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod email;
+mod logout;
 mod sessions;
 
 #[derive(Clone)]
@@ -179,6 +180,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .routes(routes!(get::route))
         .nest("/sessions", sessions::router(state))
         .nest("/email", email::router(state))
+        .nest("/logout", logout::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

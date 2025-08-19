@@ -35,8 +35,6 @@
 </template>
 
 <script setup lang="ts">
-const img = useImage()
-
 const props = defineProps({
   class: {
     type: String,
@@ -44,9 +42,6 @@ const props = defineProps({
   },
 })
 
-// ipx_src is used for prerendering images upon static site generation
-// as they are not generated through NuxtMarquee for some reason
-//
 // extension banners should be prerendered and served by the api once
 // possible, but until thats done i've hardcoded the values here
 const items = ref([

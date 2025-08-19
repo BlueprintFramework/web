@@ -1,5 +1,15 @@
 <template>
-  <h1>Hi Emma!</h1>
+  <div class="flex items-center gap-2">
+    <span class="h1"> Hi </span>
+    <div
+      class="flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-1 text-xl"
+    >
+      <Icon name="memory:account" mode="svg" />
+      <span>
+        {{ user?.name }}
+      </span>
+    </div>
+  </div>
 
   <div
     class="grid grid-cols-4 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
@@ -40,4 +50,6 @@
 definePageMeta({
   middleware: 'auth',
 })
+
+const { user } = useAuth()
 </script>

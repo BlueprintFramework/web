@@ -14,6 +14,7 @@
           <UiNavigationLink to="/docs" label="Documentation" />
           <UiNavigationLink to="/about" label="About" />
           <div
+            v-if="!isAuthenticated"
             class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
           >
             <NuxtLink
@@ -30,6 +31,14 @@
               <Icon name="memory:chevron-right" />
             </NuxtLink>
           </div>
+          <NuxtLink
+            v-else
+            to="/app"
+            class="hover:text-brand-50 flex items-center gap-1 rounded-md border border-neutral-700 bg-neutral-800 px-2.5 py-0.5 transition-colors"
+          >
+            <Icon name="memory:account" />
+            <span>{{ user?.name }}</span>
+          </NuxtLink>
         </div>
         <button
           @click="mobileNavigation = !mobileNavigation"
@@ -80,16 +89,25 @@
             :visible="mobileNavigation"
           />
           <div class="py-5" />
-          <UiNavigationMobilelink
-            to="/auth"
-            label="Log in"
-            :visible="mobileNavigation"
-          />
-          <UiNavigationMobilelink
-            to="/auth/register"
-            label="Sign up"
-            :visible="mobileNavigation"
-          />
+          <template v-if="!isAuthenticated">
+            <UiNavigationMobilelink
+              to="/auth"
+              label="Log in"
+              :visible="mobileNavigation"
+            />
+            <UiNavigationMobilelink
+              to="/auth/register"
+              label="Sign up"
+              :visible="mobileNavigation"
+            />
+          </template>
+          <template v-else>
+            <UiNavigationMobilelink
+              to="/app"
+              label="Dashboard"
+              :visible="mobileNavigation"
+            />
+          </template>
         </div>
       </Transition>
     </div>
@@ -103,6 +121,7 @@
   <div class="h-13"></div>
 </template>
 <script setup lang="ts">
+const { isAuthenticated, user } = useAuth()
 const mobileNavigation = ref(false)
 
 watch(mobileNavigation, (isOpen) => {

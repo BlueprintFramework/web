@@ -1,7 +1,7 @@
 export const useAuth = () => {
   const authState = useState<AuthState>('auth', () => ({
     user: null,
-    isAuthenticated: false,
+    isAuthenticated: 'pending',
   }))
 
   const setUser = (user: FullUser) => {
@@ -23,8 +23,8 @@ export const useAuth = () => {
       setUser(data.user)
 
       await navigateTo('/app')
-    } catch (data) {
-      throw data
+    } catch (error) {
+      throw error
     }
   }
 
@@ -49,12 +49,18 @@ export const useAuth = () => {
   }
 
   const logout = async () => {
-    //TODO: Logout on API
+    try {
+      const data = await $fetch('/api/user/logout', {
+        method: 'POST',
+      })
 
-    authState.value.user = null
-    authState.value.isAuthenticated = false
+      authState.value.user = null
+      authState.value.isAuthenticated = false
 
-    await navigateTo('/')
+      await navigateTo('/')
+    } catch (error) {
+      throw error
+    }
   }
 
   const initializeAuth = async () => {

@@ -1,7 +1,6 @@
 export interface AuthState {
   user?: FullUser | null
-  token?: string | null
-  isAuthenticated: boolean
+  isAuthenticated: boolean | 'pending'
 }
 
 export interface FullUser {

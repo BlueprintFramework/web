@@ -116,7 +116,7 @@
           </template>
           <div
             v-else
-            class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-3xl border border-neutral-700"
+            class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
           >
             <div class="flex items-center gap-1.5 p-2 font-bold">
               <Icon name="memory:account" />

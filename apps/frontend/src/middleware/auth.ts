@@ -1,14 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) return
 
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isFetched } = useAuth()
 
-  if (isAuthenticated.value === 'pending') {
+  if (!isFetched.value) {
     await new Promise((resolve) => {
       const unwatch = watch(
         isAuthenticated,
         (newValue) => {
-          if (newValue !== 'pending') {
+          if (isFetched.value) {
             unwatch()
             resolve(undefined)
           }

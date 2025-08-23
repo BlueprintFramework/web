@@ -13,45 +13,47 @@
           <UiNavigationLink to="/guides" label="Guides" />
           <UiNavigationLink to="/docs" label="Documentation" />
           <UiNavigationLink to="/about" label="About" />
-          <div
-            v-if="!isAuthenticated"
-            class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
-          >
-            <NuxtLink
-              to="/auth"
-              class="hover:text-brand-50 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+          <client-only>
+            <div
+              v-if="isAuthenticated"
+              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
             >
-              <span>Log in</span>
-            </NuxtLink>
-            <NuxtLink
-              to="/auth/register"
-              class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
+              <NuxtLink
+                to="/app"
+                class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 transition-colors"
+              >
+                <Icon name="memory:account" />
+                <span> {{ user?.name }} </span>
+                <span v-if="user?.admin" class="text-default-font/60">
+                  (admin)
+                </span>
+              </NuxtLink>
+              <NuxtLink
+                @click="logout"
+                class="flex min-h-[26px] cursor-pointer items-center bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-red-950 hover:text-red-400"
+              >
+                <Icon name="memory:logout" mode="svg" />
+              </NuxtLink>
+            </div>
+            <div
+              v-else
+              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
             >
-              <span>Sign up</span>
-              <Icon name="memory:chevron-right" />
-            </NuxtLink>
-          </div>
-          <div
-            v-else
-            class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
-          >
-            <NuxtLink
-              to="/app"
-              class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 transition-colors"
-            >
-              <Icon name="memory:account" />
-              <span> {{ user?.name }} </span>
-              <span v-if="user?.admin" class="text-default-font/60">
-                (admin)
-              </span>
-            </NuxtLink>
-            <NuxtLink
-              @click="logout"
-              class="flex min-h-[26px] cursor-pointer items-center bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-red-950 hover:text-red-400"
-            >
-              <Icon name="memory:logout" mode="svg" />
-            </NuxtLink>
-          </div>
+              <NuxtLink
+                to="/auth"
+                class="hover:text-brand-50 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+              >
+                <span>Log in</span>
+              </NuxtLink>
+              <NuxtLink
+                to="/auth/register"
+                class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
+              >
+                <span>Sign up</span>
+                <Icon name="memory:chevron-right" />
+              </NuxtLink>
+            </div>
+          </client-only>
         </div>
         <button
           @click="mobileNavigation = !mobileNavigation"
@@ -102,52 +104,57 @@
             :visible="mobileNavigation"
           />
           <div class="py-5" />
-          <template v-if="!isAuthenticated">
-            <UiNavigationMobilelink
-              to="/auth"
-              label="Log in"
-              :visible="mobileNavigation"
-            />
-            <UiNavigationMobilelink
-              to="/auth/register"
-              label="Sign up"
-              :visible="mobileNavigation"
-            />
-          </template>
-          <div
-            v-else
-            class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
-          >
-            <div class="flex items-center gap-1.5 p-2 font-bold">
-              <Icon name="memory:account" />
-              <span class="truncate"> {{ user?.name }} </span>
-              <span v-if="user?.admin" class="text-default-font/60 font-normal">
-                (admin)
-              </span>
-            </div>
+          <client-only>
             <div
-              class="flex flex-col gap-2 p-2 opacity-0 transition-opacity duration-500"
-              :class="mobileNavigation ? 'opacity-100' : ''"
+              v-if="isAuthenticated"
+              class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
             >
-              <NuxtLink
-                to="/app"
-                class="hover:text-brand-50 block w-full text-start transition-colors"
-                :class="
-                  route.path == '/app'
-                    ? 'text-default-font'
-                    : 'text-default-font/60'
-                "
+              <div class="flex items-center gap-1.5 p-2 font-bold">
+                <Icon name="memory:account" />
+                <span class="truncate"> {{ user?.name }} </span>
+                <span
+                  v-if="user?.admin"
+                  class="text-default-font/60 font-normal"
+                >
+                  (admin)
+                </span>
+              </div>
+              <div
+                class="flex flex-col gap-2 p-2 opacity-0 transition-opacity duration-500"
+                :class="mobileNavigation ? 'opacity-100' : ''"
               >
-                <span>Dashboard</span>
-              </NuxtLink>
-              <NuxtLink
-                @click="logout"
-                class="text-default-font/60 block w-full cursor-pointer text-start transition-colors hover:text-red-400"
-              >
-                <span>Logout</span>
-              </NuxtLink>
+                <NuxtLink
+                  to="/app"
+                  class="hover:text-brand-50 block w-full text-start transition-colors"
+                  :class="
+                    route.path == '/app'
+                      ? 'text-default-font'
+                      : 'text-default-font/60'
+                  "
+                >
+                  <span>Dashboard</span>
+                </NuxtLink>
+                <NuxtLink
+                  @click="logout"
+                  class="text-default-font/60 block w-full cursor-pointer text-start transition-colors hover:text-red-400"
+                >
+                  <span>Logout</span>
+                </NuxtLink>
+              </div>
             </div>
-          </div>
+            <template v-else>
+              <UiNavigationMobilelink
+                to="/auth"
+                label="Log in"
+                :visible="mobileNavigation"
+              />
+              <UiNavigationMobilelink
+                to="/auth/register"
+                label="Sign up"
+                :visible="mobileNavigation"
+              />
+            </template>
+          </client-only>
         </div>
       </Transition>
     </div>

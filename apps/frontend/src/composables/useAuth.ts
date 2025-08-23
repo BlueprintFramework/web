@@ -1,12 +1,14 @@
 export const useAuth = () => {
   const authState = useState<AuthState>('auth', () => ({
     user: null,
-    isAuthenticated: 'pending',
+    isAuthenticated: false,
+    isFetched: false,
   }))
 
   const setUser = (user: FullUser) => {
     authState.value.user = user
     authState.value.isAuthenticated = true
+    authState.value.isFetched = true
   }
 
   const login = async (email: string, password: string) => {
@@ -69,16 +71,17 @@ export const useAuth = () => {
         method: 'GET',
       })
 
-      authState.value.user = data.user
-      authState.value.isAuthenticated = true
+      setUser(data.user)
     } catch {
       authState.value.isAuthenticated = false
+      authState.value.isFetched = true
     }
   }
 
   return {
     user: readonly(computed(() => authState.value.user)),
     isAuthenticated: readonly(computed(() => authState.value.isAuthenticated)),
+    isFetched: readonly(computed(() => authState.value.isFetched)),
 
     login,
     register,

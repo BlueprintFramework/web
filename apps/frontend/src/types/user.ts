@@ -1,6 +1,7 @@
 export interface AuthState {
   user?: FullUser | null
-  isAuthenticated: boolean | 'pending'
+  isAuthenticated: boolean
+  isFetched: boolean
 }
 
 export interface FullUser {

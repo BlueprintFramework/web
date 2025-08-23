@@ -19,12 +19,12 @@
     "@nuxtjs/sitemap": "7.4.3",
     "@tailwindcss/vite": "^4.1.12",
     "@vueuse/core": "^13.7.0",
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.2.0",
     "nuxt": "^4.0.3",
     "nuxt-marquee": "1.0.4",
     "tailwindcss": "^4.1.12",
     "ufo": "^1.6.1",
-    "vue": "^3.5.18",
+    "vue": "^3.5.19",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {

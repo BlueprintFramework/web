@@ -24,21 +24,39 @@
           >
             <Icon name="memory:apps" :size="24" />
           </NuxtLink>
-          <div
+          <NuxtLink
+            to="/app/account"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            :class="{
+              '!text-default-font':
+                route.path == '/app/account' ||
+                route.path.startsWith('/app/account/'),
+            }"
           >
             <Icon name="memory:account-box" :size="24" />
-          </div>
-          <div
+          </NuxtLink>
+          <NuxtLink
+            to="/app/extensions"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            :class="{
+              '!text-default-font':
+                route.path == '/app/extensions' ||
+                route.path.startsWith('/app/extensions/'),
+            }"
           >
             <Icon name="memory:cube" :size="24" />
-          </div>
-          <div
+          </NuxtLink>
+          <NuxtLink
+            to="/app/stats"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            :class="{
+              '!text-default-font':
+                route.path == '/app/stats' ||
+                route.path.startsWith('/app/stats/'),
+            }"
           >
             <Icon name="memory:chart-bar" :size="24" />
-          </div>
+          </NuxtLink>
         </div>
 
         <!-- Logout -->

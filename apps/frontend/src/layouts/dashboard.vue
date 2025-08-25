@@ -1,6 +1,6 @@
 <template>
-  <div class="flex">
-    <div class="w-21 py-4 pl-4">
+  <div class="flex gap-5">
+    <div class="w-17 py-4 pl-4">
       <div
         class="w-15 fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950"
       >
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="container space-y-6 py-6">
+      <div class="container space-y-5 py-6">
         <slot />
       </div>
     </div>

@@ -1,8 +1,10 @@
-<template></template>
+<template>
+  <h1>Statistics</h1>
+</template>
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth',
+  middleware: 'user-verified',
   layout: 'dashboard',
 })
 

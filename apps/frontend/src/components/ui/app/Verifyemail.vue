@@ -6,8 +6,8 @@
       <Icon name="memory:email" :size="24" mode="svg" />
     </div>
     <div class="border-s border-red-800 p-4">
-      You need to verify your email address. We've sent an account verification
-      email to
+      You need to verify your email address to manage and publish extensions
+      We've sent an account verification email to
       <span class="monospace-body"> {{ user?.email_pending }} </span>.
     </div>
   </div>

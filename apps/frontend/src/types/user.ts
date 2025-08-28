@@ -22,6 +22,15 @@ export interface User {
   support?: string | null
 }
 
+export interface UserSessions {
+  sessions: {
+    total: number
+    per_page: number
+    page: number
+    data: UserSession[]
+  }
+}
+
 export interface UserSession {
   created: string
   id: number

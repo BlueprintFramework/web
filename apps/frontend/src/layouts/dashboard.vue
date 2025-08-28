@@ -18,6 +18,7 @@
         <!-- Links -->
         <div class="flex w-full flex-col divide-y divide-neutral-700">
           <NuxtLink
+            v-if="user?.email_pending == null"
             to="/app"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
             :class="{ '!text-default-font': route.path == '/app' }"
@@ -36,6 +37,7 @@
             <Icon name="memory:account-box" :size="24" />
           </NuxtLink>
           <NuxtLink
+            v-if="user?.email_pending == null"
             to="/app/extensions"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
             :class="{
@@ -47,6 +49,7 @@
             <Icon name="memory:cube" :size="24" />
           </NuxtLink>
           <NuxtLink
+            v-if="user?.email_pending == null"
             to="/app/stats"
             class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
             :class="{
@@ -72,6 +75,8 @@
     </div>
     <div class="flex w-full">
       <div class="container space-y-5 py-6">
+        <UiAppVerifyemail v-if="user?.email_pending != null" />
+
         <slot />
       </div>
     </div>

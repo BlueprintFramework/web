@@ -12,7 +12,7 @@
           <UiNavigationLink to="/browse" label="Extensions" />
           <UiNavigationLink to="/guides" label="Guides" />
           <UiNavigationLink to="/docs" label="Documentation" />
-          <UiNavigationLink to="/about" label="About" />
+          <UiNavigationLink to="/donate" label="Donate" />
           <client-only>
             <div
               v-if="isAuthenticated"
@@ -99,8 +99,8 @@
             :visible="mobileNavigation"
           />
           <UiNavigationMobilelink
-            to="/about"
-            label="About"
+            to="/donate"
+            label="Donate"
             :visible="mobileNavigation"
           />
           <div class="py-5" />

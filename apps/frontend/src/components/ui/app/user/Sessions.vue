@@ -15,6 +15,7 @@
         <button
           class="disabled:text-default-font/60 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 border-r border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
           :disabled="page > 1 ? false : true"
+          @click="page--"
         >
           Previous page
         </button>
@@ -30,6 +31,7 @@
           :disabled="
             (pageLastSession || 0) >= (data?.sessions.total || 0) ? true : false
           "
+          @click="page++"
         >
           Next page
         </button>
@@ -72,7 +74,9 @@
 <script setup lang="ts">
 const data = ref<UserSessions>()
 const page = ref(1)
-const perPage = ref(5)
+const perPage = ref(4)
+const loading = ref(false)
+
 const pageFirstSession = computed(() => perPage.value * (page.value - 1) + 1)
 const pageLastSession = computed(() =>
   perPage.value * page.value >= (data.value?.sessions.total || 0)
@@ -80,10 +84,26 @@ const pageLastSession = computed(() =>
     : perPage.value * page.value
 )
 
-data.value = await $fetch(
-  `/api/user/sessions?page=${page.value}&per_page=${perPage.value}`,
-  {
-    method: 'GET',
+const fetchSessions = async () => {
+  loading.value = true
+  try {
+    data.value = await $fetch(
+      `/api/user/sessions?page=${page.value}&per_page=${perPage.value}`,
+      {
+        method: 'GET',
+      }
+    )
+  } catch (error) {
+    //TODO: properly handle error in the ui as well
+    console.error('failed to fetch sessions:', error)
+  } finally {
+    loading.value = false
   }
-)
+}
+
+watch(page, () => {
+  fetchSessions()
+})
+
+await fetchSessions()
 </script>

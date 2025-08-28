@@ -10,6 +10,7 @@
         },
         "experimental": {
           "classRegex": [
+            ["@apply\\s+([^;]*);", "([a-zA-Z0-9\\s\\-:]+)"],
             "class=\"([^\"]*)",
             "class={\"([^\"}]*)",
             "class=format!({\"([^\"}]*)"

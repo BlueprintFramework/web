@@ -11,7 +11,29 @@
         </p>
       </div>
       <div class="bg-stripes h-full" />
-      <div class="p-4">TODO: Pagination</div>
+      <div class="flex items-center justify-between">
+        <button
+          class="disabled:text-default-font/60 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 border-r border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
+          :disabled="page > 1 ? false : true"
+        >
+          Previous page
+        </button>
+        <div class="p-4">
+          <span>
+            Showing {{ pageFirstSession }}-{{ pageLastSession }}
+            of
+            {{ data?.sessions.total }}
+          </span>
+        </div>
+        <button
+          class="disabled:text-default-font/60 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 border-l border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
+          :disabled="
+            (pageLastSession || 0) >= (data?.sessions.total || 0) ? true : false
+          "
+        >
+          Next page
+        </button>
+      </div>
     </div>
     <div class="flex flex-col divide-y divide-neutral-700">
       <div
@@ -49,8 +71,19 @@
 
 <script setup lang="ts">
 const data = ref<UserSessions>()
+const page = ref(1)
+const perPage = ref(5)
+const pageFirstSession = computed(() => perPage.value * (page.value - 1) + 1)
+const pageLastSession = computed(() =>
+  perPage.value * page.value >= (data.value?.sessions.total || 0)
+    ? data.value?.sessions.total
+    : perPage.value * page.value
+)
 
-data.value = await $fetch('/api/user/sessions?page=1&per_page=3', {
-  method: 'GET',
-})
+data.value = await $fetch(
+  `/api/user/sessions?page=${page.value}&per_page=${perPage.value}`,
+  {
+    method: 'GET',
+  }
+)
 </script>

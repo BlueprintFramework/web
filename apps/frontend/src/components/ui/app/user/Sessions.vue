@@ -2,12 +2,12 @@
   <div
     class="grid grid-cols-2 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
   >
-    <div class="flex min-h-60 flex-col divide-y divide-neutral-700">
+    <div class="min-h-55 flex flex-col divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
         <h2>Devices</h2>
         <p>
-          This is a list of devices that you are currently signed into. You can
-          deauthorize devices by selecting them.
+          This is a list of devices that are currently signed in to your
+          Blueprint account. You can deauthorize devices by selecting them.
         </p>
       </div>
       <div class="bg-stripes h-full" />
@@ -17,11 +17,11 @@
           :disabled="page > 1 ? false : true"
           @click="page--"
         >
-          Previous page
+          <Icon name="memory:chevron-left" :size="24" mode="svg" />
         </button>
         <div class="p-4">
           <span>
-            Showing {{ pageFirstSession }}-{{ pageLastSession }}
+            Sessions {{ pageFirstSession }}-{{ pageLastSession }}
             of
             {{ data?.sessions.total }}
           </span>
@@ -33,15 +33,18 @@
           "
           @click="page++"
         >
-          Next page
+          <Icon name="memory:chevron-right" :size="24" mode="svg" />
         </button>
       </div>
     </div>
-    <div class="flex flex-col divide-y divide-neutral-700">
+    <div class="grid" :class="`grid-rows-${perPage}`">
       <div
         v-for="session in data?.sessions.data"
-        class="flex h-full flex-col gap-2 p-4 align-middle"
-        :class="session.is_using ? 'bg-neutral-900' : 'bg-neutral-950'"
+        class="flex flex-col justify-center gap-2 overflow-hidden border-neutral-700 p-4 align-middle"
+        :class="
+          (session.is_using ? 'bg-neutral-900 ' : 'bg-neutral-950 ') +
+          (session != data?.sessions.data.at(-1) ? 'border-b' : 'border-b-0')
+        "
       >
         <div class="flex items-center justify-between gap-2">
           <div
@@ -57,7 +60,7 @@
             #{{ session.id }}
           </span>
         </div>
-        <p class="monospace-body text-default-font/60">
+        <p class="monospace-body text-default-font/60 truncate">
           {{ session.user_agent }}
         </p>
         <p v-if="session.is_using" class="text-brand-50">
@@ -66,6 +69,13 @@
         <p v-else>
           Last used <NuxtTime :datetime="session.last_used" relative />
         </p>
+      </div>
+      <div
+        v-if="!data?.sessions.data[perPage - 1]"
+        class="flex flex-col items-center justify-center gap-1 border-t border-neutral-700 p-4"
+      >
+        <Icon name="pixelarticons:devices" :size="32" />
+        <p>New devices will show up here..</p>
       </div>
     </div>
   </div>

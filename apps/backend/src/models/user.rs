@@ -187,6 +187,27 @@ impl User {
         Ok(row.map(|row| Self::map(None, &row)))
     }
 
+    pub async fn validate_password(
+        &self,
+        database: &crate::database::Database,
+        password: &str,
+    ) -> Result<bool, sqlx::Error> {
+        let row = sqlx::query(&format!(
+            r#"
+            SELECT {}
+            FROM users
+            WHERE users.id = $1 AND users.password = crypt($2, users.password)
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(self.id)
+        .bind(password)
+        .fetch_optional(database.read())
+        .await?;
+
+        Ok(row.is_some())
+    }
+
     pub async fn update_password(
         &self,
         database: &crate::database::Database,

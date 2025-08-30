@@ -15,6 +15,7 @@ use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod email;
 mod logout;
+mod password;
 mod sessions;
 
 #[derive(Clone)]
@@ -175,11 +176,69 @@ mod get {
     }
 }
 
+mod patch {
+    use crate::{
+        response::{ApiResponse, ApiResponseResult},
+        routes::{ApiError, GetState, user::GetUser},
+    };
+    use axum::http::StatusCode;
+    use serde::{Deserialize, Serialize};
+    use utoipa::ToSchema;
+    use validator::Validate;
+
+    #[derive(ToSchema, Validate, Deserialize)]
+    pub struct Payload {
+        #[validate(
+            length(min = 3, max = 15),
+            regex(path = "*crate::models::user::NAME_REGEX")
+        )]
+        #[schema(min_length = 3, max_length = 15)]
+        #[schema(pattern = "^[a-zA-Z0-9_]+$")]
+        name: Option<String>,
+    }
+
+    #[derive(ToSchema, Serialize)]
+    struct Response {}
+
+    #[utoipa::path(patch, path = "/", responses(
+        (status = OK, body = inline(Response)),
+    ))]
+    pub async fn route(
+        state: GetState,
+        mut user: GetUser,
+        axum::Json(data): axum::Json<Payload>,
+    ) -> ApiResponseResult {
+        if let Err(errors) = crate::utils::validate_data(&data) {
+            return ApiResponse::json(ApiError::new_strings_value(errors))
+                .with_status(StatusCode::BAD_REQUEST)
+                .ok();
+        }
+
+        if let Some(name) = data.name {
+            user.name = name;
+        }
+
+        sqlx::query!(
+            "UPDATE users
+            SET name = $2
+            WHERE users.id = $1",
+            user.id,
+            user.name
+        )
+        .execute(state.database.write())
+        .await?;
+
+        ApiResponse::json(Response {}).ok()
+    }
+}
+
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .routes(routes!(get::route))
+        .routes(routes!(patch::route))
         .nest("/sessions", sessions::router(state))
         .nest("/email", email::router(state))
+        .nest("/password", password::router(state))
         .nest("/logout", logout::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())

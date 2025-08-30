@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE users\n            SET email = users.email_pending, email_pending = NULL, email_verification = NULL\n            WHERE users.id = $1 AND email_verification = $2\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Bpchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b3264685db1ad1988c38f1077a98299c97d5e13124ca49e29c14193b41c3bb37"
+}

@@ -1,5 +1,5 @@
 <template>
-  <div class="my-2 overflow-auto">
+  <div class="my-4 overflow-auto">
     <div
       class="w-full overflow-hidden rounded-t-2xl border border-neutral-700 bg-neutral-950"
     >

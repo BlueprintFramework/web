@@ -52,6 +52,7 @@
               : 'group cursor-pointer bg-neutral-950 hover:bg-red-950 ') +
             (session != data?.sessions.data.at(-1) ? 'border-b' : 'border-b-0')
           "
+          @click="!session.is_using && deleteSession(session.id)"
         >
           <div class="flex items-center justify-between gap-2">
             <div
@@ -105,6 +106,7 @@ const data = ref<UserSessions>()
 const page = ref(1)
 const perPage = ref(4)
 const loading = ref(false)
+const deleting = ref(false)
 
 const pageFirstSession = computed(() => perPage.value * (page.value - 1) + 1)
 const pageLastSession = computed(() =>
@@ -114,6 +116,8 @@ const pageLastSession = computed(() =>
 )
 
 const fetchSessions = async () => {
+  if (loading.value) return
+
   loading.value = true
   try {
     data.value = await $fetch(
@@ -134,6 +138,24 @@ const fetchSessions = async () => {
     ) {
       page.value--
     }
+  }
+}
+
+const deleteSession = async (sessionId: number) => {
+  if (deleting.value || loading.value) return
+
+  deleting.value = true
+  try {
+    await $fetch(`/api/user/sessions/${sessionId}`, {
+      method: 'DELETE',
+    })
+
+    await fetchSessions()
+  } catch (error) {
+    //TODO: properly handle error in the ui as well
+    console.error('failed to delete session:', error)
+  } finally {
+    deleting.value = false
   }
 }
 

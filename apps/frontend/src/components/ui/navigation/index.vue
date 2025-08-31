@@ -12,7 +12,14 @@
           <UiNavigationLink to="/browse" label="Extensions" />
           <UiNavigationLink to="/guides" label="Guides" />
           <UiNavigationLink to="/docs" label="Documentation" />
-          <UiNavigationLink to="/donate" label="Donate" />
+          <NuxtLink
+            to="https://hcb.hackclub.com/donations/start/blueprint"
+            target="_blank"
+            class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 overflow-hidden rounded-md border border-neutral-700 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+          >
+            <span>Donate</span>
+            <Icon name="memory:arrow-top-right" mode="svg" />
+          </NuxtLink>
           <client-only>
             <div
               v-if="isAuthenticated"
@@ -99,7 +106,8 @@
             :visible="mobileNavigation"
           />
           <UiNavigationMobilelink
-            to="/donate"
+            to="https://hcb.hackclub.com/donations/start/blueprint"
+            target="_blank"
             label="Donate"
             :visible="mobileNavigation"
           />

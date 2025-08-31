@@ -1,6 +1,6 @@
 ---
-title: Working with placeholders
-description: Learn how to properly make use of placeholders
+title: Placeholders
+description: Automatically replace strings with data
 category: concepts
 ---
 

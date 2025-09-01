@@ -1,3 +1,28 @@
+<template>
+  <svg
+    viewBox="0 0 3 3"
+    xmlns="http://www.w3.org/2000/svg"
+    :class="props.class"
+    :width="size"
+    :height="size"
+    :fill="fill || 'currentColor'"
+    alt="Blueprint Logo"
+  >
+    <rect
+      v-for="cube in cubes"
+      :key="cube.index"
+      :x="cube.x"
+      :y="cube.y"
+      width="1"
+      height="1"
+      class="emblem-cube transition-opacity"
+      :style="{
+        '--emblem-delay': `${cube.index * 70}ms`,
+      }"
+    ></rect>
+  </svg>
+</template>
+
 <script setup lang="ts">
 const props = defineProps({
   size: {
@@ -24,31 +49,6 @@ const cubes = [
   { x: 2, y: 2, index: 2 },
 ]
 </script>
-
-<template>
-  <svg
-    viewBox="0 0 3 3"
-    xmlns="http://www.w3.org/2000/svg"
-    :class="props.class"
-    :width="size"
-    :height="size"
-    :fill="fill || 'currentColor'"
-    alt="Blueprint Logo"
-  >
-    <rect
-      v-for="cube in cubes"
-      :key="cube.index"
-      :x="cube.x"
-      :y="cube.y"
-      width="1"
-      height="1"
-      class="emblem-cube transition-opacity"
-      :style="{
-        '--emblem-delay': `${cube.index * 70}ms`,
-      }"
-    ></rect>
-  </svg>
-</template>
 
 <style>
 @keyframes emblemSequence {

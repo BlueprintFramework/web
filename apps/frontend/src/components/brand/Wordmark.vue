@@ -1,5 +1,12 @@
 <template>
-  <div class="w-min">
+  <NuxtLink
+    v-if="showWordart"
+    to="/"
+    class="hover:rotate-13 transition-transform duration-300 hover:scale-110"
+  >
+    <NuxtImg src="/img/blueprint_wordart.png" :height="28" />
+  </NuxtLink>
+  <div v-else class="w-min">
     <NuxtLink
       to="/"
       class="hover:text-brand-50 flex items-center justify-between gap-2 transition-colors"
@@ -13,6 +20,9 @@
 </template>
 
 <script setup lang="ts">
+const today = new Date()
+const showWordart = today.getMonth() === 3 && today.getDate() === 1
+
 const emblemClass = ref('')
 const emblemAnimating = ref(false)
 

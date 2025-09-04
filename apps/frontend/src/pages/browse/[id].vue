@@ -57,12 +57,26 @@
     <div
       class="flex flex-col divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:flex-row lg:divide-x"
     >
-      <div class="w-full">
-        <div class="bg-stripes h-full w-full p-4"></div>
+      <div class="w-full border-b border-neutral-700 lg:border-b-0">
+        <template v-if="extension.description">
+          <p>rendering descriptions will happen someday</p>
+        </template>
+        <template v-else>
+          <div
+            class="flex h-full w-full items-center justify-center align-middle"
+          >
+            <div class="max-w-100 p-4 text-center">
+              <Icon name="pixelarticons:downasaur" :size="48" />
+              <h1 class="mb-2.5">Missing description</h1>
+              <p>
+                {{ extension.author.name }} still has to write one. Until then,
+                you'll have to deal with this dinosaur.
+              </p>
+            </div>
+          </div>
+        </template>
       </div>
-      <div
-        class="lg:min-w-100 lg:max-w-100 order-first border-b border-neutral-700 lg:order-last lg:border-b-0"
-      >
+      <div class="lg:min-w-100 lg:max-w-100">
         <div class="space-y-4 p-4">
           <div
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"

@@ -195,6 +195,9 @@ mod patch {
         #[schema(min_length = 3, max_length = 15)]
         #[schema(pattern = "^[a-zA-Z0-9_]+$")]
         name: Option<String>,
+        #[schema(min_length = 5, max_length = 63)]
+        #[schema(min_length = 5, max_length = 63)]
+        support: Option<String>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -217,13 +220,21 @@ mod patch {
         if let Some(name) = data.name {
             user.name = name;
         }
+        if let Some(support) = data.support {
+            if support.is_empty() {
+                user.support = None;
+            } else {
+                user.support = Some(support);
+            }
+        }
 
         sqlx::query!(
             "UPDATE users
-            SET name = $2
+            SET name = $2, support = $3
             WHERE users.id = $1",
             user.id,
-            user.name
+            user.name,
+            user.support
         )
         .execute(state.database.write())
         .await?;

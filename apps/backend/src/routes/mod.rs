@@ -35,22 +35,15 @@ pub struct AppState {
     pub version: String,
 
     pub github_releases: RwLock<Vec<String>>,
+    pub client: reqwest::Client,
 
     pub database: Arc<crate::database::Database>,
     pub cache: Arc<crate::cache::Cache>,
+    pub s3: Arc<crate::s3::S3>,
     pub telemetry: crate::telemetry::TelemetryLogger,
     pub env: Arc<crate::env::Env>,
     pub mail: Arc<crate::mail::Mail>,
     pub captcha: Arc<crate::captcha::Captcha>,
-}
-
-impl AppState {
-    pub fn client(&self) -> reqwest::Client {
-        reqwest::Client::builder()
-            .user_agent(format!("blueprint api/{}", self.version))
-            .build()
-            .unwrap()
-    }
 }
 
 pub type State = Arc<AppState>;

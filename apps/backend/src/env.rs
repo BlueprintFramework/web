@@ -51,6 +51,14 @@ pub struct Env {
     pub database_url: String,
     pub database_url_primary: Option<String>,
 
+    pub s3_url: String,
+    pub s3_path_style: bool,
+    pub s3_endpoint: String,
+    pub s3_region: String,
+    pub s3_bucket: String,
+    pub s3_access_key: String,
+    pub s3_secret_key: String,
+
     pub bind: String,
     pub port: u16,
 
@@ -191,6 +199,36 @@ impl Env {
             database_url_primary: std::env::var("DATABASE_URL_PRIMARY")
                 .ok()
                 .map(|s| s.trim_matches('"').to_string()),
+
+            s3_url: std::env::var("S3_URL")
+                .expect("S3_URL is required")
+                .trim_matches('"')
+                .to_string(),
+            s3_path_style: std::env::var("S3_PATH_STYLE")
+                .unwrap_or("true".to_string())
+                .trim_matches('"')
+                .parse()
+                .unwrap(),
+            s3_endpoint: std::env::var("S3_ENDPOINT")
+                .expect("S3_ENDPOINT is required")
+                .trim_matches('"')
+                .to_string(),
+            s3_region: std::env::var("S3_REGION")
+                .expect("S3_REGION is required")
+                .trim_matches('"')
+                .to_string(),
+            s3_bucket: std::env::var("S3_BUCKET")
+                .expect("S3_BUCKET is required")
+                .trim_matches('"')
+                .to_string(),
+            s3_access_key: std::env::var("S3_ACCESS_KEY")
+                .expect("S3_ACCESS_KEY is required")
+                .trim_matches('"')
+                .to_string(),
+            s3_secret_key: std::env::var("S3_SECRET_KEY")
+                .expect("S3_SECRET_KEY is required")
+                .trim_matches('"')
+                .to_string(),
 
             bind: std::env::var("BIND")
                 .unwrap_or("0.0.0.0".to_string())

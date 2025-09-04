@@ -11,7 +11,7 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
     let releases = state
-        .client()
+        .client
         .get("https://api.github.com/repos/BlueprintFramework/framework/releases")
         .send()
         .await?

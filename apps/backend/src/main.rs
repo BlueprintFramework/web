@@ -30,6 +30,7 @@ mod mail;
 mod models;
 mod response;
 mod routes;
+mod s3;
 mod schedules;
 mod telemetry;
 mod utils;
@@ -111,6 +112,7 @@ async fn main() {
         },
     ));
 
+    let s3 = Arc::new(s3::S3::new(&env).await);
     let database = Arc::new(database::Database::new(&env).await);
     let cache = Arc::new(cache::Cache::new(&env).await);
     let env = Arc::new(env);
@@ -120,9 +122,14 @@ async fn main() {
         version: format!("{VERSION}:{GIT_COMMIT}"),
 
         github_releases: RwLock::new(Vec::new()),
+        client: reqwest::Client::builder()
+            .user_agent(format!("blueprint api/{}", VERSION))
+            .build()
+            .unwrap(),
 
         database: database.clone(),
         cache: cache.clone(),
+        s3,
         telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),
         env: env.clone(),
         mail: Arc::new(mail::Mail::new(env.clone())),

@@ -25,7 +25,7 @@ impl<'a> ApiError<'a> {
         serde_json::json!({ "errors": errors })
     }
 
-    pub fn to_value(&self) -> serde_json::Value {
+    pub fn to_value(self) -> serde_json::Value {
         serde_json::to_value(self).unwrap()
     }
 }

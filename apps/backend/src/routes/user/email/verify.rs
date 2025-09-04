@@ -36,11 +36,9 @@ mod post {
         }
 
         let rows = sqlx::query!(
-            r#"
-            UPDATE users
+            "UPDATE users
             SET email = users.email_pending, email_pending = NULL, email_verification = NULL
-            WHERE users.id = $1 AND email_verification = $2
-            "#,
+            WHERE users.id = $1 AND email_verification = $2",
             user.id,
             data.token
         )

@@ -153,13 +153,9 @@ mod get {
     ))]
     pub async fn route(state: GetState, user: GetUser) -> ApiResponseResult {
         let data = sqlx::query!(
-            r#"
-            SELECT
-                COUNT(*) AS total,
-                SUM(unlisted::int) AS unlisted
+            "SELECT COUNT(*) AS total, SUM(unlisted::int) AS unlisted
             FROM extensions
-            WHERE extensions.author_id = $1
-            "#,
+            WHERE extensions.author_id = $1",
             user.id
         )
         .fetch_one(state.database.read())

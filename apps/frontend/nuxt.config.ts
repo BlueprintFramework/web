@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
+    '@nuxtjs/mdc',
   ],
   css: ['~/assets/css/main.css'],
   app: {

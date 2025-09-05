@@ -50,11 +50,9 @@ mod patch {
         let email_verification = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 16);
 
         sqlx::query!(
-            r#"
-            UPDATE users
+            "UPDATE users
             SET email_pending = $2, email_verification = $3
-            WHERE users.id = $1
-            "#,
+            WHERE users.id = $1",
             user.id,
             data.email,
             email_verification

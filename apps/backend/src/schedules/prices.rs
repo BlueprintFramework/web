@@ -69,7 +69,7 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
     if let Some(sxc_token) = &state.env.sxc_token {
         sxc_products = serde_json::from_value(
             state
-                .client()
+                .client
                 .get("https://www.sourcexchange.net/api/products/blueprint")
                 .header("Authorization", format!("Bearer {sxc_token}"))
                 .send()
@@ -93,190 +93,189 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
             version.downloads = 0;
         }
 
-        if let Some(key) = extension.platforms.get_mut("SOURCEXCHANGE") {
-            if let Some(sxc_product) = sxc_products.iter().find(|product| product.url == key.url) {
-                match state
-                    .client()
-                    .get(format!(
-                        "https://www.sourcexchange.net/api/products/{}/releases",
-                        sxc_product.id
-                    ))
-                    .header(
-                        "Authorization",
-                        format!("Bearer {}", state.env.sxc_token.as_ref().unwrap()),
-                    )
-                    .send()
-                    .await?
-                    .json::<Vec<SxcProductVersion>>()
-                    .await
-                {
-                    Ok(versions) => {
-                        let mut versions: Vec<ExtensionVersion> = versions
-                            .into_iter()
-                            .map(|version| ExtensionVersion {
-                                name: clean_version_name(&version.name),
-                                downloads: version.downloads_count,
-                                created: chrono::NaiveDateTime::parse_from_str(
-                                    &version.created_at,
-                                    "%Y-%m-%dT%H:%M:%S%.fZ",
-                                )
-                                .unwrap_or_default(),
-                            })
-                            .collect();
+        if let Some(key) = extension.platforms.get_mut("SOURCEXCHANGE")
+            && let Some(sxc_product) = sxc_products.iter().find(|product| product.url == key.url)
+        {
+            match state
+                .client
+                .get(format!(
+                    "https://www.sourcexchange.net/api/products/{}/releases",
+                    sxc_product.id
+                ))
+                .header(
+                    "Authorization",
+                    format!("Bearer {}", state.env.sxc_token.as_ref().unwrap()),
+                )
+                .send()
+                .await?
+                .json::<Vec<SxcProductVersion>>()
+                .await
+            {
+                Ok(versions) => {
+                    let mut versions: Vec<ExtensionVersion> = versions
+                        .into_iter()
+                        .map(|version| ExtensionVersion {
+                            name: clean_version_name(&version.name),
+                            downloads: version.downloads_count,
+                            created: chrono::NaiveDateTime::parse_from_str(
+                                &version.created_at,
+                                "%Y-%m-%dT%H:%M:%S%.fZ",
+                            )
+                            .unwrap_or_default(),
+                        })
+                        .collect();
 
-                        if versions.len() > extension.versions.len() {
-                            versions.sort_unstable_by(|a, b| a.created.cmp(&b.created).reverse());
-                            versions.dedup_by(|a, b| a.name == b.name);
+                    if versions.len() > extension.versions.len() {
+                        versions.sort_unstable_by(|a, b| a.created.cmp(&b.created).reverse());
+                        versions.dedup_by(|a, b| a.name == b.name);
 
-                            extension.versions = versions;
-                        } else {
-                            for version in extension.versions.iter_mut() {
-                                if let Some(sxc_version) = versions
-                                    .iter()
-                                    .find(|sxc_version| sxc_version.name == version.name)
-                                {
-                                    version.downloads += sxc_version.downloads;
-                                }
+                        extension.versions = versions;
+                    } else {
+                        for version in extension.versions.iter_mut() {
+                            if let Some(sxc_version) = versions
+                                .iter()
+                                .find(|sxc_version| sxc_version.name == version.name)
+                            {
+                                version.downloads += sxc_version.downloads;
                             }
                         }
+                    }
 
-                        *key = ExtensionPlatform {
-                            url: key.url.clone(),
-                            price: sxc_product.price,
-                            currency: sxc_product.currency.clone(),
-                            reviews: sxc_product.review_count,
-                            rating: sxc_product.rating_avg,
-                        };
-                    }
-                    Err(err) => {
-                        tracing::error!(
-                            "failed to get sourcexchange versions for {}: {:#?}",
-                            extension.name,
-                            err
-                        );
-                    }
-                };
-            }
+                    *key = ExtensionPlatform {
+                        url: key.url.clone(),
+                        price: sxc_product.price,
+                        currency: sxc_product.currency.clone(),
+                        reviews: sxc_product.review_count,
+                        rating: sxc_product.rating_avg,
+                    };
+                }
+                Err(err) => {
+                    tracing::error!(
+                        "failed to get sourcexchange versions for {}: {:#?}",
+                        extension.name,
+                        err
+                    );
+                }
+            };
         }
 
-        if let Some(bbb_token) = &state.env.bbb_token {
-            if let Some(key) = extension.platforms.get_mut("BUILTBYBIT") {
-                let product_id: u32 = key
-                    .url
-                    .split('.')
-                    .next_back()
-                    .ok_or_else(|| {
-                        std::io::Error::new(
-                            std::io::ErrorKind::InvalidData,
-                            format!("Invalid BBB URL: {}", key.url.bright_cyan()),
-                        )
-                    })?
-                    .trim_end_matches(|c: char| !c.is_ascii_digit())
-                    .parse()
-                    .unwrap_or_default();
+        if let Some(bbb_token) = &state.env.bbb_token
+            && let Some(key) = extension.platforms.get_mut("BUILTBYBIT")
+        {
+            let product_id: u32 = key
+                .url
+                .split('.')
+                .next_back()
+                .ok_or_else(|| {
+                    std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        format!("Invalid BBB URL: {}", key.url.bright_cyan()),
+                    )
+                })?
+                .trim_end_matches(|c: char| !c.is_ascii_digit())
+                .parse()
+                .unwrap_or_default();
 
-                #[derive(Deserialize)]
-                struct BbbProductResponse {
-                    #[serde(rename = "data")]
-                    product: BbbProduct,
-                }
+            #[derive(Deserialize)]
+            struct BbbProductResponse {
+                #[serde(rename = "data")]
+                product: BbbProduct,
+            }
 
-                #[derive(Deserialize)]
-                struct BbbProductVersionResponse {
-                    #[serde(rename = "data")]
-                    versions: Vec<BbbProductVersion>,
-                }
+            #[derive(Deserialize)]
+            struct BbbProductVersionResponse {
+                #[serde(rename = "data")]
+                versions: Vec<BbbProductVersion>,
+            }
 
-                match state
-                    .client()
-                    .get(format!(
-                        "https://api.builtbybit.com/v1/resources/{product_id}"
-                    ))
-                    .header("Authorization", format!("Private {bbb_token}"))
-                    .send()
-                    .await?
-                    .json::<BbbProductResponse>()
-                    .await
-                {
-                    Ok(BbbProductResponse { product }) => {
-                        match state
-                            .client()
-                            .get(format!(
-                                "https://api.builtbybit.com/v1/resources/{product_id}/versions"
-                            ))
-                            .header("Authorization", format!("Private {bbb_token}"))
-                            .send()
-                            .await?
-                            .json::<BbbProductVersionResponse>()
-                            .await
-                        {
-                            Ok(BbbProductVersionResponse { versions }) => {
-                                let mut versions: Vec<ExtensionVersion> = versions
-                                    .into_iter()
-                                    .map(|version| ExtensionVersion {
-                                        name: clean_version_name(&version.name),
-                                        downloads: version.download_count,
-                                        created: chrono::DateTime::from_timestamp(
-                                            version.release_date,
-                                            0,
-                                        )
-                                        .unwrap_or_default()
-                                        .naive_utc(),
-                                    })
-                                    .collect();
+            match state
+                .client
+                .get(format!(
+                    "https://api.builtbybit.com/v1/resources/{product_id}"
+                ))
+                .header("Authorization", format!("Private {bbb_token}"))
+                .send()
+                .await?
+                .json::<BbbProductResponse>()
+                .await
+            {
+                Ok(BbbProductResponse { product }) => {
+                    match state
+                        .client
+                        .get(format!(
+                            "https://api.builtbybit.com/v1/resources/{product_id}/versions"
+                        ))
+                        .header("Authorization", format!("Private {bbb_token}"))
+                        .send()
+                        .await?
+                        .json::<BbbProductVersionResponse>()
+                        .await
+                    {
+                        Ok(BbbProductVersionResponse { versions }) => {
+                            let mut versions: Vec<ExtensionVersion> = versions
+                                .into_iter()
+                                .map(|version| ExtensionVersion {
+                                    name: clean_version_name(&version.name),
+                                    downloads: version.download_count,
+                                    created: chrono::DateTime::from_timestamp(
+                                        version.release_date,
+                                        0,
+                                    )
+                                    .unwrap_or_default()
+                                    .naive_utc(),
+                                })
+                                .collect();
 
-                                if versions.len() > extension.versions.len() {
-                                    versions.sort_unstable_by(|a, b| {
-                                        a.created.cmp(&b.created).reverse()
-                                    });
-                                    versions.dedup_by(|a, b| a.name == b.name);
+                            if versions.len() > extension.versions.len() {
+                                versions
+                                    .sort_unstable_by(|a, b| a.created.cmp(&b.created).reverse());
+                                versions.dedup_by(|a, b| a.name == b.name);
 
-                                    extension.versions = versions;
-                                } else {
-                                    for version in extension.versions.iter_mut() {
-                                        if let Some(bbb_version) = versions
-                                            .iter()
-                                            .find(|bbb_version| bbb_version.name == version.name)
-                                        {
-                                            version.downloads += bbb_version.downloads;
-                                        }
+                                extension.versions = versions;
+                            } else {
+                                for version in extension.versions.iter_mut() {
+                                    if let Some(bbb_version) = versions
+                                        .iter()
+                                        .find(|bbb_version| bbb_version.name == version.name)
+                                    {
+                                        version.downloads += bbb_version.downloads;
                                     }
                                 }
+                            }
 
-                                *key = ExtensionPlatform {
-                                    url: key.url.clone(),
-                                    price: product.price,
-                                    currency: product.currency.clone(),
-                                    reviews: Some(product.review_count),
-                                    rating: product.review_average,
-                                };
-                            }
-                            Err(err) => {
-                                tracing::error!(
-                                    "failed to get builtbybit versions for {}: {:#?}",
-                                    extension.name,
-                                    err
-                                );
-                            }
+                            *key = ExtensionPlatform {
+                                url: key.url.clone(),
+                                price: product.price,
+                                currency: product.currency.clone(),
+                                reviews: Some(product.review_count),
+                                rating: product.review_average,
+                            };
+                        }
+                        Err(err) => {
+                            tracing::error!(
+                                "failed to get builtbybit versions for {}: {:#?}",
+                                extension.name,
+                                err
+                            );
                         }
                     }
-                    Err(err) => {
-                        tracing::error!(
-                            "failed to get builtbybit product for {} (#{}): {:#?}",
-                            extension.name,
-                            product_id,
-                            err
-                        );
-                    }
-                };
-            }
+                }
+                Err(err) => {
+                    tracing::error!(
+                        "failed to get builtbybit product for {} (#{}): {:#?}",
+                        extension.name,
+                        product_id,
+                        err
+                    );
+                }
+            };
         }
 
         if let Some(key) = extension.platforms.get_mut("GITHUB") {
             let repo = key.url.split('/').collect::<Vec<_>>()[3..5].join("/");
 
             match state
-                .client()
+                .client
                 .get(format!("https://api.github.com/repos/{repo}/releases"))
                 .send()
                 .await?

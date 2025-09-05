@@ -90,7 +90,7 @@ const handleLogin = async () => {
   try {
     await login(form.value.email, form.value.password)
   } catch (error) {
-    //TODO: Properly handle API errors
+    //[TODO] Properly handle API errors
     console.error(error)
   } finally {
     loading.value = false

@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div class="prose prose-invert w-full md:p-8">
+        <div class="w-full md:p-8">
           <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>
         <!-- prettier-ignore -->

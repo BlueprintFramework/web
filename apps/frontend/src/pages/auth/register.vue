@@ -103,7 +103,7 @@ const handleRegister = async () => {
       form.value.displayName
     )
   } catch (error) {
-    //TODO: Properly handle API errors
+    //[TODO] Properly handle API errors
     console.error(error)
   } finally {
     loading.value = false

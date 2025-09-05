@@ -36,6 +36,18 @@ export default defineNuxtConfig({
         '/api': 'http://localhost:8000',
       },
     },
+    optimizeDeps: {
+      include: ['debug'],
+    },
+  },
+  components: {
+    dirs: [
+      {
+        path: '~/components/prose',
+        global: true,
+      },
+      '~/components',
+    ],
   },
   content: {
     build: {
@@ -56,6 +68,15 @@ export default defineNuxtConfig({
             'php',
           ],
         },
+      },
+    },
+  },
+  mdc: {
+    components: {
+      prose: true,
+      map: {
+        script: 'ProseDisabled',
+        style: 'ProseDisabled',
       },
     },
   },

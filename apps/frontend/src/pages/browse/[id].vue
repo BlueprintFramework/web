@@ -59,7 +59,15 @@
     >
       <div class="w-full border-b border-neutral-700 lg:border-b-0">
         <template v-if="extension.description">
-          <p>rendering descriptions will happen someday</p>
+          <MDCRenderer
+            v-if="description?.body"
+            class="prose-content p-4"
+            :body="description?.body"
+            :data="description?.data"
+            :components="{
+              img: 'ProseDisabled',
+            }"
+          />
         </template>
         <template v-else>
           <div
@@ -194,6 +202,7 @@
 </template>
 
 <script setup lang="ts">
+import { parseMarkdown } from '@nuxtjs/mdc/runtime'
 const route = useRoute()
 
 const { data: extension, pending } = await useAsyncData<Extension>(
@@ -202,6 +211,10 @@ const { data: extension, pending } = await useAsyncData<Extension>(
   {
     server: false,
   }
+)
+const { data: description } = await useAsyncData(
+  `markdown-${route.params.id}`,
+  () => parseMarkdown(extension.value?.description || '')
 )
 
 useSeoMeta({

@@ -17,6 +17,7 @@ mod email;
 mod logout;
 mod password;
 mod sessions;
+mod two_factor;
 
 #[derive(Clone)]
 pub enum AuthMethod {
@@ -102,14 +103,22 @@ pub async fn auth(
                 .build(),
         );
 
-        const IGNORED_VERIFICATION_PATHS: &[&str] = &["/api/user", "/api/user/email/verify"];
+        const IGNORED_VERIFICATION_PATHS: &[&str] = &[
+            "/api/user",
+            "/api/user/password",
+            "/api/user/two-factor",
+            "/api/user/sessions",
+            "/api/user/sessions/{session}",
+            "/api/user/email/verify",
+            "/api/user/logout",
+        ];
 
         if user.email_verification.is_some()
             && user.email_pending.is_none()
             && !IGNORED_VERIFICATION_PATHS.contains(&matched_path.as_str())
         {
             return Ok(ApiResponse::error("email verification required")
-                .with_status(StatusCode::UNAUTHORIZED)
+                .with_status(StatusCode::FORBIDDEN)
                 .into_response());
         }
 
@@ -246,6 +255,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/sessions", sessions::router(state))
         .nest("/email", email::router(state))
         .nest("/password", password::router(state))
+        .nest("/two-factor", two_factor::router(state))
         .nest("/logout", logout::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())

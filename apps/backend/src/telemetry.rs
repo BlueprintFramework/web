@@ -212,14 +212,12 @@ impl TelemetryLogger {
 
         for id in panels {
             match sqlx::query!(
-                "
-                INSERT INTO telemetry_panels (id)
+                "INSERT INTO telemetry_panels (id)
                 VALUES ($1)
                 ON CONFLICT (id) DO UPDATE SET last_update = GREATEST(
                     telemetry_panels.last_update,
                     (SELECT created FROM telemetry_data WHERE panel_id = $1 ORDER BY created DESC LIMIT 1)
-                )
-                ",
+                )",
                 id
             )
             .execute(self.database.write())
@@ -240,11 +238,9 @@ impl TelemetryLogger {
 
         for t in telemetry.iter() {
             match sqlx::query!(
-                "
-                INSERT INTO telemetry_data (panel_id, telemetry_version, ip, continent, country, data, created)
+                "INSERT INTO telemetry_data (panel_id, telemetry_version, ip, continent, country, data, created)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
-                ON CONFLICT DO NOTHING
-                ",
+                ON CONFLICT DO NOTHING",
                 t.panel_id,
                 t.telemetry_version,
                 t.ip,

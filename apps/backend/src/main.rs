@@ -26,6 +26,7 @@ mod cache;
 mod captcha;
 mod database;
 mod env;
+mod jwt;
 mod mail;
 mod models;
 mod response;
@@ -115,6 +116,7 @@ async fn main() {
     let s3 = Arc::new(s3::S3::new(&env).await);
     let database = Arc::new(database::Database::new(&env).await);
     let cache = Arc::new(cache::Cache::new(&env).await);
+    let jwt = Arc::new(jwt::Jwt::new(&env));
     let env = Arc::new(env);
 
     let state = Arc::new(routes::AppState {
@@ -128,6 +130,7 @@ async fn main() {
             .unwrap(),
 
         database: database.clone(),
+        jwt,
         cache: cache.clone(),
         s3,
         telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),

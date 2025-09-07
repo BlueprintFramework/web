@@ -21,6 +21,8 @@ pub struct User {
     pub support: Option<String>,
 
     pub admin: bool,
+    pub totp_enabled: bool,
+    pub totp_secret: Option<String>,
 
     pub created: NaiveDateTime,
 }
@@ -28,45 +30,33 @@ pub struct User {
 impl BaseModel for User {
     #[inline]
     fn columns(prefix: Option<&str>, table: Option<&str>) -> BTreeMap<String, String> {
+        let prefix = prefix.unwrap_or_default();
         let table = table.unwrap_or("users");
 
         BTreeMap::from([
-            (
-                format!("{table}.id"),
-                format!("{}id", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.github_id"),
-                format!("{}github_id", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.name"),
-                format!("{}name", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.email"),
-                format!("{}email", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.id"), format!("{}id", prefix)),
+            (format!("{table}.github_id"), format!("{}github_id", prefix)),
+            (format!("{table}.name"), format!("{}name", prefix)),
+            (format!("{table}.email"), format!("{}email", prefix)),
             (
                 format!("{table}.email_pending"),
-                format!("{}email_pending", prefix.unwrap_or_default()),
+                format!("{}email_pending", prefix),
             ),
             (
                 format!("{table}.email_verification"),
-                format!("{}email_verification", prefix.unwrap_or_default()),
+                format!("{}email_verification", prefix),
+            ),
+            (format!("{table}.support"), format!("{}support", prefix)),
+            (format!("{table}.admin"), format!("{}admin", prefix)),
+            (
+                format!("{table}.totp_enabled"),
+                format!("{prefix}totp_enabled"),
             ),
             (
-                format!("{table}.support"),
-                format!("{}support", prefix.unwrap_or_default()),
+                format!("{table}.totp_secret"),
+                format!("{prefix}totp_secret"),
             ),
-            (
-                format!("{table}.admin"),
-                format!("{}admin", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.created"),
-                format!("{}created", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.created"), format!("{}created", prefix)),
         ])
     }
 
@@ -83,6 +73,8 @@ impl BaseModel for User {
             email_verification: row.get(format!("{prefix}email_verification").as_str()),
             support: row.get(format!("{prefix}support").as_str()),
             admin: row.get(format!("{prefix}admin").as_str()),
+            totp_enabled: row.get(format!("{prefix}totp_enabled").as_str()),
+            totp_secret: row.get(format!("{prefix}totp_secret").as_str()),
             created: row.get(format!("{prefix}created").as_str()),
         }
     }
@@ -113,6 +105,25 @@ impl User {
         .await?;
 
         Ok((Self::map(None, &row), email_verification))
+    }
+
+    pub async fn by_id(
+        database: &crate::database::Database,
+        id: i32,
+    ) -> Result<Option<Self>, sqlx::Error> {
+        let row = sqlx::query(&format!(
+            r#"
+            SELECT {}
+            FROM users
+            WHERE id = $1
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(id)
+        .fetch_optional(database.read())
+        .await?;
+
+        Ok(row.map(|row| Self::map(None, &row)))
     }
 
     pub async fn by_email(
@@ -244,10 +255,20 @@ impl User {
         ApiFullUser {
             id: self.id,
             name: self.name,
-            email: self.email,
-            email_pending: self.email_pending,
+            email: self.email.clone(),
+            email_pending: match self.email_pending {
+                Some(pending) => Some(pending),
+                None => {
+                    if self.email_verification.is_some() {
+                        Some(self.email)
+                    } else {
+                        None
+                    }
+                }
+            },
             support: self.support,
             admin: self.admin,
+            totp_enabled: self.totp_enabled,
             created: self.created.and_utc(),
         }
     }
@@ -264,6 +285,7 @@ pub struct ApiFullUser {
     pub support: Option<String>,
 
     pub admin: bool,
+    pub totp_enabled: bool,
 
     pub created: chrono::DateTime<chrono::Utc>,
 }

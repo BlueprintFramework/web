@@ -25,7 +25,7 @@ impl<'a> ApiError<'a> {
         serde_json::json!({ "errors": errors })
     }
 
-    pub fn to_value(self) -> serde_json::Value {
+    pub fn to_value(&self) -> serde_json::Value {
         serde_json::to_value(self).unwrap()
     }
 }
@@ -38,6 +38,7 @@ pub struct AppState {
     pub client: reqwest::Client,
 
     pub database: Arc<crate::database::Database>,
+    pub jwt: Arc<crate::jwt::Jwt>,
     pub cache: Arc<crate::cache::Cache>,
     pub s3: Arc<crate::s3::S3>,
     pub telemetry: crate::telemetry::TelemetryLogger,

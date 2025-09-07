@@ -57,7 +57,6 @@ impl Cache {
         instance
     }
 
-    #[inline]
     pub async fn cached<T, F, Fut>(
         &self,
         key: &str,

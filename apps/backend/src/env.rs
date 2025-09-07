@@ -71,6 +71,7 @@ pub struct Env {
     pub app_debug: bool,
     pub app_log_directory: String,
     pub app_url: String,
+    pub app_encryption_key: String,
     pub server_name: Option<String>,
 }
 
@@ -267,6 +268,10 @@ impl Env {
                 .to_string(),
             app_url: std::env::var("APP_URL")
                 .expect("APP_URL is required")
+                .trim_matches('"')
+                .to_string(),
+            app_encryption_key: std::env::var("APP_ENCRYPTION_KEY")
+                .expect("APP_ENCRYPTION_KEY is required")
                 .trim_matches('"')
                 .to_string(),
             server_name: std::env::var("SERVER_NAME")

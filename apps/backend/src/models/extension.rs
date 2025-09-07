@@ -75,69 +75,37 @@ pub struct Extension {
 impl BaseModel for Extension {
     #[inline]
     fn columns(prefix: Option<&str>, table: Option<&str>) -> BTreeMap<String, String> {
+        let prefix = prefix.unwrap_or_default();
         let table = table.unwrap_or("extensions");
 
         let mut columns = BTreeMap::from([
-            (
-                format!("{table}.id"),
-                format!("{}id", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.type"),
-                format!("{}type", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.status"),
-                format!("{}status", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.id"), format!("{}id", prefix)),
+            (format!("{table}.type"), format!("{}type", prefix)),
+            (format!("{table}.status"), format!("{}status", prefix)),
             (
                 format!("{table}.deny_reason"),
-                format!("{}deny_reason", prefix.unwrap_or_default()),
+                format!("{}deny_reason", prefix),
             ),
-            (
-                format!("{table}.unlisted"),
-                format!("{}unlisted", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.name"),
-                format!("{}name", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.unlisted"), format!("{}unlisted", prefix)),
+            (format!("{table}.name"), format!("{}name", prefix)),
             (
                 format!("{table}.identifier"),
-                format!("{}identifier", prefix.unwrap_or_default()),
+                format!("{}identifier", prefix),
             ),
-            (
-                format!("{table}.summary"),
-                format!("{}summary", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.summary"), format!("{}summary", prefix)),
             (
                 format!("{table}.description"),
-                format!("{}description", prefix.unwrap_or_default()),
+                format!("{}description", prefix),
             ),
-            (
-                format!("{table}.platforms"),
-                format!("{}platforms", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.versions"),
-                format!("{}versions", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.keywords"),
-                format!("{}keywords", prefix.unwrap_or_default()),
-            ),
-            (
-                format!("{table}.banner"),
-                format!("{}banner", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.platforms"), format!("{}platforms", prefix)),
+            (format!("{table}.versions"), format!("{}versions", prefix)),
+            (format!("{table}.keywords"), format!("{}keywords", prefix)),
+            (format!("{table}.banner"), format!("{}banner", prefix)),
             (
                 "mv_extension_stats.stats".to_string(),
-                format!("{}stats", prefix.unwrap_or_default()),
+                format!("{}stats", prefix),
             ),
-            (
-                format!("{table}.created"),
-                format!("{}created", prefix.unwrap_or_default()),
-            ),
+            (format!("{table}.created"), format!("{}created", prefix)),
         ]);
 
         columns.extend(User::columns(Some("author_"), None));

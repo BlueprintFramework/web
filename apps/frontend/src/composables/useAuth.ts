@@ -12,47 +12,68 @@ export const useAuth = () => {
   }
 
   const login = async (email: string, password: string) => {
+    const res = ref()
     try {
-      const data: { user: FullUser } = await $fetch('/api/auth/login', {
-        method: 'POST',
-        body: {
-          email,
-          password,
-          captcha: null,
-        },
-      })
+      const data: { user?: FullUser; errors?: string[] } = await $fetch(
+        '/api/auth/login',
+        {
+          method: 'POST',
+          body: {
+            email,
+            password,
+            captcha: null,
+          },
+        }
+      )
 
-      setUser(data.user)
-
-      await navigateTo('/app')
-    } catch (error) {
-      throw error
+      if (data.user) {
+        setUser(data.user)
+        await navigateTo('/app')
+      } else {
+        throw data
+      }
+    } catch (error: any) {
+      if (error.response._data.errors) {
+        throw error.response._data.errors
+      } else if (error.errors) {
+        throw error.errors
+      }
     }
   }
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      const data: { user: FullUser } = await $fetch('/api/auth/register', {
-        method: 'POST',
-        body: {
-          name,
-          email,
-          password,
-          captcha: null,
-        },
-      })
+      const data: { user?: FullUser; errors?: string[] } = await $fetch(
+        '/api/auth/register',
+        {
+          method: 'POST',
+          body: {
+            name,
+            email,
+            password,
+            captcha: null,
+          },
+        }
+      )
 
-      setUser(data.user)
-
-      await navigateTo('/app')
-    } catch (error) {
-      throw error
+      if (data.user) {
+        setUser(data.user)
+        await navigateTo('/app')
+      } else {
+        throw data
+      }
+    } catch (error: any) {
+      if (error.response._data.errors) {
+        throw error.response._data.errors
+      } else if (error.errors) {
+        throw error.errors
+      }
     }
   }
 
   const logout = async () => {
     try {
-      const data = await $fetch('/api/user/logout', {
+      await $fetch('/api/user/logout', {
         method: 'POST',
       })
 

@@ -74,10 +74,6 @@ export default defineNuxtConfig({
   mdc: {
     components: {
       prose: true,
-      map: {
-        script: 'ProseDisabled',
-        style: 'ProseDisabled',
-      },
     },
   },
   site: {

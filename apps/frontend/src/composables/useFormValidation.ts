@@ -46,8 +46,7 @@ export const useFormValidation = () => {
       message = 'Password must contain at least 8 characters with uppercase, lowercase, number, and special character'
     ): ValidationRule => ({
       validator: (value: string) => {
-        const passwordRegex =
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+        const passwordRegex = /^(?=\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\W]*).{8,512}$/
         return passwordRegex.test(value)
       },
       message,

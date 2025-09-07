@@ -7,6 +7,13 @@
       <h1 class="!text-4xl">Welcome back!</h1>
     </div>
     <div class="space-y-4 p-4">
+      <Card v-if="errors?.includes('invalid name or password')">
+        Invalid email or password. Double-check you've submitted the correct
+        info or
+        <NuxtLink to="/auth/reset" class="text-link"
+          >recover your account here</NuxtLink
+        >.
+      </Card>
       <UiFormInput
         v-model="form.email"
         name="email"
@@ -17,7 +24,9 @@
         auto-complete="email"
         placeholder="Email address"
         :disabled="loading"
-        @validate="(event) => handleFieldValidation('email', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('email', isValid)
+        "
       />
       <UiFormInput
         v-model="form.password"
@@ -29,7 +38,9 @@
         auto-complete="password"
         placeholder="Password"
         :disabled="loading"
-        @validate="(event) => handleFieldValidation('password', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('password', isValid)
+        "
       />
 
       <span class="text-default-font/50">
@@ -75,6 +86,7 @@ const { login } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
+const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
@@ -90,8 +102,8 @@ const handleLogin = async () => {
   try {
     await login(form.value.email, form.value.password)
   } catch (error) {
-    //[TODO] Properly handle API errors
     console.error(error)
+    errors.value = error
   } finally {
     loading.value = false
   }

@@ -66,6 +66,8 @@
             :data="description?.data"
             :components="{
               img: 'ProseDisabled',
+              script: 'ProseDisabled',
+              style: 'ProseDisabled',
             }"
           />
         </template>

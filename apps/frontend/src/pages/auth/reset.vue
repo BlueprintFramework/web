@@ -13,7 +13,9 @@
         leading-icon="memory:email"
         auto-complete="email"
         placeholder="Email address"
-        @validate="(event) => handleFieldValidation('email', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('email', isValid)
+        "
       />
 
       <span class="text-default-font/50">
@@ -39,6 +41,8 @@ definePageMeta({
 
 const { rules: validationRules } = useFormValidation()
 
+const loading = ref(false)
+const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',

@@ -25,7 +25,7 @@
               :height="128"
               :width="256"
               :alt="item.name"
-              class="aspect-[2/1] object-cover"
+              class="aspect-[2/1] bg-neutral-800 object-cover"
             />
           </div>
         </NuxtLink>

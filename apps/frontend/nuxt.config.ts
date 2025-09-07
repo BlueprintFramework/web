@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
+    '@nuxtjs/mdc',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -35,6 +36,18 @@ export default defineNuxtConfig({
         '/api': 'http://localhost:8000',
       },
     },
+    optimizeDeps: {
+      include: ['debug'],
+    },
+  },
+  components: {
+    dirs: [
+      {
+        path: '~/components/prose',
+        global: true,
+      },
+      '~/components',
+    ],
   },
   content: {
     build: {
@@ -56,6 +69,11 @@ export default defineNuxtConfig({
           ],
         },
       },
+    },
+  },
+  mdc: {
+    components: {
+      prose: true,
     },
   },
   site: {

@@ -70,7 +70,7 @@ mod post {
                 .replace(
                     "{{reset_link}}",
                     &format!(
-                        "{}/auth/reset-password?token={}",
+                        "{}/auth/reset?token={}",
                         state.env.app_url,
                         urlencoding::encode(&token),
                     ),

@@ -6,7 +6,7 @@
     <div class="space-y-4 p-4">
       <span class="text-default-font/50">
         You need to verify your email address to manage and publish extensions
-        We've sent an account verification email to
+        We've sent a verification code to
         <span class="monospace-body"> {{ user?.email_pending }} </span>. If
         that's not right, adjust your email in your
         <NuxtLink to="/app/account" class="text-link">account settings</NuxtLink

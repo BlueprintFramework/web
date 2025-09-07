@@ -7,6 +7,12 @@
       <h1 class="!text-4xl">Hi there!</h1>
     </div>
     <div class="space-y-4 p-4">
+      <Card v-if="errors?.includes('user with name or email already exists')">
+        Email address or username is already in use.
+      </Card>
+      <Card v-if="errors?.includes('failed to create user')">
+        Could not create user, try again later.
+      </Card>
       <UiFormInput
         v-model="form.displayName"
         name="displayname"
@@ -16,7 +22,9 @@
         leading-icon="memory:user"
         placeholder="Display name"
         :disabled="loading"
-        @validate="(event) => handleFieldValidation('displayName', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('displayName', isValid)
+        "
       />
       <UiFormInput
         v-model="form.email"
@@ -28,7 +36,9 @@
         auto-complete="email"
         placeholder="Email address"
         :disabled="loading"
-        @validate="(event) => handleFieldValidation('email', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('email', isValid)
+        "
       />
       <UiFormInput
         v-model="form.password"
@@ -40,7 +50,9 @@
         auto-complete="password"
         placeholder="Password"
         :disabled="loading"
-        @validate="(event) => handleFieldValidation('password', event)"
+        @validate="
+          (isValid: boolean) => handleFieldValidation('password', isValid)
+        "
       />
 
       <span class="text-default-font/50">
@@ -83,6 +95,7 @@ const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
+const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   displayName: '',
@@ -103,8 +116,8 @@ const handleRegister = async () => {
       form.value.displayName
     )
   } catch (error) {
-    //TODO: Properly handle API errors
     console.error(error)
+    errors.value = error
   } finally {
     loading.value = false
   }

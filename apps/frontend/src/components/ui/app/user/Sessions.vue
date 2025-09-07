@@ -127,7 +127,7 @@ const fetchSessions = async () => {
       }
     )
   } catch (error) {
-    //TODO: properly handle error in the ui as well
+    //[TODO] properly handle error in the ui as well
     console.error('failed to fetch sessions:', error)
   } finally {
     loading.value = false
@@ -152,7 +152,7 @@ const deleteSession = async (sessionId: number) => {
 
     await fetchSessions()
   } catch (error) {
-    //TODO: properly handle error in the ui as well
+    //[TODO] properly handle error in the ui as well
     console.error('failed to delete session:', error)
   } finally {
     deleting.value = false

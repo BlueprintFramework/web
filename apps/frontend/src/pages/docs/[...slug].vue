@@ -11,7 +11,7 @@
       </p>
     </div>
 
-    <div class="prose prose-invert max-w-none">
+    <div class="max-w-none">
       <ContentRenderer :value="data" class="prose-content" />
     </div>
 

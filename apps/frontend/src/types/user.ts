@@ -16,6 +16,7 @@ export interface FullUser {
   name: string
   totp_enabled: boolean
   email_pending?: string | null
+  pronouns?: string | null
   support?: string | null
 }
 
@@ -24,6 +25,7 @@ export interface User {
   created: string
   id: number
   name: string
+  pronouns?: string | null
   support?: string | null
 }
 

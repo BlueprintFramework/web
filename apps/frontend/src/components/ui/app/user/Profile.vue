@@ -5,7 +5,7 @@
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
         <h2>Profile</h2>
-        <p>Update your public profile, visible to anyone.</p>
+        <p>Your public profile on the Blueprint platform.</p>
       </div>
       <div class="bg-stripes h-full" />
     </div>
@@ -14,7 +14,7 @@
         <UiFormInput
           v-model="profileForm.name"
           label="Display name"
-          description="Your display name, must be unique."
+          description="Your display name, displayed side-wide and should be unique."
           name="name"
           type="text"
           :rules="[
@@ -33,6 +33,20 @@
           "
         />
         <UiFormInput
+          v-model="profileForm.pronouns"
+          label="Pronouns"
+          description='Pronouns displayed on your profile. "Joke pronouns" are not allowed.'
+          name="pronouns"
+          type="text"
+          :rules="[validationRules.pronouns(), validationRules.maxLength(22)]"
+          leading-icon="memory:tag-text"
+          placeholder="they/them"
+          :disabled="loading"
+          @validate="
+            (isValid: boolean) => handleFieldValidation('pronouns', isValid)
+          "
+        />
+        <UiFormInput
           v-model="profileForm.support"
           label="Support URL"
           description="Link for users to get product support, in case you publish extensions."
@@ -40,7 +54,6 @@
           type="url"
           :rules="[validationRules.url()]"
           leading-icon="memory:tooltip-start-help"
-          autocomplete="username"
           placeholder="mailto:example@example.com"
           :disabled="loading"
           @validate="
@@ -51,6 +64,7 @@
       <button
         :disabled="
           fieldValidation.name == false ||
+          fieldValidation.pronouns == false ||
           fieldValidation.support == false ||
           loading
         "
@@ -73,6 +87,7 @@ const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
 const profileForm = ref({
   name: user.value?.name || '',
+  pronouns: user.value?.pronouns || '',
   support: user.value?.support || '',
 })
 

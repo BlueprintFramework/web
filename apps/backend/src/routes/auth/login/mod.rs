@@ -100,7 +100,7 @@ mod post {
             .await?;
 
             cookies.add(
-                Cookie::build(("session", key))
+                Cookie::build(("blueprint_session", key))
                     .http_only(true)
                     .same_site(tower_cookies::cookie::SameSite::Strict)
                     .secure(state.env.app_url.starts_with("https://"))

@@ -23,7 +23,7 @@ mod post {
 
     #[utoipa::path(post, path = "/", responses(
         (status = OK, body = inline(Response)),
-    ))]
+    ), request_body = inline(Payload))]
     pub async fn route(
         state: GetState,
         user: GetUser,

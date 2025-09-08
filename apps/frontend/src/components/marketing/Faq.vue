@@ -64,6 +64,10 @@ const items = [
     text: 'No. At this time Blueprint does not work with Pterodactyl alternatives, including forks.',
   },
   {
+    title: 'Is Blueprint a fork of Pterodactyl?',
+    text: "No. Blueprint cannot function on it's own, just like any other 'standalone' Pterodactyl modification.",
+  },
+  {
     title: 'Are standalone modifications compatible?',
     inner: () => {
       return [

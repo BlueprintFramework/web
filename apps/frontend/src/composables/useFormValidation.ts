@@ -42,6 +42,12 @@ export const useFormValidation = () => {
       trigger: 'blur',
     }),
 
+    maxLength: (max: number, message?: string): ValidationRule => ({
+      validator: (value: string) => value.length <= max,
+      message: message || `Must be ${max} characters or less`,
+      trigger: 'blur',
+    }),
+
     password: (
       message = 'Password must contain at least 8 characters with uppercase, lowercase, number, and special character'
     ): ValidationRule => ({

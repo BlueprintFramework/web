@@ -11,7 +11,7 @@
         :rules="[validationRules.required(), validationRules.email()]"
         :required="true"
         leading-icon="memory:email"
-        auto-complete="email"
+        autocomplete="email"
         placeholder="Email address"
         @validate="
           (isValid: boolean) => handleFieldValidation('email', isValid)

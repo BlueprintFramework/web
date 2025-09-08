@@ -28,7 +28,7 @@
         :aria-required="required"
         :aria-invalid="hasError"
         :aria-describedby="describedByIds"
-        :autocomplete="autoComplete"
+        :autocomplete="autocomplete"
         :class="inputClasses"
         @input="handleInput"
         @blur="handleBlur"
@@ -113,7 +113,7 @@ interface FormInputProps {
   required?: boolean
   disabled?: boolean
   readonly?: boolean
-  autoComplete?: string
+  autocomplete?: string
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   variant?: 'default' | 'filled' | 'outlined'
 

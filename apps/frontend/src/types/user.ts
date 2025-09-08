@@ -2,6 +2,10 @@ export interface AuthState {
   user?: FullUser | null
   isAuthenticated: boolean
   isFetched: boolean
+  checkpoint: {
+    authType?: AuthType
+    token?: string
+  }
 }
 
 export interface FullUser {
@@ -10,6 +14,7 @@ export interface FullUser {
   email: string
   id: number
   name: string
+  totp_enabled: boolean
   email_pending?: string | null
   support?: string | null
 }
@@ -39,3 +44,5 @@ export interface UserSession {
   last_used: string
   user_agent: string
 }
+
+export type AuthType = 'completed' | 'two_factor_required' | null

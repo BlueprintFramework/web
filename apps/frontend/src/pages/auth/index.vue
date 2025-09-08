@@ -15,35 +15,58 @@
         >.
       </Card>
       <UiFormInput
-        v-model="form.email"
+        v-model="authForm.email"
         name="email"
         type="email"
         :rules="[validationRules.required(), validationRules.email()]"
         :required="true"
         leading-icon="memory:email"
-        auto-complete="email"
+        autocomplete="email"
         placeholder="Email address"
-        :disabled="loading"
+        :disabled="loading || checkpointData.authType == 'two_factor_required'"
         @validate="
           (isValid: boolean) => handleFieldValidation('email', isValid)
         "
       />
       <UiFormInput
-        v-model="form.password"
+        v-model="authForm.password"
         name="password"
         type="password"
         :rules="[validationRules.required()]"
         :required="true"
         leading-icon="memory:key"
-        auto-complete="password"
+        autocomplete="current-password"
         placeholder="Password"
-        :disabled="loading"
+        :disabled="loading || checkpointData.authType == 'two_factor_required'"
         @validate="
           (isValid: boolean) => handleFieldValidation('password', isValid)
         "
       />
+      <UiFormInput
+        v-model="checkpointForm.code"
+        v-if="checkpointData.authType == 'two_factor_required'"
+        name="code"
+        type="code"
+        :rules="[
+          validationRules.required(),
+          validationRules.minLength(6),
+          validationRules.maxLength(10),
+        ]"
+        :required="true"
+        leading-icon="memory:shield"
+        autocomplete="one-time-code"
+        placeholder="2FA code"
+        :disabled="loading"
+        @validate="(isValid: boolean) => handleFieldValidation('code', isValid)"
+      />
 
-      <span class="text-default-font/50">
+      <span
+        v-if="checkpointData.authType == 'two_factor_required'"
+        class="text-default-font/50"
+      >
+        Use your 6-digit one time password or a 2FA recovery code.
+      </span>
+      <span v-else class="text-default-font/50">
         Forgot your password and/or lost access?
         <NuxtLink to="/auth/reset" class="text-link">
           Recover your account here
@@ -55,7 +78,11 @@
     >
       <button
         :disabled="
-          !fieldValidation.email || !fieldValidation.password || loading
+          (checkpointData.authType != 'two_factor_required' &&
+            (!fieldValidation.email || !fieldValidation.password)) ||
+          (checkpointData.authType == 'two_factor_required' &&
+            !fieldValidation.code) ||
+          loading
         "
         type="submit"
         class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
@@ -82,15 +109,20 @@ definePageMeta({
   middleware: 'guest',
 })
 
-const { login } = useAuth()
+const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
 const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
-const form = ref({
+const authForm = ref({
   email: '',
   password: '',
+})
+const checkpointForm = ref<{
+  code: number | string
+}>({
+  code: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -99,8 +131,23 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 
 const handleLogin = async () => {
   loading.value = true
+
+  // [INFO] Two factor authentication
+  if (checkpointData.value.authType == 'two_factor_required') {
+    try {
+      await checkpoint(checkpointForm.value.code)
+    } catch (error) {
+      console.error(error)
+      errors.value = error
+    } finally {
+      loading.value = false
+    }
+    return
+  }
+
+  // [INFO] Sign in like normal
   try {
-    await login(form.value.email, form.value.password)
+    await login(authForm.value.email, authForm.value.password)
   } catch (error) {
     console.error(error)
     errors.value = error

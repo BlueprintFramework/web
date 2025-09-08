@@ -46,7 +46,7 @@
         v-model="checkpointForm.code"
         v-if="checkpointData.authType == 'two_factor_required'"
         name="code"
-        type="code"
+        type="text"
         :rules="[
           validationRules.required(),
           validationRules.minLength(6),
@@ -79,9 +79,10 @@
       <button
         :disabled="
           (checkpointData.authType != 'two_factor_required' &&
-            (!fieldValidation.email || !fieldValidation.password)) ||
+            (fieldValidation.email == false ||
+              fieldValidation.password == false)) ||
           (checkpointData.authType == 'two_factor_required' &&
-            !fieldValidation.code) ||
+            fieldValidation.code == false) ||
           loading
         "
         type="submit"
@@ -119,9 +120,7 @@ const authForm = ref({
   email: '',
   password: '',
 })
-const checkpointForm = ref<{
-  code: number | string
-}>({
+const checkpointForm = ref({
   code: '',
 })
 

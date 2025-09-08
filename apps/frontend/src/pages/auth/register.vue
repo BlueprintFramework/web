@@ -17,7 +17,12 @@
         v-model="form.displayName"
         name="displayname"
         type="text"
-        :rules="[validationRules.required(), validationRules.name()]"
+        :rules="[
+          validationRules.required(),
+          validationRules.name(),
+          validationRules.minLength(3),
+          validationRules.maxLength(15),
+        ]"
         :required="true"
         leading-icon="memory:user"
         autocomplete="nickname"
@@ -59,20 +64,18 @@
       <span class="text-default-font/50">
         By creating an account, you acknowledge that you have read and agree to
         our
-        <NuxtLink to="/legal/terms" class="text-link"
-          >Terms of Service</NuxtLink
-        >
+        <!-- prettier-ignore -->
+        <NuxtLink to="/legal/terms" class="text-link">Terms of Service</NuxtLink>
         and
-        <NuxtLink to="/legal/privacy" class="text-link"
-          >Privacy Policy</NuxtLink
-        >
+        <!-- prettier-ignore -->
+        <NuxtLink to="/legal/privacy" class="text-link">Privacy Policy</NuxtLink>
       </span>
     </div>
     <button
       :disabled="
-        !fieldValidation.displayName ||
-        !fieldValidation.email ||
-        !fieldValidation.password ||
+        fieldValidation.displayName == false ||
+        fieldValidation.email == false ||
+        fieldValidation.password == false ||
         loading
       "
       type="submit"

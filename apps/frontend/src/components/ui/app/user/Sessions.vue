@@ -24,13 +24,13 @@
             <span>
               Sessions {{ pageFirstSession }}-{{ pageLastSession }}
               of
-              {{ data?.sessions.total }}
+              {{ data?.sessions?.total }}
             </span>
           </div>
           <button
             class="disabled:text-default-font/40 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 cursor-pointer border-l border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
             :disabled="
-              (pageLastSession || 0) >= (data?.sessions.total || 0)
+              (pageLastSession || 0) >= (data?.sessions?.total || 0)
                 ? true
                 : false
             "
@@ -42,15 +42,18 @@
       </client-only>
     </div>
     <client-only>
-      <div class="grid" :class="`grid-rows-${perPage}`">
+      <div
+        class="grid"
+        :class="`grid-rows-${sessionsCount == perPage ? perPage : sessionsCount + 1}`"
+      >
         <div
-          v-for="session in data?.sessions.data"
+          v-for="session in data?.sessions?.data"
           class="flex flex-col justify-center gap-2 overflow-hidden border-neutral-700 p-4 align-middle transition-colors"
           :class="
             (session.is_using
               ? 'bg-neutral-900 '
               : 'group cursor-pointer bg-neutral-950 hover:bg-red-950 ') +
-            (session != data?.sessions.data.at(-1) ? 'border-b' : 'border-b-0')
+            (session != data?.sessions?.data.at(-1) ? 'border-b' : 'border-b-0')
           "
           @click="!session.is_using && deleteSession(session.id)"
         >
@@ -63,7 +66,10 @@
                   : 'group-hover:text-red-400'
               "
             >
-              <Icon name="pixelarticons:device-laptop" :size="18" />
+              <Icon
+                :name="determineDeviceIcon(session.user_agent)"
+                :size="18"
+              />
               <span>
                 {{ session.ip }}
               </span>
@@ -90,7 +96,7 @@
           </p>
         </div>
         <div
-          v-if="!data?.sessions.data[perPage - 1]"
+          v-if="!data?.sessions?.data[perPage - 1]"
           class="flex flex-col items-center justify-center gap-1 border-t border-neutral-700 p-4"
         >
           <Icon name="pixelarticons:devices" :size="32" />
@@ -102,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-const data = ref<UserSessions>()
+const data = ref<{ sessions?: UserSessions; errors?: ApiError }>()
 const page = ref(1)
 const perPage = ref(4)
 const loading = ref(false)
@@ -110,10 +116,17 @@ const deleting = ref(false)
 
 const pageFirstSession = computed(() => perPage.value * (page.value - 1) + 1)
 const pageLastSession = computed(() =>
-  perPage.value * page.value >= (data.value?.sessions.total || 0)
-    ? data.value?.sessions.total
+  perPage.value * page.value >= (data.value?.sessions?.total || 0)
+    ? data.value?.sessions?.total
     : perPage.value * page.value
 )
+const sessionsCount = computed(() => data.value?.sessions?.data.length ?? 0)
+
+const determineDeviceIcon = (ua: string) => {
+  if (/android/i.test(ua)) return 'pixelarticons:android'
+  if (/mobile|iphone|ipad|ipod/i.test(ua)) return 'pixelarticons:device-phone'
+  return 'pixelarticons:device-laptop'
+}
 
 const fetchSessions = async () => {
   if (loading.value) return
@@ -126,6 +139,10 @@ const fetchSessions = async () => {
         method: 'GET',
       }
     )
+
+    if (!data.value?.sessions) {
+      throw data.value?.errors
+    }
   } catch (error) {
     //[TODO] properly handle error in the ui as well
     console.error('failed to fetch sessions:', error)
@@ -133,8 +150,8 @@ const fetchSessions = async () => {
     loading.value = false
 
     if (
-      (data.value?.sessions.page || 0 > 1) &&
-      data.value?.sessions.total == 0
+      (data.value?.sessions?.page || 0 > 1) &&
+      data.value?.sessions?.total == 0
     ) {
       page.value--
     }

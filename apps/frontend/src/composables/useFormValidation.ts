@@ -58,6 +58,20 @@ export const useFormValidation = () => {
       message,
       trigger: 'blur',
     }),
+
+    url: (message = 'Please enter a valid URL'): ValidationRule => ({
+      validator: (value: string) => {
+        if (!value) return true
+        try {
+          new URL(value)
+          return true
+        } catch {
+          return false
+        }
+      },
+      message,
+      trigger: 'blur',
+    }),
   }
 
   const debounce = (func: Function, delay: number) => {

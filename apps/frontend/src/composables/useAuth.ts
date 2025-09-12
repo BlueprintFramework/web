@@ -103,7 +103,7 @@ export const useAuth = () => {
       if (data.user) {
         authState.value.checkpoint.authType = 'completed'
         setUser(data.user)
-        await navigateTo('/app')
+        await navigateTo('/auth/verify')
       } else {
         throw data
       }

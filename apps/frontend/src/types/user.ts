@@ -18,6 +18,7 @@ export interface FullUser {
   email_pending?: string | null
   pronouns?: string | null
   support?: string | null
+  suspended: boolean
 }
 
 export interface User {
@@ -27,6 +28,7 @@ export interface User {
   name: string
   pronouns?: string | null
   support?: string | null
+  suspended: boolean
 }
 
 export interface UserSessions {

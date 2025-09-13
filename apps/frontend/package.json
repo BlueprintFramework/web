@@ -21,7 +21,7 @@
     "@tailwindcss/vite": "^4.1.13",
     "@vueuse/core": "^13.9.0",
     "better-sqlite3": "^12.2.0",
-    "debug": "^4.4.1",
+    "debug": "4.4.1",
     "nuxt": "^4.1.1",
     "nuxt-marquee": "1.0.4",
     "tailwindcss": "^4.1.13",

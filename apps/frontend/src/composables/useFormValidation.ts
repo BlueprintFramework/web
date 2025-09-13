@@ -72,6 +72,18 @@ export const useFormValidation = () => {
       message,
       trigger: 'blur',
     }),
+
+    pronouns: (
+      message = 'Pronouns must follow a "foo/bar" or "foo/bar/fizz" structure'
+    ): ValidationRule => ({
+      validator: (value: string) => {
+        if (!value) return true
+        const pronounRegex = /^[a-zA-Z]+\/[a-zA-Z]+(?:\/[a-zA-Z]+)?$/
+        return pronounRegex.test(value)
+      },
+      message,
+      trigger: 'blur',
+    }),
   }
 
   const debounce = (func: Function, delay: number) => {

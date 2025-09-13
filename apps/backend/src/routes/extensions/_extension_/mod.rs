@@ -41,7 +41,7 @@ mod get {
         match extension {
             Some(extension) => {
                 if !extension.unlisted && extension.status == ExtensionStatus::Approved {
-                    ApiResponse::json(extension.into_api_object()).ok()
+                    ApiResponse::json(extension.into_api_object(&state.env)).ok()
                 } else {
                     ApiResponse::error("extension not found")
                         .with_status(StatusCode::NOT_FOUND)

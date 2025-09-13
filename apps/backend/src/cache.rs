@@ -1,7 +1,7 @@
 use crate::env::RedisMode;
 use colored::Colorize;
 use rustis::client::Client;
-use rustis::commands::{SetCondition, SetExpiration, StringCommands};
+use rustis::commands::{GenericCommands, SetCondition, SetExpiration, StringCommands};
 use rustis::resp::cmd;
 use serde::{Serialize, de::DeserializeOwned};
 use std::future::Future;
@@ -93,5 +93,25 @@ impl Cache {
                 Ok(result)
             }
         }
+    }
+
+    #[inline]
+    pub async fn clear_extension(
+        &self,
+        extension: &crate::models::extension::Extension,
+    ) -> Result<(), rustis::Error> {
+        let (mut id_keys, mut identifier_keys): (Vec<String>, Vec<String>) = tokio::try_join!(
+            self.client.keys(format!("extensions::{}*", extension.id)),
+            self.client
+                .keys(format!("extensions::{}*", extension.identifier))
+        )?;
+
+        if !id_keys.is_empty() || !identifier_keys.is_empty() {
+            id_keys.append(&mut identifier_keys);
+
+            self.client.del(id_keys).await?;
+        }
+
+        Ok(())
     }
 }

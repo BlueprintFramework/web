@@ -26,6 +26,7 @@ mod cache;
 mod captcha;
 mod database;
 mod env;
+mod extract;
 mod jwt;
 mod mail;
 mod models;

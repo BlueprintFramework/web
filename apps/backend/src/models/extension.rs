@@ -1,10 +1,15 @@
 use super::{BaseModel, user::User};
+use rand::distr::SampleString;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, postgres::PgRow, prelude::Type, types::chrono::NaiveDateTime};
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::LazyLock};
 use utoipa::ToSchema;
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+pub static IDENTIFIER_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^[a-z]+$").expect("Failed to compile identifier regex"));
+
+#[derive(ToSchema, Serialize, Deserialize, Type, Clone, Copy)]
 #[serde(rename_all = "lowercase")]
 #[schema(rename_all = "lowercase")]
 #[sqlx(type_name = "extension_type", rename_all = "UPPERCASE")]
@@ -23,7 +28,7 @@ pub enum ExtensionStatus {
     Pending,
 }
 
-#[derive(ToSchema, Serialize, Deserialize)]
+#[derive(ToSchema, Serialize, Deserialize, Clone)]
 pub struct ExtensionVersion {
     pub name: String,
     pub downloads: u32,
@@ -31,22 +36,47 @@ pub struct ExtensionVersion {
     pub created: NaiveDateTime,
 }
 
-#[derive(ToSchema, Serialize, Deserialize)]
-pub struct ExtensionPlatform {
+#[derive(ToSchema, Serialize, Deserialize, Clone, Copy, PartialOrd, Ord, PartialEq, Eq)]
+#[serde(rename_all = "UPPERCASE")]
+#[schema(rename_all = "UPPERCASE")]
+pub enum ExtensionPlatform {
+    Builtbybit,
+    Sourcexchange,
+    Github,
+}
+
+#[derive(ToSchema, Serialize, Deserialize, Clone, Copy, PartialOrd, Ord, PartialEq, Eq)]
+#[serde(rename_all = "UPPERCASE")]
+#[schema(rename_all = "UPPERCASE")]
+pub enum ExtensionPlatformCurrency {
+    Usd,
+    Eur,
+    Gbp,
+}
+
+#[derive(ToSchema, Serialize, Deserialize, Clone)]
+pub struct ExtensionPlatformData {
     pub url: String,
     pub price: f64,
-    pub currency: String,
+    pub currency: ExtensionPlatformCurrency,
 
     pub reviews: Option<u32>,
     pub rating: Option<f64>,
 }
 
 #[derive(ToSchema, Serialize, Deserialize)]
+pub struct MinimalExtensionPlatformData {
+    pub url: String,
+    pub price: f64,
+    pub currency: ExtensionPlatformCurrency,
+}
+
+#[derive(Default, ToSchema, Serialize, Deserialize, Clone)]
 pub struct ExtensionStats {
     pub panels: i64,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Extension {
     pub id: i32,
     pub author: User,
@@ -61,7 +91,7 @@ pub struct Extension {
     pub summary: String,
     pub description: Option<String>,
 
-    pub platforms: BTreeMap<String, ExtensionPlatform>,
+    pub platforms: BTreeMap<ExtensionPlatform, ExtensionPlatformData>,
     pub versions: Vec<ExtensionVersion>,
 
     pub keywords: Vec<String>,
@@ -134,22 +164,62 @@ impl BaseModel for Extension {
                 .unwrap_or_default(),
             keywords: row.get(format!("{prefix}keywords").as_str()),
             banner: row.get(format!("{prefix}banner").as_str()),
-            stats: serde_json::from_value(row.get(format!("{prefix}stats").as_str())).unwrap(),
+            stats: if let Ok(data) = row.try_get(format!("{prefix}stats").as_str()) {
+                serde_json::from_value(data).unwrap_or_default()
+            } else {
+                Default::default()
+            },
             created: row.get(format!("{prefix}created").as_str()),
         }
     }
 }
 
 impl Extension {
-    #[inline]
-    pub fn versions(&self) -> Vec<&String> {
-        let mut versions: Vec<&String> = Vec::new();
+    #[allow(clippy::too_many_arguments)]
+    pub async fn create(
+        database: &crate::database::Database,
+        env: &crate::env::Env,
+        author_id: i32,
+        name: &str,
+        identifier: &str,
+        r#type: ExtensionType,
+        unlisted: bool,
+        summary: &str,
+        description: Option<&str>,
+        platforms: &BTreeMap<ExtensionPlatform, ExtensionPlatformData>,
+    ) -> Result<i32, sqlx::Error> {
+        let identifier_random = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 8);
 
-        for version in self.versions.iter() {
-            versions.push(&version.name);
-        }
+        let row = sqlx::query(
+            r#"
+            INSERT INTO extensions (author_id, name, identifier, type, status, unlisted, summary, description, platforms, banner, created)
+            VALUES ($1, $2, $3, $4, 'PENDING', $5, $6, $7, $8, $9, NOW())
+            RETURNING extensions.id
+            "#,
+        )
+        .bind(author_id)
+        .bind(name)
+        .bind(identifier)
+        .bind(r#type)
+        .bind(unlisted)
+        .bind(summary)
+        .bind(description)
+        .bind(serde_json::to_value(platforms).unwrap())
+        .bind(format!("{}/default.webp", env.s3_url))
+        .fetch_one(database.write())
+        .await?;
 
-        versions
+        sqlx::query!(
+            "UPDATE extensions
+            SET identifier = $2
+            WHERE extensions.id = $1",
+            row.get::<i32, _>("id"),
+            format!("{identifier}:{identifier_random}")
+        )
+        .execute(database.write())
+        .await?;
+
+        Ok(row.get("id"))
     }
 
     pub async fn all(database: &crate::database::Database) -> Result<Vec<Self>, sqlx::Error> {
@@ -168,6 +238,40 @@ impl Extension {
         .await?;
 
         Ok(rows.into_iter().map(|row| Self::map(None, &row)).collect())
+    }
+
+    pub async fn by_author_id_with_pagination(
+        database: &crate::database::Database,
+        author_id: i32,
+        page: i64,
+        per_page: i64,
+    ) -> Result<super::Pagination<Self>, sqlx::Error> {
+        let offset = (page - 1) * per_page;
+
+        let rows = sqlx::query(&format!(
+            r#"
+            SELECT {}, COUNT(*) OVER() AS total_count
+            FROM extensions
+            JOIN users ON extensions.author_id = users.id
+            LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
+            WHERE extensions.author_id = $1
+            ORDER BY extensions.id DESC
+            LIMIT $2 OFFSET $3
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(author_id)
+        .bind(per_page)
+        .bind(offset)
+        .fetch_all(database.read())
+        .await?;
+
+        Ok(super::Pagination {
+            total: rows.first().map_or(0, |row| row.get("total_count")),
+            per_page,
+            page,
+            data: rows.into_iter().map(|row| Self::map(None, &row)).collect(),
+        })
     }
 
     pub async fn by_identifier(
@@ -213,25 +317,112 @@ impl Extension {
     }
 
     #[inline]
-    pub fn into_api_object(self) -> ApiExtension {
+    pub fn versions(&self) -> Vec<&String> {
+        let mut versions: Vec<&String> = Vec::new();
+        versions.reserve_exact(self.versions.len());
+
+        for version in self.versions.iter() {
+            versions.push(&version.name);
+        }
+
+        versions
+    }
+
+    #[inline]
+    pub fn into_api_object(mut self, env: &crate::env::Env) -> ApiExtension {
         ApiExtension {
             id: self.id,
             author: self.author.into_api_object(),
             r#type: self.r#type,
-            status: self.status,
-            unlisted: self.unlisted,
             name: self.name,
-            identifier: self.identifier,
+            identifier: if self.identifier.contains(":") {
+                self.identifier.truncate(self.identifier.len() - 9);
+
+                self.identifier
+            } else {
+                self.identifier
+            },
             summary: self.summary,
             description: self.description,
             platforms: self.platforms,
             versions: self.versions,
             keywords: self.keywords,
-            banner: self.banner,
+            banner: ExtensionBanner {
+                lowres: format!("{}/extensions/lowres/{}", env.s3_url, self.banner),
+                fullres: format!("{}/extensions/{}", env.s3_url, self.banner),
+            },
             stats: self.stats,
             created: self.created.and_utc(),
         }
     }
+
+    #[inline]
+    pub fn into_api_full_object(mut self, env: &crate::env::Env) -> ApiFullExtension {
+        ApiFullExtension {
+            id: self.id,
+            author: self.author.into_api_object(),
+            r#type: self.r#type,
+            status: self.status,
+            deny_reason: self.deny_reason,
+            unlisted: self.unlisted,
+            name: self.name,
+            identifier: if self.identifier.contains(":") {
+                self.identifier.truncate(self.identifier.len() - 9);
+
+                self.identifier
+            } else {
+                self.identifier
+            },
+            summary: self.summary,
+            description: self.description,
+            platforms: self.platforms,
+            versions: self.versions,
+            keywords: self.keywords,
+            banner: ExtensionBanner {
+                lowres: format!("{}/extensions/lowres/{}", env.s3_url, self.banner),
+                fullres: format!("{}/extensions/{}", env.s3_url, self.banner),
+            },
+            stats: self.stats,
+            created: self.created.and_utc(),
+        }
+    }
+}
+
+#[derive(ToSchema, Serialize)]
+pub struct ExtensionBanner {
+    pub lowres: String,
+    pub fullres: String,
+}
+
+#[derive(ToSchema, Serialize)]
+#[schema(title = "FullExtension")]
+pub struct ApiFullExtension {
+    pub id: i32,
+    pub author: super::user::ApiUser,
+
+    pub r#type: ExtensionType,
+    pub status: ExtensionStatus,
+    pub deny_reason: Option<String>,
+    pub unlisted: bool,
+
+    pub name: String,
+    pub identifier: String,
+    pub summary: String,
+    pub description: Option<String>,
+
+    #[schema(inline)]
+    pub platforms: BTreeMap<ExtensionPlatform, ExtensionPlatformData>,
+    #[schema(inline)]
+    pub versions: Vec<ExtensionVersion>,
+
+    pub keywords: Vec<String>,
+    #[schema(inline)]
+    pub banner: ExtensionBanner,
+
+    #[schema(inline)]
+    pub stats: ExtensionStats,
+
+    pub created: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(ToSchema, Serialize)]
@@ -241,8 +432,6 @@ pub struct ApiExtension {
     pub author: super::user::ApiUser,
 
     pub r#type: ExtensionType,
-    pub status: ExtensionStatus,
-    pub unlisted: bool,
 
     pub name: String,
     pub identifier: String,
@@ -250,12 +439,13 @@ pub struct ApiExtension {
     pub description: Option<String>,
 
     #[schema(inline)]
-    pub platforms: BTreeMap<String, ExtensionPlatform>,
+    pub platforms: BTreeMap<ExtensionPlatform, ExtensionPlatformData>,
     #[schema(inline)]
     pub versions: Vec<ExtensionVersion>,
 
     pub keywords: Vec<String>,
-    pub banner: String,
+    #[schema(inline)]
+    pub banner: ExtensionBanner,
 
     #[schema(inline)]
     pub stats: ExtensionStats,

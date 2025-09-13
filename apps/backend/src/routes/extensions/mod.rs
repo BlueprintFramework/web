@@ -24,7 +24,7 @@ mod get {
 
         ApiResponse::json(
             data.into_iter()
-                .map(|extension| extension.into_api_object())
+                .map(|extension| extension.into_api_object(&state.env))
                 .collect::<Vec<_>>(),
         )
         .ok()

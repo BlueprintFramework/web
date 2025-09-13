@@ -1,5 +1,8 @@
 use crate::{
-    models::extension::{Extension, ExtensionPlatform, ExtensionVersion},
+    models::extension::{
+        Extension, ExtensionPlatform, ExtensionPlatformCurrency, ExtensionPlatformData,
+        ExtensionVersion,
+    },
     routes::State,
 };
 use colored::Colorize;
@@ -9,7 +12,7 @@ use serde::Deserialize;
 struct SxcProduct {
     id: u32,
     price: f64,
-    currency: String,
+    currency: ExtensionPlatformCurrency,
     url: String,
     rating_avg: Option<f64>,
     review_count: Option<u32>,
@@ -25,7 +28,7 @@ struct SxcProductVersion {
 #[derive(Deserialize)]
 struct BbbProduct {
     price: f64,
-    currency: String,
+    currency: ExtensionPlatformCurrency,
     review_average: Option<f64>,
     review_count: u32,
 }
@@ -93,74 +96,8 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
             version.downloads = 0;
         }
 
-        if let Some(key) = extension.platforms.get_mut("SOURCEXCHANGE")
-            && let Some(sxc_product) = sxc_products.iter().find(|product| product.url == key.url)
-        {
-            match state
-                .client
-                .get(format!(
-                    "https://www.sourcexchange.net/api/products/{}/releases",
-                    sxc_product.id
-                ))
-                .header(
-                    "Authorization",
-                    format!("Bearer {}", state.env.sxc_token.as_ref().unwrap()),
-                )
-                .send()
-                .await?
-                .json::<Vec<SxcProductVersion>>()
-                .await
-            {
-                Ok(versions) => {
-                    let mut versions: Vec<ExtensionVersion> = versions
-                        .into_iter()
-                        .map(|version| ExtensionVersion {
-                            name: clean_version_name(&version.name),
-                            downloads: version.downloads_count,
-                            created: chrono::NaiveDateTime::parse_from_str(
-                                &version.created_at,
-                                "%Y-%m-%dT%H:%M:%S%.fZ",
-                            )
-                            .unwrap_or_default(),
-                        })
-                        .collect();
-
-                    if versions.len() > extension.versions.len() {
-                        versions.sort_unstable_by(|a, b| a.created.cmp(&b.created).reverse());
-                        versions.dedup_by(|a, b| a.name == b.name);
-
-                        extension.versions = versions;
-                    } else {
-                        for version in extension.versions.iter_mut() {
-                            if let Some(sxc_version) = versions
-                                .iter()
-                                .find(|sxc_version| sxc_version.name == version.name)
-                            {
-                                version.downloads += sxc_version.downloads;
-                            }
-                        }
-                    }
-
-                    *key = ExtensionPlatform {
-                        url: key.url.clone(),
-                        price: sxc_product.price,
-                        currency: sxc_product.currency.clone(),
-                        reviews: sxc_product.review_count,
-                        rating: sxc_product.rating_avg,
-                    };
-                }
-                Err(err) => {
-                    tracing::error!(
-                        "failed to get sourcexchange versions for {}: {:#?}",
-                        extension.name,
-                        err
-                    );
-                }
-            };
-        }
-
         if let Some(bbb_token) = &state.env.bbb_token
-            && let Some(key) = extension.platforms.get_mut("BUILTBYBIT")
+            && let Some(key) = extension.platforms.get_mut(&ExtensionPlatform::Builtbybit)
         {
             let product_id: u32 = key
                 .url
@@ -243,10 +180,10 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
                                 }
                             }
 
-                            *key = ExtensionPlatform {
+                            *key = ExtensionPlatformData {
                                 url: key.url.clone(),
                                 price: product.price,
-                                currency: product.currency.clone(),
+                                currency: product.currency,
                                 reviews: Some(product.review_count),
                                 rating: product.review_average,
                             };
@@ -271,7 +208,75 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
             };
         }
 
-        if let Some(key) = extension.platforms.get_mut("GITHUB") {
+        if let Some(key) = extension
+            .platforms
+            .get_mut(&ExtensionPlatform::Sourcexchange)
+            && let Some(sxc_product) = sxc_products.iter().find(|product| product.url == key.url)
+        {
+            match state
+                .client
+                .get(format!(
+                    "https://www.sourcexchange.net/api/products/{}/releases",
+                    sxc_product.id
+                ))
+                .header(
+                    "Authorization",
+                    format!("Bearer {}", state.env.sxc_token.as_ref().unwrap()),
+                )
+                .send()
+                .await?
+                .json::<Vec<SxcProductVersion>>()
+                .await
+            {
+                Ok(versions) => {
+                    let mut versions: Vec<ExtensionVersion> = versions
+                        .into_iter()
+                        .map(|version| ExtensionVersion {
+                            name: clean_version_name(&version.name),
+                            downloads: version.downloads_count,
+                            created: chrono::NaiveDateTime::parse_from_str(
+                                &version.created_at,
+                                "%Y-%m-%dT%H:%M:%S%.fZ",
+                            )
+                            .unwrap_or_default(),
+                        })
+                        .collect();
+
+                    if versions.len() > extension.versions.len() {
+                        versions.sort_unstable_by(|a, b| a.created.cmp(&b.created).reverse());
+                        versions.dedup_by(|a, b| a.name == b.name);
+
+                        extension.versions = versions;
+                    } else {
+                        for version in extension.versions.iter_mut() {
+                            if let Some(sxc_version) = versions
+                                .iter()
+                                .find(|sxc_version| sxc_version.name == version.name)
+                            {
+                                version.downloads += sxc_version.downloads;
+                            }
+                        }
+                    }
+
+                    *key = ExtensionPlatformData {
+                        url: key.url.clone(),
+                        price: sxc_product.price,
+                        currency: sxc_product.currency,
+                        reviews: sxc_product.review_count,
+                        rating: sxc_product.rating_avg,
+                    };
+                }
+                Err(err) => {
+                    tracing::error!(
+                        "failed to get sourcexchange versions for {}: {:#?}",
+                        extension.name,
+                        err
+                    );
+                }
+            };
+        }
+
+        if let Some(key) = extension.platforms.get_mut(&ExtensionPlatform::Github) {
             let repo = key.url.split('/').collect::<Vec<_>>()[3..5].join("/");
 
             match state
@@ -318,10 +323,10 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
                         }
                     }
 
-                    *key = ExtensionPlatform {
+                    *key = ExtensionPlatformData {
                         url: key.url.clone(),
                         price: 0.0,
-                        currency: "USD".to_string(),
+                        currency: ExtensionPlatformCurrency::Usd,
                         reviews: Some(0),
                         rating: None,
                     };

@@ -14,6 +14,7 @@ use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod email;
+mod extensions;
 mod logout;
 mod password;
 mod sessions;
@@ -24,8 +25,8 @@ pub enum AuthMethod {
     Session(UserSession),
 }
 
-pub type GetUser = axum::extract::Extension<User>;
-pub type GetAuthMethod = axum::extract::Extension<AuthMethod>;
+pub type GetUser = crate::extract::ConsumingExtension<User>;
+pub type GetAuthMethod = crate::extract::ConsumingExtension<AuthMethod>;
 
 pub async fn auth(
     state: GetState,
@@ -199,7 +200,14 @@ mod patch {
         )]
         #[schema(min_length = 3, max_length = 15)]
         #[schema(pattern = "^[a-zA-Z0-9_]+$")]
-        name: Option<String>,
+        name: String,
+        #[validate(
+            length(min = 3, max = 22),
+            regex(path = "*crate::models::user::PRONOUNS_REGEX")
+        )]
+        #[schema(min_length = 3, max_length = 22)]
+        #[schema(pattern = "^[a-zA-Z]+/[a-zA-Z]+(?:/[a-zA-Z]+)?$")]
+        pronouns: Option<String>,
         #[schema(min_length = 5, max_length = 63)]
         #[schema(min_length = 5, max_length = 63)]
         support: Option<String>,
@@ -213,7 +221,7 @@ mod patch {
     ), request_body = inline(Payload))]
     pub async fn route(
         state: GetState,
-        mut user: GetUser,
+        user: GetUser,
         axum::Json(data): axum::Json<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
@@ -222,24 +230,14 @@ mod patch {
                 .ok();
         }
 
-        if let Some(name) = data.name {
-            user.name = name;
-        }
-        if let Some(support) = data.support {
-            if support.is_empty() {
-                user.support = None;
-            } else {
-                user.support = Some(support);
-            }
-        }
-
         sqlx::query!(
             "UPDATE users
-            SET name = $2, support = $3
+            SET name = $2, pronouns = $3, support = $4
             WHERE users.id = $1",
             user.id,
-            user.name,
-            user.support
+            data.name,
+            data.pronouns,
+            data.support
         )
         .execute(state.database.write())
         .await?;
@@ -253,6 +251,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .routes(routes!(get::route))
         .routes(routes!(patch::route))
         .nest("/sessions", sessions::router(state))
+        .nest("/extensions", extensions::router(state))
         .nest("/email", email::router(state))
         .nest("/password", password::router(state))
         .nest("/two-factor", two_factor::router(state))

@@ -1,14 +1,12 @@
 use s3::error::S3Error;
 
 pub struct S3 {
-    pub public_url: String,
     pub bucket: Box<s3::Bucket>,
 }
 
 impl S3 {
     pub async fn new(env: &crate::env::Env) -> Self {
         let mut instance = Self {
-            public_url: env.s3_url.clone(),
             bucket: s3::Bucket::new(
                 &env.s3_bucket,
                 s3::Region::Custom {
@@ -35,12 +33,12 @@ impl S3 {
     }
 
     #[inline]
-    pub async fn url(
+    pub async fn upload(
         &self,
-        path: &str,
+        path: String,
         content: &[u8],
         content_type: Option<&str>,
-    ) -> Result<String, S3Error> {
+    ) -> Result<(), S3Error> {
         self.bucket
             .put_object_with_content_type(
                 path,
@@ -49,6 +47,6 @@ impl S3 {
             )
             .await?;
 
-        Ok(format!("{}/{}", self.public_url, path))
+        Ok(())
     }
 }

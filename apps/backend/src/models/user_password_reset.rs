@@ -45,7 +45,6 @@ impl BaseModel for UserPasswordReset {
 }
 
 impl UserPasswordReset {
-    #[inline]
     pub async fn create(
         database: &crate::database::Database,
         user_id: i32,

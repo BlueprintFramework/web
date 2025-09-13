@@ -70,13 +70,4 @@ impl Jwt {
     pub fn create<T: Serialize>(&self, payload: &T) -> Result<String, jwt::Error> {
         payload.sign_with_key(&self.key)
     }
-
-    #[inline]
-    pub fn create_custom<T: Serialize>(
-        &self,
-        key: &[u8],
-        payload: &T,
-    ) -> Result<String, jwt::Error> {
-        payload.sign_with_key(&hmac::Hmac::<sha2::Sha256>::new_from_slice(key)?)
-    }
 }

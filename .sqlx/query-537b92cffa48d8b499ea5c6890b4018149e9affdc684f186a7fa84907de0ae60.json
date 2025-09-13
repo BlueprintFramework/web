@@ -1,0 +1,30 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE extensions\n            SET name = $2, type = $3, unlisted = $4, summary = $5, description = $6, platforms = $7\n            WHERE extensions.id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        {
+          "Custom": {
+            "name": "extension_type",
+            "kind": {
+              "Enum": [
+                "THEME",
+                "EXTENSION"
+              ]
+            }
+          }
+        },
+        "Bool",
+        "Varchar",
+        "Text",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "537b92cffa48d8b499ea5c6890b4018149e9affdc684f186a7fa84907de0ae60"
+}

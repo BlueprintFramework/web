@@ -178,7 +178,6 @@ impl Extension {
     #[allow(clippy::too_many_arguments)]
     pub async fn create(
         database: &crate::database::Database,
-        env: &crate::env::Env,
         author_id: i32,
         name: &str,
         identifier: &str,
@@ -205,7 +204,7 @@ impl Extension {
         .bind(summary)
         .bind(description)
         .bind(serde_json::to_value(platforms).unwrap())
-        .bind(format!("{}/default.webp", env.s3_url))
+        .bind("_default.jpeg")
         .fetch_one(database.write())
         .await?;
 

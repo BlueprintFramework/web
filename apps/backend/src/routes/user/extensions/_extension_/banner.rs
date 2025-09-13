@@ -76,7 +76,15 @@ mod post {
                 format!("extensions/{banner_name}"),
                 &fullres_data,
                 Some("image/jpeg")
-            )
+            ),
+            state
+                .s3
+                .bucket
+                .delete_object(format!("extensions/lowres/{}", extension.banner)),
+            state
+                .s3
+                .bucket
+                .delete_object(format!("extensions/{}", extension.banner))
         )?;
 
         sqlx::query!(

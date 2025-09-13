@@ -228,7 +228,6 @@ mod post {
 
         match Extension::create(
             &state.database,
-            &state.env,
             user.id,
             &data.name,
             &data.identifier,

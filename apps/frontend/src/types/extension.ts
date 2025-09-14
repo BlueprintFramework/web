@@ -1,44 +1,51 @@
 export interface Extension {
-  author: ExtensionAuthor
-  banner: string
+  author: User
+  banner: ExtensionBanner
   created: string
   id: number
   identifier: string
   keywords: string[]
   name: string
-  platforms: Record<string, ExtensionPlatforms>
-  stats: {
-    panels: number
-  }
-  status: ExtensionStatus
+  platforms: Record<string, ExtensionFullPlatform>
+  stats: ExtensionStats
   summary: string
   type: ExtensionType
-  unlisted: boolean
-  versions: ExtensionVersions[]
+  versions: ExtensionVersion[]
   description?: string | null
 }
 
-export interface ExtensionVersions {
+export interface FullExtension extends Extension {
+  status: ExtensionStatus
+  unlisted: boolean
+  deny_reason?: string | null
+}
+
+export interface ExtensionVersion {
   name: string
   downloads: number
   created: string
 }
 
-export interface ExtensionPlatforms {
-  url: string
+export interface ExtensionPlatform {
+  currency: ExtensionPlatformCurrency
   price: number
-  currency: string
+  url: string
+}
+
+export interface ExtensionFullPlatform extends ExtensionPlatform {
   reviews?: number | null
   rating?: number | null
 }
 
-export interface ExtensionAuthor {
-  id: number
-  name: string
-  website?: string | null
-  support?: string | null
-  created: string
+export interface ExtensionBanner {
+  fullres: string
+  lowres: string
+}
+
+export interface ExtensionStats {
+  panels: number
 }
 
 export type ExtensionType = 'theme' | 'extension'
 export type ExtensionStatus = 'approved' | 'ready' | 'pending'
+export type ExtensionPlatformCurrency = 'USD' | 'EUR' | 'GBP'

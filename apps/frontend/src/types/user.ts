@@ -8,19 +8,6 @@ export interface AuthState {
   }
 }
 
-export interface FullUser {
-  admin: boolean
-  created: string
-  email: string
-  id: number
-  name: string
-  totp_enabled: boolean
-  email_pending?: string | null
-  pronouns?: string | null
-  support?: string | null
-  suspended: boolean
-}
-
 export interface User {
   admin: boolean
   created: string
@@ -29,6 +16,12 @@ export interface User {
   pronouns?: string | null
   support?: string | null
   suspended: boolean
+}
+
+export interface FullUser extends User {
+  email: string
+  totp_enabled: boolean
+  email_pending?: string | null
 }
 
 export interface UserSessions {

@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "types:api": "pnpm dlx openapi-typescript http://localhost:8000/openapi.json -o ./src/types/openapi.ts"
   },
   "dependencies": {
     "@igorkowalczyk/is-browser": "^5.1.0",

@@ -2,7 +2,7 @@
   <h1>Account settings</h1>
 
   <UiAppUserProfile />
-  <UiAppUserEmail />
+  <UiAppUserSecurity />
   <UiAppUserSessions />
 </template>
 

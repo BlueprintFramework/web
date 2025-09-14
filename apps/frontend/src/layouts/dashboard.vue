@@ -1,6 +1,73 @@
 <template>
+  <div v-if="!isDesktop" class="h-13 w-full">
+    <div
+      class="h-13 fixed left-0 top-0 w-full border-b border-neutral-700 bg-neutral-950"
+    >
+      <div class="container h-full">
+        <div class="flex h-full flex-row items-center justify-between">
+          <NuxtLink to="/" class="group">
+            <BrandEmblem
+              v-if="isXs"
+              class="group-hover:text-brand-50 transition-colors"
+            />
+            <BrandWordmark v-else />
+          </NuxtLink>
+          <div class="flex flex-row">
+            <div
+              class="flex flex-row divide-x divide-neutral-700 overflow-hidden rounded-full border border-neutral-700 bg-neutral-900"
+            >
+              <NuxtLink
+                v-if="user?.email_pending == null"
+                to="/app"
+                class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
+                :class="{ '!text-default-font': route.path == '/app' }"
+              >
+                <Icon name="memory:apps" :size="20" mode="svg" />
+              </NuxtLink>
+              <NuxtLink
+                to="/app/account"
+                class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
+                :class="{
+                  '!text-default-font':
+                    route.path == '/app/account' ||
+                    route.path.startsWith('/app/account/'),
+                }"
+              >
+                <Icon name="memory:account-box" :size="20" mode="svg" />
+              </NuxtLink>
+              <NuxtLink
+                v-if="user?.email_pending == null"
+                to="/app/extensions"
+                class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
+                :class="{
+                  '!text-default-font':
+                    route.path == '/app/extensions' ||
+                    route.path.startsWith('/app/extensions/'),
+                }"
+              >
+                <Icon name="memory:cube" :size="20" mode="svg" />
+              </NuxtLink>
+              <NuxtLink
+                v-if="user?.email_pending == null"
+                to="/app/stats"
+                class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
+                :class="{
+                  '!text-default-font':
+                    route.path == '/app/stats' ||
+                    route.path.startsWith('/app/stats/'),
+                }"
+              >
+                <Icon name="memory:chart-bar" :size="20" mode="svg" />
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="flex gap-5">
-    <div class="w-17 py-4 pl-4">
+    <div v-if="isDesktop" class="w-17 py-4 pl-4">
       <div
         class="w-15 fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950"
       >
@@ -84,6 +151,10 @@
 </template>
 
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core'
+
 const { user, logout } = useAuth()
 const route = useRoute()
+const isDesktop = useMediaQuery('(min-width: 768px)')
+const isXs = useMediaQuery('(max-width: 320px)')
 </script>

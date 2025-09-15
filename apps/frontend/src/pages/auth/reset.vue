@@ -4,7 +4,7 @@
       <h1 class="!text-4xl">Account recovery</h1>
     </div>
     <div class="space-y-4 p-4">
-      <UiFormInput
+      <ElementsFormInput
         v-model="form.email"
         name="email"
         type="email"

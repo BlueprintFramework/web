@@ -1,8 +1,10 @@
 <template>
   <div
-    class="grid grid-cols-2 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
+    class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 md:grid-cols-2 md:divide-x"
   >
-    <div class="min-h-55 flex flex-col divide-y divide-neutral-700">
+    <div
+      class="md:min-h-55 flex flex-col divide-y divide-neutral-700 border-b border-neutral-700 md:border-b-0"
+    >
       <div class="space-y-2 p-4">
         <h2>Devices</h2>
         <p>
@@ -10,7 +12,7 @@
           Blueprint account. You can deauthorize devices by clicking them.
         </p>
       </div>
-      <div class="bg-stripes h-full" />
+      <div class="bg-stripes hidden h-full md:block" />
       <client-only>
         <div class="flex items-center justify-between">
           <button
@@ -20,8 +22,8 @@
           >
             <Icon name="memory:chevron-left" :size="24" mode="svg" />
           </button>
-          <div class="p-4">
-            <span>
+          <div class="overflow-auto p-4">
+            <span class="text-nowrap">
               Sessions {{ pageFirstSession }}-{{ pageLastSession }}
               of
               {{ data?.sessions?.total }}
@@ -48,23 +50,19 @@
       >
         <div
           v-for="session in data?.sessions?.data"
-          class="flex flex-col justify-center gap-2 overflow-hidden border-neutral-700 p-4 align-middle transition-colors"
+          class="flex flex-col justify-center gap-2.5 overflow-hidden border-neutral-700 p-4 align-middle transition-colors"
           :class="
             (session.is_using
               ? 'bg-neutral-900 '
-              : 'group cursor-pointer bg-neutral-950 hover:bg-red-950 ') +
+              : 'group cursor-pointer bg-neutral-950 ') +
             (session != data?.sessions?.data.at(-1) ? 'border-b' : 'border-b-0')
           "
           @click="!session.is_using && deleteSession(session.id)"
         >
           <div class="flex items-center justify-between gap-2">
             <div
-              class="flex items-center gap-2 transition-colors"
-              :class="
-                session.is_using
-                  ? 'text-brand-50 font-bold'
-                  : 'group-hover:text-red-400'
-              "
+              class="flex items-center gap-2"
+              :class="session.is_using ? 'text-brand-50 font-bold' : ''"
             >
               <Icon
                 :name="determineDeviceIcon(session.user_agent)"
@@ -76,22 +74,20 @@
             </div>
             <div
               v-if="!session.is_using"
-              class="flex items-center gap-1 font-bold text-transparent transition-colors group-hover:text-red-400"
+              class="text-default-font flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-0.5 text-sm transition-colors group-hover:bg-red-950 group-hover:text-red-400"
             >
-              <Icon name="pixelarticons:minus" :size="18" />
-              <span>Deauthorize</span>
+              <span>Forget device</span>
             </div>
           </div>
           <p
             class="monospace-body text-default-font/60 truncate transition-colors"
-            :class="session.is_using ? '' : 'group-hover:text-red-400/60'"
           >
             {{ session.user_agent }}
           </p>
           <p v-if="session.is_using" class="text-brand-50">
             Your current session
           </p>
-          <p class="transition-colors group-hover:text-red-400" v-else>
+          <p v-else>
             Last used <NuxtTime :datetime="session.last_used" relative />
           </p>
         </div>

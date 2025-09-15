@@ -10,7 +10,7 @@
         class="sticky top-[calc(var(--nav-offset)+1rem)] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
       >
         <div class="border-b border-neutral-700 p-4">
-          <UiFormInput
+          <ElementsFormInput
             v-model="form.search"
             name="search"
             type="text"
@@ -32,12 +32,12 @@
       <div
         class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
-        <UiExtensioncard
+        <ElementsExtensioncard
           v-if="pending || extensions == undefined"
           v-for="n in 28"
           class="flex flex-col bg-neutral-950"
         />
-        <UiExtensioncard
+        <ElementsExtensioncard
           v-else
           v-for="extension in filteredAndSortedExtensions"
           :key="extension.id"
@@ -80,7 +80,7 @@
       >
         <div class="flex divide-x divide-neutral-700">
           <div class="w-full p-4">
-            <UiFormInput
+            <ElementsFormInput
               v-model="form.search"
               name="search"
               type="text"
@@ -132,7 +132,7 @@
     />
   </Transition>
 
-  <UiGridbackground />
+  <ElementsGridbackground />
 </template>
 
 <script setup lang="ts">

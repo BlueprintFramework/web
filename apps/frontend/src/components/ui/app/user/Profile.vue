@@ -1,17 +1,17 @@
 <template>
   <div
-    class="grid grid-cols-2 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
+    class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 md:grid-cols-2 md:divide-x"
   >
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
         <h2>Profile</h2>
         <p>Your public profile on the Blueprint platform.</p>
       </div>
-      <div class="bg-stripes h-full" />
+      <div class="bg-stripes hidden h-full md:block" />
     </div>
     <form @submit.prevent="updateProfile" class="divide-y divide-neutral-700">
-      <div class="grid grid-cols-2 gap-4 p-4">
-        <UiFormInput
+      <div class="grid grid-cols-1 gap-4 p-4 xl:grid-cols-2">
+        <ElementsFormInput
           v-model="profileForm.name"
           label="Display name"
           description="Your display name, displayed side-wide and should be unique."
@@ -32,7 +32,7 @@
             (isValid: boolean) => handleFieldValidation('name', isValid)
           "
         />
-        <UiFormInput
+        <ElementsFormInput
           v-model="profileForm.pronouns"
           label="Pronouns"
           description='Pronouns displayed on your profile. "Joke pronouns" are not allowed.'
@@ -46,7 +46,7 @@
             (isValid: boolean) => handleFieldValidation('pronouns', isValid)
           "
         />
-        <UiFormInput
+        <ElementsFormInput
           v-model="profileForm.support"
           label="Support URL"
           description="Link for users to get product support, in case you publish extensions."

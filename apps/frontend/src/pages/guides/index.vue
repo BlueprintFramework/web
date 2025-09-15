@@ -11,7 +11,7 @@
         </span>
       </div>
       <div class="p-4 md:p-8">
-        <UiFormInput
+        <ElementsFormInput
           v-model="form.search"
           name="search"
           type="text"

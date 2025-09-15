@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isDesktop" class="h-13 w-full">
     <div
-      class="h-13 fixed left-0 top-0 w-full border-b border-neutral-700 bg-neutral-950"
+      class="h-13 fixed left-0 top-0 z-50 w-full border-b border-neutral-700 bg-neutral-950"
     >
       <div class="container h-full">
         <div class="flex h-full flex-row items-center justify-between">

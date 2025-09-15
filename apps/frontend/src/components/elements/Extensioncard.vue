@@ -68,13 +68,13 @@ const lowestPrice = computed(() => {
 
   const platformsArray = Object.values(
     props.extension.platforms
-  ) as unknown as ExtensionPlatforms[]
+  ) as unknown as ExtensionPlatform[]
 
   if (platformsArray.length === 0) {
     return null
   }
 
-  const lowest: ExtensionPlatforms = platformsArray.reduce((lowest, current) =>
+  const lowest: ExtensionPlatform = platformsArray.reduce((lowest, current) =>
     current.price < lowest.price ? current : lowest
   )
 

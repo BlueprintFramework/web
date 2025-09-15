@@ -48,7 +48,7 @@
               <button
                 v-if="closable"
                 type="button"
-                class="hover:text-brand-50 rounded-full border border-neutral-700 bg-neutral-900 p-1 transition-colors hover:bg-neutral-800"
+                class="hover:text-brand-50 cursor-pointer rounded-full border border-neutral-700 bg-neutral-900 p-1 transition-colors hover:bg-neutral-800"
                 @click="closeModal"
               >
                 <span class="sr-only">Close modal</span>

@@ -4,10 +4,8 @@
   >
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
-        <h2>Email and security</h2>
-        <p>
-          Change your email address, password or set up 2-factor authentication.
-        </p>
+        <h2>Email address</h2>
+        <p>View and update the email address associated with your account.</p>
       </div>
       <div class="bg-stripes hidden h-full md:block" />
     </div>

@@ -25,7 +25,11 @@
           class="flex min-h-full items-center justify-center p-4"
           @click="handleBackdropClick"
         >
+          <div v-if="$slots.modal">
+            <slot name="modal" />
+          </div>
           <div
+            v-else
             ref="modalRef"
             class="relative w-full max-w-lg transform divide-y divide-neutral-700 rounded-3xl border border-neutral-700 bg-neutral-950"
             role="dialog"

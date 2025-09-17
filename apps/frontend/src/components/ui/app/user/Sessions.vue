@@ -72,12 +72,11 @@
                 {{ session.ip }}
               </span>
             </div>
-            <div
+            <ElementsButtonSmall
               v-if="!session.is_using"
-              class="text-default-font flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-0.5 text-sm transition-colors group-hover:bg-red-950 group-hover:text-red-400"
-            >
-              <span>Forget device</span>
-            </div>
+              label="Forget device"
+              class="group-hover:text-brand-50 group-hover:bg-neutral-800"
+            />
           </div>
           <p
             class="monospace-body text-default-font/60 truncate transition-colors"

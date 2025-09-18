@@ -2,8 +2,8 @@
   <h1>Account settings</h1>
 
   <UiAppUserProfile />
-  <UiAppUserSecurity />
   <UiAppUserSessions />
+  <UiAppUserTwofactor />
 </template>
 
 <script setup lang="ts">

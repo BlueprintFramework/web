@@ -4,8 +4,8 @@
   >
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
-        <h2>Email address</h2>
-        <p>View and update the email address associated with your account.</p>
+        <h2>Two factor authentication</h2>
+        <p>eyes emoji</p>
       </div>
       <div class="bg-stripes hidden h-full md:block" />
     </div>

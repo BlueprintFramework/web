@@ -58,7 +58,7 @@
           :required="true"
           :disabled="loading"
           @validate="
-            (isValid: boolean) => handleFieldValidation('support', isValid)
+            (isValid: boolean) => handleFieldValidation('email', isValid)
           "
         />
         <ElementsFormInput
@@ -80,6 +80,7 @@
         :disabled="
           fieldValidation.name == false ||
           fieldValidation.pronouns == false ||
+          fieldValidation.email == false ||
           fieldValidation.support == false ||
           loading
         "

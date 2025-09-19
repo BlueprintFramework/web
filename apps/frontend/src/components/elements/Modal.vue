@@ -66,7 +66,7 @@
 
             <div
               v-if="$slots.footer"
-              class="flex flex-row items-center justify-end gap-2 p-4"
+              class="flex flex-col items-center justify-end gap-2 p-4 md:flex-row"
             >
               <slot name="footer" />
             </div>

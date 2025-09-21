@@ -1,6 +1,9 @@
 <template>
   <NuxtLink :to="props.to" :target="props.target">
-    <ElementsButtonSmall :label="props.label" :class="props.class" />
+    <ElementsButtonSmall
+      :label="props.label"
+      :class="`${props.class} cursor-pointer`"
+    />
   </NuxtLink>
 </template>
 

@@ -3,8 +3,8 @@
 
   <UiAppUserProfile />
   <UiAppUserPassword />
-  <UiAppUserSessions />
   <UiAppUserTwofactor />
+  <UiAppUserSessions />
 </template>
 
 <script setup lang="ts">

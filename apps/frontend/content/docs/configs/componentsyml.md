@@ -30,11 +30,32 @@ When referencing components in your Components.yml, Blueprint expects the compon
 
 ## Routes
 
-::card
-While components themselves are very unlikely to conflict with each other, **routes totally can**. Make sure to not use generic routes names and paths to prevent breakage.
-::
+To define a route, add an entry to the `Navigation:Routes` list in the `Components.yml` configuration.
 
-An extension can create new client frontend pages using components.
+<!-- prettier-ignore -->
+```yaml [Components.yml]
+Navigation:
+  Routes:
+    - { Name: 'Example route', Path: '/exampleroute', Type: 'account', Component: 'MyExampleRoute', AdminOnly: 'false' }
+```
+
+Routes have a few configuration options, each with their own purpose and restrictions.
+
+| Option                 | Description                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `Name` (optional)      | The route name visible in the Pterodactyl navigation bar. When left blank, the page will be set as 'unlisted' |
+| `Path`                 | URL path for the custom route, relative to `/server/[id]/` or `/account/` depending on the defined `Type`     |
+| `Type`                 | Can be either `server` or `account` and determines whether the route is an 'server' route or 'account' route  |
+| `Component`            | Path to the route's component                                                                                 |
+| `AdminOnly` (optional) | Can be either `true` or `false` and determines whether or not the page is exclusively available to admins     |
+
+### Egg-specific routes
+
+System administrators can set which "eggs" have which routes [as explained in the Manage extensions guide](/guides/admin/extensions#configuring-extensions), with no extension-side implementation needed. Extensions can't predefine on which eggs to display their routes.
+
+### Conflicts
+
+While components themselves are very unlikely to conflict with each other, **routes totally can**. Make sure to not use generic routes names and paths to prevent breakage.
 
 ## Configuration
 

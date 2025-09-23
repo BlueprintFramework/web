@@ -36,6 +36,12 @@ export const useFormValidation = () => {
       trigger: 'blur',
     }),
 
+    exact: (expected: string, message?: string): ValidationRule => ({
+      validator: (value: string) => expected == value,
+      message: message || `Must match expected answer`,
+      trigger: 'blur',
+    }),
+
     minLength: (min: number, message?: string): ValidationRule => ({
       validator: (value: string) => value.length >= min,
       message: message || `Must be at least ${min} characters long`,

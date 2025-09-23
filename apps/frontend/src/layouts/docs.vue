@@ -57,7 +57,7 @@
                   Docs
                 </NuxtLink>
               </div>
-              <UiFormInput
+              <ElementsFormInput
                 v-model="form.search"
                 name="search"
                 type="text"
@@ -100,7 +100,7 @@
                 </div>
               </div>
               <div class="p-4">
-                <UiFormInput
+                <ElementsFormInput
                   v-model="form.search"
                   name="search"
                   type="text"

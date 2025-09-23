@@ -1,17 +1,17 @@
 <template>
   <div
-    class="grid grid-cols-2 divide-x divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
+    class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 md:grid-cols-2 md:divide-x"
   >
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
         <h2>Profile</h2>
-        <p>Your public profile on the Blueprint platform.</p>
+        <p>Update your Blueprint account information and email address.</p>
       </div>
-      <div class="bg-stripes h-full" />
+      <div class="bg-stripes hidden h-full md:block" />
     </div>
     <form @submit.prevent="updateProfile" class="divide-y divide-neutral-700">
-      <div class="grid grid-cols-2 gap-4 p-4">
-        <UiFormInput
+      <div class="grid grid-cols-1 gap-4 p-4 xl:grid-cols-2">
+        <ElementsFormInput
           v-model="profileForm.name"
           label="Display name"
           description="Your display name, displayed side-wide and should be unique."
@@ -32,10 +32,10 @@
             (isValid: boolean) => handleFieldValidation('name', isValid)
           "
         />
-        <UiFormInput
+        <ElementsFormInput
           v-model="profileForm.pronouns"
           label="Pronouns"
-          description='Pronouns displayed on your profile. "Joke pronouns" are not allowed.'
+          description="Pronouns are displayed on your public profile, joke pronouns are not allowed."
           name="pronouns"
           type="text"
           :rules="[validationRules.pronouns(), validationRules.maxLength(22)]"
@@ -46,7 +46,22 @@
             (isValid: boolean) => handleFieldValidation('pronouns', isValid)
           "
         />
-        <UiFormInput
+        <ElementsFormInput
+          v-model="accountForm.email"
+          label="Email address"
+          description="The email address associated with your Blueprint account."
+          name="email"
+          type="email"
+          :rules="[validationRules.email(), validationRules.required()]"
+          leading-icon="memory:email"
+          placeholder="byte@blueprint.zip"
+          :required="true"
+          :disabled="loading"
+          @validate="
+            (isValid: boolean) => handleFieldValidation('email', isValid)
+          "
+        />
+        <ElementsFormInput
           v-model="profileForm.support"
           label="Support URL"
           description="Link for users to get product support, in case you publish extensions."
@@ -65,6 +80,7 @@
         :disabled="
           fieldValidation.name == false ||
           fieldValidation.pronouns == false ||
+          fieldValidation.email == false ||
           fieldValidation.support == false ||
           loading
         "
@@ -83,12 +99,18 @@ const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
-const errors = ref()
+const errors = ref({
+  profile: [],
+  account: [],
+})
 const fieldValidation = ref<Record<string, boolean>>({})
 const profileForm = ref({
   name: user.value?.name || '',
   pronouns: user.value?.pronouns || '',
   support: user.value?.support || '',
+})
+const accountForm = ref({
+  email: user.value?.email || '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -98,6 +120,22 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 const updateProfile = async () => {
   loading.value = true
 
+  if (accountForm.value.email != user.value?.email) {
+    try {
+      await $fetch('/api/user/email', {
+        method: 'PATCH',
+        body: {
+          email: accountForm.value.email,
+          captcha: null,
+        },
+      })
+    } catch (error) {
+      console.error(error)
+      //@ts-expect-error
+      errors.value.account = error
+    }
+  }
+
   try {
     await $fetch('/api/user', {
       method: 'PATCH',
@@ -105,7 +143,8 @@ const updateProfile = async () => {
     })
   } catch (error) {
     console.error(error)
-    errors.value = error
+    //@ts-expect-error
+    errors.value.profile = error
   } finally {
     await initializeAuth()
     loading.value = false

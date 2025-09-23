@@ -13,7 +13,7 @@
       <Card v-if="errors?.includes('failed to create user')">
         Could not create user, try again later.
       </Card>
-      <UiFormInput
+      <ElementsFormInput
         v-model="form.displayName"
         name="displayname"
         type="text"
@@ -32,7 +32,7 @@
           (isValid: boolean) => handleFieldValidation('displayName', isValid)
         "
       />
-      <UiFormInput
+      <ElementsFormInput
         v-model="form.email"
         name="email"
         type="email"
@@ -46,7 +46,7 @@
           (isValid: boolean) => handleFieldValidation('email', isValid)
         "
       />
-      <UiFormInput
+      <ElementsFormInput
         v-model="form.password"
         name="password"
         type="password"

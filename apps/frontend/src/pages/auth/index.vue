@@ -14,7 +14,7 @@
           >recover your account here</NuxtLink
         >.
       </Card>
-      <UiFormInput
+      <ElementsFormInput
         v-model="authForm.email"
         name="email"
         type="email"
@@ -28,7 +28,7 @@
           (isValid: boolean) => handleFieldValidation('email', isValid)
         "
       />
-      <UiFormInput
+      <ElementsFormInput
         v-model="authForm.password"
         name="password"
         type="password"
@@ -42,7 +42,7 @@
           (isValid: boolean) => handleFieldValidation('password', isValid)
         "
       />
-      <UiFormInput
+      <ElementsFormInput
         v-model="checkpointForm.code"
         v-if="checkpointData.authType == 'two_factor_required'"
         name="code"

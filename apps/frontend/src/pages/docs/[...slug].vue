@@ -1,11 +1,27 @@
 <template>
   <div v-if="data" class="space-y-8">
-    <div class="space-y-4">
-      <h1
-        class="!display leading-14 md:leading-18 truncate !text-5xl !font-normal md:!text-6xl"
-      >
-        {{ data.title || 'Untitled' }}
-      </h1>
+    <div class="mb-12 space-y-1.5">
+      <div>
+        <div
+          class="inline-block rounded-full border border-neutral-700 bg-neutral-950"
+        >
+          <div class="flex items-center">
+            <div class="px-2 py-1.5 pe-1.5">
+              <Icon :name="category?.icon" mode="svg" :size="20" />
+            </div>
+            <span
+              class="border-s border-neutral-700 px-2 py-1.5 ps-1.5 font-bold"
+            >
+              {{ category?.label }}
+            </span>
+          </div>
+        </div>
+        <h1
+          class="!display leading-14 md:leading-18 truncate !text-5xl !font-normal md:!text-6xl"
+        >
+          {{ data.title || 'Untitled' }}
+        </h1>
+      </div>
       <p v-if="data.description" class="text-default-font/60 text-lg">
         {{ data.description }}
       </p>
@@ -57,6 +73,8 @@
 </template>
 
 <script setup>
+import { docsCategories, defaultCategory } from '~/assets/docs.config'
+
 definePageMeta({
   layout: 'docs',
 })
@@ -81,6 +99,8 @@ if (!data.value) {
 const { data: allDocs } = await useAsyncData('all-docs-nav', () =>
   queryCollection('docs').all()
 )
+
+const category = computed(() => docsCategories[data.value.category])
 
 const { prevDoc, nextDoc } = computed(() => {
   if (!allDocs.value || !data.value) return { prevDoc: null, nextDoc: null }

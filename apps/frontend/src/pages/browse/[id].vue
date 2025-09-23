@@ -58,9 +58,8 @@
       class="flex flex-col divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:flex-row lg:divide-x"
     >
       <div class="w-full border-b border-neutral-700 lg:border-b-0">
-        <template v-if="extension.description">
+        <template v-if="description?.body">
           <MDCRenderer
-            v-if="description?.body"
             class="prose-content p-4"
             :body="description?.body"
             :data="description?.data"
@@ -68,6 +67,9 @@
               img: 'ProseDisabled',
               script: 'ProseDisabled',
               style: 'ProseDisabled',
+              iframe: 'ProseDisabled',
+              object: 'ProseDisabled',
+              embed: 'ProseDisabled',
             }"
           />
         </template>
@@ -205,24 +207,10 @@
 
 <script setup lang="ts">
 import { parseMarkdown } from '@nuxtjs/mdc/runtime'
+import type { MDCParserResult } from '@nuxtjs/mdc'
+
+const { sanitizeAst } = useMdcSanitizer()
 const route = useRoute()
-
-const { data: extension, pending } = await useAsyncData<Extension>(
-  `extension-${route.params.id}`,
-  () => $fetch<Extension>(`/api/extensions/${route.params.id}`),
-  {
-    server: false,
-  }
-)
-const { data: description } = await useAsyncData(
-  `markdown-${route.params.id}`,
-  () => parseMarkdown(extension.value?.description || '')
-)
-
-useSeoMeta({
-  title: () => extension.value?.name,
-  description: () => extension.value?.summary,
-})
 
 const platformConfig = {
   BUILTBYBIT: {
@@ -238,6 +226,20 @@ const platformConfig = {
     icon: resolveComponent('SvgGithub'),
   },
 } as const
+
+const { data: extension } = await useAsyncData<Extension | null>(
+  `extension-${route.params.id}`,
+  () => $fetch(`/api/extensions/${route.params.id}`),
+  {
+    server: false,
+    default: () => null,
+  }
+)
+
+useSeoMeta({
+  title: () => extension.value?.name,
+  description: () => extension.value?.summary,
+})
 
 const availablePlatforms = computed(() => {
   if (!extension.value?.platforms) {
@@ -265,4 +267,26 @@ const formatPrice = (price: number, currency: string): string => {
 
   return `${price.toFixed(2)} ${currency}`
 }
+
+const { data: description } = await useAsyncData(
+  `description-${route.params.id}`,
+  async (): Promise<MDCParserResult | null> => {
+    if (!extension.value?.description) return null
+
+    try {
+      const parsed = await parseMarkdown(extension.value.description)
+      return {
+        ...parsed,
+        body: sanitizeAst(parsed.body),
+      }
+    } catch (error) {
+      console.warn('Failed to parse markdown:', error)
+      return null
+    }
+  },
+  {
+    watch: [() => extension.value?.description],
+    immediate: !!extension.value?.description,
+  }
+)
 </script>

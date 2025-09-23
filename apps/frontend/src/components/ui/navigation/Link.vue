@@ -1,11 +1,9 @@
 <template>
-  <NuxtLink
-    :to="props.to"
-    :target="props.target"
-    class="hover:text-brand-50 rounded-md border border-neutral-700 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
-    :class="props.class"
-  >
-    {{ props.label }}
+  <NuxtLink :to="props.to" :target="props.target">
+    <ElementsButtonSmall
+      :label="props.label"
+      :class="`${props.class} cursor-pointer`"
+    />
   </NuxtLink>
 </template>
 

@@ -17,7 +17,7 @@
         We've sent a verification code to
         <span class="monospace-body"> {{ user?.email_pending }} </span>.
       </p>
-      <UiFormInput
+      <ElementsFormInput
         v-model="form.token"
         name="token"
         type="text"

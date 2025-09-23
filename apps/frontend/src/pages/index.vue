@@ -24,12 +24,12 @@
     </span>
   </div>
 
-  <MarketingHighlights />
-  <MarketingMarquee />
-  <MarketingHero />
-  <MarketingRepositories />
-  <MarketingFaq />
-  <MarketingSponsors />
+  <UiMarketingHighlights />
+  <UiMarketingMarquee />
+  <UiMarketingHero />
+  <UiMarketingRepositories />
+  <UiMarketingFaq />
+  <UiMarketingSponsors />
 
-  <UiGridbackground />
+  <ElementsGridbackground />
 </template>

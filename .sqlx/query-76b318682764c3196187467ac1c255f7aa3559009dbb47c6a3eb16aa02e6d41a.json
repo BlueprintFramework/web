@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE users\n            SET email = COALESCE(users.email_pending, users.email), email_pending = NULL, email_verification = NULL\n            WHERE users.id = $1 AND email_verification = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Bpchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "76b318682764c3196187467ac1c255f7aa3559009dbb47c6a3eb16aa02e6d41a"
+}

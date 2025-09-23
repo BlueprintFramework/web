@@ -37,7 +37,7 @@ mod post {
 
         let rows = sqlx::query!(
             "UPDATE users
-            SET email = users.email_pending, email_pending = NULL, email_verification = NULL
+            SET email = COALESCE(users.email_pending, users.email), email_pending = NULL, email_verification = NULL
             WHERE users.id = $1 AND email_verification = $2",
             user.id,
             data.token

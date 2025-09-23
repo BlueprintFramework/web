@@ -104,19 +104,9 @@ pub async fn auth(
                 .build(),
         );
 
-        const IGNORED_VERIFICATION_PATHS: &[&str] = &[
-            "/api/user",
-            "/api/user/password",
-            "/api/user/two-factor",
-            "/api/user/sessions",
-            "/api/user/sessions/{session}",
-            "/api/user/email/verify",
-            "/api/user/logout",
-        ];
-
         if user.email_verification.is_some()
             && user.email_pending.is_none()
-            && !IGNORED_VERIFICATION_PATHS.contains(&matched_path.as_str())
+            && matched_path.as_str().starts_with("/api/user/extensions")
         {
             return Ok(ApiResponse::error("email verification required")
                 .with_status(StatusCode::FORBIDDEN)

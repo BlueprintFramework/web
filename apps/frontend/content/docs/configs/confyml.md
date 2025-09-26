@@ -16,9 +16,7 @@ The info section contains all the metadata about your extension that gets displa
 
 #### `info.name` (required)
 
-**Type:** string
-
-display name shown to administrators in the panel. gets processed through placeholder replacement system, so you can include special characters but be careful with yaml escaping.
+The extension's display name, shown primarily in the admin panel.
 
 ```yaml [conf.yml]
 info:
@@ -30,9 +28,7 @@ info:
 
 #### `info.identifier` (required)
 
-**Type:** unique `a-z` string
-
-differentiates your extension from others - used for folder trees, routers, view names, internal tracking, etc. blueprint stores this in `.blueprint/extensions/blueprint/private/db/installed_extensions` and uses it throughout the filesystem structure. must be unique per system and only contain lowercase a-z characters.
+Differentiates your extension from others - used for folder trees, routers, file names, etc. Extension identifiers must be unique from other extensions and can only contain `a-z` characters.
 
 ```yaml [conf.yml]
 info:
@@ -43,9 +39,7 @@ info:
 
 #### `info.description` (required)
 
-**Type:** string
-
-extension description shown to administrators on your extension's admin page. also supports placeholder replacement.
+Extension description shown on your extension's admin page.
 
 ```yaml [conf.yml]
 info:
@@ -56,9 +50,11 @@ info:
 
 #### `info.flags`
 
-**Type:** comma-separated flags
+A list of comma-separated extension flags.
 
-optional list of extension flags for advanced functionality. common flags include `ignorePlaceholders` to disable placeholder replacement, `show_in_sidebar` to add extension button to admin sidebar, and various developer escalation flags. blueprint processes these during the `assignflags` function call.
+::card
+Flags enable (or sometimes disable) advanced and experimental Blueprint features. Learn more about them in the [Flags article](/docs/concepts/flags). All flags unknown to Blueprint are ignored.
+::
 
 ```yaml [conf.yml]
 info:
@@ -69,9 +65,7 @@ info:
 
 #### `info.version` (required)
 
-**Type:** string
-
-your extension's current version. used for update detection and displayed in admin panels.
+Extension's current version.
 
 ```yaml [conf.yml]
 info:
@@ -81,9 +75,7 @@ info:
 
 #### `info.target` (required)
 
-**Type:** string
-
-blueprint version your extension targets. blueprint compares this against the current version during installation and warns users if versions don't match, but still allows installation. helps users understand compatibility.
+Blueprint version your extension is designed for. Blueprint compares this against the current version during installation and warns users if versions don't match, but still allows installation.
 
 ```yaml [conf.yml]
 info:
@@ -94,9 +86,7 @@ info:
 
 #### `info.author`
 
-**Type:** string
-
-your name/team name - shows up in extension listings. will be required once blueprint's extension metadata system is fully implemented.
+Your (development team's) name.
 
 ```yaml [conf.yml]
 info:
@@ -106,9 +96,7 @@ info:
 
 #### `info.icon`
 
-**Type:** image file
-
-extension icon for admin panel. supports `.jpg`/`.jpeg`, `.svg`, `.png`, `.gif`, `.webp`. blueprint uses a random placeholder icon if this is blank. gets copied to the assets folder during installation.
+Extension icon shown in the admin panel. Supports `.jpg`/`.jpeg`, `.svg`, `.png`, `.gif`, `.webp`. Blueprint uses a random placeholder icon if this is left blank.
 
 ```yaml [conf.yml]
 info:
@@ -118,9 +106,7 @@ info:
 
 #### `info.website`
 
-**Type:** url
-
-website link displayed on extension's admin page. blueprint automatically adds http/https scheme if missing during installation.
+Website linked in the top-right of your extension's admin page.
 
 ```yaml [conf.yml]
 info:
@@ -131,13 +117,11 @@ info:
 
 ### Admin section
 
-controls how your extension integrates with pterodactyl's admin panel. blueprint creates admin routes and controllers based on these settings.
+Controls how your extension integrates with Pterodactyl's admin panel. Blueprint creates admin routes and controllers based on these settings.
 
 #### `admin.view` (required)
 
-**Type:** `.blade.php` file
-
-path to your admin blade view. blueprint copies this to `resources/views/admin/extensions/{identifier}/` and creates the appropriate route structure. this is the main interface administrators will see.
+Path to your admin blade view. Blueprint copies this to `resources/views/admin/extensions/{identifier}/` and creates the appropriate route structure. This is the main interface administrators will see.
 
 ```yaml [conf.yml]
 admin:
@@ -148,9 +132,7 @@ admin:
 
 #### `admin.controller`
 
-**Type:** `.php` file
-
-path to custom admin view controller. if not defined, blueprint uses its built-in controller which provides basic functionality. gets copied to `app/Http/Controllers/Admin/Extensions/{identifier}/` if specified.
+Path to custom admin view controller. If not defined, Blueprint uses its built-in controller which provides basic functionality. Gets copied to `app/Http/Controllers/Admin/Extensions/{identifier}/` if specified.
 
 ```yaml [conf.yml]
 admin:
@@ -161,9 +143,7 @@ admin:
 
 #### `admin.css`
 
-**Type:** `.css` file
-
-custom css for pterodactyl admin panel. blueprint processes this file and imports it into the main admin stylesheet via `@import url(/assets/extensions/{identifier}/admin.style.css);`
+Custom css for Pterodactyl admin panel.
 
 ```yaml [conf.yml]
 admin:
@@ -173,9 +153,7 @@ admin:
 
 #### `admin.wrapper`
 
-**Type:** `.blade.php` file
-
-extends admin panel layout with additional blade content. gets copied to `resources/views/blueprint/admin/wrappers/{identifier}.blade.php` and included in the admin layout.
+Extends admin panel layout with additional blade view content. Gets copied to `resources/views/blueprint/admin/wrappers/{identifier}.blade.php` and included in the admin layout.
 
 ```yaml [conf.yml]
 admin:
@@ -190,8 +168,11 @@ controls integration with pterodactyl's client-facing dashboard. works similarly
 
 #### `dashboard.css`
 
-**type:** `.css` file
-custom css for pterodactyl client panel. gets processed and imported into the client stylesheet system.
+Custom css for Pterodactyl client panel. Is imported into the React application.
+
+::card
+Unlike `admin.css`, `dashboard.css` is not imported from the wrapper, but added to the React bundle instead. In other words, dashboard css might behave slightly differently. Syntax errors may temporary prevent the client-side dashboard from rendering properly until resolved. Alternatively, you can add stylesheets between `<style/>` tags in your `dashboard.wrapper` to mimic `admin.css` behavior.
+::
 
 ```yaml [conf.yml]
 dashboard:
@@ -201,8 +182,11 @@ dashboard:
 
 #### `dashboard.wrapper`
 
-**type:** `.blade.php` file
-extends client dashboard layout with additional blade content. copied to `resources/views/blueprint/dashboard/wrappers/{identifier}.blade.php`.
+Extends client dashboard layout with additional blade view content. Copied to `resources/views/blueprint/dashboard/wrappers/{identifier}.blade.php` and included in the dashboard wrapper.
+
+::card
+The `dashboard.wrapper` allows extensions to add PHP logic and additional HTML into the client dashboard view. Interacting with the dashboard's components through this requires complicated workarounds and is advised against, use `dashboard.components` for that instead.
+::
 
 ```yaml [conf.yml]
 dashboard:
@@ -213,8 +197,11 @@ dashboard:
 
 #### `dashboard.components`
 
-**type:** directory path
-react components for direct pterodactyl frontend integration. blueprint processes the `Components.yml` configuration file in this directory and integrates your react components into the frontend build system.
+React components directory for extending the Pterodactyl user-side frontend.
+
+::card
+This binding is related to [Components.yml](/docs/configs/componentsyml). Learn more about what it does, why it exists and how to use it in that article.
+::
 
 ```yaml [conf.yml]
 dashboard:
@@ -224,12 +211,11 @@ dashboard:
 
 ### Data section
 
-defines where blueprint should place your extension's files and what accessibility they should have.
+Defines where Blueprint should place your certain directories and what accessibility they should have.
 
 #### `data.directory`
 
-**type:** directory path
-private extension-specific files storage. copied to `.blueprint/extensions/{identifier}/private/`. blueprint utilizes private directories for internal tracking even without this option enabled.
+Private extension-specific files storage. Copied to `.blueprint/extensions/{identifier}/private/`. Blueprint utilizes private directories for internal tracking even without this option enabled.
 
 ```yaml [conf.yml]
 data:
@@ -240,8 +226,7 @@ data:
 
 #### `data.public`
 
-**type:** directory path
-publicly accessible files - gets symlinked to `public/extensions/{identifier}` so anyone can access them via web requests. don't store secrets/keys here since they'll be world-readable.
+Publicly accessible files - gets symlinked to `public/extensions/{identifier}` so anyone can access them via web requests. Don't store anything that shouldn't be accessible to everyone.
 
 ```yaml [conf.yml]
 data:
@@ -253,8 +238,11 @@ data:
 
 #### `data.console`
 
-**type:** directory path
-artisan commands and scheduling functionality. blueprint copies these to `app/Console/Commands/BlueprintFramework/Extensions/{identifier}/` and processes any scheduling configuration through the console api.
+Artisan commands and scheduling functionality. Blueprint copies these to `app/Console/Commands/BlueprintFramework/Extensions/{identifier}/` and processes any scheduling configuration through the Laravel console api.
+
+::card
+This binding is related to [Console.yml](/docs/configs/consoleyml). Learn more about what it does and how to use it in it's article.
+::
 
 ```yaml [conf.yml]
 data:
@@ -264,12 +252,11 @@ data:
 
 ### Requests section
 
-defines how blueprint should handle your extension's web request routing and application logic.
+Defines how Blueprint should handle your extension's web request routing and application logic.
 
 #### `requests.views`
 
-**type:** directory path
-directory containing your blade view files. gets copied to `.blueprint/extensions/{identifier}/views/` and symlinked to `resources/views/blueprint/extensions/{identifier}` for laravel's view system.
+Directory containing additional blade view files. Symlinked to `resources/views/blueprint/extensions/{identifier}` for Laravel's view system and accessible as `blueprint.extensions.{identifier}.*`.
 
 ```yaml [conf.yml]
 requests:
@@ -280,8 +267,7 @@ requests:
 
 #### `requests.app`
 
-**type:** directory path
-application logic and controllers directory. copied to `.blueprint/extensions/{identifier}/app/` and symlinked to `app/BlueprintFramework/Extensions/{identifier}` so laravel can autoload your classes.
+Application logic and controllers directory. Symlinked to `app/BlueprintFramework/Extensions/{identifier}`.
 
 ```yaml [conf.yml]
 requests:
@@ -291,8 +277,7 @@ requests:
 
 #### `requests.routers`
 
-**type:** `<router>.php` file or use suboptions below
-main router file. if you only specify this option, blueprint defaults it to the web router. for more control, use the specific router suboptions.
+Main Laravel router file. If you only specify this option, Blueprint defaults it to the web router. For more control, use the specific router suboptions.
 
 ```yaml [conf.yml]
 requests:
@@ -307,8 +292,7 @@ requests:
 
 ##### `requests.routers.application`
 
-**type:** `<application_router>.php` file
-application-specific api routes. gets copied to `routes/blueprint/application/{identifier}.php` and included in laravel's api route group.
+Application API routes. Gets copied to `routes/blueprint/application/{identifier}.php` and prefixed by `/api/application/extensions/{identifier}/`. Calling these routes requires a valid application API key.
 
 ```yaml [conf.yml]
 requests:
@@ -320,8 +304,7 @@ requests:
 
 ##### `requests.routers.client`
 
-**type:** `<client_router>.php` file
-client-facing routes for your extension's frontend functionality. copied to `routes/blueprint/client/{identifier}.php`.
+Client API routes for extending the client api. Copied to `routes/blueprint/client/{identifier}.php` and prefixed by `/api/client/extensions/{identifier}/`. Calling these routes requires a valid client API key.
 
 ```yaml [conf.yml]
 requests:
@@ -333,8 +316,7 @@ requests:
 
 #### `requests.routers.web`
 
-**type:** `<web_router>.php` file
-standard web routes (default when using main `routers` option). copied to `routes/blueprint/web/{identifier}.php` and included in laravel's web route group.
+Standard web routes (default when using main `routers` option). Copied to `routes/blueprint/web/{identifier}.php` and prefixed by `/extensions/{identifier}/`.
 
 ```yaml [conf.yml]
 requests:
@@ -347,12 +329,11 @@ requests:
 
 ### Database section
 
-handles database-related functionality for your extension.
+Define your extension's database-related bindings.
 
 #### `database.migrations`
 
-**type:** directory path
-database migration files directory. blueprint copies these directly to laravel's `database/migrations/` folder during installation, so they'll run with the next `php artisan migrate` command.
+Database migration files directory. Blueprint copies these directly to Laravel's `database/migrations/` folder during installation and runs a database migration afterwards.
 
 ```yaml [conf.yml]
 database:

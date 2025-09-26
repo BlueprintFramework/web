@@ -5,7 +5,7 @@ category: configs
 ---
 
 ::card
-The `Components.yml` configuration lives in the root of an extension's `dashboard:components` directory. You have to create a directory, bind it in [conf.yml](/docs/configs/confyml) and create a `Components.yml` file. All components should be placed in this (or a sub-)directory too.
+The `Components.yml` configuration lives in the root of an extension's `dashboard.components` directory. You have to create a directory, bind it in [conf.yml](/docs/configs/confyml) and create a `Components.yml` file. All components should be placed in this (or a sub-)directory too.
 ::
 
 ## Introduction
@@ -30,7 +30,7 @@ When referencing components in your Components.yml, Blueprint expects the compon
 
 ## Routes
 
-To define a route, add an entry to the `Navigation:Routes` list in the `Components.yml` configuration.
+To define a route, add an entry to the `Navigation.Routes` list in the `Components.yml` configuration.
 
 <!-- prettier-ignore -->
 ```yaml [Components.yml]

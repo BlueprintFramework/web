@@ -7,7 +7,7 @@
         >
           <div class="flex items-center">
             <div class="px-2 py-1.5 pe-1.5">
-              <Icon :name="category?.icon" mode="svg" :size="20" />
+              <Icon :name="category?.icon || ''" mode="svg" :size="20" />
             </div>
             <span
               class="border-s border-neutral-700 px-2 py-1.5 ps-1.5 font-bold"
@@ -72,7 +72,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
 
 definePageMeta({
@@ -100,13 +100,15 @@ const { data: allDocs } = await useAsyncData('all-docs-nav', () =>
   queryCollection('docs').all()
 )
 
-const category = computed(() => docsCategories[data.value.category])
+const category = computed(
+  () => docsCategories[data.value?.category || 'Uncategorized']
+)
 
 const { prevDoc, nextDoc } = computed(() => {
   if (!allDocs.value || !data.value) return { prevDoc: null, nextDoc: null }
 
   const sameCategoryDocs = allDocs.value.filter(
-    (doc) => doc.category?.toLowerCase() === data.value.category?.toLowerCase()
+    (doc) => doc.category?.toLowerCase() === data.value?.category?.toLowerCase()
   )
 
   const sortedDocs = [...sameCategoryDocs].sort((a, b) => {
@@ -119,7 +121,7 @@ const { prevDoc, nextDoc } = computed(() => {
   })
 
   const currentIndex = sortedDocs.findIndex(
-    (doc) => doc.path === data.value.path
+    (doc) => doc.path === data.value?.path
   )
 
   return {

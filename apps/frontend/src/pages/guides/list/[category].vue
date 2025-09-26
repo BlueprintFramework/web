@@ -50,16 +50,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { guidesCategories } from '~/assets/guides.config'
 
 const route = useRoute()
-const categoryKey = route.params.category
+const categoryKey = route.params.category as string
 const categoryConfig = guidesCategories[categoryKey]
 
 const { data: categoryData } = await useAsyncData(
   `guides-list-${categoryKey}`,
-  () => queryCollection('guides').where('category', '=', categoryKey).all()
+  () =>
+    queryCollection('guides')
+      .where('category', '=', categoryKey)
+      .orWhere((query) =>
+        query.where('unlisted', '=', false).where('unlisted', 'IS NULL')
+      )
+      .all()
 )
 
 if (!categoryData.value || !categoryConfig) {

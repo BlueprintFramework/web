@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: controller.jpeg
 order:
+unlisted: true
 ---
 
 ...

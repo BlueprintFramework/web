@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: migrations.jpeg
 order:
+unlisted: true
 ---
 
 ...

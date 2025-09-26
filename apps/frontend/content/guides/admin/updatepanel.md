@@ -55,7 +55,7 @@ php artisan migrate --seed --force
 You can learn more about updating Blueprint in our [Update Blueprint guide](/guides/admin/updateblueprint).
 ::
 
-Use `blueprint -upgrade` command to apply the latest Blueprint release release onto your panel. This command also restores changes that were overwritten by updating Pterodactyl.
+Use the `blueprint -upgrade` command to apply the latest Blueprint release release onto your panel. This command also restores changes that were overwritten by updating Pterodactyl.
 
 ```bash
 # Updates Blueprint to the latest release

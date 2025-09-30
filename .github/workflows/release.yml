@@ -7,7 +7,7 @@ on:
 env:
   BIN_NAME: web
   PROJECT_NAME: web
-  REPO_NAME: BlueprintFramework/web
+  REPO_NAME: blueprintframework/web
 
 jobs:
   build-frontend:

@@ -69,6 +69,7 @@ pub struct Env {
     pub bbb_token: Option<String>,
 
     pub app_debug: bool,
+    pub app_auth: bool,
     pub app_log_directory: String,
     pub app_url: String,
     pub app_encryption_key: String,
@@ -258,6 +259,11 @@ impl Env {
                 .map(|s| s.trim_matches('"').to_string()),
 
             app_debug: std::env::var("APP_DEBUG")
+                .unwrap_or("false".to_string())
+                .trim_matches('"')
+                .parse()
+                .unwrap(),
+            app_auth: std::env::var("APP_AUTH")
                 .unwrap_or("false".to_string())
                 .trim_matches('"')
                 .parse()

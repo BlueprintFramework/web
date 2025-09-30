@@ -1,11 +1,14 @@
 ---
-title: Install Blueprint Docker
-description: Get started with Blueprint Docker
+title: Develop with Blueprint Docker
+description: Set up Blueprint Docker for local development
 author: Loki and Emma
-category: docker
+category: dev
 thumbnail: blueprintdocker.jpg
-order: -1
 ---
+
+::card
+This guide is made specifically for local extension development. If you want to use Blueprint Docker in production, follow the instructions in the [README](https://github.com/BlueprintFramework/docker#readme).
+::
 
 ## Create directory and pull files
 
@@ -254,8 +257,6 @@ docker compose exec panel php artisan p:user:make \
   --admin=1
 ```
 
-Open up [`localhost`](http://localhost) in your browser, and sign in with your account.
-
 ## That's it!
 
-You've completed the Blueprint Docker installation guide! [Browse our extensions list](/browse) or [check out other related guides](/guides/list/docker).
+You've set up Blueprint Docker for local extension development. Initialize an extension and start creating!

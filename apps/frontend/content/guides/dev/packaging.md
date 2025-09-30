@@ -17,7 +17,7 @@ To turn your development files into a distributable `{identifier}.blueprint` fil
 blueprint -export
 ```
 
-### Generate a download link
+### Optionally generate a download link
 
 Blueprint can generate a temporary download link for your extension for easier exporting. To generate a download link, use the `expose` argument.
 
@@ -27,6 +27,10 @@ Blueprint can generate a temporary download link for your extension for easier e
 # download link
 blueprint -export expose
 ```
+
+### Test your exported extension
+
+Testing is important! You should always check if an extension still works as expected, especially when using export scripts. Install your extension, test it on your panel and finally, if all is right, distribute it.
 
 ## Manually export your extension
 

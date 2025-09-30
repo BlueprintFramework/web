@@ -7,12 +7,18 @@
       <h1 class="!text-4xl">Hi there!</h1>
     </div>
     <div class="space-y-4 p-4">
-      <Card v-if="errors?.includes('user with name or email already exists')">
+      <ElementsInlinecard>
+        Sign-up is temporarily disabled while the application is in demo mode.
+      </ElementsInlinecard>
+
+      <ElementsInlinecard
+        v-if="errors?.includes('user with name or email already exists')"
+      >
         Email address or username is already in use.
-      </Card>
-      <Card v-if="errors?.includes('failed to create user')">
+      </ElementsInlinecard>
+      <ElementsInlinecard v-if="errors?.includes('failed to create user')">
         Could not create user, try again later.
-      </Card>
+      </ElementsInlinecard>
       <ElementsFormInput
         v-model="form.displayName"
         name="displayname"

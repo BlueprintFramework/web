@@ -7,12 +7,12 @@
       <h1 class="!text-4xl">Verify your email</h1>
     </div>
     <div class="space-y-4 p-4">
-      <Card v-if="errors.incorrect">
+      <ElementsInlinecard v-if="errors.incorrect">
         Something went wrong. Please double-check your verification code.
-      </Card>
-      <Card v-if="errors.resendError">
+      </ElementsInlinecard>
+      <ElementsInlinecard v-if="errors.resendError">
         Couldn't resend verification email, try again later.
-      </Card>
+      </ElementsInlinecard>
       <p class="text-default-font">
         We've sent a verification code to
         <span class="monospace-body"> {{ user?.email_pending }} </span>.

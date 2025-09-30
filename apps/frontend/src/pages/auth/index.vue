@@ -7,13 +7,17 @@
       <h1 class="!text-4xl">Welcome back!</h1>
     </div>
     <div class="space-y-4 p-4">
-      <Card v-if="errors?.includes('invalid name or password')">
+      <ElementsInlinecard>
+        Sign-in is temporarily disabled while the application is in demo mode.
+      </ElementsInlinecard>
+
+      <ElementsInlinecard v-if="errors?.includes('invalid name or password')">
         Invalid email or password. Double-check you've submitted the correct
         info or
         <NuxtLink to="/auth/reset" class="text-link"
           >recover your account here</NuxtLink
         >.
-      </Card>
+      </ElementsInlinecard>
       <ElementsFormInput
         v-model="authForm.email"
         name="email"

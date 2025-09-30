@@ -86,7 +86,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: frontend/.output/public
+          path: apps/frontend/.output/public
 
       - name: Install ${{ matrix.rust }} toolchain
         uses: actions-rs/toolchain@v1

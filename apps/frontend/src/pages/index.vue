@@ -29,6 +29,7 @@
   <UiMarketingHero />
   <UiMarketingRepositories />
   <UiMarketingFaq />
+  <UiMarketingTestimonials />
   <UiMarketingSponsors />
 
   <ElementsGridbackground />

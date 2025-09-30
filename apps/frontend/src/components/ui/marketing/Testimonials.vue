@@ -24,16 +24,20 @@
               >
                 <template v-for="n in 5" :key="n" class="star">
                   <template v-if="n <= testimonial.rating">
-                    <Icon name="memory:checkbox-intermediate" :size="20" />
+                    <Icon
+                      name="memory:checkbox-intermediate"
+                      class="text-brand-50"
+                      :size="20"
+                    />
                   </template>
                   <template v-else>
-                    <Icon name="memory:checkbox-blank opacity-60" :size="20" />
+                    <Icon name="memory:checkbox-blank" :size="20" />
                   </template>
                 </template>
               </div>
             </div>
             <div class="p-2">
-              <p class="text-default-font/70 m-0 p-0">
+              <p class="text-default-font m-0 p-0">
                 {{ testimonial.content }}
               </p>
             </div>

@@ -60,6 +60,7 @@ jobs:
 
   dist:
     name: Dist
+    needs: [build-frontend]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

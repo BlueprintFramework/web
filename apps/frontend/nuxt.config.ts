@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
     '@nuxtjs/mdc',
+    '@nuxtjs/plausible',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -90,5 +91,9 @@ export default defineNuxtConfig({
         prerender: false,
       },
     },
+  },
+  plausible: {
+    apiHost: 'https://plausible.prpl.wtf',
+    ignoredHostnames: ['localhost'],
   },
 })

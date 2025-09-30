@@ -17,6 +17,7 @@
     "@nuxt/icon": "^2.0.0",
     "@nuxt/image": "^1.11.0",
     "@nuxtjs/mdc": "^0.17.4",
+    "@nuxtjs/plausible": "2.0.1",
     "@nuxtjs/robots": "^5.5.1",
     "@nuxtjs/sitemap": "^7.4.3",
     "@tailwindcss/vite": "^4.1.13",

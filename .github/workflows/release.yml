@@ -141,6 +141,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          pattern: ${{ env.BIN_NAME }}*
 
       - name: Get cli version from Cargo.toml
         id: version

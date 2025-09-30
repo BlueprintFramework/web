@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: adminpage.jpeg
 order:
+unlisted: true
 ---
 
 ...

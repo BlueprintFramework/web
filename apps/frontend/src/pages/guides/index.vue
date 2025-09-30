@@ -126,7 +126,9 @@ const groupedGuides = computed(() => {
           guides: [],
         }
       }
-      acc[categoryLabel].guides.push(guide)
+      if (!guide.unlisted) {
+        acc[categoryLabel].guides.push(guide)
+      }
       return acc
     },
     {} as Record<

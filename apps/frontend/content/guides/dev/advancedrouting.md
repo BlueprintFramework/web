@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: routes.jpeg
 order:
+unlisted: true
 ---
 
 ...

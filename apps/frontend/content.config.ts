@@ -23,6 +23,7 @@ export default defineContentConfig({
         category: z.string().default('uncategorized'),
         thumbnail: z.string().optional(),
         order: z.number().optional(),
+        unlisted: z.boolean().optional().default(false),
       }),
     }),
   },

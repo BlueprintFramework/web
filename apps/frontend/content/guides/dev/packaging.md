@@ -9,7 +9,7 @@ order:
 
 ## Export your extension with the CLI
 
-To turn your development files into a distributable `identifier.blueprint` file, we'll need to use Blueprint's CLI utility to package it.
+To turn your development files into a distributable `{identifier}.blueprint` file, we'll need to use Blueprint's CLI utility to package it.
 
 ```bash
 # Exports your extension and saves the extension in your

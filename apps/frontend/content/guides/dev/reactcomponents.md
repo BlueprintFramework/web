@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: components.jpeg
 order:
+unlisted: true
 ---
 
 ...

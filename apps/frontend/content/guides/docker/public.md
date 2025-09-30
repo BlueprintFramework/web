@@ -5,6 +5,7 @@ author:
 category: docker
 thumbnail: dockerpublic.jpg
 order:
+unlisted: true
 ---
 
 ...

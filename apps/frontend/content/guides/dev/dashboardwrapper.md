@@ -5,6 +5,7 @@ author:
 category: dev
 thumbnail: dashboard.jpeg
 order:
+unlisted: true
 ---
 
 ...

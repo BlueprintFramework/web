@@ -167,6 +167,15 @@ Returns a Unix timestamp that indicates when the extension was installed.
 
 Uncategorized and advanced placeholders that do various things.
 
+#### Filesystem
+
+Returns the extension's filesystem name, for both public and private filesystems. Learn more about filesystems in the [Storing files document](/docs/concepts/filesystem).
+
+| Placeholder    | Output                        | Modifier                     |
+| -------------- | ----------------------------- | ---------------------------- |
+| `{fs}`         | blueprint:myextension         |                              |
+| `{fs/private}` | blueprint_private:myextension | Private filesystem variation |
+
 #### Random
 
 This placeholder will be replaced with a 'random' number. This number is determined **once per file**. Random numbers may vary in length, so parse wisely.

@@ -133,7 +133,7 @@ Returns the version of Blueprint the extension installed on. This placeholder **
 
 | Placeholder   | Output       | Modifier                                                                                      |
 | ------------- | ------------ | --------------------------------------------------------------------------------------------- |
-| `{target}`    | beta-2024-12 |                                                                                               |
+| `{target}`    | beta-2025-09 |                                                                                               |
 | `{is_target}` | true         | `true` or `false` depending on if the extension's target version matches the one of Blueprint |
 
 With this info, your extension could warn users if they aren't using the Blueprint version your extension was designed for.

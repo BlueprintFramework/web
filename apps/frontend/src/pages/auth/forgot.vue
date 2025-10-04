@@ -1,7 +1,10 @@
 <template>
-  <form class="w-full divide-y divide-neutral-700 border-y border-neutral-700">
+  <form
+    @submit.prevent="handleForgot"
+    class="w-full divide-y divide-neutral-700 border-y border-neutral-700"
+  >
     <div class="p-4">
-      <h1 class="!text-4xl">Account recovery</h1>
+      <h1 class="!text-4xl">Forgot password</h1>
     </div>
     <div class="space-y-4 p-4">
       <ElementsFormInput
@@ -42,7 +45,7 @@ definePageMeta({
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
-const errors = ref()
+const error = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
@@ -50,5 +53,25 @@ const form = ref({
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
+}
+
+const handleForgot = async () => {
+  loading.value = true
+  error.value = false
+
+  try {
+    await $fetch('/api/auth/password/forgot', {
+      method: 'POST',
+      body: {
+        email: form.value.email,
+        captcha: null,
+      },
+    })
+  } catch {
+    error.value = true
+    loading.value = false
+  } finally {
+    loading.value = false
+  }
 }
 </script>

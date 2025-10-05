@@ -47,7 +47,7 @@ mod get {
                 "otpauth://totp/{name}:{}?secret={}&issuer={name}",
                 urlencoding::encode(&user.email),
                 urlencoding::encode(&secret),
-                name = urlencoding::encode("Blueprint API")
+                name = urlencoding::encode("Blueprint")
             ),
             secret,
         })

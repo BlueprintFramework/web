@@ -25,8 +25,7 @@
         <span class="text-xl font-bold">Account</span>
       </div>
       <span class="text-default-font/75">
-        Display name, password, email address, connections, 2-factor
-        authentication
+        Display name, password, email address, pronouns, 2-factor authentication
       </span>
     </NuxtLink>
     <NuxtLink

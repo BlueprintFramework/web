@@ -16,6 +16,11 @@
           >recover your account here</NuxtLink
         >.
       </ElementsInlinecard>
+      <ElementsInlinecard v-if="reset">
+        Your password has been reset successfully. You can now sign in with your
+        new password.
+      </ElementsInlinecard>
+
       <ElementsFormInput
         v-model="authForm.email"
         name="email"
@@ -49,11 +54,7 @@
         v-if="checkpointData.authType == 'two_factor_required'"
         name="code"
         type="text"
-        :rules="[
-          validationRules.required(),
-          validationRules.minLength(6),
-          validationRules.maxLength(10),
-        ]"
+        :rules="[validationRules.required(), validationRules.code()]"
         :required="true"
         leading-icon="memory:shield"
         autocomplete="one-time-code"
@@ -112,11 +113,13 @@ definePageMeta({
   middleware: 'guest',
 })
 
+const route = useRoute()
 const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
 const errors = ref()
+const reset = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const authForm = ref({
   email: '',
@@ -125,6 +128,10 @@ const authForm = ref({
 const checkpointForm = ref({
   code: '',
 })
+
+if (route.query.reset) {
+  reset.value = true
+}
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid

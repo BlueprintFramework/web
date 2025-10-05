@@ -5,7 +5,12 @@
     <div class="divide-y divide-neutral-700">
       <div class="space-y-2 p-4">
         <h2>Password</h2>
-        <p>Change your account's password.</p>
+        <p>
+          Change your account's password.
+          <NuxtLink to="/auth/forgot" class="text-link"
+            >Forgot your password?</NuxtLink
+          >
+        </p>
       </div>
       <div class="bg-stripes hidden h-full md:block" />
     </div>

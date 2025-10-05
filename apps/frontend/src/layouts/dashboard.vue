@@ -5,13 +5,10 @@
     >
       <div class="container h-full">
         <div class="flex h-full flex-row items-center justify-between">
-          <NuxtLink to="/" class="group">
-            <BrandEmblem
-              v-if="isXs"
-              class="group-hover:text-brand-50 transition-colors"
-            />
-            <BrandWordmark v-else />
+          <NuxtLink to="/" v-if="isXs" class="group">
+            <BrandEmblem class="group-hover:text-brand-50 transition-colors" />
           </NuxtLink>
+          <BrandWordmark v-else />
           <div class="flex flex-row">
             <div
               class="flex flex-row divide-x divide-neutral-700 overflow-hidden rounded-full border border-neutral-700 bg-neutral-900"

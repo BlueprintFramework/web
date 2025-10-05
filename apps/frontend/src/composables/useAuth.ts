@@ -1,11 +1,11 @@
 export const useAuth = () => {
+  const confirmationToken = ref<string | null>()
   const authState = useState<AuthState>('auth', () => ({
     user: null,
     isAuthenticated: false,
     isFetched: false,
     checkpoint: {
       authType: undefined,
-      token: undefined,
     },
   }))
 
@@ -20,9 +20,9 @@ export const useAuth = () => {
     try {
       const data: {
         user?: FullUser | null
-        type?: AuthType
-        token?: string
-        errors?: ApiError
+        type?: AuthType | null
+        token?: string | null
+        errors?: ApiError | null
       } = await $fetch('/api/auth/login', {
         method: 'POST',
         body: {
@@ -31,17 +31,18 @@ export const useAuth = () => {
           captcha: null,
         },
       })
+      if (data.type == 'two_factor_required') {
+        // [INFO] send user to 2fa checkpoint
+        authState.value.checkpoint.authType = 'two_factor_required'
+        confirmationToken.value = data.token
+        return
+      }
       if (data?.user) {
-        if (data.type == 'completed') {
-          // [INFO] user completed authentication
-          authState.value.checkpoint.authType = 'completed'
-          setUser(data.user)
+        // [INFO] user completed authentication
+        authState.value.checkpoint.authType = 'completed'
+        setUser(data.user)
 
-          await navigateTo('/app')
-        } else {
-          // [INFO] send user to 2fa checkpoint
-          authState.value.checkpoint.authType = 'two_factor_required'
-        }
+        await navigateTo('/app')
       } else {
         throw data
       }
@@ -57,19 +58,19 @@ export const useAuth = () => {
   const checkpoint = async (code: number | string) => {
     try {
       const data: { user?: FullUser | null; errors?: ApiError } = await $fetch(
-        '/api/auth/checkpoint',
+        '/api/auth/login/checkpoint',
         {
           method: 'POST',
           body: {
             code,
-            token: authState.value.checkpoint.token,
+            confirmation_token: confirmationToken.value,
           },
         }
       )
       if (data?.user) {
         // [INFO] user completed authentication
         authState.value.checkpoint.authType = 'completed'
-        authState.value.checkpoint.token = undefined
+        confirmationToken.value = null
         setUser(data.user)
 
         await navigateTo('/app')

@@ -2,7 +2,7 @@
   <div class="rounded-2xl border border-neutral-700 p-2">
     <div class="group me-2 rounded-2xl font-mono">
       <span
-        class="wrap-break-word blur-sm transition-all group-hover:blur-none"
+        class="wrap-break-word text-wrap blur-sm transition-all group-hover:blur-none"
       >
         {{ props.content }}
       </span>
@@ -17,6 +17,6 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  content: string
+  content?: string
 }>()
 </script>

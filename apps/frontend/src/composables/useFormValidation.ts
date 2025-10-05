@@ -79,6 +79,20 @@ export const useFormValidation = () => {
       trigger: 'blur',
     }),
 
+    code: (message?: string): ValidationRule => ({
+      validator: (value: string) => {
+        const codeRegex = /^[0-9]+$/
+        if (value.length == 6 && codeRegex.test(value)) {
+          return true
+        } else if (value.length == 10) {
+          return true
+        }
+        return false
+      },
+      message: message || 'Please enter a valid 2FA or recovery code',
+      trigger: 'blur',
+    }),
+
     pronouns: (
       message = 'Pronouns must follow a "foo/bar" or "foo/bar/fizz" structure'
     ): ValidationRule => ({

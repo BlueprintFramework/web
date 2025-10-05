@@ -2,6 +2,7 @@
   <form
     @submit.prevent="handleForgot"
     class="w-full divide-y divide-neutral-700 border-y border-neutral-700"
+    v-if="!success"
   >
     <div class="p-4">
       <h1 class="!text-4xl">Forgot password</h1>
@@ -27,6 +28,7 @@
       </span>
     </div>
     <button
+      :disabled="fieldValidation.email == false || loading"
       type="submit"
       class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
     >
@@ -34,18 +36,34 @@
       <Icon name="memory:chevron-right" mode="svg" :size="24" />
     </button>
   </form>
+
+  <div
+    v-if="success"
+    class="w-full divide-y divide-neutral-700 border-y border-neutral-700"
+  >
+    <div class="p-4">
+      <h1 class="!text-4xl">Check your email</h1>
+    </div>
+    <div class="space-y-4 p-4">
+      <span class="text-default-font">
+        We've sent a password reset link to
+        <ProseCode>{{ form.email }}</ProseCode
+        >. It may take a few minutes to arrive.
+      </span>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
   layout: 'auth',
-  middleware: 'guest',
 })
 
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
-const error = ref()
+const error = ref(false)
+const success = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
@@ -58,6 +76,7 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 const handleForgot = async () => {
   loading.value = true
   error.value = false
+  success.value = false
 
   try {
     await $fetch('/api/auth/password/forgot', {
@@ -69,9 +88,11 @@ const handleForgot = async () => {
     })
   } catch {
     error.value = true
-    loading.value = false
+    success.value = false
   } finally {
-    loading.value = false
+    error.value = false
+    success.value = true
   }
+  loading.value = false
 }
 </script>

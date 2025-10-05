@@ -4,7 +4,6 @@ export interface AuthState {
   isFetched: boolean
   checkpoint: {
     authType?: AuthType
-    token?: string
   }
 }
 

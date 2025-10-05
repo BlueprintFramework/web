@@ -29,8 +29,14 @@
   <UiMarketingHero />
   <UiMarketingRepositories />
   <UiMarketingFaq />
-  <UiMarketingTestimonials />
+  <UiMarketingTestimonials v-if="isDesktop" class="hidden md:block" />
   <UiMarketingSponsors />
 
   <ElementsGridbackground />
 </template>
+
+<script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core'
+
+const isDesktop = useMediaQuery('(min-width: 768px)')
+</script>

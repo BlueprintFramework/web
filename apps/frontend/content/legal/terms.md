@@ -1,6 +1,6 @@
 ---
 title: Terms of Service
-updated: 10/6/2025 13:42 (CEDST)
+updated: 10/6/2025 17:07 (CEDST)
 ---
 
 By accessing or using [blueprint.zip](/) ("the Platform"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Platform.

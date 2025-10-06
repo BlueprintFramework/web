@@ -4,13 +4,13 @@
       <NuxtMarquee
         v-for="(testimonials, index) in allTestimonials"
         :autoFill="true"
-        :speed="35"
+        :speed="25"
         :direction="index % 2 == 0 ? 'left' : 'right'"
       >
         <div
           v-for="(testimonial, index) in testimonials"
           :key="`item-${index}`"
-          class="w-100 h-50 mx-2 overflow-hidden rounded-3xl border border-neutral-700"
+          class="w-100 mx-2 h-40 overflow-hidden rounded-3xl border border-neutral-700"
         >
           <div class="flex h-full w-full flex-col divide-y divide-neutral-700">
             <div class="flex items-center justify-between">
@@ -38,7 +38,8 @@
             </div>
             <div class="p-2">
               <p class="text-default-font m-0 p-0">
-                {{ testimonial.content }}
+                "<span class="italic">{{ testimonial.content }}</span
+                >"
               </p>
             </div>
           </div>
@@ -66,7 +67,7 @@ const allTestimonials = [
     {
       name: 'Futuraura',
       content:
-        'Blueprint is honestly one of the best, if not the best. Before it came along, adding extensions, themes, or other modifications to the Pterodactyl panel had to be done manually. Then Blueprint arrived and completely changed the game. It cut out all the hassle between buying and actually using extensions. Back then, I constantly ran into issues installing standalone extensions: endless bugs, reaching out to support, and getting lost trying to figure out which file was supposed to be replaced based on some vague readme. Blueprint solved all of that.',
+        'Blueprint is honestly one of the best, if not the best. (...) Then Blueprint arrived and completely changed the game.',
       rating: 5,
     },
     {
@@ -88,12 +89,6 @@ const allTestimonials = [
       rating: 5,
     },
     {
-      name: 'Mega004',
-      content:
-        "I like blueprint because of their support team, they're really understanding even on stressful times (i.e. Pterodactyl Security patch recently).",
-      rating: 5,
-    },
-    {
       name: 'Patrick',
       content:
         'Blueprint is one of the most easy and intuitive frameworks that build quality and extensive features on top of Pterodactyl. Super easy for both end users and extension developers.',
@@ -106,27 +101,15 @@ const allTestimonials = [
       rating: 5,
     },
     {
-      name: 'Nucceteere',
-      content:
-        "Blueprint is a really great framework letting you manage your extensions and themes with ease. Extensions/plugins that doesn't use Blueprint and require you to modify the files yourself usually end up in broken panels but Blueprint tries to mitigate this in a smart way and efficient way.",
-      rating: 5,
-    },
-    {
       name: 'Hamza',
       content:
-        'Blueprint has been an essential utility for me. Installing extensions manually always brought up issues, and was very hard to keep up with all the different extensions. Its clarity and usability make Blueprint a must-have tool for both private and commercial use.',
-      rating: 5,
-    },
-    {
-      name: 'SuperEvilLuke',
-      content:
-        'Blueprint is an amazing framework for pterodactyl to easily install and manage extensions for your panel! Works great, with an amazing community!',
+        'Blueprint has been an essential utility for me. (...) Its clarity and usability make Blueprint a must-have tool for both private and commercial use.',
       rating: 5,
     },
     {
       name: 'Loapu',
       content:
-        'Blueprint gives you the flexibility Pterodactyl needs. You can mod your installation reliably and to an extent not possible with Pterodactyl out of the box or other modifications. In recent updates, the developer made it easier to install and manage, even easier than Pterodactyl itself.',
+        'Blueprint gives you the flexibility Pterodactyl needs. You can mod your installation reliably and to an extent not possible with Pterodactyl out of the box or other modifications.',
       rating: 4,
     },
     {
@@ -140,19 +123,13 @@ const allTestimonials = [
     {
       name: 'ItzArefin',
       content:
-        "Blueprint completely changed how I manage my Pterodactyl panel. Before, I was manually editing core files to get the features I wanted, and every update was a headache. I was always worried I'd break something. Now, with Blueprint, adding extensions and themes is simple and secure. It’s a clean framework that lets you customize your panel without ever touching the core files. It has saved me countless hours and made my entire setup so much more stable. I honestly can't imagine using Pterodactyl without it.",
+        "Blueprint completely changed how I manage my Pterodactyl panel. (...) It has saved me countless hours and made my entire setup so much more stable. I honestly can't imagine using Pterodactyl without it.",
       rating: 5,
-    },
-    {
-      name: 'Griind',
-      content:
-        'Being a new player in this whole pterodactyl and self-hosting space, finding Blueprint made the whole "getting-started with customizing pterodactyl\'s panel" so extremely much simpler compared to the dread I got from seeing non-blueprint customizations\' installation documentations. (So long you remember to type the install commands in the correct directory hehe whoops). The community around bp is also extremely friendly and ready to help with whatever incredibly stupid newbie questions I had lol',
-      rating: 4,
     },
     {
       name: 'amogusreal69',
       content:
-        "I use Blueprint because I hate the current way you install extensions. Before, you had to modify files from Pterodactyl itself, but with Blueprint, all I need is run a command, and that's all.",
+        "Before, you had to modify files from Pterodactyl itself, but with Blueprint, all I need is run a command, and that's all.",
       rating: 5,
     },
     {
@@ -176,19 +153,19 @@ const allTestimonials = [
     {
       name: 'Aditya',
       content:
-        "Blueprint is a boon for users who want to customize their Pterodactyl panel but dont have much or no coding skils or knowledge. It is by far the best thing to happen in whole Pterodactyl community, I've been using blueprint for a quite a time now and it has given me the best experience by far <3",
+        "It is by far the best thing to happen in whole Pterodactyl community, I've been using blueprint for a quite a time now and it has given me the best experience by far <3",
       rating: 5,
     },
     {
       name: 'Zephrynis',
       content:
-        'Blueprint has completely overhauled the way in which I use Pterodactyl and how I will use it for the foreseeable future. It has allowed me to extend the feature set to levels I never thought possible without compromising on compatibility with other modifications. Blueprint FTW!!!',
+        'Blueprint has completely overhauled the way in which I use Pterodactyl and how I will use it for the foreseeable future. (...) Blueprint FTW!!!',
       rating: 5,
     },
     {
       name: 'Janosch',
       content:
-        'I like Blueprint because it’s just so easy to use. It’s just nice not having to worry about extensions conflicting or breaking each other, while being able to add add-ons without thinking whether it’ll break the Pterodactyl installation. I love it. Really.',
+        'It’s just nice not having to worry about extensions conflicting or breaking each other, while being able to add add-ons without thinking whether it’ll break the Pterodactyl installation. I love it. Really.',
       rating: 5,
     },
     {
@@ -196,18 +173,6 @@ const allTestimonials = [
       content:
         'I love blueprint because of the professional experience I am able to provide for my friends to host their own servers!',
       rating: 5,
-    },
-    {
-      name: 'MkcTao',
-      content:
-        'Been using Blueprint for a bit over a year, it just works, everytime. You never have to worry about conflicts or updates, it always does exactly what you want. Easy and Reliable.',
-      rating: 5,
-    },
-    {
-      name: 'BassRhombus',
-      content:
-        'Blueprint has made managing my servers not only easier, but more reliable. Blueprint makes add-ons way easier to install/remove with no downtime or backups required. Much easier than having to edit panel files the old way',
-      rating: 4,
     },
   ],
 ]

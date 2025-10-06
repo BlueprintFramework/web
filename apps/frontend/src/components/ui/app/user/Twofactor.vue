@@ -10,37 +10,35 @@
       <div class="bg-stripes hidden h-full md:block" />
     </div>
     <div class="flex flex-col items-center p-4 py-8">
-      <client-only>
-        <ElementsInlinecard v-if="error == 'enable-error'" class="mb-4">
-          Uh oh, couldn't initialize 2FA. Please try again later.
-        </ElementsInlinecard>
-        <template v-if="user?.totp_enabled">
-          <Icon name="pixelarticons:lock" :size="32" mode="svg" />
-          <br />
-          <p class="max-w-100 my-3 text-center">
-            You've enabled two factor authentication! You can disable it below.
-          </p>
-          <ElementsButton
-            @click="modalOpen.disable_2fa = true"
-            color="danger"
-            label="Disable 2FA"
-            :disabled="loading"
-          />
-        </template>
-        <template v-else>
-          <Icon name="pixelarticons:lock-open" :size="32" mode="svg" />
-          <br />
-          <p class="max-w-100 my-3 text-center">
-            You haven't enabled two factor authentication yet! To keep your
-            account secure, set it up below.
-          </p>
-          <ElementsButton
-            @click="handleEnable"
-            label="Enable 2FA"
-            :disabled="loading"
-          />
-        </template>
-      </client-only>
+      <ElementsInlinecard v-if="error == 'enable-error'" class="mb-4">
+        Uh oh, couldn't initialize 2FA. Please try again later.
+      </ElementsInlinecard>
+      <template v-if="user?.totp_enabled">
+        <Icon name="pixelarticons:lock" :size="32" mode="svg" />
+        <br />
+        <p class="max-w-100 chrome:-mt-3 my-3 text-center">
+          You've enabled two factor authentication! You can disable it below.
+        </p>
+        <ElementsButton
+          @click="modalOpen.disable_2fa = true"
+          color="danger"
+          label="Disable 2FA"
+          :disabled="loading"
+        />
+      </template>
+      <template v-else>
+        <Icon name="pixelarticons:lock-open" :size="32" mode="svg" />
+        <br />
+        <p class="max-w-100 my-3 text-center">
+          You haven't enabled two factor authentication yet! To keep your
+          account secure, set it up below.
+        </p>
+        <ElementsButton
+          @click="handleEnable"
+          label="Enable 2FA"
+          :disabled="loading"
+        />
+      </template>
     </div>
   </div>
 
@@ -263,7 +261,7 @@
       <ElementsButton
         label="Nevermind"
         class="w-full md:w-auto"
-        @click="modalOpen.recovery_codes = false"
+        @click="modalOpen.disable_2fa = false"
       />
       <ElementsButton
         :disabled="

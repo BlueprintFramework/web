@@ -77,7 +77,7 @@
           <div
             class="flex h-full w-full items-center justify-center align-middle"
           >
-            <div class="max-w-100 p-4 text-center">
+            <div class="md:max-w-100 p-4 text-left md:text-center">
               <Icon name="pixelarticons:downasaur" :size="48" />
               <h1 class="mb-2.5">Missing description</h1>
               <p>

@@ -44,14 +44,14 @@
           <span>{{ category }}</span>
         </div>
         <NuxtLink
-          :to="`/guides/list/${categoryData.key}`"
+          :to="`/guides/category/${categoryData.key}`"
           class="hover:text-brand-50 flex w-full items-center gap-1.5 p-4 text-2xl font-bold transition-colors hover:bg-neutral-900 sm:hidden"
         >
           <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
           <span>{{ category }}</span>
         </NuxtLink>
         <div class="hidden border-s border-neutral-700 sm:inline">
-          <NuxtLink :to="`/guides/list/${categoryData.key}`">
+          <NuxtLink :to="`/guides/category/${categoryData.key}`">
             <button
               type="submit"
               class="text-default-font hover:text-brand-50 flex h-full cursor-pointer items-center justify-between gap-1 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"

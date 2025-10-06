@@ -2,6 +2,7 @@ import { defineCollection, defineContentConfig, z } from '@nuxt/content'
 
 export default defineContentConfig({
   collections: {
+    // Documentation documents
     docs: defineCollection({
       type: 'page',
       source: 'docs/**/*.md',
@@ -13,6 +14,7 @@ export default defineContentConfig({
       }),
     }),
 
+    // Guide articles
     guides: defineCollection({
       type: 'page',
       source: 'guides/**/*.md',
@@ -24,6 +26,16 @@ export default defineContentConfig({
         thumbnail: z.string().optional(),
         order: z.number().optional(),
         unlisted: z.boolean().optional().default(false),
+      }),
+    }),
+
+    // Legal documents
+    legal: defineCollection({
+      type: 'page',
+      source: 'legal/*.md',
+      schema: z.object({
+        title: z.string(),
+        updated: z.string(),
       }),
     }),
   },

@@ -81,7 +81,7 @@ const { rules: validationRules } = useFormValidation()
 if (!route.query.token || route.query.token.length != 96) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Page Not Found',
+    statusMessage: 'Page not found',
   })
 }
 

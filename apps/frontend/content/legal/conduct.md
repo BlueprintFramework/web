@@ -1,6 +1,6 @@
 ---
 title: Code of Conduct
-updated: 10/6/2025 15:09 (CEDST)
+updated: 10/6/2025 17:07 (CEDST)
 ---
 
 ::card
@@ -66,7 +66,7 @@ These actions are explicitly forbidden in Blueprint spaces:
 - Insulting, demeaning, hateful, or threatening remarks.
 - Discrimination based on age, disability, gender, nationality, race, religion, sexuality, or similar personal characteristic.
 - Bullying or systematic harassment.
-- Unwelcome sexual advances.
+- Unwelcome sexual or romantic advances.
 - Incitement to any of these.
 
 ## Moderation

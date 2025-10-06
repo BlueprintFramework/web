@@ -19,7 +19,7 @@ You are responsible for maintaining the security of your account credentials and
 
 When you publish extensions or other content to the Platform you retain ownership of your content, represent that you have the necessary rights to publish your content, are responsible for ensuring your content does not violate any laws or third-party rights and are responsible for any code, scripts, or data included in your extensions.
 
-## Prohibited Uses
+## Limitations on Use
 
 You may not use the Platform to:
 

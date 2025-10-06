@@ -140,7 +140,6 @@
     <div class="flex w-full">
       <div class="container space-y-5 py-6">
         <UiAppVerifyemail v-if="user?.email_pending != null" />
-
         <slot />
       </div>
     </div>

@@ -67,10 +67,13 @@
         By creating an account, you acknowledge that you have read and agree to
         our
         <!-- prettier-ignore -->
-        <NuxtLink to="/legal/terms" class="text-link">Terms of Service</NuxtLink>
-        and
+        <NuxtLink to="/legal/terms" class="text-link">Terms of Service</NuxtLink
+        ><span>, </span>
         <!-- prettier-ignore -->
         <NuxtLink to="/legal/privacy" class="text-link">Privacy Policy</NuxtLink>
+        and
+        <!-- prettier-ignore -->
+        <NuxtLink to="/legal/conduct" class="text-link">Code of Conduct</NuxtLink>
       </span>
     </div>
     <button

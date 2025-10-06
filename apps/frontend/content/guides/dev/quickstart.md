@@ -54,7 +54,7 @@ blueprint -build
 
 There are a lot of resources to help you get started - from our developer community to guides like these, we've got them. Here are a few that might come in useful:
 
-- Guides for extension development (like this one!) - [check them out here](/guides/list/dev).
+- Guides for extension development (like this one!) - [check them out here](/guides/category/dev).
 - [Documentation](/docs) to help you understand Blueprint.
 - Chat with more extension developers in our [Discord community](https://discord.com/servers/blueprint-1063548024825057451).
 - Showcase extensions or get support on [GitHub Discussions](https://github.com/orgs/BlueprintFramework/discussions).

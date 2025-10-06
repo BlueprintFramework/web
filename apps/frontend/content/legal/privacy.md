@@ -7,6 +7,8 @@ updated: 10/6/2025 13:42 (CEDST)
 
 Blueprint ("we," "us," or "our") operates [blueprint.zip](/) and the Blueprint extension framework. This Privacy Policy explains how we collect, use, and protect your information. We are committed to complying with the General Data Protection Regulation (GDPR) and protecting your privacy rights.
 
+For privacy questions, concerns, or to exercise your rights, contact us at `privacy@blueprint.zip`.
+
 ## Information We Collect
 
 ### Account Information (Registered Users)
@@ -115,7 +117,3 @@ While our databases remain in the EU, our website infrastructure may process dat
 ## Changes to This Policy
 
 We may update this Privacy Policy with changes posted on this page and reflected in the "Last Updated" date. We will notify users of significant changes via email or prominent notice on our website.
-
-## Contact
-
-For privacy questions, concerns, or to exercise your rights, contact us at `privacy@blueprint.zip`.

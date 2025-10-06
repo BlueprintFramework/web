@@ -79,10 +79,7 @@ const route = useRoute()
 const { rules: validationRules } = useFormValidation()
 
 if (!route.query.token || route.query.token.length != 96) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Page not found',
-  })
+  await navigateTo('/auth/forgot')
 }
 
 const loading = ref(false)

@@ -1,10 +1,12 @@
 <template>
   <h1>Account settings</h1>
 
-  <UiAppUserProfile />
-  <UiAppUserPassword />
-  <UiAppUserTwofactor />
-  <UiAppUserSessions />
+  <client-only>
+    <UiAppUserProfile />
+    <UiAppUserPassword />
+    <UiAppUserTwofactor />
+    <UiAppUserSessions />
+  </client-only>
 </template>
 
 <script setup lang="ts">

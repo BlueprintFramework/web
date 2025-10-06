@@ -1,6 +1,6 @@
 ---
 title: Privacy Policy
-updated: 10/6/2025 1:42PM (CEDST)
+updated: 10/6/2025 13:42 (CEDST)
 ---
 
 ## Introduction

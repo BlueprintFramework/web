@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data" class="space-y-8">
+  <template v-if="data">
     <div class="space-y-3">
       <h1 class="!text-4xl">
         {{ data.title || 'Untitled' }}
@@ -24,14 +24,21 @@
     </div>
 
     <div class="max-w-none">
-      <ContentRenderer :value="data" class="prose-content" />
+      <ContentRenderer :value="data" class="prose-content space-y-3" />
     </div>
+  </template>
+
+  <div
+    class="absolute inset-0 top-[var(--nav-offset)] -z-10 h-[50vh] w-full bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:30px_30px]"
+    style="background-position-x: -5px"
+  >
+    <div
+      class="bg-linear-to-r h-full w-full from-transparent via-neutral-950 to-transparent"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { docsCategories, defaultCategory } from '~/assets/docs.config'
-
 const route = useRoute()
 
 const slug = route.params.slug
@@ -51,5 +58,9 @@ if (!data.value) {
 useSeoMeta({
   title: data.value?.title,
   description: data.value?.description,
+})
+
+definePageMeta({
+  layout: 'legal',
 })
 </script>

@@ -156,7 +156,13 @@
               <span>Moodmeter™</span>
               <Icon name="pixelarticons:human" />
             </div>
-            <div class="p-2">
+            <div v-if="moodmeter == 'unknown'" class="p-2">
+              <span class="text-default-font/60">
+                This extension does not have enough reviews for a Moodmeter
+                rating.
+              </span>
+            </div>
+            <div v-if="moodmeter != 'unknown'" class="p-2">
               <div class="flex flex-col items-center py-3">
                 <div class="flex items-center gap-2">
                   <div>
@@ -168,7 +174,6 @@
                     />
                   </div>
                   <div>
-                    <p v-if="moodmeter == 'unknown'">Unable to determine</p>
                     <p v-if="moodmeter == 'love'">
                       Users
                       <b class="text-brand-50 font-extrabold">love</b>
@@ -201,11 +206,111 @@
                 </div>
               </div>
             </div>
-            <div class="p-2" v-if="moodmeter == 'unknown'">
-              <span class="text-default-font/60">
-                Moodmeter is only available for extensions with three reviews or
-                more.
-              </span>
+            <div v-if="moodmeter != 'unknown'" class="p-2">
+              <table class="w-full">
+                <thead>
+                  <tr>
+                    <th>
+                      <Icon
+                        name="pixelarticons:mood-sad"
+                        :class="
+                          moodmeter == 'dislike'
+                            ? 'text-brand-50'
+                            : 'text-default-font/60'
+                        "
+                      />
+                    </th>
+                    <th>
+                      <Icon
+                        name="pixelarticons:mood-neutral"
+                        :class="
+                          moodmeter == 'meh'
+                            ? 'text-brand-50'
+                            : 'text-default-font/60'
+                        "
+                      />
+                    </th>
+                    <th>
+                      <Icon
+                        name="pixelarticons:mood-happy"
+                        :class="
+                          moodmeter == 'like'
+                            ? 'text-brand-50'
+                            : 'text-default-font/60'
+                        "
+                      />
+                    </th>
+                    <th>
+                      <Icon
+                        name="pixelarticons:human-handsup"
+                        :class="
+                          moodmeter == 'really like'
+                            ? 'text-brand-50'
+                            : 'text-default-font/60'
+                        "
+                      />
+                    </th>
+                    <th>
+                      <Icon
+                        name="pixelarticons:heart"
+                        :class="
+                          moodmeter == 'love'
+                            ? 'text-brand-50'
+                            : 'text-default-font/60'
+                        "
+                      />
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="divide-x divide-neutral-700">
+                    <td>
+                      <div
+                        class="h-4 w-full rounded-s-full border-y border-s border-neutral-700"
+                        :class="
+                          moodmeter == 'dislike'
+                            ? 'bg-brand-50'
+                            : 'bg-neutral-900'
+                        "
+                      />
+                    </td>
+                    <td>
+                      <div
+                        class="h-4 w-full border-y border-neutral-700"
+                        :class="
+                          moodmeter == 'meh' ? 'bg-brand-50' : 'bg-neutral-900'
+                        "
+                      />
+                    </td>
+                    <td>
+                      <div
+                        class="h-4 w-full border-y border-neutral-700"
+                        :class="
+                          moodmeter == 'like' ? 'bg-brand-50' : 'bg-neutral-900'
+                        "
+                      />
+                    </td>
+                    <td>
+                      <div
+                        class="h-4 w-full border-y border-neutral-700"
+                        :class="
+                          moodmeter == 'really like'
+                            ? 'bg-brand-50'
+                            : 'bg-neutral-900'
+                        "
+                      />
+                    </td>
+                    <td>
+                      <div
+                        class="h-4 w-full rounded-e-full border-y border-e border-neutral-700"
+                        :class="
+                          moodmeter == 'love' ? 'bg-brand-50' : 'bg-neutral-900'
+                        "
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 

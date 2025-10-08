@@ -99,15 +99,6 @@
             </div>
             <div class="p-2">
               <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:calendar-month" />
-                <div>
-                  Released
-                  <span class="text-default-font/60 font-normal">
-                    <NuxtTime :datetime="extension.created" />
-                  </span>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 font-bold">
                 <Icon name="pixelarticons:user" />
                 <div>
                   Created by
@@ -122,6 +113,15 @@
                   Used by
                   <span class="text-default-font/60 font-normal">
                     ~{{ extension.stats.panels }} installations
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 font-bold">
+                <Icon name="pixelarticons:calendar-month" />
+                <div>
+                  Released
+                  <span class="text-default-font/60 font-normal">
+                    <NuxtTime :datetime="extension.created" />
                   </span>
                 </div>
               </div>
@@ -148,6 +148,67 @@
               </div>
             </div>
           </div>
+
+          <div
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
+          >
+            <div class="flex items-center justify-between gap-2 p-2 text-lg">
+              <span>Moodmeter™</span>
+              <Icon name="pixelarticons:human" />
+            </div>
+            <div class="p-2">
+              <div class="flex flex-col items-center py-3">
+                <div class="flex items-center gap-2">
+                  <div>
+                    <Icon
+                      :name="moodmeterIcon"
+                      :size="52"
+                      mode="svg"
+                      class="size-8 md:size-[52px]"
+                    />
+                  </div>
+                  <div>
+                    <p v-if="moodmeter == 'unknown'">Unable to determine</p>
+                    <p v-if="moodmeter == 'love'">
+                      Users
+                      <b class="text-brand-50 font-extrabold">love</b>
+                      this extension!
+                    </p>
+                    <p v-if="moodmeter == 'really like'">
+                      Users
+                      <b class="text-brand-50 font-extrabold">really like</b>
+                      this extension
+                    </p>
+                    <p v-if="moodmeter == 'like'">
+                      Users
+                      <b class="text-brand-50 font-extrabold">like</b>
+                      this extension
+                    </p>
+                    <p v-if="moodmeter == 'meh'">
+                      Users feel
+                      <b class="text-brand-50 font-extrabold">meh</b>
+                      about this extension
+                    </p>
+                    <p v-if="moodmeter == 'dislike'">
+                      Users
+                      <b class="text-brand-50 font-extrabold">dislike</b>
+                      this extension
+                    </p>
+                    <p class="text-default-font/60">
+                      {{ totalReviews }} reviews submitted
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-2" v-if="moodmeter == 'unknown'">
+              <span class="text-default-font/60">
+                Moodmeter is only available for extensions with three reviews or
+                more.
+              </span>
+            </div>
+          </div>
+
           <div
             class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
           >
@@ -260,11 +321,77 @@ const availablePlatforms = computed(() => {
     }))
 })
 
+const totalReviews = computed<unknown | number>(() =>
+  Object.values(extension.value?.platforms || {}).reduce(
+    (sum, platform) => sum + (platform.reviews || 0),
+    0
+  )
+)
+const platformsWithRatings = computed(() =>
+  Object.values(extension.value?.platforms || {}).filter((x) => x.rating)
+)
+const averageRating = computed<unknown | number>(() =>
+  platformsWithRatings.value.length > 0
+    ? platformsWithRatings.value.reduce(
+        (sum, platform) => sum + (platform.rating || 0),
+        0
+      ) / platformsWithRatings.value.length
+    : 0
+)
+
+const moodmeter = computed(() => {
+  if ((totalReviews.value as number) < 3) return 'unknown'
+  if ((extension.value?.stats.panels || 0) < 20) return 'unknown'
+
+  const rating = averageRating.value as number
+  const adjustment = Math.log10((totalReviews.value as number) / 5) * 0.12
+
+  if (!moodmeterLimited.value) {
+    switch (true) {
+      case rating < 2.5 + adjustment:
+        return 'dislike'
+      case rating >= 2.5 + adjustment && rating < 3.5 + adjustment:
+        return 'meh'
+      case rating >= 3.5 + adjustment && rating < 4.3 + adjustment:
+        return 'like'
+      case rating >= 4.3 + adjustment && rating < 4.7 + adjustment:
+        return 'really like'
+      case rating >= 4.7 + adjustment:
+        return 'love'
+    }
+  } else {
+    switch (true) {
+      case rating < 3.5 + adjustment:
+        return 'meh'
+      case rating >= 3.5 + adjustment && rating < 4.0 + adjustment:
+        return 'like'
+      case rating >= 4.0 + adjustment:
+        return 'really like'
+    }
+  }
+})
+const moodmeterLimited = computed(() => (totalReviews.value as number) < 12)
+const moodmeterIcon = computed(() => {
+  switch (moodmeter.value) {
+    default:
+      return 'pixelarticons:cellular-signal-off'
+    case 'dislike':
+      return 'pixelarticons:mood-sad'
+    case 'meh':
+      return 'pixelarticons:mood-neutral'
+    case 'like':
+      return 'pixelarticons:mood-happy'
+    case 'really like':
+      return 'pixelarticons:human-handsup'
+    case 'love':
+      return 'pixelarticons:heart'
+  }
+})
+
 const formatPrice = (price: number, currency: string): string => {
   if (price === 0) {
     return 'Free'
   }
-
   return `${price.toFixed(2)} ${currency}`
 }
 

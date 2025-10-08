@@ -6,7 +6,7 @@ export interface Extension {
   identifier: string
   keywords: string[]
   name: string
-  platforms: Record<string, ExtensionFullPlatform>
+  platforms: ExtensionFullPlatforms
   stats: ExtensionStats
   summary: string
   type: ExtensionType
@@ -26,12 +26,15 @@ export interface ExtensionVersion {
   created: string
 }
 
+export type ExtensionPlatforms = Record<string, ExtensionPlatform>
+export type ExtensionPlatformCurrency = 'USD' | 'EUR' | 'GBP'
 export interface ExtensionPlatform {
   currency: ExtensionPlatformCurrency
   price: number
   url: string
 }
 
+export type ExtensionFullPlatforms = Record<string, ExtensionFullPlatform>
 export interface ExtensionFullPlatform extends ExtensionPlatform {
   reviews?: number | null
   rating?: number | null
@@ -48,4 +51,3 @@ export interface ExtensionStats {
 
 export type ExtensionType = 'theme' | 'extension'
 export type ExtensionStatus = 'approved' | 'ready' | 'pending'
-export type ExtensionPlatformCurrency = 'USD' | 'EUR' | 'GBP'

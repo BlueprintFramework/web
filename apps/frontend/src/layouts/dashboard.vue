@@ -5,10 +5,14 @@
         <div
           class="flex h-full flex-row items-center justify-between rounded-full border border-neutral-700 bg-neutral-950 px-3"
         >
-          <NuxtLink to="/" v-if="isXs" class="group">
-            <BrandEmblem class="group-hover:text-brand-50 transition-colors" />
-          </NuxtLink>
-          <BrandWordmark v-else />
+          <div class="ms-1">
+            <NuxtLink to="/" v-if="isXs" class="group">
+              <BrandEmblem
+                class="group-hover:text-brand-50 transition-colors"
+              />
+            </NuxtLink>
+            <BrandWordmark v-else />
+          </div>
           <div class="flex flex-row">
             <div
               class="flex flex-row divide-x divide-neutral-700 overflow-hidden rounded-full border border-neutral-700 bg-neutral-900"
@@ -152,5 +156,5 @@ import { useMediaQuery } from '@vueuse/core'
 const { user, logout } = useAuth()
 const route = useRoute()
 const isDesktop = useMediaQuery('(min-width: 768px)')
-const isXs = useMediaQuery('(max-width: 320px)')
+const isXs = useMediaQuery('(max-width: 330px)')
 </script>

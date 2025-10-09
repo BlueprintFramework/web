@@ -4,3 +4,14 @@
     <NuxtPage />
   </NuxtLayout>
 </template>
+
+<script setup lang="ts">
+useHead({
+  meta: [
+    {
+      name: 'color-scheme',
+      content: 'dark',
+    },
+  ],
+})
+</script>

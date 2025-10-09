@@ -5,7 +5,7 @@
     >
       <div class="flex divide-x divide-neutral-700">
         <NuxtImg
-          :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
+          :src="extension.banner.fullres"
           class="max-h-125 hidden aspect-video w-full object-cover lg:block"
         />
         <div
@@ -22,7 +22,7 @@
           <div class="h-full w-full">
             <div class="bg-stripes hidden h-full w-full lg:block" />
             <NuxtImg
-              :src="`https://s3.blueprint.zip/extensions/${extension.identifier}.jpeg`"
+              :src="extension.banner.fullres"
               class="max-h-125 block aspect-video w-full object-cover lg:hidden"
             />
           </div>
@@ -176,12 +176,12 @@
                   <div>
                     <p v-if="moodmeter == 'love'">
                       Users
-                      <b class="text-brand-50 font-extrabold">love</b>
+                      <b class="font-extrabold text-purple-400">love</b>
                       this extension!
                     </p>
                     <p v-if="moodmeter == 'really like'">
                       Users
-                      <b class="text-brand-50 font-extrabold">really like</b>
+                      <b class="font-extrabold text-green-400">really like</b>
                       this extension
                     </p>
                     <p v-if="moodmeter == 'like'">
@@ -191,12 +191,12 @@
                     </p>
                     <p v-if="moodmeter == 'meh'">
                       Users feel
-                      <b class="text-brand-50 font-extrabold">meh</b>
+                      <b class="font-extrabold text-yellow-200">meh</b>
                       about this extension
                     </p>
                     <p v-if="moodmeter == 'dislike'">
                       Users
-                      <b class="text-brand-50 font-extrabold">dislike</b>
+                      <b class="font-extrabold text-red-400">dislike</b>
                       this extension
                     </p>
                     <p class="text-default-font/60">
@@ -215,7 +215,7 @@
                         name="pixelarticons:mood-sad"
                         :class="
                           moodmeter == 'dislike'
-                            ? 'text-brand-50'
+                            ? 'text-red-400'
                             : 'text-default-font/60'
                         "
                       />
@@ -225,7 +225,7 @@
                         name="pixelarticons:mood-neutral"
                         :class="
                           moodmeter == 'meh'
-                            ? 'text-brand-50'
+                            ? 'text-yellow-200'
                             : 'text-default-font/60'
                         "
                       />
@@ -245,7 +245,7 @@
                         name="pixelarticons:human-handsup"
                         :class="
                           moodmeter == 'really like'
-                            ? 'text-brand-50'
+                            ? 'text-green-400'
                             : 'text-default-font/60'
                         "
                       />
@@ -255,7 +255,7 @@
                         name="pixelarticons:heart"
                         :class="
                           moodmeter == 'love'
-                            ? 'text-brand-50'
+                            ? 'text-purple-400'
                             : 'text-default-font/60'
                         "
                       />
@@ -269,7 +269,7 @@
                         class="h-4 w-full rounded-s-full border-y border-s border-neutral-700"
                         :class="
                           moodmeter == 'dislike'
-                            ? 'bg-brand-50'
+                            ? 'bg-red-400'
                             : 'bg-neutral-900'
                         "
                       />
@@ -278,7 +278,9 @@
                       <div
                         class="h-4 w-full border-y border-neutral-700"
                         :class="
-                          moodmeter == 'meh' ? 'bg-brand-50' : 'bg-neutral-900'
+                          moodmeter == 'meh'
+                            ? 'bg-yellow-200'
+                            : 'bg-neutral-900'
                         "
                       />
                     </td>
@@ -295,7 +297,7 @@
                         class="h-4 w-full border-y border-neutral-700"
                         :class="
                           moodmeter == 'really like'
-                            ? 'bg-brand-50'
+                            ? 'bg-green-400'
                             : 'bg-neutral-900'
                         "
                       />
@@ -304,7 +306,9 @@
                       <div
                         class="h-4 w-full rounded-e-full border-y border-e border-neutral-700"
                         :class="
-                          moodmeter == 'love' ? 'bg-brand-50' : 'bg-neutral-900'
+                          moodmeter == 'love'
+                            ? 'bg-purple-400'
+                            : 'bg-neutral-900'
                         "
                       />
                     </td>

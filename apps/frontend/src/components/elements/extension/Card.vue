@@ -1,7 +1,13 @@
 <template>
   <div :class="props.class">
     <NuxtLink
-      :to="props.extension ? `/browse/${props.extension.identifier}` : ''"
+      :to="
+        props.extension && !props.to
+          ? `/browse/${props.extension.identifier}`
+          : props.to
+            ? props.to
+            : ''
+      "
     >
       <div
         class="group space-y-4 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900"
@@ -11,7 +17,7 @@
           class="aspect-video w-full overflow-hidden rounded-2xl border border-neutral-700"
         >
           <NuxtImg
-            :src="`https://s3.blueprint.zip/extensions/lowres/${props.extension.identifier}.jpeg`"
+            :src="props.extension.banner.lowres"
             class="h-full w-full transition-transform group-hover:scale-105"
           />
         </div>
@@ -59,6 +65,7 @@
 const props = defineProps<{
   extension?: Extension
   class?: string
+  to?: string
 }>()
 
 const lowestPrice = computed(() => {

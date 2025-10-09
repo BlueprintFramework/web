@@ -1,10 +1,10 @@
 <template>
   <div v-if="!isDesktop" class="h-13 w-full">
-    <div
-      class="h-13 fixed left-0 top-0 z-50 w-full border-b border-neutral-700 bg-neutral-950"
-    >
+    <div class="h-15 fixed left-0 top-4 z-50 w-full">
       <div class="container h-full">
-        <div class="flex h-full flex-row items-center justify-between">
+        <div
+          class="flex h-full flex-row items-center justify-between rounded-full border border-neutral-700 bg-neutral-950 px-3"
+        >
           <NuxtLink to="/" v-if="isXs" class="group">
             <BrandEmblem class="group-hover:text-brand-50 transition-colors" />
           </NuxtLink>
@@ -138,7 +138,7 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="container space-y-5 py-6">
+      <div class="container space-y-5 pb-6 pt-11 md:pt-6">
         <UiAppVerifyemail v-if="user?.email_pending != null" />
         <slot />
       </div>

@@ -32,12 +32,12 @@
       <div
         class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
-        <ElementsExtensioncard
+        <ElementsExtensionCard
           v-if="pending || extensions == undefined"
           v-for="n in 28"
           class="flex flex-col bg-neutral-950"
         />
-        <ElementsExtensioncard
+        <ElementsExtensionCard
           v-else
           v-for="extension in filteredAndSortedExtensions"
           :key="extension.id"

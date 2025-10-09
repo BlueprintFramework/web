@@ -39,4 +39,13 @@ export interface UserSession {
   user_agent: string
 }
 
+export interface UserExtensions {
+  extensions: {
+    total: number
+    per_page: number
+    page: number
+    data: FullExtension[]
+  }
+}
+
 export type AuthType = 'completed' | 'two_factor_required' | null

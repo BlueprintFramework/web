@@ -77,7 +77,7 @@
 
     <template #footer>
       <ElementsButton
-        label="Nevermind"
+        label="Cancel"
         color="danger"
         class="w-full md:w-auto"
         @click="modalOpen.enable_2fa = false"
@@ -152,7 +152,7 @@
 
     <template #footer>
       <ElementsButton
-        label="Go back"
+        label="Back"
         class="w-full md:w-auto"
         @click="
           () => {
@@ -259,7 +259,7 @@
 
     <template #footer>
       <ElementsButton
-        label="Nevermind"
+        label="Cancel"
         class="w-full md:w-auto"
         @click="modalOpen.disable_2fa = false"
       />

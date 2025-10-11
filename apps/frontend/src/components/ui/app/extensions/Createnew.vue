@@ -11,24 +11,27 @@
     <ElementsButton
       label="New extension"
       class="w-full sm:w-auto"
-      @click="modalOpen.create_new = true"
+      @click="modalOpen.onboarding = true"
     />
   </div>
 
   <ElementsModal
-    :is-open="modalOpen.create_new"
+    :is-open="modalOpen.onboarding"
     :closable="true"
     title="New extension"
-    @close="modalOpen.create_new = false"
+    @close="modalOpen.onboarding = false"
   >
     <template #default>
-      <div class="grid grid-cols-2 gap-4">
+      <div
+        class="grid grid-cols-1 grid-rows-2 gap-4 sm:grid-cols-2 sm:grid-rows-1"
+      >
         <ElementsButton
           class="min-h-20 w-full !p-4"
           @click="
             () => {
-              modalOpen.create_new = false
-              modalOpen.new_extension = true
+              modalOpen.onboarding = false
+              modalOpen.info = true
+              isDistributed = false
             }
           "
         >
@@ -41,8 +44,9 @@
           class="min-h-20 w-full !p-4"
           @click="
             () => {
-              modalOpen.create_new = false
-              modalOpen.distributed_extension = true
+              modalOpen.onboarding = false
+              modalOpen.info = true
+              isDistributed = true
             }
           "
         >
@@ -58,18 +62,91 @@
       <ElementsButton
         label="Cancel"
         class="w-full md:w-auto"
-        @click="modalOpen.create_new = false"
+        @click="modalOpen.onboarding = false"
       />
     </template>
   </ElementsModal>
 
   <ElementsModal
-    :is-open="modalOpen.new_extension"
+    :is-open="modalOpen.info"
     :closable="true"
     title="New extension"
-    @close="modalOpen.new_extension = false"
+    @close="
+      () => {
+        modalOpen.info = false
+        modalOpen.onboarding = true
+      }
+    "
   >
-    <template #default> </template>
+    <template #default>
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ElementsFormInput
+            v-model="form.name"
+            label="Name"
+            description="Your extension's display name"
+            name="extension_name"
+            type="text"
+            :rules="[
+              validationRules.minLength(3),
+              validationRules.maxLength(63),
+              validationRules.required(),
+            ]"
+            :required="true"
+            :requiredIcon="false"
+            placeholder="My Extension"
+            :disabled="loading"
+            @validate="
+              (isValid: boolean) =>
+                handleFieldValidation('extension_name', isValid)
+            "
+          />
+          <ElementsFormInput
+            v-model="form.identifier"
+            label="Identifier"
+            description="Your extension's identifier, must be unique"
+            name="extension_identifier"
+            type="text"
+            :rules="[
+              validationRules.extensionIdentifier(),
+              validationRules.uniqueExtensionIdentifier(),
+              validationRules.required(),
+            ]"
+            :required="true"
+            :requiredIcon="false"
+            placeholder="myextension"
+            :disabled="loading"
+            @validate="
+              (isValid: boolean) =>
+                handleFieldValidation('extension_identifier', isValid)
+            "
+          />
+        </div>
+
+        <ElementsFormInput
+          v-model="form.summary"
+          label="Summary"
+          description="A short description of your extension"
+          name="extension_summary"
+          type="text"
+          :rules="[
+            validationRules.minLength(3),
+            validationRules.maxLength(255),
+            validationRules.required(),
+          ]"
+          :required="true"
+          :requiredIcon="false"
+          placeholder="This is my extension :)"
+          :disabled="loading"
+          @validate="
+            (isValid: boolean) =>
+              handleFieldValidation('extension_summary', isValid)
+          "
+        />
+
+        <ElementsFormExtensiontype v-model="form.type" />
+      </div>
+    </template>
 
     <template #footer>
       <ElementsButton
@@ -77,23 +154,23 @@
         class="w-full md:w-auto"
         @click="
           () => {
-            modalOpen.new_extension = false
-            modalOpen.create_new = true
+            modalOpen.info = false
+            modalOpen.onboarding = true
           }
         "
       />
       <ElementsButton
-        label="Create"
+        :label="isDistributed ? 'Next' : 'Create'"
         class="order-first w-full md:order-[unset] md:w-auto"
       />
     </template>
   </ElementsModal>
 
   <ElementsModal
-    :is-open="modalOpen.distributed_extension"
+    :is-open="modalOpen.platforms"
     :closable="true"
     title="New extension"
-    @close="modalOpen.distributed_extension = false"
+    @close="modalOpen.platforms = false"
   >
     <template #default>
       lorem ipsum dolor whatever the fuck comes next
@@ -105,8 +182,8 @@
         class="w-full md:w-auto"
         @click="
           () => {
-            modalOpen.distributed_extension = false
-            modalOpen.create_new = true
+            modalOpen.platforms = false
+            modalOpen.onboarding = true
           }
         "
       />
@@ -119,9 +196,33 @@
 </template>
 
 <script setup lang="ts">
+const { rules: validationRules } = useFormValidation()
+
+const loading = ref(false)
+const isDistributed = ref(false)
+const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
-  create_new: false,
-  new_extension: false,
-  distributed_extension: false,
+  onboarding: false,
+  info: true,
+  platforms: false,
 })
+const form = ref<{
+  identifier: string
+  name: string
+  platforms: ExtensionPlatforms
+  summary: string
+  type: ExtensionType
+  unlisted: boolean
+}>({
+  identifier: '',
+  name: '',
+  platforms: {},
+  summary: '',
+  type: 'extension',
+  unlisted: true,
+})
+
+const handleFieldValidation = (field: string, isValid: boolean) => {
+  fieldValidation.value[field] = isValid
+}
 </script>

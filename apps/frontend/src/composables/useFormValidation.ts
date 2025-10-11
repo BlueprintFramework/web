@@ -104,6 +104,46 @@ export const useFormValidation = () => {
       message,
       trigger: 'blur',
     }),
+
+    extensionIdentifier: (
+      message = 'Identifier must only contain lowercase a-z characters and be between 3 and 48 characters'
+    ): ValidationRule => ({
+      validator: (value: string) => {
+        if (!value) return true
+        const identifierRegex = /^[a-z]+$/
+        if (
+          !identifierRegex.test(value) ||
+          value.length >= 48 ||
+          value.length <= 3
+        ) {
+          return false
+        }
+        return true
+      },
+      message,
+      trigger: 'blur',
+    }),
+
+    uniqueExtensionIdentifier: (
+      current?: string,
+      message?: string
+    ): ValidationRule => ({
+      validator: async (value: string) => {
+        if (!value) return true
+        if (current && current == value) return true
+        if (!rules.extensionIdentifier(value)) return false
+
+        const { error } = await useFetch(`/api/extensions/${value}`, {
+          server: false,
+        })
+
+        if (error.value?.statusCode == 404) return true
+        return false
+      },
+      message:
+        message || 'Identifier is already taken by a published extension',
+      trigger: 'blur',
+    }),
   }
 
   const debounce = (func: Function, delay: number) => {

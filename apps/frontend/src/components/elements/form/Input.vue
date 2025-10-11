@@ -2,18 +2,51 @@
   <div class="form-field" :class="fieldClasses">
     <label v-if="label" :for="fieldId" class="form-label" :class="labelClasses">
       {{ label }}
-      <span v-if="required" class="ml-1 text-red-400" aria-label="required">
+      <span
+        v-if="required && requiredIcon"
+        class="ml-1 text-red-400"
+        aria-label="required"
+      >
         *
       </span>
     </label>
 
     <div class="input-wrapper" :class="wrapperClasses">
-      <Icon
-        v-if="leadingIcon"
-        :name="leadingIcon"
-        :class="iconClasses"
-        class="input-icon input-icon--leading scale-85"
-      />
+      <template v-if="!isValidating">
+        <Icon
+          v-if="leadingIcon"
+          :name="leadingIcon"
+          :class="iconClasses"
+          class="input-icon input-icon--leading scale-85"
+        />
+      </template>
+      <template v-else>
+        <div
+          class="input-icon input-icon--leading scale-85"
+          :class="iconClasses"
+        >
+          <div
+            class="h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent"
+          ></div>
+        </div>
+      </template>
+
+      <button
+        v-if="trailingIcon"
+        type="button"
+        class="input-icon input-icon--trailing"
+        :class="[
+          iconClasses,
+          {
+            'cursor-pointer rounded-md hover:bg-gray-700/50':
+              trailingIconClickable,
+          },
+        ]"
+        @click="handleTrailingIconClick"
+        :aria-label="trailingIconLabel"
+      >
+        <Icon :name="trailingIcon" class="h-5 w-5" />
+      </button>
 
       <input
         :id="fieldId"
@@ -35,33 +68,6 @@
         @focus="handleFocus"
         @keydown="handleKeydown"
       />
-
-      <button
-        v-if="trailingIcon"
-        type="button"
-        class="input-icon input-icon--trailing"
-        :class="[
-          iconClasses,
-          {
-            'cursor-pointer rounded-md hover:bg-gray-700/50':
-              trailingIconClickable,
-          },
-        ]"
-        @click="handleTrailingIconClick"
-        :aria-label="trailingIconLabel"
-      >
-        <Icon :name="trailingIcon" class="h-5 w-5" />
-      </button>
-
-      <div
-        v-if="isValidating"
-        class="input-icon input-icon--trailing"
-        :class="iconClasses"
-      >
-        <div
-          class="h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent"
-        ></div>
-      </div>
     </div>
 
     <div
@@ -178,6 +184,7 @@ interface FormInputProps {
   trailingIcon?: string
   trailingIconClickable?: boolean
   trailingIconLabel?: string
+  requiredIcon?: boolean
 
   // Validation
   rules?: ValidationRule[]
@@ -203,6 +210,7 @@ const props = withDefaults(defineProps<FormInputProps>(), {
   validateOnBlur: true,
   trailingIconClickable: false,
   showSuccess: false,
+  requiredIcon: true,
 })
 
 const emit = defineEmits<{
@@ -316,8 +324,8 @@ const inputClasses = computed(() => [
       props.disabled,
 
     // Icon padding
-    'pl-11': props.leadingIcon,
-    'pr-11': props.trailingIcon || isValidating.value,
+    'pl-11': props.leadingIcon || isValidating.value,
+    'pr-11': props.trailingIcon,
   },
 ])
 

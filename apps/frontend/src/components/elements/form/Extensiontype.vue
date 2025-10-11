@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="mb-2 text-sm font-medium text-gray-300">Extension Type</p>
+    <p class="mb-2 text-sm font-medium text-gray-300">Type</p>
     <div class="grid grid-cols-2 divide-x divide-blue-800">
       <div>
         <ElementsButton

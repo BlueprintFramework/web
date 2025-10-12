@@ -161,6 +161,14 @@
       />
       <ElementsButton
         :label="isDistributed ? 'Next' : 'Create'"
+        @click="() => {
+          isDistributed ? (
+            modalOpen.info = false
+            modalOpen.platforms = true
+          ) : (
+            handleCreate()
+          )
+        }"
         class="order-first w-full md:order-[unset] md:w-auto"
       />
     </template>
@@ -203,7 +211,7 @@ const isDistributed = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
   onboarding: false,
-  info: true,
+  info: false,
   platforms: false,
 })
 const form = ref<{
@@ -224,5 +232,9 @@ const form = ref<{
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
+}
+
+const handleCreate = () => {
+  form.value.unlisted = isDistributed.value == true
 }
 </script>

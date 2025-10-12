@@ -161,14 +161,18 @@
       />
       <ElementsButton
         :label="isDistributed ? 'Next' : 'Create'"
-        @click="() => {
-          isDistributed ? (
-            modalOpen.info = false
-            modalOpen.platforms = true
-          ) : (
-            handleCreate()
-          )
-        }"
+        :disabled="
+          fieldValidation.extension_name == false ||
+          fieldValidation.extension_identifier == false ||
+          fieldValidation.extension_summary == false ||
+          form.name == '' ||
+          form.identifier == '' ||
+          form.summary == '' ||
+          (form.type != 'extension' && form.type != 'theme') ||
+          loading
+        "
+        @click="handleCreate"
+        type="submit"
         class="order-first w-full md:order-[unset] md:w-auto"
       />
     </template>
@@ -178,7 +182,12 @@
     :is-open="modalOpen.platforms"
     :closable="true"
     title="New extension"
-    @close="modalOpen.platforms = false"
+    @close="
+      () => {
+        modalOpen.platforms = false
+        modalOpen.info = true
+      }
+    "
   >
     <template #default>
       lorem ipsum dolor whatever the fuck comes next
@@ -191,13 +200,15 @@
         @click="
           () => {
             modalOpen.platforms = false
-            modalOpen.onboarding = true
+            modalOpen.info = true
           }
         "
       />
       <ElementsButton
         label="Create"
         class="order-first w-full md:order-[unset] md:w-auto"
+        type="submit"
+        @click="handleCreate"
       />
     </template>
   </ElementsModal>
@@ -236,5 +247,13 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 
 const handleCreate = () => {
   form.value.unlisted = isDistributed.value == true
+
+  if (isDistributed.value && !form.value.platforms[0]) {
+    modalOpen.value.info = false
+    modalOpen.value.platforms = true
+    return
+  }
+
+  console.log('boop')
 }
 </script>

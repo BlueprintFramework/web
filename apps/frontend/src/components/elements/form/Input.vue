@@ -101,8 +101,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, useId } from 'vue'
-
 interface ValidationRule {
   validator: (value: string) => boolean | Promise<boolean>
   message: string
@@ -110,7 +108,6 @@ interface ValidationRule {
 }
 
 interface FormInputProps {
-  modelValue: string
   label?: string
   name?: string
   type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'number'
@@ -212,6 +209,8 @@ const props = withDefaults(defineProps<FormInputProps>(), {
   showSuccess: false,
   requiredIcon: true,
 })
+
+const modelValue = defineModel<string>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -408,7 +407,7 @@ const validateField = async () => {
 
   try {
     for (const rule of props.rules) {
-      const isValid = await rule.validator(props.modelValue)
+      const isValid = await rule.validator(modelValue.value || '')
       if (!isValid) {
         validationErrors.value.push(rule.message)
         break

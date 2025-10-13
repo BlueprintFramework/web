@@ -12,9 +12,17 @@
           class="lg:min-w-100 lg:max-w-100 flex w-full flex-col justify-between divide-y divide-neutral-700"
         >
           <div class="p-4">
-            <h1 class="truncate !text-2xl lg:!text-3xl">
-              {{ extension.name }}
-            </h1>
+            <div class="flex justify-between gap-2">
+              <h1 class="truncate !text-2xl lg:!text-3xl">
+                {{ extension.name }}
+              </h1>
+              <NuxtLink
+                :to="`/app/extensions/${extension.id}`"
+                v-if="user?.admin || user?.id == extension.author.id"
+              >
+                <ElementsButtonSmall> Edit </ElementsButtonSmall>
+              </NuxtLink>
+            </div>
             <p class="text-default-font/75 text-md lg:text-lg">
               {{ extension.summary }}
             </p>
@@ -379,8 +387,9 @@
 import { parseMarkdown } from '@nuxtjs/mdc/runtime'
 import type { MDCParserResult } from '@nuxtjs/mdc'
 
-const { sanitizeAst } = useMdcSanitizer()
 const route = useRoute()
+const { sanitizeAst } = useMdcSanitizer()
+const { user } = useAuth()
 
 const platformConfig = {
   BUILTBYBIT: {

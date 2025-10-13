@@ -1,6 +1,14 @@
 <template>
   <template v-if="data?.extension">
-    <h1>{{ data.extension.name }}</h1>
+    <div class="flex items-center gap-2">
+      <span class="h1"> {{ data.extension.name }} </span>
+      <ElementsTextbadge
+        v-if="user?.admin && user?.id != data.extension.author.id"
+        :label="`${data.extension.author.name}`"
+        icon="memory:account"
+      />
+      <ElementsTextbadge :label="`${data.extension.id}`" icon="memory:pound" />
+    </div>
   </template>
 
   {{ data }}
@@ -8,6 +16,7 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const { user } = useAuth()
 
 definePageMeta({
   middleware: 'user-verified',

@@ -91,7 +91,7 @@
           "
         />
 
-        <ElementsFormExtensiontype v-model="form.type" />
+        <ElementsExtensionType v-model="form.type" />
       </div>
     </template>
 

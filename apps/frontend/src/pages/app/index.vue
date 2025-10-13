@@ -2,7 +2,7 @@
   <div class="flex items-center gap-2">
     <span class="h1"> Hi </span>
     <div
-      class="flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-1 text-xl"
+      class="flex items-center gap-1 rounded-full border border-neutral-700 bg-neutral-900 px-2 py-1 text-xl"
     >
       <Icon name="memory:account" mode="svg" />
       <span>

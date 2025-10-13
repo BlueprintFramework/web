@@ -23,6 +23,10 @@
   >
     <template #default>
       <div class="space-y-4">
+        <ElementsInlinecard v-if="errors">
+          An unexpected error occurred, please try again later.
+        </ElementsInlinecard>
+
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <ElementsFormInput
             v-model="form.name"
@@ -121,6 +125,7 @@
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
+const errors = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
   new: false,
@@ -146,13 +151,18 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 }
 
 const handleCreate = async () => {
+  errors.value = false
+  loading.value = true
+
   try {
     await $fetch('/api/user/extensions', {
       method: 'POST',
       body: form.value,
     })
+    navigateTo(`/app/extensions/${form.value.identifier}`)
   } catch (error) {
     console.error(error)
+    errors.value = true
   } finally {
     loading.value = false
   }

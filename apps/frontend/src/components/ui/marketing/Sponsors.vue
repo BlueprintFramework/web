@@ -34,16 +34,9 @@
         class="flex w-full flex-col items-start justify-center gap-4 p-4 md:flex-row md:items-center md:gap-12 md:p-6"
       >
         <NuxtLink
-          to="https://pyro.host"
-          target="_blank"
-          class="hover:text-brand-50 flex items-center transition-colors"
-        >
-          <SvgPyro size="30" />
-        </NuxtLink>
-        <NuxtLink
           to="https://ultraservers.com"
           target="_blank"
-          class="hover:text-brand-50 flex items-center gap-2 transition-colors"
+          class="hover:text-brand-50 flex items-center transition-colors first:gap-2"
         >
           <SvgUltraservers size="32" />
           <span class="h2 text-[1.6rem]">UltraServers</span>

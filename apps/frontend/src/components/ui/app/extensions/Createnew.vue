@@ -11,72 +11,15 @@
     <ElementsButton
       label="New extension"
       class="w-full sm:w-auto"
-      @click="modalOpen.onboarding = true"
+      @click="modalOpen.new = true"
     />
   </div>
 
   <ElementsModal
-    :is-open="modalOpen.onboarding"
+    :is-open="modalOpen.new"
     :closable="true"
     title="New extension"
-    @close="modalOpen.onboarding = false"
-  >
-    <template #default>
-      <div
-        class="grid grid-cols-1 grid-rows-2 gap-4 sm:grid-cols-2 sm:grid-rows-1"
-      >
-        <ElementsButton
-          class="min-h-20 w-full !p-4"
-          @click="
-            () => {
-              modalOpen.onboarding = false
-              modalOpen.info = true
-              isDistributed = false
-            }
-          "
-        >
-          <div class="flex w-full flex-col items-center gap-2">
-            <Icon name="pixelarticons:plus" :size="28" />
-            <p>I'm building a new extension</p>
-          </div>
-        </ElementsButton>
-        <ElementsButton
-          class="min-h-20 w-full !p-4"
-          @click="
-            () => {
-              modalOpen.onboarding = false
-              modalOpen.info = true
-              isDistributed = true
-            }
-          "
-        >
-          <div class="flex w-full flex-col items-center gap-2">
-            <Icon name="pixelarticons:link" :size="28" />
-            <p>I've already published my extension to distributors</p>
-          </div>
-        </ElementsButton>
-      </div>
-    </template>
-
-    <template #footer>
-      <ElementsButton
-        label="Cancel"
-        class="w-full md:w-auto"
-        @click="modalOpen.onboarding = false"
-      />
-    </template>
-  </ElementsModal>
-
-  <ElementsModal
-    :is-open="modalOpen.info"
-    :closable="true"
-    title="New extension"
-    @close="
-      () => {
-        modalOpen.info = false
-        modalOpen.onboarding = true
-      }
-    "
+    @close="modalOpen.new = false"
   >
     <template #default>
       <div class="space-y-4">
@@ -150,17 +93,12 @@
 
     <template #footer>
       <ElementsButton
-        label="Back"
+        label="Cancel"
         class="w-full md:w-auto"
-        @click="
-          () => {
-            modalOpen.info = false
-            modalOpen.onboarding = true
-          }
-        "
+        @click="modalOpen.new = false"
       />
       <ElementsButton
-        :label="isDistributed ? 'Next' : 'Create'"
+        label="Create"
         :disabled="
           fieldValidation.extension_name == false ||
           fieldValidation.extension_identifier == false ||
@@ -177,53 +115,15 @@
       />
     </template>
   </ElementsModal>
-
-  <ElementsModal
-    :is-open="modalOpen.platforms"
-    :closable="true"
-    title="New extension"
-    @close="
-      () => {
-        modalOpen.platforms = false
-        modalOpen.info = true
-      }
-    "
-  >
-    <template #default>
-      lorem ipsum dolor whatever the fuck comes next
-    </template>
-
-    <template #footer>
-      <ElementsButton
-        label="Back"
-        class="w-full md:w-auto"
-        @click="
-          () => {
-            modalOpen.platforms = false
-            modalOpen.info = true
-          }
-        "
-      />
-      <ElementsButton
-        label="Create"
-        class="order-first w-full md:order-[unset] md:w-auto"
-        type="submit"
-        @click="handleCreate"
-      />
-    </template>
-  </ElementsModal>
 </template>
 
 <script setup lang="ts">
 const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
-const isDistributed = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
-  onboarding: false,
-  info: false,
-  platforms: false,
+  new: false,
 })
 const form = ref<{
   identifier: string
@@ -233,10 +133,10 @@ const form = ref<{
   type: ExtensionType
   unlisted: boolean
 }>({
-  identifier: '',
-  name: '',
+  identifier: 'myextension',
+  name: 'My Extension',
   platforms: {},
-  summary: '',
+  summary: 'eee',
   type: 'extension',
   unlisted: true,
 })
@@ -245,15 +145,16 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
 
-const handleCreate = () => {
-  form.value.unlisted = isDistributed.value == true
-
-  if (isDistributed.value && !form.value.platforms[0]) {
-    modalOpen.value.info = false
-    modalOpen.value.platforms = true
-    return
+const handleCreate = async () => {
+  try {
+    await $fetch('/api/user/extensions', {
+      method: 'POST',
+      body: form.value,
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
   }
-
-  console.log('boop')
 }
 </script>

@@ -64,7 +64,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   extension?: Extension
-  class?: string
+  class?: any
   to?: string
 }>()
 

@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 interface Props {
-  class?: string
+  class?: any
   label?: string
   active?: boolean
   disabled?: boolean

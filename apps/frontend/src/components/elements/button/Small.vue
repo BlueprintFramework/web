@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 interface Props {
-  class?: string
+  class?: any
   label?: string
   disabled?: boolean
   color?: 'default' | 'danger'

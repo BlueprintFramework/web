@@ -45,23 +45,28 @@
         class="xl:flex-2/3 overflow-hidden rounded-3xl border border-neutral-700"
       >
         <div
-          class="h-50 flex w-full flex-col justify-between bg-cover bg-center bg-no-repeat xl:h-full"
+          class="h-50 overflow-hidden rounded-3xl bg-cover bg-center xl:h-full"
           :style="`background-image: url(${data.extension.banner.fullres});`"
         >
           <div
-            class="flex items-center gap-2 border-b border-neutral-700 bg-neutral-950/70 p-4 backdrop-blur-2xl"
+            class="h-50 flex w-full flex-col justify-between bg-cover bg-center bg-no-repeat xl:h-full xl:bg-contain xl:backdrop-blur-2xl"
+            :style="`background-image: url(${data.extension.banner.fullres});`"
           >
-            <Icon name="memory:image" :size="28" />
-            <span class="h2"> Banner </span>
-          </div>
-          <div class="flex w-full flex-col items-end justify-end p-4">
-            <div>
-              <ElementsButton>
-                <div class="flex items-center gap-1.5">
-                  <Icon name="pixelarticons:upload" />
-                  <span>Upload banner</span>
-                </div>
-              </ElementsButton>
+            <div
+              class="flex items-center gap-2 rounded-t-3xl border-b border-neutral-700 bg-neutral-950/90 p-4 backdrop-blur-2xl"
+            >
+              <Icon name="memory:image" :size="28" />
+              <span class="h2"> Banner </span>
+            </div>
+            <div class="flex w-full flex-col items-end justify-end p-4">
+              <div>
+                <ElementsButton>
+                  <div class="flex items-center gap-1.5">
+                    <Icon name="pixelarticons:upload" />
+                    <span>Upload banner</span>
+                  </div>
+                </ElementsButton>
+              </div>
             </div>
           </div>
         </div>
@@ -76,7 +81,7 @@
             <ElementsFormInput
               v-model="form.name"
               label="Name"
-              description="Your extension's display name"
+              description="The display name of your extension, should match the display name you defined in your extension's configuration."
               name="extension_name"
               type="text"
               :rules="[
@@ -95,7 +100,7 @@
             <ElementsFormInput
               v-model="form.identifier"
               label="Identifier"
-              description="Your extension's identifier, must be unique"
+              description="The identifier of your extension, should match the identifier you defined in your extension's configuration."
               name="extension_identifier"
               type="text"
               :rules="[
@@ -116,7 +121,7 @@
             <ElementsFormInput
               v-model="form.summary"
               label="Summary"
-              description="A short description of your extension"
+              description="A short description of your extension to display alongside your extension listing."
               name="extension_summary"
               type="text"
               :rules="[
@@ -132,7 +137,24 @@
                   handleFieldValidation('extension_summary', isValid)
               "
             />
-            <ElementsExtensionType v-model="form.type" />
+            <ElementsFormBinarytoggle
+              v-model="form.type"
+              label="Type"
+              description="Each extension falls under one of these two categories. If your extension moreso focuses on visual changes over functional changes, it's likely a theme."
+              :options="[
+                { value: 'extension', icon: 'memory:cube', label: 'Extension' },
+                { value: 'theme', icon: 'memory:image', label: 'Theme' },
+              ]"
+            />
+            <ElementsFormBinarytoggle
+              v-model="form.unlisted"
+              label="Visibility"
+              description="Public extensions are discoverable through the platform, unlisted extension only using their direct link. If your extension is pending review, this setting will immediately apply after approval."
+              :options="[
+                { value: false, icon: 'pixelarticons:cloud', label: 'Public' },
+                { value: true, icon: 'pixelarticons:link', label: 'Unlisted' },
+              ]"
+            />
           </div>
         </div>
       </div>
@@ -180,8 +202,6 @@
       </div>
     </div>
   </template>
-
-  {{ data }}
 </template>
 
 <script setup lang="ts">
@@ -237,7 +257,7 @@ watch(
         platforms: newData.extension.platforms || {},
         summary: newData.extension.summary || '',
         type: newData.extension.type || 'extension',
-        unlisted: newData.extension.unlisted || true,
+        unlisted: newData.extension.unlisted,
         description: newData.extension.description || '',
       }
     }

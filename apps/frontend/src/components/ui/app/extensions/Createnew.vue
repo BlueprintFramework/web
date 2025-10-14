@@ -91,7 +91,14 @@
           "
         />
 
-        <ElementsExtensionType v-model="form.type" />
+        <ElementsFormBinarytoggle
+          v-model="form.type"
+          label="Type"
+          :options="[
+            { value: 'extension', icon: 'memory:cube', label: 'Extension' },
+            { value: 'theme', icon: 'memory:image', label: 'Theme' },
+          ]"
+        />
       </div>
     </template>
 

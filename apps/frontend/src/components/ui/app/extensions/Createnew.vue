@@ -138,10 +138,10 @@ const form = ref<{
   type: ExtensionType
   unlisted: boolean
 }>({
-  identifier: 'myextension',
-  name: 'My Extension',
+  identifier: '',
+  name: '',
   platforms: {},
-  summary: 'eee',
+  summary: '',
   type: 'extension',
   unlisted: true,
 })

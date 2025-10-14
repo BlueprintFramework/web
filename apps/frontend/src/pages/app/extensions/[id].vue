@@ -1,16 +1,72 @@
 <template>
   <template v-if="data?.extension">
-    <div class="flex items-center gap-2">
-      <span class="h1"> {{ data.extension.name }} </span>
-      <ElementsTextbadge
-        v-if="user?.admin && user?.id != data.extension.author.id"
-        :label="`${data.extension.author.name}`"
-        icon="memory:account"
-      />
+    <div
+      class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+    >
+      <div class="flex items-center gap-2">
+        <span class="h1"> {{ data.extension.name }} </span>
+        <ElementsTextbadge
+          v-if="user?.admin && user?.id != data.extension.author.id"
+          :label="`${data.extension.author.name}`"
+          icon="memory:account"
+        />
+      </div>
+      <div class="flex items-center gap-2">
+        <ElementsButton
+          v-if="data.extension.status == 'pending'"
+          class="max-md:w-full"
+        >
+          Submit for review
+        </ElementsButton>
+        <ElementsButton
+          v-else-if="data.extension.status == 'ready'"
+          class="max-md:w-full"
+          :disabled="true"
+        >
+          <div class="flex items-center gap-1.5">
+            <Icon name="pixelarticons:clock" />
+            <span>Submit for review</span>
+          </div>
+        </ElementsButton>
+        <ElementsButton class="max-md:w-full"> Save changes </ElementsButton>
+      </div>
     </div>
 
-    <div class="flex flex-row gap-6">
-      <div class="flex-1/3">
+    <ElementsInlinecard v-if="data.extension.deny_reason">
+      Your extension submission was rejected for the following reason(s):
+      <span class="text-default-font/60 italic">
+        {{ data.extension.deny_reason }}
+      </span>
+      Please correct this/these issue(s) and re-submit the extension for review.
+    </ElementsInlinecard>
+
+    <div class="flex flex-col gap-5 xl:flex-row">
+      <div
+        class="xl:flex-2/3 overflow-hidden rounded-3xl border border-neutral-700"
+      >
+        <div
+          class="h-50 flex w-full flex-col justify-between bg-cover bg-center bg-no-repeat xl:h-full"
+          :style="`background-image: url(${data.extension.banner.fullres});`"
+        >
+          <div
+            class="flex items-center gap-2 border-b border-neutral-700 bg-neutral-950/70 p-4 backdrop-blur-2xl"
+          >
+            <Icon name="memory:image" :size="28" />
+            <span class="h2"> Banner </span>
+          </div>
+          <div class="flex w-full flex-col items-end justify-end p-4">
+            <div>
+              <ElementsButton>
+                <div class="flex items-center gap-1.5">
+                  <Icon name="pixelarticons:upload" />
+                  <span>Upload banner</span>
+                </div>
+              </ElementsButton>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="xl:flex-1/3">
         <div class="rounded-3xl border border-neutral-700">
           <div class="flex items-center gap-2 border-b border-neutral-700 p-4">
             <Icon name="memory:text-box" :size="28" />
@@ -80,34 +136,45 @@
           </div>
         </div>
       </div>
-      <div class="flex-2/3">
-        <div class="rounded-3xl border border-neutral-700">
-          <div class="flex items-center gap-2 border-b border-neutral-700 p-4">
-            <Icon name="memory:text-image" :size="28" />
-            <span class="h2"> Description </span>
-          </div>
-          <div class="flex flex-col p-4">
-            <ElementsFormTextbox
-              v-model="form.description"
-              :rows="4"
-              class="rounded-b-none font-mono"
-              placeholder="The longer extension summary. Markdown is supported :)"
+    </div>
+
+    <div class="rounded-3xl border border-neutral-700">
+      <div
+        class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
+      >
+        <div class="flex items-center gap-2">
+          <Icon name="memory:text-image" :size="28" />
+          <span class="h2"> Description </span>
+        </div>
+        <div>
+          <SvgIconMarkdown :size="32" class="text-neutral-500" />
+        </div>
+      </div>
+      <div class="p-4">
+        <div
+          class="grid grid-rows-2 overflow-hidden rounded-2xl border border-neutral-700 xl:grid-cols-2 xl:grid-rows-1"
+        >
+          <ElementsFormTextbox
+            v-model="form.description"
+            :rows="12"
+            class="rounded-none border-0 font-mono"
+            :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+          />
+          <div
+            class="border-t border-neutral-700 p-4 xl:border-s xl:border-t-0"
+          >
+            <template v-if="!form.description || form.description == ''">
+              <p>(ﾉ*･_･)ﾉ</p>
+              <p><b>markdown</b> is supported</p>
+            </template>
+            <MDC
+              v-else
+              class="prose-content"
+              :value="form.description"
+              :parser-options="{
+                rehype: { options: { allowDangerousHtml: false } },
+              }"
             />
-            <div class="rounded-b-2xl border border-t-0 border-neutral-700 p-4">
-              <template v-if="!form.description || form.description == ''">
-                <span>
-                  Write something nice, you'll see a preview of it here.
-                </span>
-              </template>
-              <MDC
-                v-else
-                class="prose-content"
-                :value="form.description"
-                :parser-options="{
-                  rehype: { options: { allowDangerousHtml: false } },
-                }"
-              />
-            </div>
           </div>
         </div>
       </div>

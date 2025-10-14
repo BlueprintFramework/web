@@ -72,6 +72,11 @@
             :body="description?.body"
             :data="description?.data"
             :components="{
+              h1: 'ProseH2',
+              h2: 'ProseH3',
+              h3: 'ProseH4',
+              h4: 'ProseH5',
+              h5: 'ProseH6',
               img: 'ProseDisabled',
               script: 'ProseDisabled',
               style: 'ProseDisabled',
@@ -519,7 +524,9 @@ const { data: description } = await useAsyncData(
     if (!extension.value?.description) return null
 
     try {
-      const parsed = await parseMarkdown(extension.value.description)
+      const parsed = await parseMarkdown(extension.value.description, {
+        rehype: { options: { allowDangerousHtml: false } },
+      })
       return {
         ...parsed,
         body: sanitizeAst(parsed.body),

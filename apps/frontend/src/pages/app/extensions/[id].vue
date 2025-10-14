@@ -44,7 +44,9 @@
               type="text"
               :rules="[
                 validationRules.extensionIdentifier(),
-                validationRules.uniqueExtensionIdentifier(),
+                validationRules.uniqueExtensionIdentifier(
+                  data.extension.identifier
+                ),
                 validationRules.required(),
               ]"
               :required="true"
@@ -84,8 +86,28 @@
             <Icon name="memory:text-image" :size="28" />
             <span class="h2"> Description </span>
           </div>
-          <div class="space-y-4 p-4">
-            <ElementsFormTextarea v-model="form.description" />
+          <div class="flex flex-col p-4">
+            <ElementsFormTextbox
+              v-model="form.description"
+              :rows="4"
+              class="rounded-b-none font-mono"
+              placeholder="The longer extension summary. Markdown is supported :)"
+            />
+            <div class="rounded-b-2xl border border-t-0 border-neutral-700 p-4">
+              <template v-if="!form.description || form.description == ''">
+                <span>
+                  Write something nice, you'll see a preview of it here.
+                </span>
+              </template>
+              <MDC
+                v-else
+                class="prose-content"
+                :value="form.description"
+                :parser-options="{
+                  rehype: { options: { allowDangerousHtml: false } },
+                }"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -111,7 +133,15 @@ const form = ref<{
   type: ExtensionType
   unlisted: boolean
   description: string
-}>()
+}>({
+  identifier: '',
+  name: '',
+  platforms: {},
+  summary: '',
+  type: 'extension',
+  unlisted: true,
+  description: '',
+})
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid

@@ -28,7 +28,20 @@
             <span>Submit for review</span>
           </div>
         </ElementsButton>
-        <ElementsButton class="max-md:w-full"> Save changes </ElementsButton>
+        <ElementsButton
+          class="max-md:w-full"
+          :disabled="
+            fieldValidation.extension_name == false ||
+            fieldValidation.extension_identifier == false ||
+            fieldValidation.extension_summary == false ||
+            (form.type != 'extension' && form.type != 'theme') ||
+            (form.unlisted != true && form.unlisted != false) ||
+            loading
+          "
+          @click="handleSave"
+        >
+          Save changes
+        </ElementsButton>
       </div>
     </div>
 
@@ -48,24 +61,28 @@
           class="h-50 overflow-hidden rounded-3xl bg-cover bg-center xl:h-full"
           :style="`background-image: url(${data.extension.banner.fullres});`"
         >
-          <div
-            class="h-50 flex w-full flex-col justify-between bg-cover bg-center bg-no-repeat xl:h-full xl:bg-contain xl:backdrop-blur-2xl"
-            :style="`background-image: url(${data.extension.banner.fullres});`"
-          >
+          <div class="h-50 w-full xl:h-full xl:backdrop-blur-2xl">
             <div
-              class="flex items-center gap-2 rounded-t-3xl border-b border-neutral-700 bg-neutral-950/90 p-4 backdrop-blur-2xl"
+              class="h-50 w-full bg-cover bg-center bg-no-repeat xl:h-full xl:bg-contain"
+              :style="`background-image: url(${data.extension.banner.fullres})`"
             >
-              <Icon name="memory:image" :size="28" />
-              <span class="h2"> Banner </span>
-            </div>
-            <div class="flex w-full flex-col items-end justify-end p-4">
-              <div>
-                <ElementsButton>
-                  <div class="flex items-center gap-1.5">
-                    <Icon name="pixelarticons:upload" />
-                    <span>Upload banner</span>
+              <div class="h-50 flex w-full flex-col justify-between xl:h-full">
+                <div
+                  class="flex items-center gap-2 rounded-t-3xl border-b border-neutral-700 bg-neutral-950/90 p-4 backdrop-blur-2xl"
+                >
+                  <Icon name="memory:image" :size="28" />
+                  <span class="h2"> Banner </span>
+                </div>
+                <div class="flex w-full flex-col items-end justify-end p-4">
+                  <div>
+                    <ElementsButton>
+                      <div class="flex items-center gap-1.5">
+                        <Icon name="pixelarticons:upload" />
+                        <span>Upload banner</span>
+                      </div>
+                    </ElementsButton>
                   </div>
-                </ElementsButton>
+                </div>
               </div>
             </div>
           </div>
@@ -264,4 +281,21 @@ watch(
   },
   { immediate: true }
 )
+
+const handleSave = async () => {
+  errors.value = false
+  loading.value = true
+
+  try {
+    await $fetch(`/api/user/extensions/${data.value?.extension.id}`, {
+      method: 'PATCH',
+      body: form.value,
+    })
+  } catch (error) {
+    console.error(error)
+    errors.value = true
+  } finally {
+    loading.value = false
+  }
+}
 </script>

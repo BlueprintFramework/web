@@ -239,6 +239,133 @@ impl Extension {
         Ok(rows.into_iter().map(|row| Self::map(None, &row)).collect())
     }
 
+    pub async fn all_admin_with_pagination(
+        database: &crate::database::Database,
+        page: i64,
+        per_page: i64,
+    ) -> Result<super::Pagination<Self>, sqlx::Error> {
+        let offset = (page - 1) * per_page;
+
+        let rows = sqlx::query(&format!(
+            r#"
+            SELECT {}, COUNT(*) OVER() AS total_count
+            FROM extensions
+            JOIN users ON extensions.author_id = users.id
+            LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
+            ORDER BY extensions.id DESC
+            LIMIT $1 OFFSET $2
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(per_page)
+        .bind(offset)
+        .fetch_all(database.read())
+        .await?;
+
+        Ok(super::Pagination {
+            total: rows.first().map_or(0, |row| row.get("total_count")),
+            per_page,
+            page,
+            data: rows.into_iter().map(|row| Self::map(None, &row)).collect(),
+        })
+    }
+
+    pub async fn all_admin_pending_with_pagination(
+        database: &crate::database::Database,
+        page: i64,
+        per_page: i64,
+    ) -> Result<super::Pagination<Self>, sqlx::Error> {
+        let offset = (page - 1) * per_page;
+
+        let rows = sqlx::query(&format!(
+            r#"
+            SELECT {}, COUNT(*) OVER() AS total_count
+            FROM extensions
+            JOIN users ON extensions.author_id = users.id
+            LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
+            WHERE extensions.status = 'PENDING'
+            ORDER BY extensions.id DESC
+            LIMIT $1 OFFSET $2
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(per_page)
+        .bind(offset)
+        .fetch_all(database.read())
+        .await?;
+
+        Ok(super::Pagination {
+            total: rows.first().map_or(0, |row| row.get("total_count")),
+            per_page,
+            page,
+            data: rows.into_iter().map(|row| Self::map(None, &row)).collect(),
+        })
+    }
+
+    pub async fn all_admin_ready_with_pagination(
+        database: &crate::database::Database,
+        page: i64,
+        per_page: i64,
+    ) -> Result<super::Pagination<Self>, sqlx::Error> {
+        let offset = (page - 1) * per_page;
+
+        let rows = sqlx::query(&format!(
+            r#"
+            SELECT {}, COUNT(*) OVER() AS total_count
+            FROM extensions
+            JOIN users ON extensions.author_id = users.id
+            LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
+            WHERE extensions.status = 'READY'
+            ORDER BY extensions.id DESC
+            LIMIT $1 OFFSET $2
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(per_page)
+        .bind(offset)
+        .fetch_all(database.read())
+        .await?;
+
+        Ok(super::Pagination {
+            total: rows.first().map_or(0, |row| row.get("total_count")),
+            per_page,
+            page,
+            data: rows.into_iter().map(|row| Self::map(None, &row)).collect(),
+        })
+    }
+
+    pub async fn all_admin_denied_with_pagination(
+        database: &crate::database::Database,
+        page: i64,
+        per_page: i64,
+    ) -> Result<super::Pagination<Self>, sqlx::Error> {
+        let offset = (page - 1) * per_page;
+
+        let rows = sqlx::query(&format!(
+            r#"
+            SELECT {}, COUNT(*) OVER() AS total_count
+            FROM extensions
+            JOIN users ON extensions.author_id = users.id
+            LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
+            WHERE extensions.deny_reason IS NOT NULL
+            ORDER BY extensions.id DESC
+            LIMIT $1 OFFSET $2
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(per_page)
+        .bind(offset)
+        .fetch_all(database.read())
+        .await?;
+
+        Ok(super::Pagination {
+            total: rows.first().map_or(0, |row| row.get("total_count")),
+            per_page,
+            page,
+            data: rows.into_iter().map(|row| Self::map(None, &row)).collect(),
+        })
+    }
+
     pub async fn by_author_id_with_pagination(
         database: &crate::database::Database,
         author_id: i32,

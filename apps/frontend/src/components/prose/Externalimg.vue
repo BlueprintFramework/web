@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="my-4 overflow-hidden rounded-2xl border border-neutral-700 first-line:mt-0"
-  >
+  <div class="my-4 overflow-hidden rounded-2xl border border-neutral-700">
     <component
       :is="ImageComponent"
       :src="refinedSrc"
@@ -45,6 +43,6 @@ const refinedSrc = computed(() => {
       return joinURL(_base, props.src)
     }
   }
-  return props.src
+  return `https://img.blueprint.zip/insecure/rs:fit/plain/${props.src}`
 })
 </script>

@@ -72,12 +72,14 @@
             :body="description?.body"
             :data="description?.data"
             :components="{
+              card: 'Card',
               h1: 'ProseH2',
               h2: 'ProseH3',
               h3: 'ProseH4',
               h4: 'ProseH5',
               h5: 'ProseH6',
-              img: 'ProseDisabled',
+              h6: 'ProseH6',
+              img: 'Externalimg',
               script: 'ProseDisabled',
               style: 'ProseDisabled',
               iframe: 'ProseDisabled',
@@ -393,7 +395,6 @@ import { parseMarkdown } from '@nuxtjs/mdc/runtime'
 import type { MDCParserResult } from '@nuxtjs/mdc'
 
 const route = useRoute()
-const { sanitizeAst } = useMdcSanitizer()
 const { user } = useAuth()
 
 const platformConfig = {
@@ -529,7 +530,7 @@ const { data: description } = await useAsyncData(
       })
       return {
         ...parsed,
-        body: sanitizeAst(parsed.body),
+        body: parsed.body,
       }
     } catch (error) {
       console.warn('Failed to parse markdown:', error)

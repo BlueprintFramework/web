@@ -29,9 +29,14 @@ mod post {
 
         sqlx::query!(
             "UPDATE extensions
-            SET status = 'APPROVED'
+            SET status = 'APPROVED', identifier = $2
             WHERE extensions.id = $1",
-            extension.id
+            extension.id,
+            if let Some((prefix, _)) = extension.identifier.rsplit_once(':') {
+                prefix
+            } else {
+                &extension.identifier
+            }
         )
         .execute(state.database.write())
         .await?;

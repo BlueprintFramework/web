@@ -21,6 +21,7 @@
     :wrap="props.wrap"
     :class="props.class"
     @input="resize"
+    @click="resize"
     class="h-auto w-full resize-none overflow-hidden rounded-2xl border border-neutral-700 bg-gray-800/40 p-4 outline-0 transition-colors focus:bg-gray-800/60"
   />
 </template>
@@ -64,5 +65,17 @@ const resize = () => {
   textarea.value.style.height = textarea.value.scrollHeight + 'px'
 }
 
-onMounted(() => resize())
+onMounted(() => {
+  resize()
+  if (!textarea.value) return
+
+  const observer = new ResizeObserver(() => resize())
+  observer.observe(textarea.value)
+
+  onBeforeUnmount(() => observer.disconnect())
+})
+
+watch(model, () => {
+  nextTick(() => resize())
+})
 </script>

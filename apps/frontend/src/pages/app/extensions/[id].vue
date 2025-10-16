@@ -191,14 +191,16 @@
       </div>
       <div class="p-4">
         <div
-          class="grid grid-rows-2 overflow-hidden rounded-2xl border border-neutral-700 xl:grid-cols-2 xl:grid-rows-1"
+          class="flex grid-cols-2 flex-col overflow-hidden rounded-2xl border border-neutral-700 xl:grid"
         >
-          <ElementsFormTextbox
-            v-model="form.description"
-            :rows="12"
-            class="rounded-none border-0 font-mono"
-            :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
-          />
+          <div class="grid grid-cols-1 bg-neutral-800/40">
+            <ElementsFormTextbox
+              v-model="form.description"
+              :rows="12"
+              class="rounded-none border-0 bg-transparent font-mono"
+              :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+            />
+          </div>
           <div
             class="border-t border-neutral-700 p-4 xl:border-s xl:border-t-0"
           >

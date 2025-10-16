@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { withTrailingSlash, withLeadingSlash, joinURL } from 'ufo'
-
 import ImageComponent from '#build/mdc-image-component.mjs'
 
 const props = defineProps({
@@ -44,6 +43,6 @@ const refinedSrc = computed(() => {
       return joinURL(_base, props.src)
     }
   }
-  return props.src
+  return `https://img.blueprint.zip/insecure/rs:fit/plain/${props.src}`
 })
 </script>

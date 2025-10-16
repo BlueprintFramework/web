@@ -71,7 +71,11 @@ const items = [
     title: 'Are standalone modifications compatible?',
     inner: () => {
       return [
-        h('span', {}, 'No. '),
+        h(
+          'span',
+          {},
+          "No. Standalone modifications (themes/addons not made with Blueprint) are known for blindly overwriting Blueprint's core files. "
+        ),
         h(
           NuxtLink,
           {
@@ -80,11 +84,7 @@ const items = [
           },
           () => 'Find a Blueprint-compatible alternative'
         ),
-        h(
-          'span',
-          {},
-          " or ask the modification's developer to port it over. Select standalone modifications may be compatible with Blueprint, provided that their developer actively maintains a Blueprint fork."
-        ),
+        h('span', {}, " or ask the modification's developer to port it over."),
       ]
     },
   },

@@ -1,5 +1,7 @@
 <template>
-  <div class="my-4 overflow-hidden rounded-2xl border border-neutral-700">
+  <div
+    class="my-4 overflow-hidden rounded-2xl border border-neutral-700 first-line:mt-0"
+  >
     <component
       :is="ImageComponent"
       :src="refinedSrc"
@@ -13,7 +15,6 @@
 
 <script setup lang="ts">
 import { withTrailingSlash, withLeadingSlash, joinURL } from 'ufo'
-
 import ImageComponent from '#build/mdc-image-component.mjs'
 
 const props = defineProps({

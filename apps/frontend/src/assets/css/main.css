@@ -9,6 +9,7 @@ html {
 h1 {
   @apply h1;
 }
+
 h2 {
   @apply h2;
 }
@@ -40,10 +41,14 @@ h3 {
   background-size: 30px 30px;
 }
 
-.prose-content > *:first-child {
+.prose-content > *:first-child,
+.prose-content p *:first-child,
+.prose-content p > a > *:first-child {
   margin-top: 0 !important;
 }
-.prose-content > *:last-child {
+.prose-content > *:last-child,
+.prose-content p > *:last-child,
+.prose-content p > a > *:last-child {
   margin-bottom: 0 !important;
 }
 

@@ -130,6 +130,7 @@
 
 <script setup lang="ts">
 const { rules: validationRules } = useFormValidation()
+const router = useRouter()
 
 const loading = ref(false)
 const errors = ref(false)
@@ -166,7 +167,7 @@ const handleCreate = async () => {
       method: 'POST',
       body: form.value,
     })
-    navigateTo(`/app/extensions/${form.value.identifier}`)
+    window.location.reload()
   } catch (error) {
     console.error(error)
     errors.value = true

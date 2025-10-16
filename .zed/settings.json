@@ -1,5 +1,5 @@
 {
-  "format_on_save": ["prettier"],
+  "format_on_save": "on",
   "tab_size": 2,
   "lsp": {
     "tailwindcss-language-server": {

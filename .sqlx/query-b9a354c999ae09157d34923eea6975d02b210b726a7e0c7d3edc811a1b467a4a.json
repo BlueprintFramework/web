@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE extensions\n            SET status = 'PENDING', deny_reason = $2\n            WHERE extensions.id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b9a354c999ae09157d34923eea6975d02b210b726a7e0c7d3edc811a1b467a4a"
+}

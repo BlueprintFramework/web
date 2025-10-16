@@ -13,6 +13,7 @@ use axum::{
 use tower_cookies::{Cookie, Cookies};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
+mod admin;
 mod email;
 mod extensions;
 mod logout;
@@ -246,6 +247,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/password", password::router(state))
         .nest("/two-factor", two_factor::router(state))
         .nest("/logout", logout::router(state))
+        .nest("/admin", admin::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

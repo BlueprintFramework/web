@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE extensions\n            SET status = 'APPROVED'\n            WHERE extensions.id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c8c12f538e6978f5195f755af571a9d603a08738ac481e6d5c618f88d219da60"
+}

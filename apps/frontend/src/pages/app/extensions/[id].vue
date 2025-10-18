@@ -338,6 +338,10 @@
 </template>
 
 <script setup lang="ts">
+// [TODO]
+// - Change extension banner
+// - Link distribution platforms
+
 const route = useRoute()
 const { user } = useAuth()
 const { rules: validationRules } = useFormValidation()

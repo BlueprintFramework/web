@@ -113,6 +113,14 @@
       <span class="text-default-font/60"> tldr; you should make some </span>
     </div>
   </div>
+
+  <div
+    v-if="hasMore && data"
+    ref="loadMoreTrigger"
+    class="flex h-20 items-center justify-center"
+  >
+    <span v-if="loading" class="text-default-font/60">loading more...</span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -126,11 +134,12 @@ definePageMeta({
 const data = ref<UserExtensions>()
 const page = ref(1)
 const loading = ref(false)
+const loadMoreTrigger = ref<HTMLElement | null>(null)
 const viewOthers = ref<{
   enabled: boolean
   show: 'unspecified' | 'ready' | 'pending' | 'denied'
 }>({
-  enabled: true,
+  enabled: false,
   show: 'unspecified',
 })
 
@@ -150,14 +159,34 @@ const basePath = computed(() => {
   }
 })
 
+const hasMore = computed(() => {
+  if (!data.value) return false
+  const totalPages = Math.ceil(
+    data.value.extensions.total / data.value.extensions.per_page
+  )
+  return page.value < totalPages
+})
+
 const fetchExtensions = async () => {
-  if (loading.value) return
+  if (loading.value || (!hasMore.value && page.value > 1)) return
 
   loading.value = true
   try {
-    data.value = await $fetch(`${basePath.value}?page=${page.value}`, {
-      method: 'GET',
-    })
+    const result = await $fetch<UserExtensions>(
+      `${basePath.value}?page=${page.value}&per_page=26`,
+      {
+        method: 'GET',
+      }
+    )
+
+    if (page.value === 1) {
+      data.value = result
+    } else if (data.value) {
+      data.value.extensions.data.push(...result.extensions.data)
+      data.value.extensions.page = result.extensions.page
+      data.value.extensions.total = result.extensions.total
+      data.value.extensions.per_page = result.extensions.per_page
+    }
   } catch (error) {
     console.error('failed to fetch sessions:', error)
   } finally {
@@ -165,22 +194,54 @@ const fetchExtensions = async () => {
   }
 }
 
-watch(page, () => {
+const resetAndFetch = () => {
+  page.value = 1
+  data.value = undefined
   fetchExtensions()
-})
+}
+
+watch(basePath, resetAndFetch)
+
+let observer: IntersectionObserver | null = null
+
+const setupObserver = () => {
+  observer?.disconnect()
+
+  if (!loadMoreTrigger.value) return
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting && hasMore.value && !loading.value) {
+        page.value++
+      }
+    },
+    { threshold: 0.5 }
+  )
+
+  observer.observe(loadMoreTrigger.value)
+}
 
 onMounted(async () => {
   await fetchExtensions()
+
+  watch(loadMoreTrigger, () => {
+    nextTick(() => setupObserver())
+  })
+
+  onUnmounted(() => observer?.disconnect())
+})
+
+watch(page, () => {
+  if (page.value > 1) fetchExtensions()
 })
 
 const adminToggle = () => {
   viewOthers.value.enabled = !viewOthers.value.enabled
-  fetchExtensions()
 }
+
 const adminCategory = (
   category: 'unspecified' | 'ready' | 'pending' | 'denied'
 ) => {
   viewOthers.value.show = category
-  fetchExtensions()
 }
 </script>

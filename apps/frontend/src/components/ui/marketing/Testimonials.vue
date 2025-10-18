@@ -79,7 +79,7 @@ const allTestimonials = [
     {
       name: 'Bradley',
       content:
-        'Blueprint expanded Pterodactyl Extensions development in a way the core project couldn’t - It’s made managing, developing, and using multiple extensions at once way easier. ',
+        'Blueprint expanded Pterodactyl Extensions development in a way the core project couldn’t - It’s made managing, developing, and using multiple extensions at once way easier.',
       rating: 5,
     },
     {

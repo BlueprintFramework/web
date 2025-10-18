@@ -1,5 +1,7 @@
 <template>
-  <div class="my-4 overflow-hidden rounded-2xl border border-neutral-700">
+  <div
+    class="bg-stripes my-4 min-h-10 overflow-hidden rounded-2xl border border-neutral-700"
+  >
     <component
       :is="ImageComponent"
       :src="refinedSrc"

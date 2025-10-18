@@ -1,10 +1,60 @@
 <template>
-  <h1>Extensions</h1>
-
-  <UiAppExtensionsCreatenew />
+  <div class="flex items-center justify-between">
+    <h1>Extensions</h1>
+    <div v-if="user?.admin">
+      <ElementsButton @click="adminToggle" :disabled="loading">
+        {{
+          viewOthers.enabled ? 'Show my extensions' : "Show others' extensions"
+        }}
+      </ElementsButton>
+    </div>
+  </div>
 
   <div
-    v-if="data"
+    v-if="viewOthers.enabled"
+    class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
+  >
+    <div class="w-full">
+      <ElementsButton
+        class="w-full rounded-none border-none"
+        :active="viewOthers.show == 'unspecified'"
+        @click="adminCategory('unspecified')"
+      >
+        All
+      </ElementsButton>
+    </div>
+    <div class="w-full">
+      <ElementsButton
+        class="w-full rounded-none border-none"
+        :active="viewOthers.show == 'ready'"
+        @click="adminCategory('ready')"
+      >
+        Ready
+      </ElementsButton>
+    </div>
+    <div class="w-full">
+      <ElementsButton
+        class="w-full rounded-none border-none"
+        :active="viewOthers.show == 'pending'"
+        @click="adminCategory('pending')"
+      >
+        Pending
+      </ElementsButton>
+    </div>
+    <div class="w-full">
+      <ElementsButton
+        class="w-full rounded-none border-none"
+        :active="viewOthers.show == 'denied'"
+        @click="adminCategory('denied')"
+      >
+        Rejected
+      </ElementsButton>
+    </div>
+  </div>
+  <UiAppExtensionsCreatenew v-else />
+
+  <div
+    v-if="data && data.extensions.total > 0"
     class="grid grid-cols-1 gap-[1px] divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 xl:grid-cols-2"
   >
     <NuxtLink
@@ -27,6 +77,12 @@
         </div>
         <div class="space-y-1 overflow-hidden">
           <p
+            class="!text-default-font/60 mb-1.5 truncate text-nowrap text-sm"
+            v-if="viewOthers.enabled"
+          >
+            {{ extension.author.name }}
+          </p>
+          <p
             class="!text-default-font group-hover:!text-brand-50 truncate text-nowrap text-xl font-bold transition-colors"
           >
             {{ extension.name }}
@@ -47,19 +103,84 @@
       <div class="bg-stripes h-full w-full" />
     </div>
   </div>
+  <div
+    v-else-if="data?.extensions.total == 0"
+    class="flex flex-col items-center rounded-3xl border border-neutral-700 p-12"
+  >
+    <div class="max-w-100 flex flex-col items-center gap-2">
+      <Icon name="memory:cube" :size="32" />
+      <span class="text-lg">No extensions found!</span>
+      <span class="text-default-font/60"> tldr; you should make some </span>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+const { user } = useAuth()
+
 definePageMeta({
   middleware: 'user-verified',
   layout: 'dashboard',
 })
 
-const { data } = await useAsyncData<UserExtensions>(
-  `user-extensions`,
-  () => $fetch(`/api/user/extensions`),
-  {
-    server: false,
+const data = ref<UserExtensions>()
+const page = ref(1)
+const loading = ref(false)
+const viewOthers = ref<{
+  enabled: boolean
+  show: 'unspecified' | 'ready' | 'pending' | 'denied'
+}>({
+  enabled: true,
+  show: 'unspecified',
+})
+
+const basePath = computed(() => {
+  if (!user.value?.admin || !viewOthers.value.enabled)
+    return `/api/user/extensions`
+
+  switch (viewOthers.value.show) {
+    case 'unspecified':
+      return '/api/user/admin/extensions'
+    case 'ready':
+      return '/api/user/admin/extensions/ready'
+    case 'pending':
+      return '/api/user/admin/extensions/pending'
+    case 'denied':
+      return '/api/user/admin/extensions/denied'
   }
-)
+})
+
+const fetchExtensions = async () => {
+  if (loading.value) return
+
+  loading.value = true
+  try {
+    data.value = await $fetch(`${basePath.value}?page=${page.value}`, {
+      method: 'GET',
+    })
+  } catch (error) {
+    console.error('failed to fetch sessions:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+watch(page, () => {
+  fetchExtensions()
+})
+
+onMounted(async () => {
+  await fetchExtensions()
+})
+
+const adminToggle = () => {
+  viewOthers.value.enabled = !viewOthers.value.enabled
+  fetchExtensions()
+}
+const adminCategory = (
+  category: 'unspecified' | 'ready' | 'pending' | 'denied'
+) => {
+  viewOthers.value.show = category
+  fetchExtensions()
+}
 </script>

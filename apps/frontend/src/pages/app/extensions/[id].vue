@@ -2,11 +2,7 @@
   <client-only>
     <template v-if="data?.extension">
       <div
-        v-if="
-          user?.admin &&
-          (submitted || data.extension.status == 'ready') &&
-          !rejected
-        "
+        v-if="user?.admin && data.extension.status == 'ready'"
         class="flex justify-between rounded-3xl border border-neutral-700 max-md:flex-col md:items-center"
       >
         <div class="p-4">
@@ -69,7 +65,7 @@
           </ElementsButton>
           <template v-if="user?.id == data.extension.author.id">
             <ElementsButton
-              v-if="data.extension.status == 'pending' && !submitted"
+              v-if="data.extension.status == 'pending'"
               @click="handleSubmit"
               :disabled="submitting"
               class="max-md:w-full"
@@ -77,7 +73,7 @@
               Submit for review
             </ElementsButton>
             <ElementsButton
-              v-else-if="data.extension.status == 'ready' || submitted"
+              v-else-if="data.extension.status == 'ready'"
               class="max-md:w-full"
               :disabled="true"
             >
@@ -110,8 +106,7 @@
           data.extension.deny_reason &&
           user?.id == data.extension.author.id &&
           data.extension.status != 'ready' &&
-          data.extension.status != 'approved' &&
-          !submitted
+          data.extension.status != 'approved'
         "
       >
         Your extension submission was rejected for the following reason(s):
@@ -349,9 +344,8 @@ const { rules: validationRules } = useFormValidation()
 
 const loading = ref(false)
 const submitting = ref(false)
-const submitted = ref(false)
-const rejected = ref(false)
 const errors = ref(false)
+const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
   adminReject: false,
@@ -388,18 +382,18 @@ definePageMeta({
   layout: 'dashboard',
 })
 
-const { data, refresh } = await useAsyncData<{ extension: FullExtension }>(
-  `user-extension-${route.params.id}`,
-  () =>
-    $fetch(
+onMounted(async () => {
+  try {
+    data.value = await $fetch(
       user.value?.admin
         ? `/api/user/admin/extensions/${route.params.id}`
-        : `/api/user/extensions/${route.params.id}`
-    ),
-  {
-    server: false,
+        : `/api/user/extensions/${route.params.id}`,
+      { method: 'GET', server: false }
+    )
+  } catch (error) {
+    console.error(error)
   }
-)
+})
 
 watch(
   () => data.value,
@@ -449,7 +443,7 @@ const handleSubmit = async () => {
     await $fetch(`/api/user/extensions/${route.params.id}/ready`, {
       method: 'POST',
     })
-    submitted.value = true
+    if (data.value) data.value.extension.status = 'ready'
   } catch (error) {
     console.error(error)
     errors.value = true
@@ -465,11 +459,10 @@ const handleAdminApprove = async () => {
     await $fetch(`/api/user/admin/extensions/${route.params.id}/ready`, {
       method: 'POST',
     })
+    if (data.value) data.value.extension.status = 'approved'
   } catch (error) {
     console.error(error)
     errors.value = true
-  } finally {
-    refresh()
   }
 }
 
@@ -483,12 +476,16 @@ const handleAdminReject = async () => {
       body: adminRejectForm.value,
     })
     modalOpen.value.adminReject = false
+    if (data.value) {
+      data.value.extension.status = 'pending'
+      data.value.extension.deny_reason = adminRejectForm.value.deny_reason
+    }
+    adminRejectForm.value.deny_reason = ''
   } catch (error) {
     console.error(error)
     errors.value = true
   } finally {
     loading.value = false
-    refresh()
   }
 }
 </script>

@@ -85,7 +85,7 @@ const handleForgot = async () => {
   try {
     await $fetch('/api/auth/password/forgot', {
       method: 'POST',
-      body: form,
+      body: form.value,
     })
     error.value = false
     success.value = true

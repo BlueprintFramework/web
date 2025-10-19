@@ -85,6 +85,13 @@
           </template>
 
           <ElementsButton
+            @click="modalOpen.platforms = true"
+            class="w-full md:w-auto"
+          >
+            Platforms
+          </ElementsButton>
+
+          <ElementsButton
             class="max-md:w-full"
             :disabled="
               fieldValidation.extension_name == false ||
@@ -270,18 +277,6 @@
       </div>
 
       <div class="rounded-3xl border border-neutral-700">
-        <div class="flex items-center gap-2 border-b border-neutral-700 p-4">
-          <Icon name="memory:folder-open" :size="28" />
-          <span class="h2"> Platforms </span>
-        </div>
-        <div class="grid grid-cols-3 divide-x divide-neutral-700">
-          <div class="p-4"></div>
-          <div class="p-4"></div>
-          <div class="p-4"></div>
-        </div>
-      </div>
-
-      <div class="rounded-3xl border border-neutral-700">
         <div
           class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
         >
@@ -357,15 +352,18 @@
           />
         </template>
       </ElementsModal>
+
+      <UiAppExtensionsPlatformsmodal
+        :is-open="modalOpen.platforms"
+        :platforms="form.platforms"
+        @close="modalOpen.platforms = false"
+        @save="handlePlatformsSave"
+      />
     </template>
   </client-only>
 </template>
 
 <script setup lang="ts">
-// [TODO]
-// - Change extension banner
-// - Link distribution platforms
-
 const route = useRoute()
 const { user } = useAuth()
 const { rules: validationRules } = useFormValidation()
@@ -379,6 +377,7 @@ const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
   adminReject: false,
+  platforms: false,
 })
 const form = ref<{
   identifier: string
@@ -508,6 +507,10 @@ const handleBannerUpload = async (event: Event) => {
   } finally {
     uploading.value = false
   }
+}
+
+const handlePlatformsSave = (platforms: ExtensionPlatforms) => {
+  form.value.platforms = platforms
 }
 
 const handleAdminApprove = async () => {

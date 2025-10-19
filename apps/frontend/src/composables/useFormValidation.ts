@@ -65,7 +65,7 @@ export const useFormValidation = () => {
       trigger: 'blur',
     }),
 
-    url: (message = 'Please enter a valid URL'): ValidationRule => ({
+    url: (message = 'Must be a valid URL'): ValidationRule => ({
       validator: (value: string) => {
         if (!value) return true
         try {

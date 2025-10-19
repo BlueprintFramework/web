@@ -75,6 +75,8 @@
             (isValid: boolean) => handleFieldValidation('support', isValid)
           "
         />
+
+        <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
       </div>
       <button
         :disabled="
@@ -98,6 +100,7 @@
 const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const turnstile = ref()
 const loading = ref(false)
 const errors = ref({
   profile: [],
@@ -111,6 +114,7 @@ const profileForm = ref({
 })
 const accountForm = ref({
   email: user.value?.email || '',
+  captcha: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -133,6 +137,7 @@ const updateProfile = async () => {
       console.error(error)
       //@ts-expect-error
       errors.value.account = error
+      turnstile.value?.reset()
     }
   }
 

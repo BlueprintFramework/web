@@ -16,7 +16,7 @@ export const useAuth = () => {
     authState.value.checkpoint.authType = undefined
   }
 
-  const login = async (user: string, password: string) => {
+  const login = async (user: string, password: string, captcha: string) => {
     try {
       const data: {
         user?: FullUser | null
@@ -28,7 +28,7 @@ export const useAuth = () => {
         body: {
           user,
           password,
-          captcha: null,
+          captcha,
         },
       })
       if (data.type == 'two_factor_required') {
@@ -86,7 +86,12 @@ export const useAuth = () => {
     }
   }
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    name: string,
+    captcha: string
+  ) => {
     try {
       const data: { user?: FullUser; errors?: ApiError } = await $fetch(
         '/api/auth/register',
@@ -96,7 +101,7 @@ export const useAuth = () => {
             name,
             email,
             password,
-            captcha: null,
+            captcha,
           },
         }
       )

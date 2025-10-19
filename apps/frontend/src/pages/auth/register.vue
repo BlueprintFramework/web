@@ -75,6 +75,8 @@
         <!-- prettier-ignore -->
         <NuxtLink to="/legal/conduct" class="text-link">Code of Conduct</NuxtLink>
       </span>
+
+      <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
     </div>
     <button
       :disabled="
@@ -103,6 +105,7 @@ definePageMeta({
 const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const turnstile = ref()
 const loading = ref(false)
 const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
@@ -110,6 +113,7 @@ const form = ref({
   displayName: '',
   email: '',
   password: '',
+  captcha: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -122,11 +126,13 @@ const handleRegister = async () => {
     await register(
       form.value.email,
       form.value.password,
-      form.value.displayName
+      form.value.displayName,
+      form.value.captcha
     )
   } catch (error) {
     console.error(error)
     errors.value = error
+    turnstile.value?.reset()
   } finally {
     loading.value = false
   }

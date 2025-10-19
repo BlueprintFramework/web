@@ -26,6 +26,8 @@
         Enter the email associated with your Blueprint account. If an account
         exists, we'll send you a password reset link.
       </span>
+
+      <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
     </div>
     <button
       :disabled="fieldValidation.email == false || loading"
@@ -61,12 +63,14 @@ definePageMeta({
 
 const { rules: validationRules } = useFormValidation()
 
+const turnstile = ref()
 const loading = ref(false)
 const error = ref(false)
 const success = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
+  captcha: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -81,17 +85,14 @@ const handleForgot = async () => {
   try {
     await $fetch('/api/auth/password/forgot', {
       method: 'POST',
-      body: {
-        email: form.value.email,
-        captcha: null,
-      },
+      body: form,
     })
+    error.value = false
+    success.value = true
   } catch {
     error.value = true
     success.value = false
-  } finally {
-    error.value = false
-    success.value = true
+    turnstile.value?.reset()
   }
   loading.value = false
 }

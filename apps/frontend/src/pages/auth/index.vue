@@ -75,6 +75,8 @@
           Recover your account here
         </NuxtLink>
       </span>
+
+      <NuxtTurnstile v-model="authForm.captcha" ref="turnstile" />
     </div>
     <div
       class="flex flex-col divide-y divide-neutral-700 md:flex-row md:divide-x md:divide-y-0"
@@ -117,6 +119,7 @@ const route = useRoute()
 const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const turnstile = ref()
 const loading = ref(false)
 const errors = ref()
 const reset = ref(false)
@@ -124,6 +127,7 @@ const fieldValidation = ref<Record<string, boolean>>({})
 const authForm = ref({
   email: '',
   password: '',
+  captcha: '',
 })
 const checkpointForm = ref({
   code: '',
@@ -155,10 +159,15 @@ const handleLogin = async () => {
 
   // [INFO] Sign in like normal
   try {
-    await login(authForm.value.email, authForm.value.password)
+    await login(
+      authForm.value.email,
+      authForm.value.password,
+      authForm.value.captcha
+    )
   } catch (error) {
     console.error(error)
     errors.value = error
+    turnstile.value?.reset()
   } finally {
     loading.value = false
   }

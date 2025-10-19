@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     '@nuxtjs/mdc',
     '@nuxtjs/plausible',
+    '@nuxtjs/turnstile',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -95,5 +96,8 @@ export default defineNuxtConfig({
   plausible: {
     apiHost: 'https://plausible.prpl.wtf',
     ignoredHostnames: ['localhost'],
+  },
+  turnstile: {
+    siteKey: '1x00000000000000000000BB',
   },
 })

@@ -141,7 +141,19 @@
                   </div>
                   <div class="flex w-full flex-col items-end justify-end p-4">
                     <div>
-                      <ElementsButton>
+                      <input
+                        ref="bannerInput"
+                        type="file"
+                        accept="image/jpeg"
+                        class="hidden"
+                        @change="handleBannerUpload"
+                      />
+                      <ElementsButton
+                        @click="bannerInput?.click()"
+                        :disabled="
+                          uploading || user?.id != data.extension.author.id
+                        "
+                      >
                         <div class="flex items-center gap-1.5">
                           <Icon name="pixelarticons:upload" />
                           <span>Upload banner</span>
@@ -258,6 +270,18 @@
       </div>
 
       <div class="rounded-3xl border border-neutral-700">
+        <div class="flex items-center gap-2 border-b border-neutral-700 p-4">
+          <Icon name="memory:folder-open" :size="28" />
+          <span class="h2"> Platforms </span>
+        </div>
+        <div class="grid grid-cols-3 divide-x divide-neutral-700">
+          <div class="p-4"></div>
+          <div class="p-4"></div>
+          <div class="p-4"></div>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-neutral-700">
         <div
           class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
         >
@@ -346,8 +370,10 @@ const route = useRoute()
 const { user } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const bannerInput = ref()
 const loading = ref(false)
 const submitting = ref(false)
+const uploading = ref(false)
 const errors = ref(false)
 const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
@@ -453,6 +479,34 @@ const handleSubmit = async () => {
     errors.value = true
   } finally {
     submitting.value = false
+  }
+}
+
+const handleBannerUpload = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  uploading.value = true
+
+  try {
+    await $fetch(`/api/user/extensions/${route.params.id}/banner`, {
+      method: 'POST',
+      body: file,
+    })
+    const newData = await $fetch<{ extension: FullExtension }>(
+      `/api/user/extensions/${route.params.id}`,
+      {
+        method: 'GET',
+      }
+    )
+    if (data.value && newData) {
+      data.value.extension.banner.fullres = newData.extension.banner.fullres
+      data.value.extension.banner.lowres = newData.extension.banner.lowres
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    uploading.value = false
   }
 }
 

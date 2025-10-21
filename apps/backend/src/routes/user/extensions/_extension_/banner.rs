@@ -77,14 +77,22 @@ mod post {
                 &fullres_data,
                 Some("image/jpeg")
             ),
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/lowres/{}", extension.banner)),
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/{}", extension.banner))
+            async {
+                if extension.banner != "_default.jpeg" {
+                    tokio::try_join!(
+                        state
+                            .s3
+                            .bucket
+                            .delete_object(format!("extensions/lowres/{}", extension.banner)),
+                        state
+                            .s3
+                            .bucket
+                            .delete_object(format!("extensions/{}", extension.banner))
+                    )?;
+                }
+
+                Ok(())
+            }
         )?;
 
         sqlx::query!(

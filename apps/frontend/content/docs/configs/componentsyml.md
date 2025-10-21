@@ -5,7 +5,7 @@ category: configs
 ---
 
 ::card
-The `Components.yml` configuration lives in the root of an extension's `dashboard.components` directory. You have to create a directory, bind it in [conf.yml](/docs/configs/confyml) and create a `Components.yml` file. All components should be placed in this (or a sub-)directory too.
+The `Components.yml` configuration lives in the root of an extension's `dashboard.components` directory. You have to create a directory, bind it in [conf.yml](/docs/configs/confyml#dashboardcomponents) and create a `Components.yml` file. All components should be placed in this (or a sub-)directory too.
 ::
 
 ## Introduction

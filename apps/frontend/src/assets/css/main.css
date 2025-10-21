@@ -52,6 +52,10 @@ h3 {
 .prose-content p > a > *:last-child {
   margin-bottom: 0 !important;
 }
+.prose-content > p + p,
+.prose-content > * > p + p {
+  margin-top: 12px;
+}
 
 .scrollbar-none::-webkit-scrollbar {
   max-width: 0px;

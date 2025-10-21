@@ -4,7 +4,7 @@ description: Feature-specific and experimental extension flags
 category: concepts
 ---
 
-## What are feature-flags?
+## Introduction
 
 Blueprint allows extensions to control certain features through feature-flags, defined in the `info.flags` [conf.yml](/docs/configs/confyml#infoflags) option. These flags can range from toggling beta features to skipping install steps for extensions.
 

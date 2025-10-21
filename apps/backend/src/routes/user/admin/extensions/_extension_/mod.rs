@@ -315,16 +315,18 @@ mod delete {
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
     pub async fn route(state: GetState, extension: GetExtension) -> ApiResponseResult {
-        tokio::try_join!(
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/lowres/{}", extension.banner)),
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/{}", extension.banner))
-        )?;
+        if extension.banner != "_default.jpeg" {
+            tokio::try_join!(
+                state
+                    .s3
+                    .bucket
+                    .delete_object(format!("extensions/lowres/{}", extension.banner)),
+                state
+                    .s3
+                    .bucket
+                    .delete_object(format!("extensions/{}", extension.banner))
+            )?;
+        }
 
         sqlx::query!(
             "DELETE FROM extensions

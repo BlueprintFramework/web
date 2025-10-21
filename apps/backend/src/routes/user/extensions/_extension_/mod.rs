@@ -329,16 +329,18 @@ mod delete {
                 .ok();
         }
 
-        tokio::try_join!(
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/lowres/{}", extension.banner)),
-            state
-                .s3
-                .bucket
-                .delete_object(format!("extensions/{}", extension.banner))
-        )?;
+        if extension.banner != "_default.jpeg" {
+            tokio::try_join!(
+                state
+                    .s3
+                    .bucket
+                    .delete_object(format!("extensions/lowres/{}", extension.banner)),
+                state
+                    .s3
+                    .bucket
+                    .delete_object(format!("extensions/{}", extension.banner))
+            )?;
+        }
 
         sqlx::query!(
             "DELETE FROM extensions

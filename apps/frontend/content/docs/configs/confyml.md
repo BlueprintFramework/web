@@ -141,6 +141,22 @@ admin:
   controller: 'path/to/controller.php'
 ```
 
+::card
+Custom admin controllers should use the namespace `Pterodactyl\Http\Controllers\Admin\Extensions\{identifier}`, and it's class should be `{identifier}ExtensionController`.
+
+Blueprint calls the following functions based on the HTTP method used when calling the `/admin/extensions/{identifier}` URL:
+
+| Method   | Function                         |
+| -------- | -------------------------------- |
+| `GET`    | `index($request)`                |
+| `PATCH`  | `update($request)`               |
+| `POST`   | `post($request)`                 |
+| `PUT`    | `put($request)`                  |
+| `DELETE` | `delete($request, $target, $id)` |
+
+For more details regarding implementation, check out the [Admin controller guide](/guides/dev/admincontroller).
+::
+
 #### `admin.css`
 
 Custom css for Pterodactyl admin panel.
@@ -289,6 +305,10 @@ requests:
     client: 'path/to/clientroutes.php'
     web: 'path/to/webroutes.php'
 ```
+
+::card
+For more details regarding implementation, check out [Custom routes](/docs/concepts/routing).
+::
 
 ##### `requests.routers.application`
 

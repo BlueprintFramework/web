@@ -12,7 +12,7 @@ unlisted: false
 
 Every extension has an admin page (or better said, admin view). It's the preferred way for administrators to configure extensions and is linked from Blueprint's extensions page.
 
-## Create a view
+## Create an admin view
 
 Create a file called `view.blade.php` in your development directory. The contents of this file will be displayed on your extension's admin page.
 

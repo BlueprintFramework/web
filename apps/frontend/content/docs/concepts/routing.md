@@ -51,3 +51,75 @@ Route::get('/foo', function () {
 ```
 
 Install your extension and visit `/extensions/{identifier}/foo` in your URL bar. You should see it respond with "bar".
+
+## Using controllers
+
+Instead of handling all requests in your route files, you can send requests over to controllers.
+
+If you don't have an `requests.app` bind yet, create a directory and set the [conf.yml bind](/docs/configs/confyml#requestsapp) to it.
+
+```yaml [conf.yml]
+requests:
+  app: 'app' # << the directory for your controllers to live in
+  routers:
+    web: 'web.php'
+    # ^^ the custom web router you created earlier
+```
+
+In your `requests.app` directory (which is called `app` in this case), create a new file called `FooController.php` with the following content:
+
+```php [app/FooController.php]
+<?php
+
+// This is the namespace 'requests.app' lives in. {identifier}
+// is automatically replaced with your extension's identifier
+// upon installation.
+namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
+
+use Pterodactyl\Http\Controllers\Controller;
+
+// This is the class you'll be referencing in your router.
+class FooController extends Controller {
+  // This is the function of FooController your router will
+  // call whenever the route is called.
+  public function index() {
+    return 'bar (but using a controller)';
+  }
+}
+```
+
+Finally, update your `requests.routers.web` router. Import the `requests.app` namespace and bind `/foo` to `FooController`'s `index()` class.
+
+```diff [web.php]
+<?php
+
+use Illuminate\Support\Facades\Route;
++ use Pterodactyl\BlueprintFramework\Extensions\{identifier};
+
+- Route::get('/foo', function () {
+-   return 'bar';
+- });
++ Route::get('/foo', [FooController::class, 'index']);
+```
+
+## Rendering a view
+
+Last but not least, we can go full-circle by utilizing the `requests.views` [conf.yml bind](/docs/configs/confyml#requestsviews) to actually render web pages!
+
+::card
+Laravel views should not be used for extending the user-side dashboard! If you are looking to properly extend that side of Pterodactyl, you should look into [Components.yml](/docs/configs/componentsyml) instead.
+
+You should definitely, however, use the controller-method documented above for creating API routes that can be called by the frontend API. The how-to is pretty much the same no matter the controller type, though [you can check the differences here](/docs/concepts/routing#router-types).
+::
+
+Create a `views` directory (if you don't have one already) and assign it to the `requests.views` bind.
+
+```yaml [conf.yml]
+requests:
+  # where your views live in
+  views: 'views'
+  # and then all the stuff you added earlier
+  app: 'app'
+  routers:
+    web: 'web.php'
+```

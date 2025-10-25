@@ -29,7 +29,7 @@ admin:
 You can now open up your extension's admin view (the `view.blade.php` created earlier) and add content to it.
 
 ::card
-A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP code and use special blade-template methods. You can read more about [Blade templates and directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
+A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP code and use special blade-template methods. You can read more about [Blade templates and it's directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
 ::
 
 ```html

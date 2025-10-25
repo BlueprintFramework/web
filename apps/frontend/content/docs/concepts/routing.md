@@ -109,7 +109,7 @@ Last but not least, we can go full-circle by utilizing the `requests.views` [con
 ::card
 Laravel views should not be used for extending the user-side dashboard! If you are looking to properly extend that side of Pterodactyl, you should look into [Components.yml](/docs/configs/componentsyml) instead.
 
-You should definitely, however, use the controller-method documented above for creating API routes that can be called by the frontend API. The how-to is pretty much the same no matter the controller type, though [you can check the differences here](/docs/concepts/routing#router-types).
+You should definitely, however, use the [controller-method documented above](#using-controllers) for creating API routes that can be called by the frontend API. The how-to is pretty much the same no matter the controller type, though [you can check the differences here](#router-types).
 ::
 
 Create a `views` directory (if you don't have one already) and assign it to the `requests.views` bind.
@@ -122,4 +122,41 @@ requests:
   app: 'app'
   routers:
     web: 'web.php'
+```
+
+With your `requests.views` directory created, create a `fizz.blade.php` file inside of it. This is your Laravel Blade view, which will be rendered by your controller.
+
+::card
+Laravel's Blade views can be quite useful and versitile. You can read more about [Blade templates and it's directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
+::
+
+<!-- prettier-ignore -->
+```html [views/fizz.blade.php]
+<p style="background: black; color: white;">
+  buzz!
+</p>
+```
+
+Create a controller called `FizzController.php` and make it render the `fizz.blade.php` view.
+
+```diff [app/FooController.php]
+  <?php
+
+  namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
+
++ use Illuminate\View\View;
++ use Illuminate\View\Factory as ViewFactory;
+  use Pterodactyl\Http\Controllers\Controller;
+
+  class FooController extends Controller {
++   public function __construct(private ViewFactory $view) {}
+
++   public function index(): View {
++     return $this->view->make('blueprint.extensions.{identifier}.fizz');
++   }
+
+-   public function index() {
+-     return 'bar (but using a controller)';
+-   }
+  }
 ```

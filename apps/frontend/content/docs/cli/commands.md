@@ -4,6 +4,10 @@ description: Interact with the Blueprint CLI
 category: cli
 ---
 
+::card
+Blueprint has built-in support for shell autocompletion. Add `source blueprint;` to your shell's configuration (likely `~/.bashrc` or `~/.zshrc`) to import it.
+::
+
 ## Extensions
 
 ### Install Extension

@@ -141,6 +141,22 @@ admin:
   controller: 'path/to/controller.php'
 ```
 
+::card
+Custom admin controllers should use the namespace `Pterodactyl\Http\Controllers\Admin\Extensions\{identifier}`, and it's class should be `{identifier}ExtensionController`.
+
+Blueprint calls the following functions based on the HTTP method used when calling the `/admin/extensions/{identifier}` URL:
+
+| Method   | Function                         |
+| -------- | -------------------------------- |
+| `GET`    | `index($request)`                |
+| `PATCH`  | `update($request)`               |
+| `POST`   | `post($request)`                 |
+| `PUT`    | `put($request)`                  |
+| `DELETE` | `delete($request, $target, $id)` |
+
+For more details regarding implementation, check out the [Admin controller guide](/guides/dev/admincontroller).
+::
+
 #### `admin.css`
 
 Custom css for Pterodactyl admin panel.
@@ -256,7 +272,7 @@ Defines how Blueprint should handle your extension's web request routing and app
 
 #### `requests.views`
 
-Directory containing additional blade view files. Symlinked to `resources/views/blueprint/extensions/{identifier}` for Laravel's view system and accessible as `blueprint.extensions.{identifier}.*`.
+Directory containing additional blade view files. Symlinked to `resources/views/blueprint/extensions/{identifier}` and accessible as `{viewcontext}.my-view-name`.
 
 ```yaml [conf.yml]
 requests:
@@ -267,7 +283,7 @@ requests:
 
 #### `requests.app`
 
-Application logic and controllers directory. Symlinked to `app/BlueprintFramework/Extensions/{identifier}`.
+Application logic and controllers directory. Symlinked to `app/BlueprintFramework/Extensions/{identifier}`, accessible as `{appcontext}\MyClassName`.
 
 ```yaml [conf.yml]
 requests:
@@ -289,6 +305,10 @@ requests:
     client: 'path/to/clientroutes.php'
     web: 'path/to/webroutes.php'
 ```
+
+::card
+For more details regarding implementation, check out [Custom routes](/docs/concepts/routing).
+::
 
 ##### `requests.routers.application`
 

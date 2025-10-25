@@ -4,7 +4,7 @@ description: Automatically replace strings with data
 category: concepts
 ---
 
-## What's this?
+## Introduction
 
 Placeholders are strings developers put in their extensions, these can range from generating a random number to autofilling your extension identifier. They are quite useful, work in (almost) every file and can help your extension work on all kinds of installations.
 
@@ -115,6 +115,26 @@ For example, you could use the `{webroot/public}` placeholder to add an image to
 <img src="{webroot/public}/cool_image.jpeg" />
 ```
 
+### Context
+
+Context placeholders simplify otherwise complicated paths and generally improve compatibility.
+
+#### Appcontext
+
+Returns the namespace prefix for an extension's PHP classes.
+
+| Placeholder    | Output                                                |
+| -------------- | ----------------------------------------------------- |
+| `{appcontext}` | Pterodactyl\BlueprintFramework\Extensions\myextension |
+
+#### Viewcontext
+
+Returns the view prefix for an extension's views.
+
+| Placeholder     | Output                           |
+| --------------- | -------------------------------- |
+| `{viewcontext}` | blueprint.extensions.myextension |
+
 ### Installer
 
 Technical details about the framework handling the extension.
@@ -149,7 +169,7 @@ With this info, your extension could warn users if they aren't using the Bluepri
 
 #### Mode
 
-Returns either `local` or `develop` depending on if the extension has been installed through a packaged `myextension.blueprint` file or developer commands.
+Returns either `local` or `develop` depending on if the extension has been installed through a packaged `myextension.blueprint` file or [developer commands](/docs/cli/commands#developer).
 
 | Placeholder | Output |
 | ----------- | ------ |

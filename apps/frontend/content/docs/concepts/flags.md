@@ -4,7 +4,7 @@ description: Feature-specific and experimental extension flags
 category: concepts
 ---
 
-## What are feature-flags?
+## Introduction
 
 Blueprint allows extensions to control certain features through feature-flags, defined in the `info.flags` [conf.yml](/docs/configs/confyml#infoflags) option. These flags can range from toggling beta features to skipping install steps for extensions.
 
@@ -28,21 +28,58 @@ info:
 
 ## Available feature-flags
 
-Feature-flags that impact your extension in production and development.
+### Placeholders
 
-| Flag                      | Description                |
-| ------------------------- | -------------------------- |
-| `ignorePlaceholders`      | Skip applying placeholders |
-| `forceLegacyPlaceholders` | Use legacy placeholders    |
+Feature-flags for Blueprint's [extension placeholders](/docs/concepts/placeholders).
 
-### Developer flags
+#### `ignorePlaceholders`
 
-Developer feature-flags only apply to developer commands.
+Disable placeholders altogether.
 
-| Flag                             | Description                                                                                   |
-| -------------------------------- | --------------------------------------------------------------------------------------------- |
-| `developerIgnoreInstallScript`   | Ignore the custom extension installation script.                                              |
-| `developerIgnoreRebuild`         | Skip rebuilding panel assets on installation.                                                 |
-| `developerKeepApplicationCache`  | Skip flushing the application's cache on installation.                                        |
-| `developerEscalateInstallScript` | Run install scripts with root permissions instead of running them through the webserver user. |
-| `developerEscalateExportScript`  | Run export scripts with root permissions instead of running them through the webserver user.  |
+#### `forceLegacyPlaceholders`
+
+Use Blueprint's (deprecated) legacy placeholders. This flag will automatically be applied if your extension is built for any `alpha` or `indev` Blueprint release.
+
+### Development
+
+Developer feature-flags only apply to [developer commands](/docs/cli/commands#developer).
+
+#### `developerIgnoreInstallScript`
+
+Skip running the extension's [install script](/docs/concepts/scripts) when the extension is installed through [developer commands](/docs/cli/commands#developer).
+
+#### `developerIgnoreRebuild`
+
+Skip rebuilding frontend assets when the extension is installed through [developer commands](/docs/cli/commands#developer). Asset rebuilds are only triggered when Blueprint determines that your extension may require one.
+
+#### `developerKeepApplicationCache`
+
+Skip flushing the application's cache when the extension is installed through [developer commands](/docs/cli/commands#developer).
+
+#### `developerEscalateInstallScript`
+
+Blueprint runs [scripts](/docs/concepts/scripts) as the webserver user by default. For extension development only, scripts can be ran with administrator privileges.
+
+#### `developerEscalateExportScript`
+
+Blueprint runs [scripts](/docs/concepts/scripts) as the webserver user by default, but your export script may need additional permissions. This flag will provide administrator privileges to your extension's export script.
+
+### Deprecated
+
+Deprecated feature-flags may be ignored by Blueprint and should not be used.
+
+#### ~~`hasInstallScript`~~ (deprecated)
+
+Blueprint will look for a file called `install.sh`, relative to the extension's data directory, during extension installation. If present, Blueprint will run the script. **As of beta-2024-12, Blueprint no longer requires a flag to enable install scripts.**
+
+#### ~~`hasRemovalScript`~~ (deprecated)
+
+Blueprint will look for a file called `remove.sh`, relative to the extension's data directory, during extension removal. If present, Blueprint will run the script. **As of beta-2024-12, Blueprint no longer requires a flag to enable remove scripts.**
+
+#### ~~`hasExportScript`~~ (deprecated)
+
+Blueprint will look for a file called `export.sh`, relative to the extension's data directory, during extension export/packaging. If present, Blueprint will run the script. **As of beta-2024-12, Blueprint no longer requires a flag to enable export scripts.**
+
+#### ~~`developerForceMigrate`~~ (deprecated)
+
+Forcefully migrate the database non-interactively when installing your extension through [developer commands](/docs/cli/commands#developer). **As of beta-2024-12, Blueprint no longer requires interaction for database migrations.**

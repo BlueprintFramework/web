@@ -12,7 +12,7 @@ unlisted: false
 
 Every extension has an admin page (or better said, admin view). It's the preferred way for administrators to configure extensions and is linked from Blueprint's extensions page.
 
-## Create a view
+## Create an admin view
 
 Create a file called `view.blade.php` in your development directory. The contents of this file will be displayed on your extension's admin page.
 
@@ -29,7 +29,7 @@ admin:
 You can now open up your extension's admin view (the `view.blade.php` created earlier) and add content to it.
 
 ::card
-A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP code and use special blade-template methods. You can read more about [Blade templates and directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
+A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP code and use special blade-template methods. You can read more about [Blade templates and it's directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
 ::
 
 ```html

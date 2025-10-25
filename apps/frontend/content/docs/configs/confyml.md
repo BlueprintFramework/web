@@ -272,7 +272,7 @@ Defines how Blueprint should handle your extension's web request routing and app
 
 #### `requests.views`
 
-Directory containing additional blade view files. Symlinked to `resources/views/blueprint/extensions/{identifier}` for Laravel's view system and accessible as `blueprint.extensions.{identifier}.*`.
+Directory containing additional blade view files. Symlinked to `resources/views/blueprint/extensions/{identifier}` and accessible as `{viewcontext}.my-view-name`.
 
 ```yaml [conf.yml]
 requests:
@@ -283,7 +283,7 @@ requests:
 
 #### `requests.app`
 
-Application logic and controllers directory. Symlinked to `app/BlueprintFramework/Extensions/{identifier}`.
+Application logic and controllers directory. Symlinked to `app/BlueprintFramework/Extensions/{identifier}`, accessible as `{appcontext}\MyClassName`.
 
 ```yaml [conf.yml]
 requests:

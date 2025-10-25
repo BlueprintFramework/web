@@ -115,6 +115,26 @@ For example, you could use the `{webroot/public}` placeholder to add an image to
 <img src="{webroot/public}/cool_image.jpeg" />
 ```
 
+### Context
+
+Context placeholders simplify otherwise complicated paths and generally improve compatibility.
+
+#### Appcontext
+
+Returns the namespace prefix for an extension's PHP classes.
+
+| Placeholder    | Output                                                |
+| -------------- | ----------------------------------------------------- |
+| `{appcontext}` | Pterodactyl\BlueprintFramework\Extensions\myextension |
+
+#### Viewcontext
+
+Returns the view prefix for an extension's views.
+
+| Placeholder     | Output                           |
+| --------------- | -------------------------------- |
+| `{viewcontext}` | blueprint.extensions.myextension |
+
 ### Installer
 
 Technical details about the framework handling the extension.

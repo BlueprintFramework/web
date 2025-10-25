@@ -71,10 +71,10 @@ In your `requests.app` directory (which is called `app` in this case), create a 
 ```php [app/FooController.php]
 <?php
 
-// This is the namespace 'requests.app' lives in. {identifier}
-// is automatically replaced with your extension's identifier
-// upon installation.
-namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
+// This is the namespace 'requests.app' lives in. {appcontext}
+// is automatically corrected by Blueprint upon installing your
+// extension.
+namespace {appcontext};
 
 use Pterodactyl\Http\Controllers\Controller;
 
@@ -94,7 +94,7 @@ Finally, update your `requests.routers.web` router. Import the `requests.app` na
 <?php
 
 use Illuminate\Support\Facades\Route;
-+ use Pterodactyl\BlueprintFramework\Extensions\{identifier};
++ use {appcontext};
 
 - Route::get('/foo', function () {
 -   return 'bar';
@@ -142,7 +142,7 @@ Create a controller called `FizzController.php` and make it render the `fizz.bla
 ```php [app/FizzController.php]
 <?php
 
-namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
+namespace {appcontext};
 
 use Pterodactyl\Http\Controllers\Controller;
 
@@ -156,9 +156,9 @@ class FizzController extends Controller {
   // Create another index function, this time promising a view
   // to be returned.
   public function index(): View {
-    // Make the view. 'requests.views' are always prefixed with
-    // 'blueprint.extensions.{identifier}'.
-    return $this->view->make('blueprint.extensions.{identifier}.fizz');
+    // Render a view. Views should be prefixed with {viewcontext}
+    // which is automatically replaced by Blueprint.
+    return $this->view->make('{viewcontext}.fizz');
   }
 }
 ```
@@ -169,7 +169,7 @@ Add the `/fizz` route to your `requests.routers.web` router.
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Pterodactyl\BlueprintFramework\Extensions\{identifier};
+use {appcontext};
 
 Route::get('/foo', [FooController::class, 'index']);
 + Route::get('/fizz', [FizzController::class, 'index']);

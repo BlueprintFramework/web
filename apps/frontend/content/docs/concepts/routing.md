@@ -139,24 +139,40 @@ Laravel's Blade views can be quite useful and versitile. You can read more about
 
 Create a controller called `FizzController.php` and make it render the `fizz.blade.php` view.
 
-```diff [app/FooController.php]
-  <?php
+```php [app/FizzController.php]
+<?php
 
-  namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
+namespace Pterodactyl\BlueprintFramework\Extensions\{identifier};
 
-+ use Illuminate\View\View;
-+ use Illuminate\View\Factory as ViewFactory;
-  use Pterodactyl\Http\Controllers\Controller;
+use Pterodactyl\Http\Controllers\Controller;
 
-  class FooController extends Controller {
-+   public function __construct(private ViewFactory $view) {}
+// Import the View and ViewFactory classes for view rendering.
+use Illuminate\View\View;
+use Illuminate\View\Factory as ViewFactory;
 
-+   public function index(): View {
-+     return $this->view->make('blueprint.extensions.{identifier}.fizz');
-+   }
+class FizzController extends Controller {
+  public function __construct(private ViewFactory $view) {}
 
--   public function index() {
--     return 'bar (but using a controller)';
--   }
+  // Create another index function, this time promising a view
+  // to be returned.
+  public function index(): View {
+    // Make the view. 'requests.views' are always prefixed with
+    // 'blueprint.extensions.{identifier}'.
+    return $this->view->make('blueprint.extensions.{identifier}.fizz');
   }
+}
 ```
+
+Add the `/fizz` route to your `requests.routers.web` router.
+
+```diff [web.php]
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Pterodactyl\BlueprintFramework\Extensions\{identifier};
+
+Route::get('/foo', [FooController::class, 'index']);
++ Route::get('/fizz', [FizzController::class, 'index']);
+```
+
+Install your extension and visit the `/extensions/{identifier}/fizz` path. You should see a text saying "buzz!" with a black background.

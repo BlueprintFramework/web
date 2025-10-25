@@ -1,5 +1,9 @@
 use super::State;
-use utoipa_axum::{router::OpenApiRouter, routes};
+use axum::extract::DefaultBodyLimit;
+use utoipa_axum::{
+    router::{OpenApiRouter, UtoipaMethodRouterExt},
+    routes,
+};
 
 mod post {
     use crate::{
@@ -35,7 +39,7 @@ mod post {
             }
         };
 
-        let image = match image.decode() {
+        let image = match tokio::task::spawn_blocking(move || image.decode()).await? {
             Ok(image) => image,
             Err(_) => {
                 return ApiResponse::error("image: unable to decode")
@@ -112,6 +116,6 @@ mod post {
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
-        .routes(routes!(post::route))
+        .routes(routes!(post::route).layer(DefaultBodyLimit::max(8 * 1024 * 1024)))
         .with_state(state.clone())
 }

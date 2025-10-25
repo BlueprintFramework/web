@@ -4210,6 +4210,7 @@ dependencies = [
  "chrono",
  "colored",
  "dotenvy",
+ "futures-util",
  "hmac",
  "image",
  "include_dir",

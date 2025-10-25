@@ -442,6 +442,42 @@ impl Extension {
         Ok(row.map(|data| Self::map(None, &data)))
     }
 
+    pub async fn delete(
+        &self,
+        database: &crate::database::Database,
+        s3: &crate::s3::S3,
+    ) -> Result<(), anyhow::Error> {
+        if self.banner != "_default.jpeg" {
+            tokio::try_join!(
+                s3.bucket
+                    .delete_object(format!("extensions/lowres/{}", self.banner)),
+                s3.bucket
+                    .delete_object(format!("extensions/{}", self.banner))
+            )?;
+        }
+
+        let images =
+            super::extension_image::ExtensionImage::all_by_extension_id(database, self.id).await?;
+        let mut futures = Vec::new();
+        futures.reserve_exact(images.len());
+
+        for image in images {
+            futures.push(s3.bucket.delete_object(image.location));
+        }
+
+        futures_util::future::try_join_all(futures).await?;
+
+        sqlx::query!(
+            "DELETE FROM extensions
+            WHERE extensions.id = $1",
+            self.id
+        )
+        .execute(database.write())
+        .await?;
+
+        Ok(())
+    }
+
     #[inline]
     pub fn versions(&self) -> Vec<&String> {
         let mut versions: Vec<&String> = Vec::new();

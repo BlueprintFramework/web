@@ -5,6 +5,7 @@ use utoipa::ToSchema;
 use validator::Validate;
 
 pub mod extension;
+pub mod extension_image;
 pub mod user;
 pub mod user_password_reset;
 pub mod user_recovery_code;

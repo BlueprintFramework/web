@@ -30,8 +30,8 @@ mod post {
         extension: GetExtension,
         axum::Json(data): axum::Json<Payload>,
     ) -> ApiResponseResult {
-        if extension.status != ExtensionStatus::Ready {
-            return ApiResponse::error("unable to mark non-ready extension as denied")
+        if extension.status == ExtensionStatus::Pending {
+            return ApiResponse::error("unable to mark pending extension as denied")
                 .with_status(StatusCode::CONFLICT)
                 .ok();
         }

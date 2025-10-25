@@ -1,25 +1,25 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod versions;
-mod images;
-
 mod get {
     use crate::{
-        models::extension::{Extension, ExtensionStatus},
+        models::{
+            extension::{Extension, ExtensionStatus},
+            extension_image::ExtensionImage,
+        },
         response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState},
     };
     use axum::{extract::Path, http::StatusCode};
 
     #[utoipa::path(get, path = "/", responses(
-        (status = OK, body = crate::models::extension::ApiExtension),
+        (status = OK, body = Vec<crate::models::extension_image::ApiExtensionImage>),
         (status = NOT_FOUND, body = ApiError),
     ), params(
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
     pub async fn route(state: GetState, Path(extension): Path<String>) -> ApiResponseResult {
-        let extension = state
+        let extension = match state
             .cache
             .cached(&format!("extensions::{extension}"), 300, || async {
                 match extension.parse::<i32>() {
@@ -37,29 +37,39 @@ mod get {
                         .map_err(|e| e.into()),
                 }
             })
-            .await?;
-
-        match extension {
+            .await?
+        {
             Some(extension) => {
                 if !extension.unlisted && extension.status == ExtensionStatus::Approved {
-                    ApiResponse::json(extension.into_api_object(&state.env)).ok()
+                    extension
                 } else {
-                    ApiResponse::error("extension not found")
+                    return ApiResponse::error("extension not found")
                         .with_status(StatusCode::NOT_FOUND)
-                        .ok()
+                        .ok();
                 }
             }
-            None => ApiResponse::error("extension not found")
-                .with_status(StatusCode::NOT_FOUND)
-                .ok(),
-        }
+            None => {
+                return ApiResponse::error("extension not found")
+                    .with_status(StatusCode::NOT_FOUND)
+                    .ok();
+            }
+        };
+
+        let extension_images =
+            ExtensionImage::all_by_extension_id(&state.database, extension.id).await?;
+
+        ApiResponse::json(
+            extension_images
+                .into_iter()
+                .map(|extension_image| extension_image.into_api_object(&state.env))
+                .collect::<Vec<_>>(),
+        )
+        .ok()
     }
 }
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .routes(routes!(get::route))
-        .nest("/versions", versions::router(state))
-        .nest("/images", images::router(state))
         .with_state(state.clone())
 }

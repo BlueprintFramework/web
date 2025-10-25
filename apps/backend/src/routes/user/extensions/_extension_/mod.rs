@@ -13,6 +13,7 @@ use axum::{
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod banner;
+mod images;
 mod ready;
 
 pub type GetExtension = crate::extract::ConsumingExtension<Extension>;
@@ -329,26 +330,7 @@ mod delete {
                 .ok();
         }
 
-        if extension.banner != "_default.jpeg" {
-            tokio::try_join!(
-                state
-                    .s3
-                    .bucket
-                    .delete_object(format!("extensions/lowres/{}", extension.banner)),
-                state
-                    .s3
-                    .bucket
-                    .delete_object(format!("extensions/{}", extension.banner))
-            )?;
-        }
-
-        sqlx::query!(
-            "DELETE FROM extensions
-            WHERE extensions.id = $1",
-            extension.id
-        )
-        .execute(state.database.write())
-        .await?;
+        extension.delete(&state.database, &state.s3).await?;
         state.cache.clear_extension(&extension).await?;
 
         ApiResponse::json(Response {}).ok()
@@ -362,6 +344,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .routes(routes!(delete::route))
         .nest("/ready", ready::router(state))
         .nest("/banner", banner::router(state))
+        .nest("/images", images::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

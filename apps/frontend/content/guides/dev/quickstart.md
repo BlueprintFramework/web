@@ -8,7 +8,7 @@ order: -1
 ---
 
 ::card
-Developer mode has to be turned on in your admin panel before you can run developer commands. Navigate to `/admin/extensions`, select "Blueprint" and set `developer` to `true`. You only have to do this once.
+Developer mode has to be turned on in your admin panel before you can run [developer commands](/docs/cli/commands#developer). Navigate to `/admin/extensions`, select "Blueprint" and set `developer` to `true`. You only have to do this once.
 ::
 
 ## Initialize your extension

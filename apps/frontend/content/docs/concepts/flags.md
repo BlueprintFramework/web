@@ -42,19 +42,19 @@ Use Blueprint's (deprecated) legacy placeholders. This flag will automatically b
 
 ### Development
 
-Developer feature-flags only apply to developer commands.
+Developer feature-flags only apply to [developer commands](/docs/cli/commands#developer).
 
 #### `developerIgnoreInstallScript`
 
-Skip running the extension's [install script](/docs/concepts/scripts) when the extension is installed through developer commands.
+Skip running the extension's [install script](/docs/concepts/scripts) when the extension is installed through [developer commands](/docs/cli/commands#developer).
 
 #### `developerIgnoreRebuild`
 
-Skip rebuilding frontend assets when the extension is installed through developer commands. Asset rebuilds are only triggered when Blueprint determines that your extension may require one.
+Skip rebuilding frontend assets when the extension is installed through [developer commands](/docs/cli/commands#developer). Asset rebuilds are only triggered when Blueprint determines that your extension may require one.
 
 #### `developerKeepApplicationCache`
 
-Skip flushing the application's cache when the extension is installed through developer commands.
+Skip flushing the application's cache when the extension is installed through [developer commands](/docs/cli/commands#developer).
 
 #### `developerEscalateInstallScript`
 
@@ -82,4 +82,4 @@ Blueprint will look for a file called `export.sh`, relative to the extension's d
 
 #### ~~`developerForceMigrate`~~ (deprecated)
 
-Forcefully migrate the database non-interactively when installing your extension through developer commands. **As of beta-2024-12, Blueprint no longer requires interaction for database migrations.**
+Forcefully migrate the database non-interactively when installing your extension through [developer commands](/docs/cli/commands#developer). **As of beta-2024-12, Blueprint no longer requires interaction for database migrations.**

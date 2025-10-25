@@ -57,6 +57,50 @@ System administrators can set which "eggs" have which routes [as explained in th
 
 While components themselves are very unlikely to conflict with each other, **routes totally can**. Make sure to not use generic routes names and paths to prevent breakage.
 
+## Building components
+
+Components are created using React and exist in the same environment as Pterodactyl. Before building your first component, make sure you are familiar with the following do-s and don't-s:
+
+| <span class="text-green-400">Do</span>                                  | <span class="text-red-400">Don't</span>                                                               |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Do make requests to client API routes                                   | **DON'T EVER STORE TOKENS OR API CREDENTIALS USERS SHOULDN'T HAVE DIRECT ACCESS TO**                  |
+| Do use Pterodactyl- and [your extension's API](/docs/concepts/routing)s | Don't query external site APIs directly from the React application/frontend                           |
+| Do build with Pterodactyl's existing components or your own             | Don't rely on other extension's components                                                            |
+| Do extend the Pterodactyl user interface                                | Don't modify the dashboard in a way that would (hypothetically) prevent other extensions from working |
+
+With that out of the way, let's create a component in your extension's `dashboard.components` directory.
+
+### Creating a basic component
+
+Create a file called `MyFirstComponent.tsx` in your `dashboard.components` directory and add the following content to it.
+
+```tsx [MyFirstComponent.tsx]
+// Import React from the react library
+import React from 'react'
+
+// Create a function and set it as the default
+// function for this file
+export default = () => {
+  // Return the component's contents
+  return (
+    <>
+      {/* Add a paragraph element */}
+      <p>this is my first component!</p>
+    </>
+  )
+}
+```
+
+Then, bind it to a placement area in your Components.yml configuration. In this example, we're adding it to `Dashboard.Serverlist.BeforeContent`.
+
+```yaml [Components.yml]
+Dashboard:
+  Serverlist:
+    BeforeContent: 'MyFirstComponent'
+```
+
+After installing your extension, you should see the component appear above the Pterodactyl serverlist.
+
 ## Configuration
 
 ### Example configuration

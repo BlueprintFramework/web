@@ -149,7 +149,7 @@ With this info, your extension could warn users if they aren't using the Bluepri
 
 #### Mode
 
-Returns either `local` or `develop` depending on if the extension has been installed through a packaged `myextension.blueprint` file or developer commands.
+Returns either `local` or `develop` depending on if the extension has been installed through a packaged `myextension.blueprint` file or [developer commands](/docs/cli/commands#developer).
 
 | Placeholder | Output |
 | ----------- | ------ |

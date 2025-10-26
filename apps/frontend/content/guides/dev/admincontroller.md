@@ -1,11 +1,10 @@
 ---
-title: Admin controller
-description: Add a custom PHP controller to an extension's admin page
+title: Custom admin page controllers
+description: Render your admin page using a custom controller
 author:
 category: dev
 thumbnail: controller.jpeg
-order:
-unlisted: true
+unlisted: false
 ---
 
 ...

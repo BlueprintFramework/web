@@ -1,11 +1,10 @@
 ---
-title: Admin page
-description: Create your extension's admin page
+title: Your first admin page
+description: Learn how to build a simple admin page for your extension
 author: Emma
 category: dev
 thumbnail: adminpage.jpeg
-order:
-unlisted: false
+order: -1
 ---
 
 ## Introduction

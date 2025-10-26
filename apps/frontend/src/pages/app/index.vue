@@ -42,7 +42,7 @@
         <span class="text-xl font-bold">Statistics</span>
       </div>
       <span class="text-default-font/75">
-        View statistics, customize graphs, embed widgets
+        View statistics, customize graphs, extension statistics
       </span>
     </NuxtLink>
     <div v-if="isDesktop" class="bg-stripes" />

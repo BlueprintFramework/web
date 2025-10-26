@@ -21,7 +21,6 @@
     :wrap="props.wrap"
     :class="props.class"
     @input="resize"
-    @click="resize"
     class="h-auto w-full resize-none overflow-hidden rounded-2xl border border-neutral-700 bg-gray-800/40 p-4 outline-0 transition-colors focus:bg-gray-800/60"
   />
 </template>

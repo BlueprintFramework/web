@@ -1,11 +1,10 @@
 ---
-title: Dashboard wrappers
-description: Extend the Pterodactyl client and admin dashboard within the Laravel blade wrapper
+title: Extending the user dashboard wrapper
+description: Extend the Pterodactyl user dashboard using the Laravel blade wrapper
 author:
 category: dev
 thumbnail: dashboard.jpeg
-order:
-unlisted: true
+unlisted: false
 ---
 
 ...

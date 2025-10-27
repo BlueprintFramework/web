@@ -65,7 +65,7 @@ const items = [
   },
   {
     title: 'Is Blueprint a fork of Pterodactyl?',
-    text: "No. Blueprint cannot function on it's own, just like any other 'standalone' Pterodactyl modification.",
+    text: 'No. Blueprint requires to be installed on top of a stock Pterodactyl installation to function.',
   },
   {
     title: 'Are standalone modifications compatible?',

@@ -149,7 +149,6 @@ impl ExtensionImage {
             FROM extension_images
             WHERE extension_id = $1
             ORDER BY extension_images.id
-            LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None, None)
         ))

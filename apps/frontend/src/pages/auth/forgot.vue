@@ -63,7 +63,7 @@ definePageMeta({
 
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const error = ref(false)
 const success = ref(false)

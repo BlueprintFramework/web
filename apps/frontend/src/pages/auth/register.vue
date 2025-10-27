@@ -105,7 +105,7 @@ definePageMeta({
 const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})

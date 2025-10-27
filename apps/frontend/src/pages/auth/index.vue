@@ -119,7 +119,7 @@ const route = useRoute()
 const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const errors = ref()
 const reset = ref(false)

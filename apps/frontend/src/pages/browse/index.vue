@@ -70,10 +70,7 @@
   </div>
 
   <!-- Mobile filters -->
-  <div
-    class="z-15 fixed bottom-0 left-0 m-0 w-full lg:hidden"
-    ref="drawerContainer"
-  >
+  <div class="z-15 fixed bottom-0 left-0 m-0 w-full lg:hidden">
     <div class="container">
       <div
         class="overflow-hidden rounded-t-3xl border border-b-0 border-neutral-700 bg-neutral-950"
@@ -144,8 +141,7 @@ const { data: extensions, pending } = await useAsyncData<Extension[]>(
   }
 )
 
-const drawerContainer = ref<HTMLElement>()
-const drawerContent = ref<HTMLElement>()
+const drawerContent = useTemplateRef('drawerContent')
 const drawer = reactive({
   open: false,
   height: '0px',

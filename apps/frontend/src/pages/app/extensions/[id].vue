@@ -295,11 +295,18 @@
             <div
               class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
             >
+              <ElementsFormTextboxToolbar
+                :textarea-ref="descriptionToolbar"
+                :on-image="imagesModal?.handleOpen"
+              />
               <ElementsFormTextbox
                 v-model="form.description"
-                :rows="12"
+                ref="descriptionToolbar"
                 class="font-mono"
+                :supports-images="true"
+                :rows="10"
                 :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+                :richtext="true"
               />
             </div>
           </div>
@@ -363,6 +370,11 @@
         @close="modalOpen.platforms = false"
         @save="handlePlatformsSave"
       />
+
+      <UiAppExtensionsImagesmodal
+        ref="imagesModal"
+        :extension="data.extension"
+      />
     </template>
   </client-only>
 </template>
@@ -372,7 +384,10 @@ const route = useRoute()
 const { user } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const bannerInput = ref()
+const bannerInput = useTemplateRef('bannerInput')
+const descriptionToolbar = useTemplateRef('descriptionToolbar')
+const imagesModal = useTemplateRef('imagesModal')
+
 const loading = ref(false)
 const submitting = ref(false)
 const uploading = ref(false)

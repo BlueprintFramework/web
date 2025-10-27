@@ -134,7 +134,7 @@ definePageMeta({
 const data = ref<UserExtensions>()
 const page = ref(1)
 const loading = ref(false)
-const loadMoreTrigger = ref<HTMLElement | null>(null)
+const loadMoreTrigger = useTemplateRef('loadMoreTrigger')
 const viewOthers = ref<{
   enabled: boolean
   show: 'unspecified' | 'ready' | 'pending' | 'denied'

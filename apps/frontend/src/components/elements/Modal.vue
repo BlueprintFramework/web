@@ -40,6 +40,7 @@
           >
             <div
               v-if="title || $slots.header"
+              ref="titleRef"
               class="flex items-center justify-between p-4"
             >
               <div v-if="$slots.header">
@@ -60,12 +61,16 @@
               </button>
             </div>
 
-            <div class="p-4">
+            <div
+              class="overflow-scroll p-4"
+              :style="`max-height: calc(100vh - ${combinedHeight}px - 48px)`"
+            >
               <slot />
             </div>
 
             <div
               v-if="$slots.footer"
+              ref="footerRef"
               class="flex flex-col items-center justify-end gap-2 p-4 md:flex-row"
             >
               <slot name="footer" />
@@ -99,7 +104,14 @@ const emit = defineEmits<Emits>()
 const titleId = `modal-title-${Math.random().toString(36).substring(2, 9)}`
 const descriptionId = `modal-description-${Math.random().toString(36).substring(2, 9)}`
 
-const modalRef = ref<HTMLElement>()
+const modalRef = useTemplateRef('modalRef')
+const titleRef = useTemplateRef('titleRef')
+const footerRef = useTemplateRef('footerRef')
+
+const combinedHeight = computed(
+  () =>
+    (titleRef.value?.scrollHeight || 0) + (footerRef.value?.scrollHeight || 0)
+)
 
 const handleBackdropClick = (event: MouseEvent) => {
   if (props.closeOnBackdrop && event.target === event.currentTarget) {

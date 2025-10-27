@@ -220,7 +220,7 @@ const emit = defineEmits<{
   'trailing-icon-click': []
 }>()
 
-const inputRef = ref<HTMLInputElement>()
+const inputRef = useTemplateRef('inputRef')
 const fieldId = useId()
 const isFocused = ref(false)
 const isTouched = ref(false)

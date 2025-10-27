@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         '/api': 'http://localhost:8000',
+        '/yay': 'https://blueprint.zip',
       },
     },
     optimizeDeps: {
@@ -95,7 +96,7 @@ export default defineNuxtConfig({
     },
   },
   plausible: {
-    apiHost: 'https://plausible.prpl.wtf',
+    apiHost: '/yay/script.js',
     ignoredHostnames: ['localhost'],
   },
   turnstile: {

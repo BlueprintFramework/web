@@ -1,13 +1,16 @@
 ---
-title: Packaging extensions
-description: Export extensions into ".blueprint" files for distribution
+title: Exporting your extension
+description: Export extensions into "myextension.blueprint" files for distribution
 author: Emma
 category: dev
 thumbnail: files.jpeg
-order:
 ---
 
-## Export your extension with the CLI
+## Introduction
+
+Blueprint extensions are distributed with `{identifier}.blueprint` files. Users can upload these files to their Pterodactyl directory and install your extension through the Blueprint CLI.
+
+## Export the extension
 
 To turn your development files into a distributable `{identifier}.blueprint` file, we'll need to use Blueprint's CLI utility to package it.
 
@@ -28,12 +31,20 @@ Blueprint can generate a temporary download link for your extension for easier e
 blueprint -export expose
 ```
 
-### Test your exported extension
+## Test the extension
 
 Testing is important! You should always check if an extension still works as expected, especially when using export scripts. Install your extension, test it on your panel and finally, if all is right, distribute it.
 
-## Manually export your extension
+```bash
+# Make sure to remove your extension beforehand, if it is
+# installed.
+blueprint -remove myextension
 
-Don't do this! Even though extensions are practically ZIP files, exporting manually can break your extension, in current and future releases of Blueprint.
+# Install the myextension.blueprint file once again, which
+# should now exist in your Pterodactyl panel.
+blueprint -install myextension
+```
 
-Our CLI does more than just archiving extensions, it excludes certain directories, runs export scripts and enforces the folder structure Blueprint expects.
+## That's it!
+
+You can now distribute your `{identifier}.blueprint` file. There are a few marketplaces that have specific categories/tags for Blueprint extensions. If your extension is open-source, add the [blueprint-extension](https://github.com/topics/blueprint-extension) tag to your repository!

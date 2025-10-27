@@ -4,7 +4,7 @@ description: Make your very own Blueprint extension
 author: Emma
 category: dev
 thumbnail: code.jpeg
-order: -1
+order: -2
 ---
 
 ::card

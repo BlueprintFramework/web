@@ -257,7 +257,7 @@
               <ElementsFormBinarytoggle
                 v-model="form.unlisted"
                 label="Visibility"
-                description="Public extensions are discoverable through the platform, unlisted extension only using their direct link. If your extension is pending review, this setting will immediately apply after approval."
+                description="Public extensions are discoverable through the platform, unlisted only available to users with access. If your extension is pending review, this setting will immediately apply after approval."
                 :options="[
                   {
                     value: false,
@@ -266,7 +266,7 @@
                   },
                   {
                     value: true,
-                    icon: 'pixelarticons:link',
+                    icon: 'pixelarticons:hidden',
                     label: 'Unlisted',
                   },
                 ]"
@@ -276,7 +276,7 @@
         </div>
       </div>
 
-      <div class="rounded-3xl border border-neutral-700">
+      <div class="overflow-hidden rounded-3xl border border-neutral-700">
         <div
           class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
         >
@@ -288,20 +288,24 @@
             <SvgIconMarkdown :size="32" class="text-neutral-500" />
           </div>
         </div>
-        <div class="p-4">
-          <div
-            class="flex grid-cols-2 flex-col overflow-hidden rounded-2xl border border-neutral-700 xl:grid"
-          >
-            <div class="grid grid-cols-1 bg-neutral-800/40">
+        <div
+          class="bg-stripes flex grid-cols-2 flex-col divide-y divide-neutral-700 overflow-hidden rounded-2xl xl:grid xl:divide-x xl:divide-y-0"
+        >
+          <div>
+            <div
+              class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
+            >
               <ElementsFormTextbox
                 v-model="form.description"
                 :rows="12"
-                class="rounded-none border-0 bg-transparent font-mono"
+                class="font-mono"
                 :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
               />
             </div>
+          </div>
+          <div>
             <div
-              class="border-t border-neutral-700 p-4 xl:border-s xl:border-t-0"
+              class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
             >
               <template v-if="!form.description || form.description == ''">
                 <p>(ﾉ*･_･)ﾉ</p>

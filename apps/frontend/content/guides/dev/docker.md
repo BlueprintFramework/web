@@ -3,7 +3,7 @@ title: Develop with Blueprint Docker
 description: Set up Blueprint Docker for local development
 author: Loki and Emma
 category: dev
-thumbnail: blueprintdocker.jpg
+thumbnail: blueprintdockerdev.jpg
 ---
 
 ::card

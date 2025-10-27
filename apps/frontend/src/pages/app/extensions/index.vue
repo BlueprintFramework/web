@@ -164,7 +164,7 @@ const hasMore = computed(() => {
   const totalPages = Math.ceil(
     data.value.extensions.total / data.value.extensions.per_page
   )
-  return page.value < totalPages
+  return page.value <= totalPages
 })
 
 const fetchExtensions = async () => {

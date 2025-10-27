@@ -46,9 +46,12 @@ const props = withDefaults(
     spellcheck?: boolean
     wrap?: 'hard' | 'soft'
     autoresize?: boolean
+    richtext?: boolean
+    imageCallback?: string
   }>(),
   {
     autoresize: true,
+    richtext: false,
     wrap: 'hard',
     rows: 4,
   }

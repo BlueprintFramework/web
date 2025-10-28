@@ -2,7 +2,7 @@
   <div
     class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
   >
-    <div class="flex items-center gap-1.5 p-2 font-bold">
+    <div class="flex items-center gap-1.5 p-2 font-bold transition-colors">
       <Icon
         name="memory:format-text-single-line"
         :size="22"
@@ -11,7 +11,7 @@
       />
       <span>Sort by</span>
     </div>
-    <div class="space-y-2 p-2">
+    <div class="space-y-2 p-2 transition-colors">
       <button
         v-for="sortOption in sortOptions"
         :key="sortOption.value"

@@ -52,12 +52,13 @@
         <span class="text-xl font-semibold"> Submit </span>
         <Icon name="memory:chevron-right" mode="svg" :size="24" />
       </button>
-      <NuxtLink>
+      <NuxtLink class="group outline-0" tabindex="0">
         <button
           :disabled="loading"
-          @click="handleResend"
+          @mousedown.prevent="handleResend"
           type="button"
-          class="text-default-font hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 md:w-auto"
+          tabindex="-1"
+          class="text-default-font group-focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900 md:w-auto"
         >
           Resend email
         </button>

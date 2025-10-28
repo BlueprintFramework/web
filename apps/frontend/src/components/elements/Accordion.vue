@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-[1px]">
     <div
       v-for="(item, index) in props.items"
       :key="index"
-      class="border-b border-neutral-700 transition-colors hover:bg-neutral-900"
-      :class="{ '!border-b-0': index === props.items.length - 1 }"
+      class="bg-neutral-950 transition-colors focus-within:bg-neutral-900 hover:bg-neutral-900"
     >
-      <div
-        class="hover:text-brand-50 flex cursor-pointer items-center justify-between p-4 transition-colors"
+      <button
+        class="hover:text-brand-50 focus:text-brand-50 flex w-full cursor-pointer items-center justify-between p-4 outline-0 transition-colors"
         @click="toggleAccordion(index)"
+        @mousedown.prevent
       >
         <h2>
           {{ item.title }}
@@ -20,7 +20,7 @@
           mode="svg"
           class="transition-transform"
         />
-      </div>
+      </button>
       <div
         class="overflow-hidden transition-[max-height] duration-300 ease-in-out"
         :style="{
@@ -31,15 +31,17 @@
           :ref="(el) => setContentRef(el as Element | null, index)"
           class="text-default-font/75 p-4 pt-0"
         >
-          <p v-if="item.text">
-            {{ item.text }}
-          </p>
-          <template v-else>
-            <component
-              v-for="(vnode, vnodeIndex) in (item.inner as Function)()"
-              :key="vnodeIndex"
-              :is="vnode"
-            />
+          <template v-if="activeIndex == index || oldIndex == index">
+            <p v-if="item.text">
+              {{ item.text }}
+            </p>
+            <template v-else>
+              <component
+                v-for="(vnode, vnodeIndex) in (item.inner as Function)()"
+                :key="vnodeIndex"
+                :is="vnode"
+              />
+            </template>
           </template>
         </div>
       </div>
@@ -60,6 +62,8 @@ const props = defineProps<{
 }>()
 
 const activeIndex = ref(-1)
+const oldIndex = ref(-1)
+const blocked = ref(false)
 const contentRefs = ref<(Element | null)[]>([])
 const contentHeights = ref<number[]>([])
 
@@ -76,6 +80,9 @@ onMounted(() => {
 })
 
 const toggleAccordion = async (index: number) => {
+  if (blocked.value) return
+
+  oldIndex.value = activeIndex.value
   if (activeIndex.value === index) {
     activeIndex.value = -1
   } else {
@@ -86,5 +93,11 @@ const toggleAccordion = async (index: number) => {
       contentHeights.value[index] = contentRefs.value[index]!.scrollHeight
     }
   }
+
+  blocked.value = true
+  setTimeout(() => {
+    oldIndex.value = -1
+    blocked.value = false
+  }, 200)
 }
 </script>

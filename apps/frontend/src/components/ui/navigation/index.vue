@@ -48,18 +48,18 @@
             </div>
             <div
               v-else
-              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800 transition-colors focus-within:border-white"
+              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800 transition-colors focus-within:divide-white focus-within:border-white"
             >
               <NuxtLink
                 to="/auth"
-                class="hover:text-brand-50 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+                class="hover:text-brand-50 focus:text-brand-50 bg-neutral-900 px-2.5 py-0.5 outline-0 transition-colors hover:bg-neutral-800 focus:bg-neutral-800"
                 @mousedown.prevent
               >
                 <span>Log in</span>
               </NuxtLink>
               <NuxtLink
                 to="/auth/register"
-                class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
+                class="hover:text-brand-50 focus:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 outline-0 transition-colors"
                 @mousedown.prevent
               >
                 <span>Sign up</span>

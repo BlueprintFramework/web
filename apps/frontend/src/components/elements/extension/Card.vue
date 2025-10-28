@@ -8,9 +8,10 @@
             ? props.to
             : ''
       "
+      class="group outline-0"
     >
       <div
-        class="group space-y-4 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900"
+        class="space-y-4 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900"
       >
         <div
           v-if="props.extension"
@@ -18,7 +19,7 @@
         >
           <NuxtImg
             :src="props.extension.banner.lowres"
-            class="h-full w-full transition-transform group-hover:scale-105"
+            class="h-full w-full transition-transform group-hover:scale-105 group-focus:scale-105"
           />
         </div>
         <div
@@ -30,7 +31,9 @@
 
         <div v-if="props.extension" class="space-y-1.5">
           <div class="flex flex-row items-center justify-between gap-2">
-            <h2 class="group-hover:text-brand-50 truncate transition-colors">
+            <h2
+              class="group-hover:text-brand-50 group-focus:text-brand-50 truncate transition-colors"
+            >
               {{ props.extension.name }}
             </h2>
             <div class="flex gap-2">

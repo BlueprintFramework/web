@@ -6,7 +6,7 @@
         :key="`item-${index}`"
         class="mx-4 inline h-[128px] w-[256px]"
       >
-        <NuxtLink :to="`/browse/${item.identifier}`">
+        <NuxtLink :to="`/browse/${item.identifier}`" tabindex="-1">
           <div
             class="overflow-hidden rounded-2xl transition-transform hover:scale-95"
           >

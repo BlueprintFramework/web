@@ -30,11 +30,12 @@
 
     <div class="w-full lg:w-[calc(100%-18.75rem)]">
       <div
-        class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 transition-colors focus-within:border-neutral-500 focus-within:bg-neutral-500 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         <ElementsExtensionCard
           v-if="pending || extensions == undefined"
           v-for="n in 28"
+          tabindex="-1"
           class="flex flex-col bg-neutral-950"
         />
         <ElementsExtensionCard

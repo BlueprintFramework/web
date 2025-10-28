@@ -2,16 +2,17 @@
   <NuxtLink
     v-if="showWordart"
     to="/"
-    class="hover:rotate-13 transition-transform duration-300 hover:scale-110"
+    class="hover:rotate-13 focus:rotate-13 transition-transform duration-300 hover:scale-110"
   >
     <NuxtImg src="/img/blueprint_wordart.png" :height="28" />
   </NuxtLink>
   <div v-else class="w-min">
     <NuxtLink
       to="/"
-      class="hover:text-brand-50 flex items-center justify-between gap-2 transition-colors"
+      class="hover:text-brand-50 focus:text-brand-50 flex items-center justify-between gap-2 outline-0 transition-colors"
       :class="emblemClass"
       @mouseover="emblemHover()"
+      @focus="emblemHover()"
     >
       <BrandEmblem />
       <span class="text-xl font-bold">Blueprint</span>

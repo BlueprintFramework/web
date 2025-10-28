@@ -9,6 +9,7 @@
             : ''
       "
       class="group outline-0"
+      @mousedown.prevent
     >
       <div
         class="space-y-4 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900"

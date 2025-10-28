@@ -5,6 +5,7 @@
       :class="props.class"
       class="cursor-pointer group-focus:border-white"
       tabindex="-1"
+      @mousedown.prevent
     />
   </NuxtLink>
 </template>

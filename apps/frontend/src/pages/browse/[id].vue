@@ -19,6 +19,7 @@
               <NuxtLink
                 :to="`/app/extensions/${extension.id}`"
                 v-if="user?.admin || user?.id == extension.author.id"
+                tabindex="-1"
               >
                 <ElementsButtonSmall> Edit </ElementsButtonSmall>
               </NuxtLink>

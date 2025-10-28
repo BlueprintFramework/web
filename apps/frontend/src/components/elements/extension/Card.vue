@@ -16,7 +16,7 @@
       >
         <div
           v-if="props.extension"
-          class="aspect-video w-full overflow-hidden rounded-2xl border border-neutral-700"
+          class="ee aspect-video w-full overflow-hidden rounded-2xl border border-neutral-700 transition-colors group-focus:border-neutral-500"
         >
           <NuxtImg
             :src="props.extension.banner.lowres"

@@ -63,7 +63,7 @@ impl ExtensionImage {
         );
 
         let image = tokio::task::spawn_blocking(move || {
-            image.resize_exact(
+            image.resize(
                 image.width().min(1280),
                 image.height().min(10000),
                 FilterType::Triangle,

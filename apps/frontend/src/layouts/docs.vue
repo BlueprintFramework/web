@@ -116,9 +116,11 @@
               <div
                 v-for="(categoryData, category) in filteredCategories"
                 :key="category"
-                class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
+                class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
               >
-                <div class="flex items-center gap-1.5 p-2 font-bold">
+                <div
+                  class="flex items-center gap-1.5 p-2 font-bold transition-colors"
+                >
                   <Icon
                     :name="categoryData.icon"
                     :size="22"
@@ -127,16 +129,17 @@
                   />
                   <span>{{ category }}</span>
                 </div>
-                <div class="space-y-2 p-2">
+                <div class="space-y-2 p-2 transition-colors">
                   <NuxtLink
                     v-for="doc in categoryData.docs"
                     :key="doc.id"
                     :to="doc.path"
-                    class="hover:text-brand-50 text-default-font/60 block w-full text-start transition-colors"
+                    class="hover:text-brand-50 text-default-font/60 focus:text-brand-50 block w-full text-start outline-0 transition-colors focus:font-bold"
                     :class="{
                       '!text-default-font': route.path == doc.path,
                     }"
                     @click="mobileVisible = false"
+                    @mousedown.prevent
                   >
                     <span>{{ doc.title }}</span>
                   </NuxtLink>

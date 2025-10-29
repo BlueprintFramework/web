@@ -10,41 +10,43 @@
   </div>
 
   <div
-    class="flex flex-col gap-4 rounded-3xl border border-neutral-700 bg-neutral-950 p-4"
+    class="flex flex-col gap-4 rounded-3xl border border-neutral-700 bg-neutral-950 p-4 transition-colors focus-within:border-neutral-500"
   >
-    <NuxtLink v-for="guide in categoryData" :key="guide.id" :to="guide.path">
-      <div
-        class="group grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 transition-colors hover:bg-neutral-900 md:grid-cols-2 md:divide-x"
-      >
-        <div class="flex h-full p-4">
-          <div class="space-y-2 self-center overflow-hidden text-nowrap">
-            <div class="flex items-center gap-2">
-              <span
-                class="group-hover:text-brand-50 h2 lg:h1 overflow-hidden text-ellipsis transition-colors"
-              >
-                {{ guide.title }}
-              </span>
-              <Icon
-                name="memory:chevron-right"
-                :size="32"
-                class="text-brand-50 opacity-0 transition-opacity group-hover:opacity-100"
-              />
-            </div>
-            <p class="text-default-font/60 overflow-hidden text-ellipsis">
-              {{ guide?.description || 'No description provided' }}
-            </p>
+    <NuxtLink
+      v-for="guide in categoryData"
+      :key="guide.id"
+      :to="guide.path"
+      class="group grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:bg-neutral-900 focus:border-neutral-500 focus:bg-neutral-900 md:grid-cols-2 md:divide-x"
+      @mousedown.prevent
+    >
+      <div class="flex h-full p-4">
+        <div class="space-y-2 self-center overflow-hidden text-nowrap">
+          <div class="flex items-center gap-2">
+            <span
+              class="group-hover:text-brand-50 group-focus:text-brand-50 h2 lg:h1 overflow-hidden text-ellipsis transition-colors"
+            >
+              {{ guide.title }}
+            </span>
+            <Icon
+              name="memory:chevron-right"
+              :size="32"
+              class="text-brand-50 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100"
+            />
           </div>
+          <p class="text-default-font/60 overflow-hidden text-ellipsis">
+            {{ guide?.description || 'No description provided' }}
+          </p>
         </div>
-        <div
-          class="order-first overflow-hidden border-b border-neutral-700 md:order-last md:border-b-0"
-        >
-          <NuxtImg
-            :src="`/img/guides/thumbnails/${guide.thumbnail || 'default.jpeg'}`"
-            :height="300"
-            :width="1280"
-            class="group-hover:scale-102 h-full w-full object-cover transition-transform"
-          />
-        </div>
+      </div>
+      <div
+        class="order-first overflow-hidden border-b border-neutral-700 md:order-last md:border-b-0"
+      >
+        <NuxtImg
+          :src="`/img/guides/thumbnails/${guide.thumbnail || 'default.jpeg'}`"
+          :height="300"
+          :width="1280"
+          class="group-hover:scale-102 group-focus:scale-102 h-full w-full object-cover transition-transform"
+        />
       </div>
     </NuxtLink>
   </div>

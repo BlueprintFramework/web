@@ -70,71 +70,81 @@
   <div class="flex gap-5">
     <div v-if="isDesktop" class="w-17 py-4 pl-4">
       <div
-        class="w-15 fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950"
+        class="w-15 parent-focus fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
       >
         <!-- Emblem -->
         <NuxtLink
           to="/"
-          class="group flex aspect-square w-full flex-col items-center justify-center transition-colors hover:bg-neutral-900"
+          class="group flex aspect-square w-full flex-col items-center justify-center outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+          @mousedown.prevent
         >
           <BrandEmblem
             :size="24"
-            class="group-hover:text-brand-50 transition-colors"
+            class="group-hover:text-brand-50 group-focus:text-brand-50 transition-colors"
           />
         </NuxtLink>
 
         <!-- Links -->
-        <div class="flex w-full flex-col divide-y divide-neutral-700">
+        <div
+          class="apply-parent-focus flex w-full flex-col divide-y divide-neutral-700 transition-colors"
+        >
           <NuxtLink
             v-if="user?.email_pending == null"
             to="/app"
-            class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{ '!text-default-font': route.path == '/app' }"
+            @mousedown.prevent
           >
             <Icon name="memory:apps" :size="24" />
           </NuxtLink>
           <NuxtLink
             to="/app/account"
-            class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
               '!text-default-font':
                 route.path == '/app/account' ||
                 route.path.startsWith('/app/account/'),
             }"
+            @mousedown.prevent
           >
             <Icon name="memory:account-box" :size="24" />
           </NuxtLink>
           <NuxtLink
             v-if="user?.email_pending == null"
             to="/app/extensions"
-            class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
               '!text-default-font':
                 route.path == '/app/extensions' ||
                 route.path.startsWith('/app/extensions/'),
             }"
+            @mousedown.prevent
           >
             <Icon name="memory:cube" :size="24" />
           </NuxtLink>
           <NuxtLink
             v-if="user?.email_pending == null"
             to="/app/stats"
-            class="text-default-font/50 hover:text-brand-50 flex w-full flex-col items-center py-4 transition-colors hover:bg-neutral-900"
+            class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
               '!text-default-font':
                 route.path == '/app/stats' ||
                 route.path.startsWith('/app/stats/'),
             }"
+            @mousedown.prevent
           >
             <Icon name="memory:chart-bar" :size="24" />
           </NuxtLink>
         </div>
 
         <!-- Logout -->
-        <div class="bg-stripes flex h-full w-full flex-col justify-end">
+        <div
+          class="bg-stripes flex h-full w-full flex-col justify-end transition-colors"
+        >
           <button
             @click="logout"
-            class="flex cursor-pointer flex-col items-center border-t border-neutral-700 bg-neutral-950 py-4 transition-colors hover:bg-red-950 hover:text-red-400"
+            class="apply-parent-focus flex cursor-pointer flex-col items-center border-t border-neutral-700 bg-neutral-950 py-4 outline-0 transition-colors hover:bg-red-950 hover:text-red-400 focus:bg-red-950 focus:text-red-400"
+            @mousedown.prevent
           >
             <Icon name="memory:logout" :size="24" />
           </button>
@@ -158,3 +168,11 @@ const route = useRoute()
 const isDesktop = useMediaQuery('(min-width: 768px)')
 const isXs = useMediaQuery('(max-width: 330px)')
 </script>
+
+<style scoped>
+@reference "~/assets/css/main.css";
+
+.parent-focus:focus-within .apply-parent-focus {
+  @apply divide-neutral-500 border-neutral-500;
+}
+</style>

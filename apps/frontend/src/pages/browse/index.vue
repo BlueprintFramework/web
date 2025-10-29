@@ -7,9 +7,9 @@
     <!-- Desktop filters -->
     <div class="w-75 hidden lg:block">
       <div
-        class="sticky top-[calc(var(--nav-offset)+1rem)] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+        class="sticky top-[calc(var(--nav-offset)+1rem)] divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
       >
-        <div class="border-b border-neutral-700 p-4">
+        <div class="p-4 transition-colors">
           <ElementsFormInput
             v-model="form.search"
             name="search"
@@ -20,7 +20,7 @@
             @validate="void"
           />
         </div>
-        <div class="divide-y divide-neutral-700">
+        <div class="divide-y divide-neutral-700 transition-colors">
           <div class="space-y-4 p-4">
             <UiBrowseFilters :form="form" />
           </div>

@@ -12,6 +12,7 @@
     <NuxtLink
       to="/app/account"
       class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:account-box" :size="28" mode="svg" />
@@ -24,6 +25,7 @@
     <NuxtLink
       to="/app/extensions"
       class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:cube" :size="28" mode="svg" />
@@ -36,6 +38,7 @@
     <NuxtLink
       to="/app/stats"
       class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:chart-bar" :size="28" mode="svg" />

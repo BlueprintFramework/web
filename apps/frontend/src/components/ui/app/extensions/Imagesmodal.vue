@@ -55,7 +55,7 @@
         v-if="extension.status == 'approved'"
         class="flex w-full flex-col items-center md:w-auto"
         :disabled="loading"
-        @click="handleUpload"
+        @click="uploadInput?.click()"
       >
         <div class="flex items-center gap-1.5">
           <Icon name="pixelarticons:upload" />
@@ -69,6 +69,14 @@
       />
     </template>
   </ElementsModal>
+
+  <input
+    ref="uploadInput"
+    type="file"
+    accept="image/*"
+    class="hidden"
+    @change="handleUpload"
+  />
 </template>
 
 <script setup lang="ts">
@@ -82,6 +90,8 @@ const emit = defineEmits<{
   insert: [url: string]
 }>()
 
+const uploadInput = useTemplateRef('uploadInput')
+
 const isOpen = ref(true)
 const loading = ref(false)
 const images = ref<{ extension_images: ExtensionImages }>()
@@ -93,30 +103,42 @@ if (user.value?.admin) {
 }
 
 const fetchImages = async () => {
-  loading.value = true
   try {
     images.value = await $fetch(`${basePath.value}/images`, {
       method: 'GET',
     })
   } catch (error) {
     console.error('An error occurred fetching images: ' + error)
-  } finally {
-    loading.value = false
   }
 }
 
 const handleOpen = async () => {
   isOpen.value = true
-  await fetchImages()
+  if (props.extension.status == 'approved') {
+    loading.value = true
+    await fetchImages()
+    loading.value = false
+  }
 }
 
-const handleUpload = async () => {
+const handleUpload = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
   imageCount.value = (images.value?.extension_images.length || 0) + 1
   loading.value = true
 
-  // upload image
-
-  await fetchImages()
+  try {
+    await $fetch(`${basePath.value}/images`, {
+      method: 'POST',
+      body: file,
+    })
+    await fetchImages()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
 }
 
 defineExpose({

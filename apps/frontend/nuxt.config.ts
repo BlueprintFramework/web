@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/plausible',
     '@nuxtjs/turnstile',
+    '@vueuse/nuxt',
   ],
   css: ['~/assets/css/main.css'],
   app: {

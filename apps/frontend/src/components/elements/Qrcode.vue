@@ -10,7 +10,7 @@ const props = defineProps<{
   size?: number
 }>()
 
-const canvas = ref<HTMLCanvasElement>()
+const canvas = useTemplateRef('canvas')
 
 onMounted(() => {
   generateQR()

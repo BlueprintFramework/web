@@ -91,16 +91,19 @@
           loading
         "
         type="submit"
-        class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+        class="text-default-font focus:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+        @mousedown.prevent="handleLogin"
       >
         <span class="text-xl font-semibold"> Continue </span>
         <Icon name="memory:chevron-right" mode="svg" :size="24" />
       </button>
-      <NuxtLink>
+      <NuxtLink tabindex="0" class="group outline-0">
         <button
           :disabled="loading"
           type="button"
-          class="text-default-font hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 md:w-auto"
+          tabindex="-1"
+          class="text-default-font group-focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900 md:w-auto"
+          @mousedown.prevent
         >
           Authenticate with GitHub
         </button>
@@ -119,7 +122,7 @@ const route = useRoute()
 const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const errors = ref()
 const reset = ref(false)

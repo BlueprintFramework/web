@@ -86,7 +86,8 @@
         loading
       "
       type="submit"
-      class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+      @mousedown.prevent="handleRegister"
+      class="text-default-font focus:text-brand-50 hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
     >
       <div class="text-xl font-semibold">
         <span>Sign up</span>
@@ -105,7 +106,7 @@ definePageMeta({
 const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})

@@ -1,16 +1,18 @@
 <template>
   <div
-    class="flex divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:divide-x"
+    class="flex divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500 lg:divide-x"
   >
-    <div class="flex-1/2 divide-y divide-neutral-700">
-      <div class="space-y-3 p-4 md:p-8">
+    <div
+      class="flex-1/2 divide-y divide-neutral-700 transition-colors focus-within:divide-neutral-500"
+    >
+      <div class="space-y-3 p-4 transition-colors md:p-8">
         <h1>Guides</h1>
         <span class="opacity-75">
           Learn how to interact with our platform. From installing Blueprint to
           developing extensions, we're here to help you get started.
         </span>
       </div>
-      <div class="p-4 md:p-8">
+      <div class="p-4 transition-colors md:p-8">
         <ElementsFormInput
           v-model="form.search"
           name="search"
@@ -22,7 +24,7 @@
         />
       </div>
     </div>
-    <div class="flex-1/2 relative hidden lg:block">
+    <div class="flex-1/2 relative hidden transition-colors lg:block">
       <NuxtImg
         src="/img/guides.jpeg"
         :width="1280"
@@ -36,9 +38,9 @@
     <div
       v-for="(categoryData, category) in filteredCategories"
       :key="category"
-      class="divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700"
+      class="guide-category divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
     >
-      <div class="flex justify-between">
+      <div class="flex justify-between transition-colors">
         <div class="hidden items-center gap-1.5 p-4 text-2xl font-bold sm:flex">
           <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
           <span>{{ category }}</span>
@@ -46,15 +48,23 @@
         <NuxtLink
           :to="`/guides/category/${categoryData.key}`"
           class="hover:text-brand-50 flex w-full items-center gap-1.5 p-4 text-2xl font-bold transition-colors hover:bg-neutral-900 sm:hidden"
+          tabindex="-1"
+          @mousedown.prevent
         >
           <Icon :name="categoryData.icon" :size="32" mode="svg" class="block" />
           <span>{{ category }}</span>
         </NuxtLink>
-        <div class="hidden border-s border-neutral-700 sm:inline">
-          <NuxtLink :to="`/guides/category/${categoryData.key}`">
+        <div
+          class="category-link hidden border-s border-neutral-700 transition-colors sm:inline"
+        >
+          <NuxtLink
+            :to="`/guides/category/${categoryData.key}`"
+            @mousedown.prevent
+            class="group outline-0"
+          >
             <button
-              type="submit"
-              class="text-default-font hover:text-brand-50 flex h-full cursor-pointer items-center justify-between gap-1 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+              class="text-default-font group-focus:text-brand-50 hover:text-brand-50 flex h-full cursor-pointer items-center justify-between gap-1 bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900"
+              tabindex="-1"
             >
               <span class="hidden text-xl font-semibold md:inline">
                 View category
@@ -64,15 +74,18 @@
           </NuxtLink>
         </div>
       </div>
-      <div class="flex gap-4 overflow-x-scroll p-4">
+      <div
+        class="flex gap-4 overflow-x-scroll p-4 outline-0 transition-colors focus:bg-neutral-900"
+      >
         <NuxtLink
           v-for="guide in categoryData.guides"
           :key="guide.id"
           :to="guide.path"
-          class="min-w-95 w-1/4"
+          class="min-w-95 group w-1/4 outline-0"
+          @mousedown.prevent
         >
           <div
-            class="group overflow-hidden rounded-2xl border border-neutral-700 transition-colors hover:bg-neutral-900"
+            class="overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors hover:bg-neutral-900 group-focus:border-neutral-500 group-focus:bg-neutral-900"
           >
             <NuxtImg
               :src="`/img/guides/thumbnails/${guide.thumbnail || 'default.jpeg'}`"
@@ -82,7 +95,7 @@
             />
             <div class="space-y-2 overflow-hidden text-nowrap p-4">
               <h2
-                class="group-hover:text-brand-50 overflow-hidden text-ellipsis transition-colors"
+                class="group-hover:text-brand-50 group-focus:text-brand-50 overflow-hidden text-ellipsis transition-colors"
               >
                 {{ guide.title }}
               </h2>
@@ -192,3 +205,11 @@ const filteredCategories = computed(() => {
   return filtered
 })
 </script>
+
+<style scoped>
+@reference "~/assets/css/main.css";
+
+.guide-category:focus-within .category-link {
+  @apply border-neutral-500;
+}
+</style>

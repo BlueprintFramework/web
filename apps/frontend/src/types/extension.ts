@@ -51,3 +51,13 @@ export interface ExtensionStats {
 
 export type ExtensionType = 'theme' | 'extension'
 export type ExtensionStatus = 'approved' | 'ready' | 'pending'
+
+export interface ExtensionImage {
+  created: string
+  height: number
+  width: number
+  id: number
+  size: number
+  url: string
+}
+export type ExtensionImages = ExtensionImage[]

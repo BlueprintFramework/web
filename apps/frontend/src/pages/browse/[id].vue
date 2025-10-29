@@ -1,17 +1,19 @@
 <template>
   <div v-if="extension" class="space-y-12">
     <div
-      class="overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+      class="parent-focus overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:border-neutral-500"
     >
-      <div class="flex divide-x divide-neutral-700">
+      <div
+        class="apply-parent-focus flex divide-x divide-neutral-700 transition-colors"
+      >
         <NuxtImg
           :src="extension.banner.fullres"
-          class="max-h-125 hidden aspect-video w-full object-cover lg:block"
+          class="max-h-125 hidden aspect-video w-full object-cover transition-colors lg:block"
         />
         <div
-          class="lg:min-w-100 lg:max-w-100 flex w-full flex-col justify-between divide-y divide-neutral-700"
+          class="lg:min-w-100 lg:max-w-100 apply-parent-focus flex w-full flex-col justify-between divide-y divide-neutral-700 transition-colors"
         >
-          <div class="p-4">
+          <div class="p-4 transition-colors">
             <div class="flex justify-between gap-2">
               <h1 class="truncate !text-2xl lg:!text-3xl">
                 {{ extension.name }}
@@ -19,6 +21,7 @@
               <NuxtLink
                 :to="`/app/extensions/${extension.id}`"
                 v-if="user?.admin || user?.id == extension.author.id"
+                tabindex="-1"
               >
                 <ElementsButtonSmall> Edit </ElementsButtonSmall>
               </NuxtLink>
@@ -27,14 +30,16 @@
               {{ extension.summary }}
             </p>
           </div>
-          <div class="h-full w-full">
+          <div class="h-full w-full transition-colors">
             <div class="bg-stripes hidden h-full w-full lg:block" />
             <NuxtImg
               :src="extension.banner.fullres"
               class="max-h-125 block aspect-video w-full object-cover lg:hidden"
             />
           </div>
-          <div class="divide-y divide-neutral-700">
+          <div
+            class="apply-parent-focus divide-y divide-neutral-700 transition-colors"
+          >
             <a
               v-for="platform in availablePlatforms"
               :key="platform.key"
@@ -45,7 +50,8 @@
               "
               target="_blank"
               rel="noopener noreferrer"
-              class="text-default-font hover:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 transition-colors hover:bg-neutral-900"
+              class="text-default-font hover:text-brand-50 focus:text-brand-50 flex w-full cursor-pointer items-center justify-between bg-neutral-950 px-4 py-3 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+              @mousedown.prevent
             >
               <div class="flex items-center gap-2 truncate">
                 <component :is="platform.icon" />
@@ -334,13 +340,17 @@
           </div>
 
           <div
-            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700"
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
           >
-            <div class="flex items-center justify-between gap-2 p-2 text-lg">
+            <div
+              class="flex items-center justify-between gap-2 p-2 text-lg transition-colors"
+            >
               <span>Version history</span>
               <Icon name="pixelarticons:git-pull-request" />
             </div>
-            <div class="max-h-75 overflow-y-scroll">
+            <div
+              class="max-h-75 overflow-y-scroll bg-neutral-950 outline-0 transition-colors focus:bg-neutral-900"
+            >
               <div
                 v-if="extension.versions[0]"
                 v-for="version in extension.versions"
@@ -543,3 +553,11 @@ const { data: description } = await useAsyncData(
   }
 )
 </script>
+
+<style scoped>
+@reference "~/assets/css/main.css";
+
+.parent-focus:focus-within .apply-parent-focus {
+  @apply divide-neutral-500 border-neutral-500;
+}
+</style>

@@ -10,4 +10,6 @@ thumbnail: adminconfiguration.jpeg
 This guide builds on the assumption that you have an admin controller set up. If you have yet to do so, check out the [custom admin controller guide](/guides/dev/admincontroller).
 ::
 
-...
+## Introduction
+
+lorem ipsum

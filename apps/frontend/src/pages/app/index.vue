@@ -7,11 +7,12 @@
   <UiAppVerifyemail v-if="user?.email_pending != null" />
 
   <div
-    class="flex flex-col divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 md:grid md:grid-cols-4 md:divide-x md:divide-y-0"
+    class="group flex flex-col divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500 md:grid md:grid-cols-4 md:divide-x md:divide-y-0"
   >
     <NuxtLink
       to="/app/account"
-      class="hover:text-brand-50 space-y-2 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900"
+      class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:account-box" :size="28" mode="svg" />
@@ -23,7 +24,8 @@
     </NuxtLink>
     <NuxtLink
       to="/app/extensions"
-      class="hover:text-brand-50 space-y-2 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900"
+      class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:cube" :size="28" mode="svg" />
@@ -35,7 +37,8 @@
     </NuxtLink>
     <NuxtLink
       to="/app/stats"
-      class="hover:text-brand-50 space-y-2 bg-neutral-950 p-4 transition-colors hover:bg-neutral-900"
+      class="hover:text-brand-50 focus:text-brand-50 space-y-2 bg-neutral-950 p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+      @mousedown.prevent
     >
       <div class="flex items-center gap-1.5">
         <Icon name="memory:chart-bar" :size="28" mode="svg" />
@@ -45,7 +48,7 @@
         View statistics, customize graphs, extension statistics
       </span>
     </NuxtLink>
-    <div v-if="isDesktop" class="bg-stripes" />
+    <div v-if="isDesktop" class="bg-stripes transition-colors" />
   </div>
 </template>
 

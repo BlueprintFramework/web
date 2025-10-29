@@ -100,7 +100,7 @@
 const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = ref()
+const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)
 const errors = ref({
   profile: [],

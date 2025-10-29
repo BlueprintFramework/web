@@ -15,7 +15,8 @@
           <NuxtLink
             to="https://hcb.hackclub.com/donations/start/blueprint"
             target="_blank"
-            class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 overflow-hidden rounded-md border border-neutral-700 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+            class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 overflow-hidden rounded-md border border-neutral-700 bg-neutral-900 px-2.5 py-0.5 outline-0 transition-colors hover:bg-neutral-800 focus:border-white"
+            @mousedown.prevent
           >
             <span>Donate</span>
             <Icon name="memory:arrow-top-right" mode="svg" />
@@ -23,11 +24,12 @@
           <client-only>
             <div
               v-if="isAuthenticated"
-              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
+              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800 transition-colors focus-within:divide-white focus-within:border-white"
             >
               <NuxtLink
                 to="/app"
-                class="hover:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 transition-colors"
+                class="hover:text-brand-50 focus:text-brand-50 flex min-h-[26px] items-center gap-1 px-2.5 py-0.5 outline-0 transition-colors"
+                @mousedown.prevent
               >
                 <Icon name="memory:account" />
                 <span> {{ user?.name }} </span>
@@ -37,24 +39,28 @@
               </NuxtLink>
               <NuxtLink
                 @click="logout"
-                class="flex min-h-[26px] cursor-pointer items-center bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-red-950 hover:text-red-400"
+                tabindex="0"
+                class="flex min-h-[26px] cursor-pointer items-center bg-neutral-900 px-2.5 py-0.5 outline-0 transition-colors hover:bg-red-950 hover:text-red-400 focus:bg-red-950 focus:text-red-400"
+                @mousedown.prevent
               >
                 <Icon name="memory:logout" mode="svg" />
               </NuxtLink>
             </div>
             <div
               v-else
-              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800"
+              class="flex items-center divide-x divide-neutral-700 overflow-hidden rounded-md border border-neutral-700 bg-neutral-800 transition-colors focus-within:divide-white focus-within:border-white"
             >
               <NuxtLink
                 to="/auth"
-                class="hover:text-brand-50 bg-neutral-900 px-2.5 py-0.5 transition-colors hover:bg-neutral-800"
+                class="hover:text-brand-50 focus:text-brand-50 bg-neutral-900 px-2.5 py-0.5 outline-0 transition-colors hover:bg-neutral-800 focus:bg-neutral-800"
+                @mousedown.prevent
               >
                 <span>Log in</span>
               </NuxtLink>
               <NuxtLink
                 to="/auth/register"
-                class="hover:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 transition-colors"
+                class="hover:text-brand-50 focus:text-brand-50 flex items-center gap-1 px-2.5 py-0.5 outline-0 transition-colors"
+                @mousedown.prevent
               >
                 <span>Sign up</span>
                 <Icon name="memory:chevron-right" />

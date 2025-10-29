@@ -1,9 +1,11 @@
 <template>
   <div
     :class="props.class"
-    class="grid grid-cols-1 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 md:grid-cols-2"
+    class="grid grid-cols-1 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 focus-within:border-neutral-500 md:grid-cols-2"
   >
-    <div class="border-neutral-700 md:border-e">
+    <div
+      class="border-neutral-700 bg-neutral-700 transition-colors focus-within:border-neutral-500 focus-within:bg-neutral-500 md:border-e"
+    >
       <ElementsAccordion :items="items" :default="0" />
     </div>
     <div class="relative hidden overflow-hidden md:block">
@@ -65,7 +67,7 @@ const items = [
   },
   {
     title: 'Is Blueprint a fork of Pterodactyl?',
-    text: "No. Blueprint cannot function on it's own, just like any other 'standalone' Pterodactyl modification.",
+    text: 'No. Blueprint requires to be installed on top of a stock Pterodactyl installation to function.',
   },
   {
     title: 'Are standalone modifications compatible?',

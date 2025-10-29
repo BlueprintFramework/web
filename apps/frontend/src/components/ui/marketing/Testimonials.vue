@@ -6,6 +6,7 @@
         :autoFill="true"
         :speed="25"
         :direction="index % 2 == 0 ? 'left' : 'right'"
+        tabindex="-1"
       >
         <div
           v-for="(testimonial, index) in testimonials"

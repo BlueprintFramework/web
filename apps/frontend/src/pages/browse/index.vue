@@ -7,9 +7,9 @@
     <!-- Desktop filters -->
     <div class="w-75 hidden lg:block">
       <div
-        class="sticky top-[calc(var(--nav-offset)+1rem)] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950"
+        class="sticky top-[calc(var(--nav-offset)+1rem)] divide-y divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
       >
-        <div class="border-b border-neutral-700 p-4">
+        <div class="p-4 transition-colors">
           <ElementsFormInput
             v-model="form.search"
             name="search"
@@ -20,7 +20,7 @@
             @validate="void"
           />
         </div>
-        <div class="divide-y divide-neutral-700">
+        <div class="divide-y divide-neutral-700 transition-colors">
           <div class="space-y-4 p-4">
             <UiBrowseFilters :form="form" />
           </div>
@@ -30,11 +30,12 @@
 
     <div class="w-full lg:w-[calc(100%-18.75rem)]">
       <div
-        class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        class="grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 transition-colors focus-within:border-neutral-500 focus-within:bg-neutral-500 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         <ElementsExtensionCard
           v-if="pending || extensions == undefined"
           v-for="n in 28"
+          tabindex="-1"
           class="flex flex-col bg-neutral-950"
         />
         <ElementsExtensionCard
@@ -70,10 +71,7 @@
   </div>
 
   <!-- Mobile filters -->
-  <div
-    class="z-15 fixed bottom-0 left-0 m-0 w-full lg:hidden"
-    ref="drawerContainer"
-  >
+  <div class="z-15 fixed bottom-0 left-0 m-0 w-full lg:hidden">
     <div class="container">
       <div
         class="overflow-hidden rounded-t-3xl border border-b-0 border-neutral-700 bg-neutral-950"
@@ -144,8 +142,7 @@ const { data: extensions, pending } = await useAsyncData<Extension[]>(
   }
 )
 
-const drawerContainer = ref<HTMLElement>()
-const drawerContent = ref<HTMLElement>()
+const drawerContent = useTemplateRef('drawerContent')
 const drawer = reactive({
   open: false,
   height: '0px',

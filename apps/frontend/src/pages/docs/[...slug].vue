@@ -32,13 +32,14 @@
     </div>
 
     <div
-      class="grid divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
+      class="grid divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
       v-if="prevDoc || nextDoc"
     >
       <NuxtLink
         v-if="prevDoc"
         :to="prevDoc.path"
-        class="hover:text-brand-50 overflow-hidden p-4 transition-colors hover:bg-neutral-900"
+        class="hover:text-brand-50 focus:text-brand-50 overflow-hidden p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+        @mousedown.prevent
       >
         <h3 class="mb-2 truncate text-lg font-medium">
           {{ prevDoc.title }}
@@ -50,12 +51,16 @@
           {{ prevDoc.description }}
         </p>
       </NuxtLink>
-      <div class="bg-stripes hidden h-full w-full sm:block" v-else />
+      <div
+        class="bg-stripes hidden h-full w-full transition-colors sm:block"
+        v-else
+      />
 
       <NuxtLink
         v-if="nextDoc"
         :to="nextDoc.path"
-        class="hover:text-brand-50 overflow-hidden p-4 transition-colors hover:bg-neutral-900"
+        class="hover:text-brand-50 focus:text-brand-50 overflow-hidden p-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
+        @mousedown.prevent
       >
         <h3 class="mb-2 truncate text-lg font-medium">
           {{ nextDoc.title }}
@@ -67,7 +72,10 @@
           {{ nextDoc.description }}
         </p>
       </NuxtLink>
-      <div class="bg-stripes hidden h-full w-full sm:block" v-else />
+      <div
+        class="bg-stripes hidden h-full w-full transition-colors sm:block"
+        v-else
+      />
     </div>
   </div>
 </template>

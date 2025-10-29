@@ -116,7 +116,7 @@
             label="Submit"
             type="submit"
             class="order-first w-full md:order-[unset] md:w-auto"
-            @click="submitButton.click()"
+            @click="submitButton?.click()"
           />
         </template>
       </ElementsModal>
@@ -127,7 +127,7 @@
 <script setup lang="ts">
 const { rules: validationRules } = useFormValidation()
 
-const submitButton = ref()
+const submitButton = useTemplateRef('submitButton')
 const passwordModalOpen = ref(false)
 const loading = ref(false)
 const errors = ref()

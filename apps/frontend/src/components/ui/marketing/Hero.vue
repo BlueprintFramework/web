@@ -49,6 +49,8 @@
         class="h-full w-full object-cover"
         playsinline
         webkit-playsinline
+        preload="none"
+        tabindex="-1"
       >
         <source src="/img/console.mp4" type="video/mp4" />
         <source src="/img/console.webm" type="video/webm" />

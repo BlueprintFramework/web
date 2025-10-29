@@ -126,7 +126,7 @@ async fn main() {
 
         github_releases: RwLock::new(Vec::new()),
         client: reqwest::Client::builder()
-            .user_agent(format!("blueprint api/{}", VERSION))
+            .user_agent(format!("github.com/BlueprintFramework/web {}", VERSION))
             .build()
             .unwrap(),
 

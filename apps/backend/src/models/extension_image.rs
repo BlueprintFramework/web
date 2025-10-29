@@ -77,7 +77,12 @@ impl ExtensionImage {
         let data = tokio::task::spawn_blocking(move || {
             let mut data: Vec<u8> = Vec::new();
             let encoder = WebPEncoder::new_lossless(&mut data);
-            encoder.encode(image.as_bytes(), 1280, 720, image.color().into())?;
+            encoder.encode(
+                image.as_bytes(),
+                image.width(),
+                image.height(),
+                image.color().into(),
+            )?;
 
             Ok::<_, anyhow::Error>(data)
         })

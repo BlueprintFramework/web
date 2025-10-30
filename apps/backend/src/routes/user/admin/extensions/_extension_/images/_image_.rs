@@ -14,7 +14,7 @@ mod delete {
     #[derive(ToSchema, Serialize)]
     struct Response {}
 
-    #[utoipa::path(get, path = "/", responses(
+    #[utoipa::path(delete, path = "/", responses(
         (status = OK, body = inline(Response)),
         (status = NOT_FOUND, body = ApiError),
     ), params(

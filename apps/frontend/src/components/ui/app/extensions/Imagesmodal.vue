@@ -21,8 +21,6 @@
       </div>
 
       <template v-else>
-        {{ images }}
-
         <div v-if="loading" class="grid grid-cols-1 gap-2 md:grid-cols-2">
           <div
             v-for="i in imageCount"
@@ -44,6 +42,29 @@
                 Once you upload images, they'll show up here. You can upload up
                 to 25 images per extension.
               </p>
+            </div>
+          </div>
+          <div v-else class="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <div
+              v-for="image in images.extension_images"
+              class="group aspect-video cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 bg-cover bg-center p-2 transition-colors hover:border-neutral-500"
+              :style="`background-image: url(${image.url});`"
+            >
+              <div class="flex justify-between gap-2">
+                <ElementsButtonSmall
+                  class="min-w-auto hover:text-brand-50 !rounded-lg py-1 !transition-all hover:bg-neutral-800 group-hover:!rounded-sm group-hover:py-2"
+                  @click="handleInsert(image)"
+                >
+                  <Icon name="pixelarticons:plus" mode="svg" />
+                </ElementsButtonSmall>
+                <ElementsButtonSmall
+                  color="danger"
+                  class="min-w-auto !rounded-lg rounded-2xl py-1 !transition-all group-hover:!rounded-sm group-hover:py-2"
+                  @click="handleDelete(image)"
+                >
+                  <Icon name="pixelarticons:trash" mode="svg" />
+                </ElementsButtonSmall>
+              </div>
             </div>
           </div>
         </template>
@@ -87,7 +108,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  insert: [url: string]
+  insert: [url: ExtensionImage['url']]
 }>()
 
 const uploadInput = useTemplateRef('uploadInput')
@@ -141,10 +162,29 @@ const handleUpload = async (event: Event) => {
   }
 }
 
+const handleInsert = async (image: ExtensionImage) => {
+  isOpen.value = false
+  emit('insert', image.url)
+}
+
+const handleDelete = async (image: ExtensionImage) => {
+  if (!image) return
+
+  imageCount.value = (images.value?.extension_images.length || 0) - 1
+  loading.value = true
+
+  try {
+    await $fetch(`${basePath.value}/images/${image.id}`, { method: 'DELETE' })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    await fetchImages()
+    loading.value = false
+  }
+}
+
 defineExpose({
   isOpen,
   handleOpen,
 })
-
-//emit('insert', url)
 </script>

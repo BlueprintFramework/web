@@ -157,9 +157,7 @@
                       />
                       <ElementsButton
                         @click="bannerInput?.click()"
-                        :disabled="
-                          uploading || user?.id != data.extension.author.id
-                        "
+                        :disabled="uploading"
                       >
                         <div class="flex items-center gap-1.5">
                           <Icon name="pixelarticons:upload" />
@@ -388,6 +386,7 @@ const bannerInput = useTemplateRef('bannerInput')
 const descriptionToolbar = useTemplateRef('descriptionToolbar')
 const imagesModal = useTemplateRef('imagesModal')
 
+const basePath = ref(`/api/user/extensions/${route.params.id}`)
 const loading = ref(false)
 const submitting = ref(false)
 const uploading = ref(false)
@@ -421,6 +420,10 @@ const adminRejectForm = ref<{
   deny_reason: '',
 })
 
+if (user.value?.admin) {
+  basePath.value = `/api/user/admin/extensions/${route.params.id}`
+}
+
 const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
@@ -432,12 +435,10 @@ definePageMeta({
 
 onMounted(async () => {
   try {
-    data.value = await $fetch(
-      user.value?.admin
-        ? `/api/user/admin/extensions/${route.params.id}`
-        : `/api/user/extensions/${route.params.id}`,
-      { method: 'GET', server: false }
-    )
+    data.value = await $fetch(`${basePath.value}`, {
+      method: 'GET',
+      server: false,
+    })
   } catch (error) {
     console.error(error)
   }
@@ -466,15 +467,10 @@ const handleSave = async () => {
   loading.value = true
 
   try {
-    await $fetch(
-      user.value?.admin
-        ? `/api/user/admin/extensions/${route.params.id}`
-        : `/api/user/extensions/${route.params.id}`,
-      {
-        method: 'PATCH',
-        body: form.value,
-      }
-    )
+    await $fetch(`${basePath.value}`, {
+      method: 'PATCH',
+      body: form.value,
+    })
   } catch (error) {
     console.error(error)
     errors.value = true
@@ -488,7 +484,7 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    await $fetch(`/api/user/extensions/${route.params.id}/ready`, {
+    await $fetch(`${basePath.value}/ready`, {
       method: 'POST',
     })
     if (data.value) data.value.extension.status = 'ready'
@@ -507,12 +503,12 @@ const handleBannerUpload = async (event: Event) => {
   uploading.value = true
 
   try {
-    await $fetch(`/api/user/extensions/${route.params.id}/banner`, {
+    await $fetch(`${basePath.value}/banner`, {
       method: 'POST',
       body: file,
     })
     const newData = await $fetch<{ extension: FullExtension }>(
-      `/api/user/extensions/${route.params.id}`,
+      `${basePath.value}`,
       {
         method: 'GET',
       }
@@ -536,7 +532,7 @@ const handleAdminApprove = async () => {
   errors.value = false
 
   try {
-    await $fetch(`/api/user/admin/extensions/${route.params.id}/ready`, {
+    await $fetch(`${basePath.value}/ready`, {
       method: 'POST',
     })
     if (data.value) data.value.extension.status = 'approved'
@@ -551,7 +547,7 @@ const handleAdminReject = async () => {
   loading.value = true
 
   try {
-    await $fetch(`/api/user/admin/extensions/${route.params.id}/deny`, {
+    await $fetch(`${basePath.value}/deny`, {
       method: 'POST',
       body: adminRejectForm.value,
     })

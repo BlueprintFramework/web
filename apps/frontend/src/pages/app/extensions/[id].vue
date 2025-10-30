@@ -489,7 +489,7 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    await $fetch(`${basePath.value}/ready`, {
+    await $fetch(`/api/user/extensions/${route.params.id}/ready`, {
       method: 'POST',
     })
     if (data.value) data.value.extension.status = 'ready'
@@ -537,7 +537,7 @@ const handleAdminApprove = async () => {
   errors.value = false
 
   try {
-    await $fetch(`${basePath.value}/ready`, {
+    await $fetch(`/api/user/admin/extensions/${route.params.id}`, {
       method: 'POST',
     })
     if (data.value) data.value.extension.status = 'approved'

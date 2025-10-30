@@ -57,8 +57,15 @@ h3 {
   margin-top: 12px;
 }
 
-.scrollbar-none::-webkit-scrollbar {
-  max-width: 0px;
+.scrollbar-none {
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: 0px;
+  }
 }
 
 .marquee {

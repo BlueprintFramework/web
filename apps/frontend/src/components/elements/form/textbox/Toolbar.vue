@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="textareaRef"
-    class="flex divide-x divide-neutral-700 overflow-x-scroll rounded-t-2xl border-x border-t border-neutral-700"
+    class="scrollbar-none flex divide-x divide-neutral-700 overflow-x-scroll rounded-t-2xl border-x border-t border-neutral-700"
   >
     <div class="flex items-center p-2">
       <button

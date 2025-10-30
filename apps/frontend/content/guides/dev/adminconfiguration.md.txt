@@ -4,6 +4,7 @@ description: Add a few configuration options to your extension's admin page
 author: Emma
 category: dev
 thumbnail: adminconfiguration.jpeg
+unlisted: true
 ---
 
 ::card

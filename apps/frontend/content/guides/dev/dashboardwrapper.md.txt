@@ -4,6 +4,7 @@ description: Extend the Pterodactyl user dashboard using the Laravel blade wrapp
 author: Emma
 category: dev
 thumbnail: dashboard.jpeg
+unlisted: true
 ---
 
 ::card
@@ -12,4 +13,4 @@ The dashboard wrapper should not be your first choice for dashboard extensibilit
 
 ## Introduction
 
-Blueprint's dashboard wrapper bind extends the user-side dashboard
+Blueprint's dashboard wrapper bind extends the user-side dashboard.

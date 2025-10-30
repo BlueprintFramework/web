@@ -96,7 +96,7 @@ mod post {
         };
 
         let extension_image =
-            ExtensionImage::create(&state.database, &state.s3, &*extension, image).await?;
+            ExtensionImage::create(&state.database, &state.s3, &extension, image).await?;
 
         ApiResponse::json(Response {
             extension_image: extension_image.into_api_object(&state.env),

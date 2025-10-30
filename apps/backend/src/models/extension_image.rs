@@ -59,7 +59,7 @@ impl ExtensionImage {
         let identifier_random = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 8);
         let location = format!(
             "extensions/images/{}/{}.webp",
-            extension.identifier, identifier_random
+            extension.id, identifier_random
         );
 
         let image = tokio::task::spawn_blocking(move || {

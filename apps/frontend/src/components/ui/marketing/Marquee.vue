@@ -21,7 +21,7 @@
               />
             </div>
             <NuxtImg
-              :src="`https://s3.blueprint.zip/extensions/lowres/${item.identifier}.jpeg`"
+              :src="`https://s3.blueprint.zip/static/${item.identifier}.jpeg`"
               :height="128"
               :width="256"
               :alt="item.name"
@@ -46,36 +46,40 @@ const props = defineProps({
 // possible, but until thats done i've hardcoded the values here
 const items = ref([
   {
-    name: 'Custom Server Sort',
-    identifier: 'customserversort',
-  },
-  {
-    name: 'File Search',
-    identifier: 'filesearch',
-  },
-  {
-    name: 'Loader',
-    identifier: 'loader',
-  },
-  {
     name: 'Nebula',
     identifier: 'nebula',
   },
   {
-    name: 'Server Importer',
-    identifier: 'serverimporter',
+    name: 'Pull Files',
+    identifier: 'pullfiles',
   },
   {
     name: 'Server Splitter',
     identifier: 'serversplitter',
   },
   {
+    name: 'Eggify',
+    identifier: 'eggify',
+  },
+  {
     name: 'Social Login',
     identifier: 'sociallogin',
   },
   {
-    name: 'Subdomains',
-    identifier: 'subdomains',
+    name: 'Euphoria',
+    identifier: 'euphoriatheme',
+  },
+  {
+    name: 'Layeredy Announce',
+    identifier: 'lyrdyannounce',
+  },
+  {
+    name: 'Extension Manager',
+    identifier: 'extmanager',
+  },
+  {
+    name: 'PteroMonaco',
+    identifier: 'pteromonaco',
   },
 ])
 </script>

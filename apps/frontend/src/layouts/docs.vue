@@ -171,8 +171,6 @@
 
 <script setup lang="ts">
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
-import { useMediaQuery } from '@vueuse/core'
-
 const route = useRoute()
 const isDesktop = useMediaQuery('(min-width: 768px)')
 

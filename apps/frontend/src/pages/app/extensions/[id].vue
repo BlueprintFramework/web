@@ -294,12 +294,12 @@
               class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
             >
               <ElementsFormTextboxToolbar
-                :textarea-ref="descriptionToolbar"
+                :textarea-ref="descriptionBox"
                 :on-image="imagesModal?.handleOpen"
               />
               <ElementsFormTextbox
                 v-model="form.description"
-                ref="descriptionToolbar"
+                ref="descriptionBox"
                 class="font-mono"
                 :supports-images="true"
                 :rows="10"
@@ -372,6 +372,11 @@
       <UiAppExtensionsImagesmodal
         ref="imagesModal"
         :extension="data.extension"
+        @insert="
+          (url: ExtensionImage['url']) => {
+            descriptionBox?.insertMarkdown('![', `](${url})`)
+          }
+        "
       />
     </template>
   </client-only>
@@ -383,7 +388,7 @@ const { user } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const bannerInput = useTemplateRef('bannerInput')
-const descriptionToolbar = useTemplateRef('descriptionToolbar')
+const descriptionBox = useTemplateRef('descriptionBox')
 const imagesModal = useTemplateRef('imagesModal')
 
 const basePath = ref(`/api/user/extensions/${route.params.id}`)

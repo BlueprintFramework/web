@@ -38,5 +38,19 @@ export default defineContentConfig({
         updated: z.string(),
       }),
     }),
+
+    // Changelogs
+    changelog: defineCollection({
+      type: 'page',
+      source: 'changelog/*.md',
+      schema: z.object({
+        version: z.string(),
+        released: z.string(),
+        summary: z.string().optional(),
+        supported: z.boolean().optional().default(false),
+        latest: z.boolean().optional().default(false),
+        num: z.number(),
+      }),
+    }),
   },
 })

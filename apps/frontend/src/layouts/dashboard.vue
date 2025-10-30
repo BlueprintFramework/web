@@ -161,8 +161,6 @@
 </template>
 
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core'
-
 const { user, logout } = useAuth()
 const route = useRoute()
 const isDesktop = useMediaQuery('(min-width: 768px)')

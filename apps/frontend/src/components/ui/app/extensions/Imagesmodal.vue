@@ -21,7 +21,10 @@
       </div>
 
       <template v-else>
-        <div v-if="loading" class="grid grid-cols-1 gap-2 md:grid-cols-2">
+        <div
+          v-if="loading && imageCount >= 1"
+          class="grid grid-cols-1 gap-2 md:grid-cols-2"
+        >
           <div
             v-for="i in imageCount"
             class="aspect-video overflow-hidden rounded-2xl border border-neutral-700"
@@ -32,7 +35,7 @@
 
         <template v-else>
           <div
-            v-if="!images?.extension_images[0]"
+            v-if="!images?.extension_images[0] || imageCount == 0"
             class="flex flex-col items-center py-4"
           >
             <div class="max-w-95 flex flex-col items-center gap-2">
@@ -47,7 +50,7 @@
           <div v-else class="grid grid-cols-1 gap-2 md:grid-cols-2">
             <div
               v-for="image in images.extension_images"
-              class="group aspect-video cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 bg-cover bg-center p-2 transition-colors hover:border-neutral-500"
+              class="group aspect-video overflow-hidden rounded-2xl border border-neutral-700 bg-cover bg-center p-2 transition-colors hover:border-neutral-500"
               :style="`background-image: url(${image.url});`"
             >
               <div class="flex justify-between gap-2">
@@ -113,7 +116,7 @@ const emit = defineEmits<{
 
 const uploadInput = useTemplateRef('uploadInput')
 
-const isOpen = ref(true)
+const isOpen = ref(false)
 const loading = ref(false)
 const images = ref<{ extension_images: ExtensionImages }>()
 const imageCount = ref(2)

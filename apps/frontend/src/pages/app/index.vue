@@ -53,8 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core'
-
 definePageMeta({
   middleware: 'user-verified',
   layout: 'dashboard',

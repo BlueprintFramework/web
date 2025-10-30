@@ -42,32 +42,12 @@
       </div>
     </div>
 
-    <div class="space-y-3">
-      <h1 class="!text-4xl">
-        {{ release.version || 'Untitled' }}
-      </h1>
-      <div
-        class="inline-block rounded-full border border-neutral-700 bg-neutral-900"
-      >
-        <div
-          class="flex flex-row items-center divide-x divide-neutral-700 px-0.5"
-        >
-          <div class="flex flex-row items-center gap-1.5 px-1.5 py-0.5">
-            <Icon name="memory:clock" mode="svg" />
-            <span>
-              Updated
-              <NuxtTime :datetime="release?.released" :relative="true" />
-            </span>
-          </div>
-          <span class="px-1.5 py-0.5">
-            <NuxtTime :datetime="release?.released" />
-          </span>
-        </div>
+    <div
+      class="border-neutral-700 bg-neutral-950 p-0 md:rounded-3xl md:border md:p-6 lg:p-12"
+    >
+      <div class="max-w-none">
+        <ContentRenderer :value="release" class="prose-content space-y-3" />
       </div>
-    </div>
-
-    <div class="max-w-none">
-      <ContentRenderer :value="release" class="prose-content space-y-3" />
     </div>
   </template>
 </template>

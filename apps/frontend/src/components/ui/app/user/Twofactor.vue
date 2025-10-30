@@ -1,18 +1,9 @@
 <template>
-  <div
-    class="grid grid-cols-1 divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 md:grid-cols-2 md:divide-x"
-  >
-    <div class="divide-y divide-neutral-700">
-      <div class="space-y-2 p-4">
-        <h2>Two factor authentication</h2>
-        <p>Add an additional layer of security to your account.</p>
-      </div>
-      <div class="bg-stripes hidden h-full md:block" />
-    </div>
-    <div class="flex flex-col items-center p-4 py-8">
-      <ElementsInlinecard v-if="error == 'enable-error'" class="mb-4">
-        Uh oh, couldn't initialize 2FA. Please try again later.
-      </ElementsInlinecard>
+  <div class="bg-neutral-950 p-4">
+    <ElementsInlinecard v-if="error == 'enable-error'" class="mb-4">
+      Uh oh, couldn't initialize 2FA. Please try again later.
+    </ElementsInlinecard>
+    <div class="flex flex-col items-center py-4">
       <template v-if="user?.totp_enabled">
         <Icon name="pixelarticons:lock" :size="32" mode="svg" />
         <br />

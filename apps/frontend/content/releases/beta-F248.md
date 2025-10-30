@@ -17,7 +17,7 @@ num: 9
 - We've added new marketing material and updated Blueprint's default logo. This includes new versions of Blueprint's icon and full-res images of our stickers.
 - Add a choice for putting the application in maintenance mode when installing/upgrading Blueprint.
 - No longer use folder placeholders for navigating to the Pterodactyl directory. ([#40](https://github.com/BlueprintFramework/framework/pull/40))
-- The extensions page now shows a "<code><icon name="gear-fill"></icon> System</code>" badge on system extensions (such as Blueprint).
+- The extensions page now shows a "System" badge on system extensions (such as Blueprint).
 - Add a new **Console** extension API which allows for creating new Artisan commands and automatically running them with intervals.
 
 <br/>

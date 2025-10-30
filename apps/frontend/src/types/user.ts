@@ -21,6 +21,7 @@ export interface FullUser extends User {
   email: string
   totp_enabled: boolean
   email_pending?: string | null
+  github_id?: number | null
 }
 
 export interface UserSessions {

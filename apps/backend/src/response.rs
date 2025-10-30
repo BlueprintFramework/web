@@ -11,6 +11,15 @@ pub struct ApiResponse {
 
 impl ApiResponse {
     #[inline]
+    pub fn new(body: impl Into<axum::body::Body>) -> Self {
+        Self {
+            body: body.into(),
+            status: axum::http::StatusCode::OK,
+            headers: axum::http::HeaderMap::new(),
+        }
+    }
+
+    #[inline]
     pub fn json(body: impl serde::Serialize) -> Self {
         Self {
             body: axum::body::Body::from(serde_json::to_string(&body).unwrap()),
@@ -30,6 +39,15 @@ impl ApiResponse {
     #[inline]
     pub fn with_status(mut self, status: axum::http::StatusCode) -> Self {
         self.status = status;
+        self
+    }
+
+    #[inline]
+    pub fn with_header(mut self, key: &'static str, value: &str) -> Self {
+        if let Ok(header_value) = axum::http::HeaderValue::from_str(value) {
+            self.headers.insert(key, header_value);
+        }
+
         self
     }
 

@@ -1,4 +1,8 @@
-use crate::routes::ApiError;
+use crate::{
+    models::extension::Extension,
+    response::ApiResponse,
+    routes::{ApiError, GetState},
+};
 use axum::{
     ServiceExt,
     body::Body,
@@ -170,6 +174,43 @@ async fn main() {
                 headers.insert("Content-Type", "text/html".parse().unwrap());
 
                 (StatusCode::OK, headers, include_str!("../static/api.html"))
+            }),
+        )
+        .route(
+            "/browse/sitemap.xml",
+            get(|state: GetState| async move {
+                let sitemap = state
+                    .cache
+                    .cached("sitemap::browse", 600, || async {
+                        let extensions = Extension::all(&state.database).await?;
+                        let mut sitemap = String::new();
+
+                        sitemap.push_str(
+                            r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+"#,
+                        );
+
+                        for extension in extensions {
+                            sitemap.push_str(&format!(
+                                r#"<url><loc>{}/browse/{}</loc><changefreq>weekly</changefreq></url>
+"#,
+                                &state.env.app_url, extension.identifier
+                            ));
+                        }
+
+                        sitemap.push_str(
+                            r#"</urlset>
+"#,
+                        );
+
+                        Ok(sitemap)
+                    })
+                    .await?;
+
+                ApiResponse::new(sitemap)
+                    .with_header("Content-Type", "text/xml")
+                    .ok()
             }),
         )
         .route(

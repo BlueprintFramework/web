@@ -35,7 +35,7 @@ pub async fn auth(
     };
     let extension = match state
         .cache
-        .cached(&format!("extensions::{extension}"), 300, || async {
+        .cached(&format!("extensions::{extension}"), 30, || async {
             match extension.parse::<i32>() {
                 Ok(id) => {
                     if id < 1 {

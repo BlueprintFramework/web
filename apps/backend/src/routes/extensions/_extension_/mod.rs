@@ -1,8 +1,8 @@
 use super::State;
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-mod versions;
 mod images;
+mod versions;
 
 mod get {
     use crate::{

@@ -8,6 +8,7 @@ use axum::{
 };
 use utoipa_axum::router::OpenApiRouter;
 
+mod github;
 mod login;
 mod password;
 mod register;
@@ -27,6 +28,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/login", login::router(state))
         .nest("/register", register::router(state))
         .nest("/password", password::router(state))
+        .nest("/github", github::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

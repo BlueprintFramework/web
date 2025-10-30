@@ -124,11 +124,30 @@ impl User {
             r#"
             SELECT {}
             FROM users
-            WHERE id = $1
+            WHERE users.id = $1
             "#,
             Self::columns_sql(None, None)
         ))
         .bind(id)
+        .fetch_optional(database.read())
+        .await?;
+
+        Ok(row.map(|row| Self::map(None, &row)))
+    }
+
+    pub async fn by_github_id(
+        database: &crate::database::Database,
+        github_id: i64,
+    ) -> Result<Option<Self>, sqlx::Error> {
+        let row = sqlx::query(&format!(
+            r#"
+            SELECT {}
+            FROM users
+            WHERE users.github_id = $1
+            "#,
+            Self::columns_sql(None, None)
+        ))
+        .bind(github_id)
         .fetch_optional(database.read())
         .await?;
 
@@ -143,7 +162,7 @@ impl User {
             r#"
             SELECT {}
             FROM users
-            WHERE email = $1
+            WHERE users.email = $1
             "#,
             Self::columns_sql(None, None)
         ))
@@ -265,6 +284,7 @@ impl User {
     pub fn into_api_full_object(self) -> ApiFullUser {
         ApiFullUser {
             id: self.id,
+            github_id: self.github_id,
             name: self.name,
             pronouns: self.pronouns,
             email: self.email.clone(),
@@ -291,6 +311,7 @@ impl User {
 #[schema(title = "FullUser")]
 pub struct ApiFullUser {
     pub id: i32,
+    pub github_id: Option<i64>,
 
     pub name: String,
     pub pronouns: Option<String>,

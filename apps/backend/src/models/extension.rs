@@ -347,7 +347,7 @@ impl Extension {
             FROM extensions
             JOIN users ON extensions.author_id = users.id
             LEFT JOIN mv_extension_stats ON extensions.id = mv_extension_stats.id
-            WHERE extensions.deny_reason IS NOT NULL
+            WHERE extensions.deny_reason IS NOT NULL AND extensions.status = 'PENDING'
             ORDER BY extensions.id DESC
             LIMIT $1 OFFSET $2
             "#,

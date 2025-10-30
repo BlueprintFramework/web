@@ -13,6 +13,7 @@ use axum::{
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 mod approve;
+mod banner;
 mod deny;
 mod images;
 
@@ -344,6 +345,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/ready", approve::router(state))
         .nest("/deny", deny::router(state))
         .nest("/images", images::router(state))
+        .nest("/banner", banner::router(state))
         .route_layer(axum::middleware::from_fn_with_state(state.clone(), auth))
         .with_state(state.clone())
 }

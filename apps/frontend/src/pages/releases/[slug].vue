@@ -72,4 +72,6 @@ useSeoMeta({
   title: release.value?.version,
   description: release.value?.summary,
 })
+
+defineOgImageComponent('Release')
 </script>

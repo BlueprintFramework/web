@@ -100,7 +100,8 @@ const handleVerify = async () => {
       method: 'POST',
       body: form.value,
     })
-  } catch {
+  } catch (error) {
+    console.error(error)
     errors.value.incorrect = true
     loading.value = false
   } finally {
@@ -122,7 +123,8 @@ const handleResend = async () => {
         captcha: null,
       },
     })
-  } catch {
+  } catch (error) {
+    console.error(error)
     errors.value.resendError = true
     loading.value = false
   } finally {

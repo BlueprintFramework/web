@@ -1,5 +1,8 @@
 <template>
   <client-only>
+    <ElementsInlinecard v-if="errors">
+      An unknown error occurred. Open your browser console for more information.
+    </ElementsInlinecard>
     <template v-if="data?.extension">
       <div
         v-if="user?.admin && data.extension.status == 'ready'"

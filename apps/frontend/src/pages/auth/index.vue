@@ -16,6 +16,9 @@
           >recover your account here</NuxtLink
         >.
       </ElementsInlinecard>
+      <ElementsInlinecard v-else-if="errors[0]">
+        An unknown error occurred.
+      </ElementsInlinecard>
       <ElementsInlinecard v-if="reset">
         Your password has been reset successfully. You can now sign in with your
         new password.

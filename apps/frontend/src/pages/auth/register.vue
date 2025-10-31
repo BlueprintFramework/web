@@ -12,8 +12,11 @@
       >
         Email address or username is already in use.
       </ElementsInlinecard>
-      <ElementsInlinecard v-if="errors?.includes('failed to create user')">
+      <ElementsInlinecard v-else-if="errors?.includes('failed to create user')">
         Could not create user, try again later.
+      </ElementsInlinecard>
+      <ElementsInlinecard v-else-if="errors">
+        An unknown error occurred.
       </ElementsInlinecard>
       <ElementsInlinecard
         v-if="route.query.reason == 'oauth'"

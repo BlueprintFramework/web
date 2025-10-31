@@ -8,6 +8,9 @@
       <h1 class="!text-4xl">Forgot password</h1>
     </div>
     <div class="space-y-4 p-4">
+      <ElementsInlinecard v-if="error">
+        An unknown error occurred.
+      </ElementsInlinecard>
       <ElementsFormInput
         v-model="form.email"
         name="email"

@@ -114,7 +114,7 @@
             class="max-md:w-full"
             color="danger"
             :disabled="loading"
-            @click="modalOpen.delete = true"
+            @click="handleOpenDelete"
           >
             Delete draft
           </ElementsButton>
@@ -401,9 +401,9 @@
             @click="modalOpen.delete = false"
           />
           <ElementsButton
-            label="Delete"
+            :label="`Delete${deleteTimeout != 0 ? ' (' + deleteTimeout + ')' : ''}`"
             color="danger"
-            :disabled="loading"
+            :disabled="loading || deleteTimeout != 0"
             @click="handleDelete"
             type="submit"
             class="order-first w-full md:order-[unset] md:w-auto"
@@ -445,6 +445,7 @@ const loading = ref(false)
 const submitting = ref(false)
 const uploading = ref(false)
 const errors = ref(false)
+const deleteTimeout = ref(10)
 const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
@@ -577,6 +578,18 @@ const handleBannerUpload = async (event: Event) => {
   } finally {
     uploading.value = false
   }
+}
+
+const handleOpenDelete = async () => {
+  deleteTimeout.value = 10
+  modalOpen.value.delete = true
+
+  const interval = setInterval(() => {
+    if (deleteTimeout.value === 0) {
+      return clearInterval(interval)
+    }
+    deleteTimeout.value--
+  }, 1000)
 }
 
 const handleDelete = async () => {

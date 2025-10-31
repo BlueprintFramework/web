@@ -1,4 +1,4 @@
 export default defineAppConfig({
   title: 'Blueprint',
-  url: 'https://api.blueprintframe.work',
+  url: 'https://blueprint.zip',
 })

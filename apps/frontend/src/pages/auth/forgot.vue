@@ -26,7 +26,8 @@
         Enter the email associated with your Blueprint account. If an account
         exists, we'll send you a password reset link.
       </span>
-
+    </div>
+    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
       <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
     </div>
     <button

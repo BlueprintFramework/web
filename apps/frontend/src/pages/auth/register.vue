@@ -81,7 +81,8 @@
         <!-- prettier-ignore -->
         <NuxtLink to="/legal/conduct" class="text-link">Code of Conduct</NuxtLink>
       </span>
-
+    </div>
+    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
       <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
     </div>
     <button

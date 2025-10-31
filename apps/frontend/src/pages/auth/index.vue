@@ -75,7 +75,8 @@
           Recover your account here
         </NuxtLink>
       </span>
-
+    </div>
+    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
       <NuxtTurnstile v-model="authForm.captcha" ref="turnstile" />
     </div>
     <div

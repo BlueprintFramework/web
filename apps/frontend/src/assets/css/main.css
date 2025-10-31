@@ -84,3 +84,7 @@ h3 {
     transparent 100%
   );
 }
+
+.turnstile-wrapper div {
+  display: flex !important;
+}

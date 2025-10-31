@@ -7,16 +7,5 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
-const ogImagePath = useOgImagePath()
-
-if (!/^\/browse\/.+$/.test(route.path)) {
-  defineOgImageComponent('Large')
-  useSeoMeta({
-    ogImage: ogImagePath,
-    ogImageUrl: ogImagePath,
-    twitterCard: 'summary_large_image',
-    twitterImage: ogImagePath,
-  })
-}
+defineOgImageComponent('Large')
 </script>

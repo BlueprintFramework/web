@@ -19,7 +19,6 @@
     "@nuxt/scripts": "^0.12.2",
     "@nuxtjs/mdc": "^0.17.4",
     "@nuxtjs/plausible": "2.0.1",
-    "@nuxtjs/robots": "^5.5.5",
     "@nuxtjs/sitemap": "^7.4.7",
     "@nuxtjs/turnstile": "1.1.1",
     "@tailwindcss/vite": "^4.1.14",

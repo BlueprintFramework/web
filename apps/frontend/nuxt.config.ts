@@ -11,7 +11,6 @@ export default defineNuxtConfig({
     'nuxt-marquee',
     '@nuxt/content',
     '@nuxtjs/sitemap',
-    '@nuxtjs/robots',
     '@nuxtjs/mdc',
     '@nuxtjs/plausible',
     '@nuxtjs/turnstile',
@@ -111,11 +110,35 @@ export default defineNuxtConfig({
       },
     },
   },
+  routeRules: {
+    '/__og-image__/image/**': {
+      proxy: { to: '/__og-image__/static/**' },
+    },
+  },
   plausible: {
     apiHost: '/yay/script.js',
     ignoredHostnames: ['localhost'],
   },
   turnstile: {
     siteKey: '1x00000000000000000000BB',
+  },
+
+  hooks: {
+    'nitro:build:public-assets': async (nitro) => {
+      if (nitro.options.preset === 'static') {
+        const { promises: fs } = await import('fs')
+        const { join } = await import('path')
+
+        const publicDir = nitro.options.output.publicDir
+        const srcPath = join(publicDir, '__og-image__', 'static')
+        const destPath = join(publicDir, '__og-image__', 'image')
+
+        try {
+          await fs.cp(srcPath, destPath, { recursive: true })
+        } catch (err) {
+          console.warn('og-image copy failed:', err)
+        }
+      }
+    },
   },
 })

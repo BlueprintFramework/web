@@ -25,13 +25,5 @@
 </template>
 
 <script setup lang="ts">
-const ogImagePath = useOgImagePath()
-
 defineOgImageComponent('Large')
-useSeoMeta({
-  ogImage: ogImagePath,
-  ogImageUrl: ogImagePath,
-  twitterCard: 'summary_large_image',
-  twitterImage: ogImagePath,
-})
 </script>

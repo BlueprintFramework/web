@@ -108,6 +108,16 @@
           >
             Save changes
           </ElementsButton>
+
+          <ElementsButton
+            v-if="data.extension.status != 'approved'"
+            class="max-md:w-full"
+            color="danger"
+            :disabled="loading"
+            @click="handleOpenDelete"
+          >
+            Delete draft
+          </ElementsButton>
         </div>
       </div>
 
@@ -217,7 +227,7 @@
                 ]"
                 :required="true"
                 placeholder="myextension"
-                :disabled="loading"
+                :disabled="data.extension.status == 'approved' || loading"
                 @validate="
                   (isValid: boolean) =>
                     handleFieldValidation('extension_identifier', isValid)
@@ -365,6 +375,42 @@
         </template>
       </ElementsModal>
 
+      <ElementsModal
+        v-if="data.extension.status != 'approved'"
+        :is-open="modalOpen.delete"
+        :closable="true"
+        title="Delete extension draft"
+        @close="modalOpen.delete = false"
+      >
+        <template #default>
+          <div class="flex flex-col items-center py-4">
+            <div class="max-w-95 flex flex-col items-center gap-2">
+              <Icon name="pixelarticons:trash" :size="32" />
+              <p class="text-lg font-bold">Are you sure?</p>
+              <p class="text-default-font/60 text-center">
+                Deleting extension drafts is permanent, it cannot be undone.
+              </p>
+            </div>
+          </div>
+        </template>
+
+        <template #footer>
+          <ElementsButton
+            label="Cancel"
+            class="w-full md:w-auto"
+            @click="modalOpen.delete = false"
+          />
+          <ElementsButton
+            :label="`Delete${deleteTimeout != 0 ? ' (' + deleteTimeout + ')' : ''}`"
+            color="danger"
+            :disabled="loading || deleteTimeout != 0"
+            @click="handleDelete"
+            type="submit"
+            class="order-first w-full md:order-[unset] md:w-auto"
+          />
+        </template>
+      </ElementsModal>
+
       <UiAppExtensionsPlatformsmodal
         :is-open="modalOpen.platforms"
         :platforms="form.platforms"
@@ -399,11 +445,13 @@ const loading = ref(false)
 const submitting = ref(false)
 const uploading = ref(false)
 const errors = ref(false)
+const deleteTimeout = ref(10)
 const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
   adminReject: false,
   platforms: false,
+  delete: false,
 })
 const form = ref<{
   identifier: string
@@ -529,6 +577,35 @@ const handleBannerUpload = async (event: Event) => {
     console.error(error)
   } finally {
     uploading.value = false
+  }
+}
+
+const handleOpenDelete = async () => {
+  deleteTimeout.value = 10
+  modalOpen.value.delete = true
+
+  const interval = setInterval(() => {
+    if (deleteTimeout.value === 0) {
+      return clearInterval(interval)
+    }
+    deleteTimeout.value--
+  }, 1000)
+}
+
+const handleDelete = async () => {
+  errors.value = false
+  loading.value = true
+
+  try {
+    await $fetch(`${basePath.value}`, {
+      method: 'DELETE',
+    })
+  } catch (error) {
+    console.error(error)
+    errors.value = true
+  } finally {
+    await navigateTo('/app/extensions')
+    loading.value = false
   }
 }
 

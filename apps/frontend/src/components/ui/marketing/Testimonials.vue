@@ -1,11 +1,11 @@
 <template>
   <div :class="props?.class" class="rounded-3xl border border-neutral-700 p-4">
     <div class="marquee space-y-4">
-      <NuxtMarquee
+      <ElementsNewMarquee
         v-for="(testimonials, index) in allTestimonials"
-        :autoFill="true"
-        :speed="25"
+        :speed="12"
         :direction="index % 2 == 0 ? 'left' : 'right'"
+        :pauseOnHover="false"
         tabindex="-1"
       >
         <div
@@ -50,7 +50,7 @@
             />
           </div>
         </div>
-      </NuxtMarquee>
+      </ElementsNewMarquee>
     </div>
   </div>
 </template>

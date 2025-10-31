@@ -144,6 +144,9 @@ const { prevDoc, nextDoc } = computed(() => {
 useSeoMeta({
   title: data.value?.title,
   description: data.value?.description,
+  ogType: 'article',
+  ogTitle: `Documentation: ${data.value?.title}`,
+  ogDescription: data.value?.description,
 })
 
 defineOgImageComponent('Descriptive', { scope: 'Documentation' })

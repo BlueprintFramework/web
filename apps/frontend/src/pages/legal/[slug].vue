@@ -58,6 +58,8 @@ if (!data.value) {
 useSeoMeta({
   title: data.value?.title,
   description: data.value?.description,
+  ogTitle: `${data.value?.title} - Blueprint`,
+  ogDescription: data.value?.description,
 })
 
 definePageMeta({
@@ -65,6 +67,6 @@ definePageMeta({
 })
 
 defineOgImageComponent('Descriptive', {
-  scope: 'Legal',
+  scope: 'Agreements',
 })
 </script>

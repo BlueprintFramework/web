@@ -71,6 +71,9 @@ if (!release.value) {
 useSeoMeta({
   title: release.value?.version,
   description: release.value?.summary,
+  ogType: 'article',
+  ogTitle: `Blueprint ${release.value?.version} release`,
+  ogDescription: release.value?.summary,
 })
 
 defineOgImageComponent('Descriptive', { scope: 'Releases' })

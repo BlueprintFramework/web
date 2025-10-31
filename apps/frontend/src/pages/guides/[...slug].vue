@@ -82,6 +82,9 @@ if (!data.value) {
 useSeoMeta({
   title: data.value?.title,
   description: data.value?.description,
+  ogType: 'article',
+  ogTitle: `Guide: ${data.value?.title}`,
+  ogDescription: data.value?.description,
 })
 
 defineOgImageComponent('Descriptive', {

@@ -14,4 +14,6 @@ useHead({
     },
   ],
 })
+
+defineOgImageComponent('Large')
 </script>

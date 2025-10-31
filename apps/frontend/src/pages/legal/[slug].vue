@@ -63,4 +63,8 @@ useSeoMeta({
 definePageMeta({
   layout: 'legal',
 })
+
+defineOgImageComponent('Descriptive', {
+  scope: 'Legal',
+})
 </script>

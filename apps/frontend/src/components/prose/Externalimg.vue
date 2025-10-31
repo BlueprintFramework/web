@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-stripes my-4 min-h-10 overflow-hidden rounded-2xl border border-neutral-700"
+    class="my-4 min-h-10 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-900/50"
   >
     <component
       :is="ImageComponent"
@@ -37,6 +37,12 @@ const props = defineProps({
 })
 
 const refinedSrc = computed(() => {
+  const refinedUrl = new URL(props.src)
+
+  if (refinedUrl.hostname == 's3.blueprint.zip') {
+    return props.src
+  }
+
   if (props.src?.startsWith('/') && !props.src.startsWith('//')) {
     const _base = withLeadingSlash(
       withTrailingSlash(useRuntimeConfig().app.baseURL)

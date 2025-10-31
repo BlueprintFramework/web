@@ -3,46 +3,33 @@ withDefaults(
   defineProps<{
     title?: string
     description?: string
-    scope?: string
   }>(),
   {
     title: 'title',
     description: '',
-    scope: '',
   }
 )
 </script>
 
 <template>
   <div
-    class="flex h-full w-full flex-col justify-between bg-cover p-16"
+    class="flex h-full w-full flex-col justify-center gap-8 bg-cover p-16"
     style="
       background-image: url(https://s3.blueprint.zip/static/releases/releases2.jpeg);
       background-size: cover;
     "
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col items-center">
       <div class="flex items-center gap-6">
         <BrandLimitedemblem fill="white" :size="64" />
         <span class="text-6xl text-white">
           <span class="font-bold">Blueprint</span>
         </span>
-        <span class="text-6xl text-white"> {{ scope }} </span>
       </div>
     </div>
-    <div class="flex flex-col">
-      <p
-        class="text-8xl font-bold text-white"
-        style="font-family: 'Funnel Display'"
-      >
-        {{ title }}
-      </p>
-      <p
-        class="truncate text-nowrap text-4xl text-white"
-        style="font-family: 'Funnel Display'"
-        v-if="description"
-      >
-        {{ description }}
+    <div class="flex flex-col items-center">
+      <p class="mb-0 text-center text-7xl text-white" style="line-height: 85px">
+        The modding platform for Pterodactyl
       </p>
     </div>
   </div>

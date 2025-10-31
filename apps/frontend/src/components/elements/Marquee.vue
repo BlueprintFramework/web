@@ -5,6 +5,7 @@
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousedown="handleMouseDown"
+    @touchstart="handleTouchStart"
     @click.capture="handleClick"
   >
     <div
@@ -12,7 +13,8 @@
       class="flex w-max"
       :style="{
         transform: `translateX(${translateX}px)`,
-        cursor: isDragging ? 'grabbing' : 'grab'
+        cursor: isDragging ? 'grabbing' : 'grab',
+        touchAction: 'pan-y' // Allow vertical scrolling but prevent horizontal on touch
       }"
     >
       <!-- First set of items -->
@@ -154,6 +156,66 @@ const handleMouseUp = () => {
   document.removeEventListener('mouseup', handleMouseUp)
 }
 
+// Touch event handlers for mobile
+const handleTouchStart = (e: TouchEvent) => {
+  if (e.touches.length !== 1) return
+
+  isDragging.value = true
+  const touch = e.touches[0]
+  dragStartX.value = touch.clientX
+  dragStartTranslateX.value = translateX.value
+  hasDragged = false
+
+  // Reset velocity when starting a new drag
+  velocity.value = 0
+
+  // Initialize velocity tracking
+  lastMouseX = touch.clientX
+  lastMouseTime = Date.now()
+
+  document.addEventListener('touchmove', handleTouchMove, { passive: false })
+  document.addEventListener('touchend', handleTouchEnd)
+  document.addEventListener('touchcancel', handleTouchEnd)
+}
+
+const handleTouchMove = (e: TouchEvent) => {
+  if (!isDragging.value || e.touches.length !== 1) return
+
+  const touch = e.touches[0]
+  const deltaX = touch.clientX - dragStartX.value
+  translateX.value = dragStartTranslateX.value + deltaX
+
+  // Track if user has actually dragged (moved more than 5px)
+  if (Math.abs(deltaX) > 5) {
+    hasDragged = true
+    // Prevent scrolling when dragging
+    e.preventDefault()
+  }
+
+  // Calculate velocity for flick/momentum
+  const currentTime = Date.now()
+  const timeDelta = currentTime - lastMouseTime
+
+  if (timeDelta > 0) {
+    const moveDelta = touch.clientX - lastMouseX
+    velocity.value = moveDelta / timeDelta * 16 // normalize to ~60fps
+  }
+
+  lastMouseX = touch.clientX
+  lastMouseTime = currentTime
+
+  // Normalize position to keep within bounds for seamless looping
+  normalizePosition()
+}
+
+const handleTouchEnd = () => {
+  isDragging.value = false
+  normalizePosition()
+  document.removeEventListener('touchmove', handleTouchMove)
+  document.removeEventListener('touchend', handleTouchEnd)
+  document.removeEventListener('touchcancel', handleTouchEnd)
+}
+
 const animate = () => {
   if (!isDragging.value) {
     // Apply momentum if there's any velocity from flicking (even when hovering)
@@ -191,8 +253,13 @@ onUnmounted(() => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId)
   }
+  // Clean up mouse event listeners
   document.removeEventListener('mousemove', handleMouseMove)
   document.removeEventListener('mouseup', handleMouseUp)
+  // Clean up touch event listeners
+  document.removeEventListener('touchmove', handleTouchMove)
+  document.removeEventListener('touchend', handleTouchEnd)
+  document.removeEventListener('touchcancel', handleTouchEnd)
 })
 </script>
 

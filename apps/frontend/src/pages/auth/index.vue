@@ -16,7 +16,7 @@
           >recover your account here</NuxtLink
         >.
       </ElementsInlinecard>
-      <ElementsInlinecard v-else-if="errors[0]">
+      <ElementsInlinecard v-else-if="errors">
         An unknown error occurred.
       </ElementsInlinecard>
       <ElementsInlinecard v-if="reset">

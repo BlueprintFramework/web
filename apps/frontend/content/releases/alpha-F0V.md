@@ -1,6 +1,7 @@
 ---
 version: alpha-F0V
 released: 2023-09-19T17:56:38Z
+summary: bugfix fixed in another version
 num: 1
 ---
 

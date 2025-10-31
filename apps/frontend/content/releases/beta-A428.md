@@ -1,6 +1,7 @@
 ---
 version: beta-A428
 released: 2024-04-09T20:21:09Z
+summary: The infamous bug-riddled beta release
 num: 8
 ---
 

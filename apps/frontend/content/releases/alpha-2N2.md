@@ -1,6 +1,7 @@
 ---
 version: alpha-2N2
 released: 2023-10-07T18:32:16Z
+summary: That time we gave yall an excuse to not ship extension icons
 num: 2
 ---
 

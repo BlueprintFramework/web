@@ -1,6 +1,7 @@
 ---
 version: alpha-NLM
 released: 2024-01-06T22:43:42Z
+summary: React extensibility? It's more likely than you may think!
 num: 6
 ---
 

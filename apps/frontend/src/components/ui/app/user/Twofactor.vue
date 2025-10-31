@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-neutral-950 p-4">
+  <div class="flex flex-col items-center justify-center bg-neutral-950 p-4">
     <ElementsInlinecard v-if="error == 'enable-error'" class="mb-4">
       Uh oh, couldn't initialize 2FA. Please try again later.
     </ElementsInlinecard>

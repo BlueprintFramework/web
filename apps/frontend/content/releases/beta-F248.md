@@ -1,6 +1,7 @@
 ---
 version: beta-F248
 released: 2024-06-22T15:25:22Z
+summary: Extensions page gets a new look
 num: 9
 ---
 

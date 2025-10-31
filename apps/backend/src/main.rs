@@ -1,5 +1,5 @@
 use crate::{
-    models::extension::Extension,
+    models::extension::{Extension, ExtensionStatus},
     response::ApiResponse,
     routes::{ApiError, GetState},
 };
@@ -218,7 +218,7 @@ async fn main() {
             "/send/{panel}/{data}",
             get(|| async move { (StatusCode::OK, axum::Json(json!({}))) }),
         )
-        .fallback(|req: Request<Body>| async move {
+        .fallback(|state: GetState, req: Request<Body>| async move {
             if req.uri().path().starts_with("/api") {
                 return Response::builder()
                     .status(StatusCode::NOT_FOUND)
@@ -238,6 +238,119 @@ async fn main() {
             }
 
             let path = Path::new(&path);
+
+            let mut components = path.components();
+            if components.next().is_some_and(|c| c.as_os_str() == "browse")
+                && let Some(extension) = components.next().and_then(|c| c.as_os_str().to_str())
+                && components.next().is_none()
+                && let Some(content) = FRONTEND_ASSETS
+                    .get_file("404.html")
+                    .and_then(|f| f.contents_utf8())
+            {
+                let extension = match state
+                    .cache
+                    .cached(&format!("extensions::{extension}"), 300, || async {
+                        match extension.parse::<i32>() {
+                            Ok(id) => {
+                                if id < 1 {
+                                    Ok(None)
+                                } else {
+                                    Extension::by_id(&state.database, id)
+                                        .await
+                                        .map_err(|e| e.into())
+                                }
+                            }
+                            Err(_) => Extension::by_identifier(&state.database, extension)
+                                .await
+                                .map_err(|e| e.into()),
+                        }
+                    })
+                    .await
+                {
+                    Ok(Some(extension))
+                        if extension.status == ExtensionStatus::Approved && !extension.unlisted =>
+                    {
+                        extension
+                    }
+                    _ => {
+                        return Response::builder()
+                            .status(StatusCode::NOT_FOUND)
+                            .header("Content-Type", "text/html")
+                            .body(Body::from(content))
+                            .unwrap();
+                    }
+                };
+
+                let total_reviews = extension
+                    .platforms
+                    .values()
+                    .fold(0, |sum, platform| sum + platform.reviews.unwrap_or(0));
+                let platforms_with_ratings: Vec<&_> = extension
+                    .platforms
+                    .values()
+                    .filter(|x| x.rating.is_some())
+                    .collect();
+                let average_rating = if !platforms_with_ratings.is_empty() {
+                    platforms_with_ratings
+                        .iter()
+                        .fold(0.0, |sum, platform| sum + platform.rating.unwrap_or(0.0))
+                        / (platforms_with_ratings.len() as f64)
+                } else {
+                    0.0
+                };
+
+                let json_ld = json!({
+                    "@context": "https://schema.org/",
+                    "@type": "Product",
+                    "name": extension.name,
+                    "image": format!("{}/extensions/lowres/{}", state.env.s3_url, extension.banner),
+                    "description": extension.summary,
+                    "brand": {
+                        "@type": "Thing",
+                        "name": extension.author.name,
+                    },
+                    "sku": extension.identifier,
+                    "offers": extension.platforms.into_values().map(|platform| {
+                        json!({
+                            "@type": "Offer",
+                            "url": platform.url,
+                            "priceCurrency": platform.currency,
+                            "price": platform.price,
+                            "availability": "https://schema.org/InStock",
+                        })
+                    }).collect::<Vec<_>>(),
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": format!("{:.2}", average_rating),
+                        "reviewCount": total_reviews,
+                        "bestRating": "5",
+                        "worstRating": "1",
+                    },
+                });
+
+                let head = format!(
+                    r#"<head>
+<script type="application/ld+json">{json_ld}</script>
+<meta property="og:title" content="{}">
+<meta property="og:description" content="{}">
+<meta property="og:image" content="{img_url}">
+<meta property="og:image:type" content="image/jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{img_url}">
+<meta name="twitter:image:src" content="{img_url}">"#,
+                    extension.name,
+                    extension.summary,
+                    img_url = format!(
+                        "{}/extensions/lowres/{}",
+                        state.env.s3_url, extension.banner
+                    ),
+                );
+
+                return Response::builder()
+                    .header("Content-Type", "text/html")
+                    .body(Body::from(content.replace("<head>", &head)))
+                    .unwrap();
+            }
 
             let serve_file = |file: &'static include_dir::File| -> Response<Body> {
                 let content_type = match infer::get(file.contents()) {
@@ -268,10 +381,10 @@ async fn main() {
                 return serve_file(file);
             }
 
-            if let Some(include_dir::DirEntry::Dir(dir)) = FRONTEND_ASSETS.get_entry(path) {
-                if let Some(index_file) = dir.get_file(path.join("index.html")) {
-                    return serve_file(index_file);
-                }
+            if let Some(include_dir::DirEntry::Dir(dir)) = FRONTEND_ASSETS.get_entry(path)
+                && let Some(index_file) = dir.get_file(path.join("index.html"))
+            {
+                return serve_file(index_file);
             }
 
             let mut html_path = path.to_path_buf();

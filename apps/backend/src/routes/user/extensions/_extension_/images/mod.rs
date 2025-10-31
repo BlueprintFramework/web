@@ -53,7 +53,7 @@ mod get {
 
 mod post {
     use crate::{
-        models::extension_image::ExtensionImage,
+        models::{extension::ExtensionStatus, extension_image::ExtensionImage},
         response::{ApiResponse, ApiResponseResult},
         routes::{GetState, user::extensions::_extension_::GetExtension},
     };
@@ -77,6 +77,12 @@ mod post {
         extension: GetExtension,
         image: Bytes,
     ) -> ApiResponseResult {
+        if extension.status != ExtensionStatus::Approved {
+            return ApiResponse::error("unable to add images to non-approved extension")
+                .with_status(StatusCode::CONFLICT)
+                .ok();
+        }
+
         let image = match ImageReader::new(std::io::Cursor::new(image)).with_guessed_format() {
             Ok(reader) => reader,
             Err(_) => {

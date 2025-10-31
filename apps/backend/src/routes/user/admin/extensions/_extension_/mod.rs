@@ -99,11 +99,14 @@ mod get {
 mod patch {
     use crate::{
         models::extension::{
-            ExtensionPlatform, ExtensionPlatformData, ExtensionType, MinimalExtensionPlatformData,
+            ExtensionPlatform, ExtensionPlatformData, ExtensionStatus, ExtensionType,
+            MinimalExtensionPlatformData,
         },
         response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState, user::admin::extensions::_extension_::GetExtension},
     };
+    use axum::http::StatusCode;
+    use rand::distr::SampleString;
     use serde::{Deserialize, Serialize};
     use std::collections::BTreeMap;
     use utoipa::ToSchema;
@@ -114,6 +117,13 @@ mod patch {
         #[validate(length(min = 3, max = 63))]
         #[schema(min_length = 3, max_length = 63)]
         name: Option<String>,
+        #[validate(
+            length(min = 3, max = 48),
+            regex(path = "*crate::models::extension::IDENTIFIER_REGEX")
+        )]
+        #[schema(min_length = 3, max_length = 48)]
+        #[schema(pattern = "^[a-z]+$")]
+        identifier: Option<String>,
         r#type: Option<ExtensionType>,
         unlisted: Option<bool>,
         #[validate(length(min = 3, max = 255))]
@@ -279,6 +289,49 @@ mod patch {
             }
         }
 
+        let mut transaction = state.database.write().begin().await?;
+
+        if extension.status != ExtensionStatus::Approved
+            && let Some(identifier) = data.identifier
+        {
+            match sqlx::query!(
+                "UPDATE extensions
+                SET identifier = $2
+                WHERE extensions.id = $1",
+                extension.id,
+                identifier
+            )
+            .execute(&mut *transaction)
+            .await
+            {
+                Ok(_) => {}
+                Err(err) if err.to_string().contains("unique constraint") => {
+                    return ApiResponse::error("extension with identifier already exists")
+                        .with_status(StatusCode::CONFLICT)
+                        .ok();
+                }
+                Err(err) => {
+                    tracing::error!("failed to create extension: {:#?}", err);
+
+                    return ApiResponse::error("failed to create extension")
+                        .with_status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .ok();
+                }
+            }
+
+            let identifier_random = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 8);
+
+            sqlx::query!(
+                "UPDATE extensions
+                SET identifier = $2
+                WHERE extensions.id = $1",
+                extension.id,
+                format!("{identifier}:{identifier_random}")
+            )
+            .execute(&mut *transaction)
+            .await?;
+        }
+
         sqlx::query!(
             "UPDATE extensions
             SET name = $2, type = $3, unlisted = $4, summary = $5, description = $6, platforms = $7
@@ -291,8 +344,9 @@ mod patch {
             extension.description,
             serde_json::to_value(&extension.platforms)?
         )
-        .execute(state.database.write())
+        .execute(&mut *transaction)
         .await?;
+        transaction.commit().await?;
         state.cache.clear_extension(&extension).await?;
 
         ApiResponse::json(Response {}).ok()

@@ -22,9 +22,11 @@ withDefaults(
       <div class="flex items-center gap-6">
         <BrandLimitedemblem fill="white" :size="64" />
         <span class="text-6xl text-white">
-          <span class="font-bold">Blueprint</span>
+          <span class="font-bold" style="font-family: 'Roboto'">Blueprint</span>
         </span>
-        <span class="text-6xl text-white"> {{ scope }} </span>
+        <span class="text-6xl text-white" style="font-family: 'Roboto'">
+          {{ scope }}
+        </span>
       </div>
     </div>
     <div class="flex flex-col">
@@ -36,7 +38,7 @@ withDefaults(
       </p>
       <p
         class="truncate text-nowrap text-4xl text-white"
-        style="font-family: 'Funnel Display'"
+        style="font-family: 'Roboto'"
         v-if="description"
       >
         {{ description }}

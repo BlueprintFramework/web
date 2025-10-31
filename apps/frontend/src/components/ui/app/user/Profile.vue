@@ -9,7 +9,10 @@
       </div>
       <div class="bg-stripes hidden h-full md:block" />
     </div>
-    <form @submit.prevent="updateProfile" class="divide-y divide-neutral-700">
+    <form
+      @submit.prevent="determineCaptcha"
+      class="divide-y divide-neutral-700"
+    >
       <div class="grid grid-cols-1 gap-4 p-4 xl:grid-cols-2">
         <ElementsFormInput
           v-model="profileForm.name"
@@ -75,8 +78,6 @@
             (isValid: boolean) => handleFieldValidation('support', isValid)
           "
         />
-
-        <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
       </div>
       <button
         :disabled="
@@ -94,6 +95,33 @@
       </button>
     </form>
   </div>
+
+  <ElementsModal
+    :is-open="modalOpen.turnstile"
+    :closable="true"
+    title="Captcha"
+    @close="modalOpen.turnstile = false"
+  >
+    <template #default>
+      <p class="mb-5">
+        We need to know if you're human. Please complete the captcha below.
+      </p>
+      <div
+        class="flex flex-col items-center rounded-2xl border border-neutral-700 bg-neutral-900 py-4"
+      >
+        <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
+      </div>
+    </template>
+
+    <template #footer>
+      <ElementsButton
+        label="Continue"
+        class="order-first w-full md:order-[unset] md:w-auto"
+        :disabled="loading"
+        @click="updateProfile"
+      />
+    </template>
+  </ElementsModal>
 </template>
 
 <script setup lang="ts">
@@ -101,6 +129,9 @@ const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
 const turnstile = useTemplateRef('turnstile')
+const modalOpen = ref({
+  turnstile: false,
+})
 const loading = ref(false)
 const errors = ref({
   profile: [],
@@ -121,6 +152,15 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
 
+const determineCaptcha = async () => {
+  if (accountForm.value.email != user.value?.email) {
+    modalOpen.value.turnstile = true
+    return
+  }
+
+  updateProfile()
+}
+
 const updateProfile = async () => {
   loading.value = true
 
@@ -133,6 +173,7 @@ const updateProfile = async () => {
           captcha: null,
         },
       })
+      modalOpen.value.turnstile = false
     } catch (error) {
       console.error(error)
       //@ts-expect-error
@@ -144,7 +185,11 @@ const updateProfile = async () => {
   try {
     await $fetch('/api/user', {
       method: 'PATCH',
-      body: profileForm.value,
+      body: {
+        name: profileForm.value.name || null,
+        pronouns: profileForm.value.pronouns || null,
+        support: profileForm.value.support || null,
+      },
     })
   } catch (error) {
     console.error(error)

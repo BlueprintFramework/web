@@ -121,7 +121,7 @@ export default defineNuxtConfig({
   },
   turnstile: {
     siteKey: import.meta.dev
-      ? '1x00000000000000000000BB'
+      ? '1x00000000000000000000AA'
       : '0x4AAAAAAB7bNfQex8uoMyq6',
   },
 

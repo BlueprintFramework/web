@@ -7,5 +7,9 @@
 </template>
 
 <script setup lang="ts">
-defineOgImageComponent('Large')
+const route = useRoute()
+
+if (!route.path.startsWith('/browse/')) {
+  defineOgImageComponent('Large')
+}
 </script>

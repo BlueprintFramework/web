@@ -16,10 +16,7 @@ withDefaults(
 <template>
   <div
     class="flex h-full w-full flex-col justify-between bg-cover p-16"
-    style="
-      background-image: url(https://s3.blueprint.zip/static/releases/releases2.jpeg);
-      background-size: cover;
-    "
+    style="background-image: url(/img/ogbg.jpeg); background-size: cover"
   >
     <div class="flex flex-col">
       <div class="flex items-center gap-6">

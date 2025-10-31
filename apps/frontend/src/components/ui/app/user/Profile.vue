@@ -106,10 +106,10 @@
       <p class="mb-5">
         We need to know if you're human. Please complete the captcha below.
       </p>
-      <div
-        class="flex flex-col items-center rounded-2xl border border-neutral-700 bg-neutral-900 py-4"
-      >
-        <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
+      <div class="rounded-2xl border border-neutral-700 bg-neutral-900 py-4">
+        <div class="flex min-h-[65px] flex-col items-center">
+          <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
+        </div>
       </div>
     </template>
 

@@ -7,16 +7,16 @@
 </template>
 
 <script setup lang="ts">
-const appConfig = useAppConfig()
 const route = useRoute()
+const ogImagePath = useOgImagePath()
 
-if (!route.path.startsWith('/browse/')) {
+if (!/^\/browse\/.+$/.test(route.path)) {
   defineOgImageComponent('Large')
-
   useSeoMeta({
-    ogImage: () =>
-      `${appConfig.url}/__og-image__/${import.meta.prerender ? 'static' : 'image'}/${route.path.substring(1)}/og.png`,
-    ogType: 'article',
+    ogImage: ogImagePath,
+    ogImageUrl: ogImagePath,
+    twitterCard: 'summary_large_image',
+    twitterImage: ogImagePath,
   })
 }
 </script>

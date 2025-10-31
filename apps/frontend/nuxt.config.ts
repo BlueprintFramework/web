@@ -38,6 +38,7 @@ export default defineNuxtConfig({
       'Funnel+Display:400',
       'Funnel+Display:700',
     ],
+    zeroRuntime: true,
   },
   icon: {
     localApiEndpoint: '/__nuxt_icon',

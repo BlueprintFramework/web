@@ -172,8 +172,8 @@
 <script setup lang="ts">
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
 
-const appConfig = useAppConfig()
 const route = useRoute()
+const ogImagePath = useOgImagePath()
 const isDesktop = useMediaQuery('(min-width: 768px)')
 
 const mobileVisible = ref(false)
@@ -261,10 +261,10 @@ const filteredCategories = computed(() => {
 })
 
 defineOgImageComponent('Large')
-
 useSeoMeta({
-  ogImage: () =>
-    `${appConfig.url}/__og-image__/${import.meta.prerender ? 'static' : 'image'}/${route.path.substring(1)}/og.png`,
-  ogType: 'article',
+  ogImage: ogImagePath,
+  ogImageUrl: ogImagePath,
+  twitterCard: 'summary_large_image',
+  twitterImage: ogImagePath,
 })
 </script>

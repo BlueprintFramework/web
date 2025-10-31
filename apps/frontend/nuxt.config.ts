@@ -116,7 +116,7 @@ export default defineNuxtConfig({
   },
   plausible: {
     apiHost: 'https://blueprint.zip/yay/script.js',
-    domain: 'https://blueprint.zip',
+    domain: 'blueprint.zip',
     autoOutboundTracking: true,
     ignoredHostnames: ['localhost'],
   },

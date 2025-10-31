@@ -62,7 +62,7 @@
             </div>
 
             <div
-              class="overflow-scroll p-4"
+              class="scrollbar-none overflow-y-scroll p-4"
               :style="`max-height: calc(100vh - ${combinedHeight}px - 48px)`"
             >
               <slot />

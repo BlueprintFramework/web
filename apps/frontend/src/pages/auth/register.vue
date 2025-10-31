@@ -15,6 +15,12 @@
       <ElementsInlinecard v-if="errors?.includes('failed to create user')">
         Could not create user, try again later.
       </ElementsInlinecard>
+      <ElementsInlinecard
+        v-if="route.query.reason == 'oauth'"
+        class="mb-4 w-full"
+      >
+        Please create an account first.
+      </ElementsInlinecard>
       <ElementsFormInput
         v-model="form.displayName"
         name="displayname"
@@ -105,6 +111,7 @@ definePageMeta({
 
 const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
+const route = useRoute()
 
 const turnstile = useTemplateRef('turnstile')
 const loading = ref(false)

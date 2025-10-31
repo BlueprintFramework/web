@@ -12,7 +12,7 @@
           <NuxtTime :datetime="latestRelease.released" :relative="true" />
         </p>
         <p>
-          {{ latestRelease.summary }}
+          {{ latestRelease.summary || 'No summary provided' }}
         </p>
         <p
           class="text-link group-focus:text-brand-50 group-hover:text-brand-50 mt-6 flex items-center gap-0.5"
@@ -26,7 +26,7 @@
       class="min-h-20 overflow-hidden border-neutral-700 transition-colors group-focus:border-neutral-500 max-lg:order-first max-lg:border-b"
     >
       <div
-        class="h-full w-full bg-[url(/img/releases/latest.png)] transition-all duration-300 group-hover:scale-105"
+        class="h-full w-full bg-[url(/img/releases/latest.png)] bg-top transition-all duration-300 group-hover:scale-105"
       />
       <div
         class="relative -top-[100%] flex h-full w-full flex-col items-center justify-center p-6 lg:px-12"
@@ -82,7 +82,7 @@
           </p>
 
           <p class="truncate text-nowrap">
-            {{ release.summary || 'This release does not have a summary' }}
+            {{ release.summary || 'No summary provided' }}
           </p>
         </div>
 
@@ -127,8 +127,8 @@
 </template>
 
 <script setup lang="ts">
-const { data: releases } = await useAsyncData('changelog-index', () => {
-  return queryCollection('changelog').order('num', 'DESC').all()
+const { data: releases } = await useAsyncData('releases-index', () => {
+  return queryCollection('releases').order('num', 'DESC').all()
 })
 
 const latestRelease = computed(() => {

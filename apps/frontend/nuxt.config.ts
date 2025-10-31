@@ -16,6 +16,8 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
     '@nuxtjs/turnstile',
     '@vueuse/nuxt',
+    'nuxt-og-image',
+    'nuxt-site-config',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -25,6 +27,17 @@ export default defineNuxtConfig({
         lang: 'en',
       },
     },
+  },
+  sitemap: {
+    sitemapsPathPrefix: '/',
+  },
+  ogImage: {
+    fonts: [
+      'Roboto:400',
+      'Roboto:700',
+      'Funnel+Display:400',
+      'Funnel+Display:700',
+    ],
   },
   icon: {
     localApiEndpoint: '/__nuxt_icon',
@@ -37,6 +50,7 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         '/api': 'http://localhost:8000',
+        '/browse/sitemap.xml': 'http://localhost:8000',
         '/yay': 'https://blueprint.zip',
       },
     },

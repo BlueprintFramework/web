@@ -97,7 +97,12 @@
         <span class="text-xl font-semibold"> Continue </span>
         <Icon name="memory:chevron-right" mode="svg" :size="24" />
       </button>
-      <NuxtLink tabindex="0" class="group outline-0">
+      <NuxtLink
+        to="/api/auth/github"
+        :external="true"
+        tabindex="0"
+        class="group outline-0"
+      >
         <button
           :disabled="loading"
           type="button"

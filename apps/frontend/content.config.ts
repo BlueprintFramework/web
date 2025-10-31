@@ -39,10 +39,10 @@ export default defineContentConfig({
       }),
     }),
 
-    // Changelogs
-    changelog: defineCollection({
+    // Releases
+    releases: defineCollection({
       type: 'page',
-      source: 'changelog/*.md',
+      source: 'releases/*.md',
       schema: z.object({
         version: z.string(),
         released: z.string(),

@@ -257,4 +257,6 @@ const filteredCategories = computed(() => {
 
   return filtered
 })
+
+defineOgImageComponent('Large')
 </script>

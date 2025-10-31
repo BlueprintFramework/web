@@ -23,3 +23,7 @@
     />
   </div>
 </template>
+
+<script setup lang="ts">
+defineOgImageComponent('Large')
+</script>

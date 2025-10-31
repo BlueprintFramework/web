@@ -31,7 +31,7 @@
         </NuxtLink>
       </div>
     </NuxtMarquee> -->
-    <ElementsNewMarquee :direction="'left'" :speed="35" :pause-on-hover="true">
+    <ElementsMarquee :direction="'left'" :speed="35" :pause-on-hover="true">
         <div
           v-for="(item, index) in items"
           :key="`item-${index}`"
@@ -57,7 +57,7 @@
             </div>
           </NuxtLink>
         </div>
-    </ElementsNewMarquee>
+      </ElementsMarquee>
   </div>
 </template>
 

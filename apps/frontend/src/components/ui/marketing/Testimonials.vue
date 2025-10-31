@@ -1,7 +1,7 @@
 <template>
   <div :class="props?.class" class="rounded-3xl border border-neutral-700 p-4">
     <div class="marquee space-y-4">
-      <ElementsNewMarquee
+      <ElementsMarquee
         v-for="(testimonials, index) in allTestimonials"
         :speed="12"
         :direction="index % 2 == 0 ? 'left' : 'right'"
@@ -50,7 +50,7 @@
             />
           </div>
         </div>
-      </ElementsNewMarquee>
+      </ElementsMarquee>
     </div>
   </div>
 </template>

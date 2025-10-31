@@ -55,7 +55,8 @@
       <NuxtLink class="group outline-0" tabindex="0">
         <button
           :disabled="loading"
-          @mousedown.prevent="handleResend"
+          @mousedown.prevent
+          @click="modalOpen.turnstile = true"
           type="button"
           tabindex="-1"
           class="text-default-font group-focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900 md:w-auto"
@@ -65,6 +66,33 @@
       </NuxtLink>
     </div>
   </form>
+
+  <ElementsModal
+    :is-open="modalOpen.turnstile"
+    :closable="true"
+    title="Captcha"
+    @close="modalOpen.turnstile = false"
+  >
+    <template #default>
+      <p class="mb-5">
+        We need to know if you're human. Please complete the captcha below.
+      </p>
+      <div class="rounded-2xl border border-neutral-700 bg-neutral-900 py-4">
+        <div class="flex min-h-[65px] flex-col items-center">
+          <NuxtTurnstile v-model="captchaToken" ref="turnstile" />
+        </div>
+      </div>
+    </template>
+
+    <template #footer>
+      <ElementsButton
+        label="Continue"
+        class="order-first w-full md:order-[unset] md:w-auto"
+        :disabled="loading"
+        @click="handleResend"
+      />
+    </template>
+  </ElementsModal>
 </template>
 
 <script setup lang="ts">
@@ -76,12 +104,17 @@ definePageMeta({
 const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
+const turnstile = useTemplateRef('turnstile')
+const captchaToken = ref()
 const loading = ref(false)
+const fieldValidation = ref<Record<string, boolean>>({})
 const errors = ref({
   incorrect: false,
   resendError: false,
 })
-const fieldValidation = ref<Record<string, boolean>>({})
+const modalOpen = ref({
+  turnstile: false,
+})
 const form = ref({
   token: '',
 })
@@ -120,9 +153,10 @@ const handleResend = async () => {
       method: 'PATCH',
       body: {
         email: user.value?.email_pending,
-        captcha: null,
+        captcha: captchaToken.value,
       },
     })
+    modalOpen.value.turnstile = false
   } catch (error) {
     console.error(error)
     errors.value.resendError = true

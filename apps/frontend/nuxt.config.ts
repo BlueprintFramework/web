@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-og-image',
     'nuxt-site-config',
+    '@nuxt/scripts',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -47,13 +48,6 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    server: {
-      proxy: {
-        '/api': 'http://localhost:8000',
-        '/browse/sitemap.xml': 'http://localhost:8000',
-        '/yay': 'https://blueprint.zip',
-      },
-    },
     optimizeDeps: {
       include: ['debug'],
     },
@@ -100,6 +94,11 @@ export default defineNuxtConfig({
     name: 'Blueprint',
   },
   nitro: {
+    devProxy: {
+      '/api': 'http://localhost:8000/api',
+      '/browse/sitemap.xml': 'http://localhost:8000/browse/sitemap.xml',
+      '/yay': 'https://blueprint.zip/yay',
+    },
     routeRules: {
       '/api/**': {
         prerender: false,

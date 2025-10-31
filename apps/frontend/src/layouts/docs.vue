@@ -31,9 +31,9 @@
     </div>
   </client-only>
 
-  <client-only>
-    <div class="flex">
-      <div class="fixed z-50 flex md:static">
+  <div class="flex">
+    <div class="fixed z-50 flex md:static">
+      <client-only>
         <div class="md:w-76">
           <Transition
             enter-active-class="transition-all duration-300 ease-out"
@@ -154,19 +154,19 @@
             </div>
           </Transition>
         </div>
-        <div class="hidden md:block">
-          <div
-            class="bg-linear-to-b fixed h-full w-[1px] from-neutral-800 via-neutral-500 to-neutral-800"
-          />
-        </div>
-      </div>
-      <div
-        class="max-w-200 container space-y-12 overflow-hidden px-4 pb-12 pt-16 md:pt-12"
-      >
-        <slot />
+      </client-only>
+      <div class="hidden md:block">
+        <div
+          class="bg-linear-to-b fixed h-full w-[1px] from-neutral-800 via-neutral-500 to-neutral-800"
+        />
       </div>
     </div>
-  </client-only>
+    <div
+      class="max-w-200 container space-y-12 overflow-hidden px-4 pb-12 pt-16 md:pt-12"
+    >
+      <slot />
+    </div>
+  </div>
 
   <div
     class="fixed inset-0 top-0 -z-10 h-[50vh] w-full bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:30px_30px] bg-[position:-5px_-5px]"

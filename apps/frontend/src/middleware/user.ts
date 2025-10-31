@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) return
 
-  const { isAuthenticated, isFetched } = useAuth()
+  const { user, isAuthenticated, isFetched } = useAuth()
 
   if (!isFetched.value) {
     await new Promise((resolve) => {
@@ -18,7 +18,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     })
   }
 
-  if (!isAuthenticated.value) {
+  // isAuthenticated is a bit funky here
+  if (!user?.value?.id) {
     return navigateTo('/auth')
   }
 })

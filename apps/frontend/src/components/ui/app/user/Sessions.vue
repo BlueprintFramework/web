@@ -68,7 +68,7 @@
                 :name="determineDeviceIcon(session.user_agent)"
                 :size="18"
               />
-              <span>
+              <span class="transition-all hover:blur-none md:blur-[6px]">
                 {{ session.ip }}
               </span>
             </div>

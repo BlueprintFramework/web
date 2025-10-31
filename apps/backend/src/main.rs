@@ -219,40 +219,71 @@ async fn main() {
             get(|| async move { (StatusCode::OK, axum::Json(json!({}))) }),
         )
         .fallback(|req: Request<Body>| async move {
-            if !req.uri().path().starts_with("/api") {
-                let path = Path::new(&req.uri().path()[1..]);
-
-                let entry = match FRONTEND_ASSETS.get_entry(path) {
-                    Some(entry) => entry,
-                    None => FRONTEND_ASSETS.get_entry("404.html").unwrap(),
-                };
-
-                let file = match entry {
-                    include_dir::DirEntry::File(file) => file,
-                    include_dir::DirEntry::Dir(dir) => match dir.get_file("index.html") {
-                        Some(index_file) => index_file,
-                        None => FRONTEND_ASSETS.get_file("404.html").unwrap(),
-                    },
-                };
-
+            if req.uri().path().starts_with("/api") {
                 return Response::builder()
-                    .header(
-                        "Content-Type",
-                        match infer::get(file.contents()) {
-                            Some(kind) => kind.mime_type(),
-                            _ => match file.path().extension() {
-                                Some(ext) => match ext.to_str() {
-                                    Some("html") => "text/html",
-                                    Some("js") => "application/javascript",
-                                    Some("css") => "text/css",
-                                    Some("json") => "application/json",
-                                    _ => "application/octet-stream",
-                                },
-                                None => "application/octet-stream",
-                            },
+                    .status(StatusCode::NOT_FOUND)
+                    .header("Content-Type", "application/json")
+                    .body(Body::from(
+                        ApiError::new(&["route not found"]).to_value().to_string(),
+                    ))
+                    .unwrap();
+            }
+
+            let mut path = req.uri().path().to_string();
+            if path.starts_with('/') {
+                path = path[1..].to_string();
+            }
+            if path.is_empty() || path.ends_with('/') {
+                path.push_str("index.html");
+            }
+
+            let path = Path::new(&path);
+
+            let serve_file = |file: &'static include_dir::File| -> Response<Body> {
+                let content_type = match infer::get(file.contents()) {
+                    Some(kind) => kind.mime_type().to_string(),
+                    None => match file.path().extension() {
+                        Some(ext) => match ext.to_str() {
+                            Some("html") => "text/html",
+                            Some("js") => "application/javascript",
+                            Some("css") => "text/css",
+                            Some("json") => "application/json",
+                            Some("woff") => "font/woff",
+                            Some("woff2") => "font/woff2",
+                            Some("ttf") => "font/ttf",
+                            _ => "application/octet-stream",
                         },
-                    )
+                        None => "application/octet-stream",
+                    }
+                    .to_string(),
+                };
+
+                Response::builder()
+                    .header("Content-Type", &content_type)
                     .body(Body::from(file.contents()))
+                    .unwrap()
+            };
+
+            if let Some(include_dir::DirEntry::File(file)) = FRONTEND_ASSETS.get_entry(path) {
+                return serve_file(file);
+            }
+
+            if let Some(include_dir::DirEntry::Dir(dir)) = FRONTEND_ASSETS.get_entry(path) {
+                if let Some(index_file) = dir.get_file(path.join("index.html")) {
+                    return serve_file(index_file);
+                }
+            }
+
+            let mut html_path = path.to_path_buf();
+            html_path.set_extension("html");
+            if let Some(include_dir::DirEntry::File(file)) = FRONTEND_ASSETS.get_entry(&html_path) {
+                return serve_file(file);
+            }
+
+            if let Some(not_found_file) = FRONTEND_ASSETS.get_file("404.html") {
+                return Response::builder()
+                    .header("Content-Type", "text/html")
+                    .body(Body::from(not_found_file.contents()))
                     .unwrap();
             }
 

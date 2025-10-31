@@ -191,7 +191,7 @@ mod patch {
             regex(path = "*crate::models::user::NAME_REGEX")
         )]
         #[schema(min_length = 3, max_length = 15)]
-        #[schema(pattern = "^[a-zA-Z0-9_]+$")]
+        #[schema(pattern = "^[a-zA-Z0-9_-]+$")]
         name: String,
         #[validate(
             length(min = 3, max = 22),

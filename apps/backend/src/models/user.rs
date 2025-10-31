@@ -7,7 +7,7 @@ use std::{collections::BTreeMap, sync::LazyLock};
 use utoipa::ToSchema;
 
 pub static NAME_REGEX: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_]+$").expect("Failed to compile name regex"));
+    LazyLock::new(|| Regex::new(r"^[a-zA-Z0-9_-]+$").expect("Failed to compile name regex"));
 pub static PRONOUNS_REGEX: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^[a-zA-Z]+/[a-zA-Z]+(?:/[a-zA-Z]+)?$").expect("Failed to compile pronouns regex")
 });

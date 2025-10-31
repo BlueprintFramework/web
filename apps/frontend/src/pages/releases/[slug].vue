@@ -73,5 +73,5 @@ useSeoMeta({
   description: release.value?.summary,
 })
 
-defineOgImageComponent('Release')
+defineOgImageComponent('Descriptive', { scope: 'Releases' })
 </script>

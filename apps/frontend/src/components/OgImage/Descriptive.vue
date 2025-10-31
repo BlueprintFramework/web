@@ -3,10 +3,12 @@ withDefaults(
   defineProps<{
     title?: string
     description?: string
+    scope?: string
   }>(),
   {
     title: 'title',
     description: 'description',
+    scope: '',
   }
 )
 </script>
@@ -20,9 +22,12 @@ withDefaults(
     "
   >
     <div class="flex flex-col">
-      <div class="flex items-center gap-8">
-        <BrandLimitedemblem fill="white" :size="72" />
-        <span class="text-6xl font-bold text-white"> Blueprint </span>
+      <div class="flex items-center gap-6">
+        <BrandLimitedemblem fill="white" :size="64" />
+        <span class="text-6xl text-white">
+          <span class="font-bold">Blueprint</span>
+        </span>
+        <span class="text-6xl text-white"> {{ scope }} </span>
       </div>
     </div>
     <div class="flex flex-col">

@@ -145,4 +145,6 @@ useSeoMeta({
   title: data.value?.title,
   description: data.value?.description,
 })
+
+defineOgImageComponent('Descriptive', { scope: 'Documentation' })
 </script>

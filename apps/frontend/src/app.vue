@@ -12,6 +12,10 @@ useHead({
       name: 'color-scheme',
       content: 'dark',
     },
+    {
+      name: 'theme-color',
+      content: '#52A9FF',
+    },
   ],
 })
 </script>

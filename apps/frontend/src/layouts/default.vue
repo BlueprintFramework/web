@@ -8,4 +8,10 @@
 
 <script setup lang="ts">
 defineOgImageComponent('Large')
+
+useSeoMeta({
+  ogTitle: 'Blueprint',
+  ogDescription:
+    'The industry-leading modding platform for the Pterodactyl panel',
+})
 </script>

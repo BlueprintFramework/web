@@ -133,7 +133,7 @@
                 <div>
                   Used by
                   <span class="text-default-font/60 font-normal">
-                    ~{{ extension.stats.panels }} installations
+                    ~{{ extension.stats.panels }} Blueprint installations
                   </span>
                 </div>
               </div>

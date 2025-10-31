@@ -188,6 +188,7 @@ impl Extension {
         platforms: &BTreeMap<ExtensionPlatform, ExtensionPlatformData>,
     ) -> Result<i32, sqlx::Error> {
         let identifier_random = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 8);
+        let mut transaction = database.write().begin().await?;
 
         let row = sqlx::query(
             r#"
@@ -205,7 +206,7 @@ impl Extension {
         .bind(description)
         .bind(serde_json::to_value(platforms).unwrap())
         .bind("_default.jpeg")
-        .fetch_one(database.write())
+        .fetch_one(&mut *transaction)
         .await?;
 
         sqlx::query!(
@@ -215,8 +216,10 @@ impl Extension {
             row.get::<i32, _>("id"),
             format!("{identifier}:{identifier_random}")
         )
-        .execute(database.write())
+        .execute(&mut *transaction)
         .await?;
+
+        transaction.commit().await?;
 
         Ok(row.get("id"))
     }

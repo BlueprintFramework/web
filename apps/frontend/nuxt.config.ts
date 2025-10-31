@@ -96,7 +96,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    url: 'https://blueprint.zip',
+    url: 'https://api.blueprintframe.work',
     name: 'Blueprint',
   },
   nitro: {

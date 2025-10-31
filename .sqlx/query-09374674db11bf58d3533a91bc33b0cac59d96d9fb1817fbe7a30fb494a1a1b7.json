@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE users\n            SET github_id = NULL\n            WHERE users.id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "09374674db11bf58d3533a91bc33b0cac59d96d9fb1817fbe7a30fb494a1a1b7"
+}

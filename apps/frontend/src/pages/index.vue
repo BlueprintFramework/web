@@ -33,12 +33,12 @@
   <UiMarketingHero />
   <UiMarketingRepositories />
   <UiMarketingFaq />
-  <UiMarketingTestimonials v-if="isDesktop" class="hidden md:block" />
+  <UiMarketingTestimonials v-if="!isMobile" class="hidden md:block" />
   <UiMarketingSponsors />
 
   <ElementsGridbackground />
 </template>
 
 <script setup lang="ts">
-const isDesktop = useMediaQuery('(min-width: 768px)')
+const isMobile = useMediaQuery('(max-width: 768px)')
 </script>

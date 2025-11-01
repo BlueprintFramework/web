@@ -1,19 +1,19 @@
 <template>
   <div class="flex flex-col gap-[1px]">
-    <client-only>
-      <div
-        v-for="(item, index) in props.items"
-        :key="index"
-        class="bg-neutral-950 transition-colors focus-within:bg-neutral-900 hover:bg-neutral-900"
+    <div
+      v-for="(item, index) in props.items"
+      :key="index"
+      class="bg-neutral-950 transition-colors focus-within:bg-neutral-900 hover:bg-neutral-900"
+    >
+      <button
+        class="hover:text-brand-50 focus:text-brand-50 flex w-full cursor-pointer items-center justify-between p-4 outline-0 transition-colors"
+        @click="toggleAccordion(index)"
+        @mousedown.prevent
       >
-        <button
-          class="hover:text-brand-50 focus:text-brand-50 flex w-full cursor-pointer items-center justify-between p-4 outline-0 transition-colors"
-          @click="toggleAccordion(index)"
-          @mousedown.prevent
-        >
-          <h2>
-            {{ item.title }}
-          </h2>
+        <h2>
+          {{ item.title }}
+        </h2>
+        <client-only>
           <Icon
             name="memory:chevron-up"
             :size="24"
@@ -21,34 +21,33 @@
             mode="svg"
             class="transition-transform"
           />
-        </button>
+        </client-only>
+      </button>
+      <div
+        class="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+        :style="{
+          maxHeight: activeIndex === index ? contentHeights[index] + 'px' : '0',
+        }"
+      >
         <div
-          class="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-          :style="{
-            maxHeight:
-              activeIndex === index ? contentHeights[index] + 'px' : '0',
-          }"
+          :ref="(el) => setContentRef(el as Element | null, index)"
+          class="text-default-font/75 p-4 pt-0"
         >
-          <div
-            :ref="(el) => setContentRef(el as Element | null, index)"
-            class="text-default-font/75 p-4 pt-0"
-          >
-            <template v-if="activeIndex == index || oldIndex == index">
-              <p v-if="item.text">
-                {{ item.text }}
-              </p>
-              <template v-else>
-                <component
-                  v-for="(vnode, vnodeIndex) in (item.inner as Function)()"
-                  :key="vnodeIndex"
-                  :is="vnode"
-                />
-              </template>
+          <template v-if="activeIndex == index || oldIndex == index">
+            <p v-if="item.text">
+              {{ item.text }}
+            </p>
+            <template v-else>
+              <component
+                v-for="(vnode, vnodeIndex) in (item.inner as Function)()"
+                :key="vnodeIndex"
+                :is="vnode"
+              />
             </template>
-          </div>
+          </template>
         </div>
       </div>
-    </client-only>
+    </div>
   </div>
 </template>
 

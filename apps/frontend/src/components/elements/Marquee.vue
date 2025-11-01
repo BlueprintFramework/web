@@ -160,7 +160,7 @@ const handleTouchStart = (e: TouchEvent) => {
 
   isDragging.value = true
   const touch = e.touches[0]
-  dragStartX.value = touch.clientX
+  dragStartX.value = touch?.clientX || 0
   dragStartTranslateX.value = translateX.value
   hasDragged = false
 
@@ -168,7 +168,7 @@ const handleTouchStart = (e: TouchEvent) => {
   velocity.value = 0
 
   // Initialize velocity tracking
-  lastMouseX = touch.clientX
+  lastMouseX = touch?.clientX || 0
   lastMouseTime = Date.now()
 
   document.addEventListener('touchmove', handleTouchMove, { passive: false })
@@ -180,7 +180,7 @@ const handleTouchMove = (e: TouchEvent) => {
   if (!isDragging.value || e.touches.length !== 1) return
 
   const touch = e.touches[0]
-  const deltaX = touch.clientX - dragStartX.value
+  const deltaX = (touch?.clientX || 0) - dragStartX.value
   translateX.value = dragStartTranslateX.value + deltaX
 
   // Track if user has actually dragged (moved more than 5px)
@@ -195,11 +195,11 @@ const handleTouchMove = (e: TouchEvent) => {
   const timeDelta = currentTime - lastMouseTime
 
   if (timeDelta > 0) {
-    const moveDelta = touch.clientX - lastMouseX
+    const moveDelta = (touch?.clientX || 0) - lastMouseX
     velocity.value = (moveDelta / timeDelta) * 16 // normalize to ~60fps
   }
 
-  lastMouseX = touch.clientX
+  lastMouseX = touch?.clientX || 0
   lastMouseTime = currentTime
 
   // Normalize position to keep within bounds for seamless looping

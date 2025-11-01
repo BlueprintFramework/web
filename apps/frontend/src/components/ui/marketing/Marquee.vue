@@ -1,6 +1,6 @@
 <template>
   <div :class="props?.class" class="marquee h-32">
-    <ElementsMarquee :direction="'left'" :speed="35" :pause-on-hover="true">
+    <ElementsMarquee :direction="'left'" :speed="20" :pause-on-hover="true">
       <div
         v-for="(item, index) in items"
         :key="`item-${index}`"

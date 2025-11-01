@@ -19,7 +19,7 @@ h3 {
 }
 
 :root {
-  --nav-offset: 3.25rem;
+  --nav-offset: 0;
   --extend-footer: 0;
 }
 
@@ -87,4 +87,8 @@ h3 {
 
 .turnstile-wrapper div {
   display: flex !important;
+}
+
+.nuxt-loading-indicator {
+  top: var(--nav-offset) !important;
 }

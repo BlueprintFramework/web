@@ -1,434 +1,428 @@
 <template>
-  <client-only>
+  <template v-if="data?.extension">
     <ElementsInlinecard v-if="errors">
       An unknown error occurred. Open your browser console for more information.
     </ElementsInlinecard>
-    <template v-if="data?.extension">
-      <div
-        v-if="user?.admin && data.extension.status == 'ready'"
-        class="flex justify-between rounded-3xl border border-neutral-700 max-md:flex-col md:items-center"
-      >
-        <div class="p-4">
-          This extension has been submitted for review. Please approve or reject
-          this extension, and when rejecting, provide a reason why.
-        </div>
-        <div
-          class="flex h-full items-center gap-2 border-neutral-700 p-2.5 max-md:w-full max-md:border-t"
-        >
-          <ElementsButton
-            @click="modalOpen.adminReject = true"
-            class="h-full max-md:order-last max-md:w-full"
-          >
-            Reject
-          </ElementsButton>
-          <ElementsButton
-            @click="handleAdminApprove"
-            class="h-full max-md:w-full"
-          >
-            Approve
-          </ElementsButton>
-        </div>
+    <div
+      v-if="user?.admin && data.extension.status == 'ready'"
+      class="flex justify-between rounded-3xl border border-neutral-700 max-md:flex-col md:items-center"
+    >
+      <div class="p-4">
+        This extension has been submitted for review. Please approve or reject
+        this extension, and when rejecting, provide a reason why.
       </div>
-
       <div
-        class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+        class="flex h-full items-center gap-2 border-neutral-700 p-2.5 max-md:w-full max-md:border-t"
       >
-        <div class="flex items-center gap-2">
-          <NuxtLink
-            :to="
+        <ElementsButton
+          @click="modalOpen.adminReject = true"
+          class="h-full max-md:order-last max-md:w-full"
+        >
+          Reject
+        </ElementsButton>
+        <ElementsButton
+          @click="handleAdminApprove"
+          class="h-full max-md:w-full"
+        >
+          Approve
+        </ElementsButton>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+    >
+      <div class="flex items-center gap-2">
+        <NuxtLink
+          :to="
+            data.extension.status == 'approved'
+              ? `/browse/${data?.extension.identifier}`
+              : ''
+          "
+        >
+          <span
+            class="h1"
+            :class="
               data.extension.status == 'approved'
-                ? `/browse/${data?.extension.identifier}`
+                ? 'text-link !decoration-transparent'
                 : ''
             "
           >
-            <span
-              class="h1"
-              :class="
-                data.extension.status == 'approved'
-                  ? 'text-link !decoration-transparent'
-                  : ''
-              "
-            >
-              {{ data.extension.name }}
-            </span>
-          </NuxtLink>
-          <ElementsTextbadge
-            v-if="user?.admin && user?.id != data.extension.author.id"
-            :label="`${data.extension.author.name}`"
-            icon="memory:account"
-          />
-        </div>
-        <div class="flex items-center gap-2 max-md:flex-col">
-          <ElementsButton
-            v-if="data.extension.status == 'approved'"
-            @click="modalOpen.adminReject = true"
-            class="max-md:w-full"
-          >
-            Withdraw approval
-          </ElementsButton>
-          <template v-if="user?.id == data.extension.author.id">
-            <ElementsButton
-              v-if="data.extension.status == 'pending'"
-              @click="handleSubmit"
-              :disabled="submitting"
-              class="max-md:w-full"
-            >
-              Submit for review
-            </ElementsButton>
-            <ElementsButton
-              v-else-if="data.extension.status == 'ready'"
-              class="max-md:w-full"
-              :disabled="true"
-            >
-              <div class="flex items-center justify-center gap-1.5">
-                <Icon name="pixelarticons:clock" />
-                <span>Submit for review</span>
-              </div>
-            </ElementsButton>
-          </template>
-
-          <ElementsButton
-            @click="modalOpen.platforms = true"
-            class="w-full md:w-auto"
-          >
-            Platforms
-          </ElementsButton>
-
-          <ElementsButton
-            class="max-md:w-full"
-            :disabled="
-              fieldValidation.extension_name == false ||
-              fieldValidation.extension_identifier == false ||
-              fieldValidation.extension_summary == false ||
-              (form.type != 'extension' && form.type != 'theme') ||
-              (form.unlisted != true && form.unlisted != false) ||
-              loading
-            "
-            @click="handleSave"
-          >
-            Save changes
-          </ElementsButton>
-
-          <ElementsButton
-            v-if="data.extension.status != 'approved'"
-            class="max-md:w-full"
-            color="danger"
-            :disabled="loading"
-            @click="handleOpenDelete"
-          >
-            Delete draft
-          </ElementsButton>
-        </div>
+            {{ data.extension.name }}
+          </span>
+        </NuxtLink>
+        <ElementsTextbadge
+          v-if="user?.admin && user?.id != data.extension.author.id"
+          :label="`${data.extension.author.name}`"
+          icon="memory:account"
+        />
       </div>
-
-      <ElementsInlinecard
-        v-if="
-          data.extension.deny_reason &&
-          user?.id == data.extension.author.id &&
-          data.extension.status != 'ready' &&
-          data.extension.status != 'approved'
-        "
-      >
-        Your extension submission was rejected for the following reason(s):
-        <span class="text-default-font/60 italic">
-          {{ data.extension.deny_reason }}
-        </span>
-        Please correct this/these issue(s) and re-submit the extension for
-        review.
-      </ElementsInlinecard>
-
-      <div class="flex flex-col gap-5 xl:flex-row">
-        <div
-          class="xl:flex-2/3 overflow-hidden rounded-3xl border border-neutral-700"
+      <div class="flex items-center gap-2 max-md:flex-col">
+        <ElementsButton
+          v-if="data.extension.status == 'approved'"
+          @click="modalOpen.adminReject = true"
+          class="max-md:w-full"
         >
-          <div
-            class="h-50 overflow-hidden rounded-3xl bg-cover bg-center xl:h-full"
-            :style="`background-image: url(${data.extension.banner.fullres});`"
+          Withdraw approval
+        </ElementsButton>
+        <template v-if="user?.id == data.extension.author.id">
+          <ElementsButton
+            v-if="data.extension.status == 'pending'"
+            @click="handleSubmit"
+            :disabled="submitting"
+            class="max-md:w-full"
           >
-            <div class="h-50 w-full xl:h-full xl:backdrop-blur-2xl">
-              <div
-                class="h-50 w-full bg-cover bg-center bg-no-repeat xl:h-full xl:bg-contain"
-                :style="`background-image: url(${data.extension.banner.fullres})`"
-              >
+            Submit for review
+          </ElementsButton>
+          <ElementsButton
+            v-else-if="data.extension.status == 'ready'"
+            class="max-md:w-full"
+            :disabled="true"
+          >
+            <div class="flex items-center justify-center gap-1.5">
+              <Icon name="pixelarticons:clock" />
+              <span>Submit for review</span>
+            </div>
+          </ElementsButton>
+        </template>
+
+        <ElementsButton
+          @click="modalOpen.platforms = true"
+          class="w-full md:w-auto"
+        >
+          Platforms
+        </ElementsButton>
+
+        <ElementsButton
+          class="max-md:w-full"
+          :disabled="
+            fieldValidation.extension_name == false ||
+            fieldValidation.extension_identifier == false ||
+            fieldValidation.extension_summary == false ||
+            (form.type != 'extension' && form.type != 'theme') ||
+            (form.unlisted != true && form.unlisted != false) ||
+            loading
+          "
+          @click="handleSave"
+        >
+          Save changes
+        </ElementsButton>
+
+        <ElementsButton
+          v-if="data.extension.status != 'approved'"
+          class="max-md:w-full"
+          color="danger"
+          :disabled="loading"
+          @click="handleOpenDelete"
+        >
+          Delete draft
+        </ElementsButton>
+      </div>
+    </div>
+
+    <ElementsInlinecard
+      v-if="
+        data.extension.deny_reason &&
+        user?.id == data.extension.author.id &&
+        data.extension.status != 'ready' &&
+        data.extension.status != 'approved'
+      "
+    >
+      Your extension submission was rejected for the following reason(s):
+      <span class="text-default-font/60 italic">
+        {{ data.extension.deny_reason }}
+      </span>
+      Please correct this/these issue(s) and re-submit the extension for review.
+    </ElementsInlinecard>
+
+    <div class="flex flex-col gap-5 xl:flex-row">
+      <div
+        class="xl:flex-2/3 overflow-hidden rounded-3xl border border-neutral-700"
+      >
+        <div
+          class="h-50 overflow-hidden rounded-3xl bg-cover bg-center xl:h-full"
+          :style="`background-image: url(${data.extension.banner.fullres});`"
+        >
+          <div class="h-50 w-full xl:h-full xl:backdrop-blur-2xl">
+            <div
+              class="h-50 w-full bg-cover bg-center bg-no-repeat xl:h-full xl:bg-contain"
+              :style="`background-image: url(${data.extension.banner.fullres})`"
+            >
+              <div class="h-50 flex w-full flex-col justify-between xl:h-full">
                 <div
-                  class="h-50 flex w-full flex-col justify-between xl:h-full"
+                  class="flex items-center gap-2 rounded-t-3xl border-b border-neutral-700 bg-neutral-950/90 p-4 backdrop-blur-2xl"
                 >
-                  <div
-                    class="flex items-center gap-2 rounded-t-3xl border-b border-neutral-700 bg-neutral-950/90 p-4 backdrop-blur-2xl"
-                  >
-                    <Icon name="memory:image" :size="28" />
-                    <span class="h2"> Banner </span>
-                  </div>
-                  <div class="flex w-full flex-col items-end justify-end p-4">
-                    <div>
-                      <input
-                        ref="bannerInput"
-                        type="file"
-                        accept="image/jpeg"
-                        class="hidden"
-                        @change="handleBannerUpload"
-                      />
-                      <ElementsButton
-                        @click="bannerInput?.click()"
-                        :disabled="uploading"
-                      >
-                        <div class="flex items-center gap-1.5">
-                          <Icon name="pixelarticons:upload" />
-                          <span>Upload banner</span>
-                        </div>
-                      </ElementsButton>
-                    </div>
+                  <Icon name="memory:image" :size="28" />
+                  <span class="h2"> Banner </span>
+                </div>
+                <div class="flex w-full flex-col items-end justify-end p-4">
+                  <div>
+                    <input
+                      ref="bannerInput"
+                      type="file"
+                      accept="image/jpeg"
+                      class="hidden"
+                      @change="handleBannerUpload"
+                    />
+                    <ElementsButton
+                      @click="bannerInput?.click()"
+                      :disabled="uploading"
+                    >
+                      <div class="flex items-center gap-1.5">
+                        <Icon name="pixelarticons:upload" />
+                        <span>Upload banner</span>
+                      </div>
+                    </ElementsButton>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="xl:flex-1/3">
-          <div class="rounded-3xl border border-neutral-700">
-            <div
-              class="flex items-center gap-2 border-b border-neutral-700 p-4"
-            >
-              <Icon name="memory:text-box" :size="28" />
-              <span class="h2"> General info </span>
-            </div>
-            <div class="space-y-4 p-4">
-              <ElementsFormInput
-                v-model="form.name"
-                label="Name"
-                description="The display name of your extension, should match the display name you defined in your extension's configuration."
-                name="extension_name"
-                type="text"
-                :rules="[
-                  validationRules.minLength(3),
-                  validationRules.maxLength(63),
-                  validationRules.required(),
-                ]"
-                :required="true"
-                placeholder="My Extension"
-                :disabled="loading"
-                @validate="
-                  (isValid: boolean) =>
-                    handleFieldValidation('extension_name', isValid)
-                "
-              />
-              <ElementsFormInput
-                v-model="form.identifier"
-                label="Identifier"
-                description="The identifier of your extension, should match the identifier you defined in your extension's configuration."
-                name="extension_identifier"
-                type="text"
-                :rules="[
-                  validationRules.extensionIdentifier(),
-                  validationRules.uniqueExtensionIdentifier(
-                    data.extension.identifier
-                  ),
-                  validationRules.required(),
-                ]"
-                :required="true"
-                placeholder="myextension"
-                :disabled="data.extension.status == 'approved' || loading"
-                @validate="
-                  (isValid: boolean) =>
-                    handleFieldValidation('extension_identifier', isValid)
-                "
-              />
-              <ElementsFormInput
-                v-model="form.summary"
-                label="Summary"
-                description="A short description of your extension to display alongside your extension listing."
-                name="extension_summary"
-                type="text"
-                :rules="[
-                  validationRules.minLength(3),
-                  validationRules.maxLength(255),
-                  validationRules.required(),
-                ]"
-                :required="true"
-                placeholder="This is my extension :)"
-                :disabled="loading"
-                @validate="
-                  (isValid: boolean) =>
-                    handleFieldValidation('extension_summary', isValid)
-                "
-              />
-              <ElementsFormBinarytoggle
-                v-model="form.type"
-                label="Type"
-                description="Each extension falls under one of these two categories. If your extension moreso focuses on visual changes over functional changes, it's likely a theme."
-                :options="[
-                  {
-                    value: 'extension',
-                    icon: 'memory:cube',
-                    label: 'Extension',
-                  },
-                  { value: 'theme', icon: 'memory:image', label: 'Theme' },
-                ]"
-              />
-              <ElementsFormBinarytoggle
-                v-model="form.unlisted"
-                label="Visibility"
-                description="Public extensions are discoverable through the platform, unlisted only available to users with access. If your extension is pending review, this setting will immediately apply after approval."
-                :options="[
-                  {
-                    value: false,
-                    icon: 'pixelarticons:cloud',
-                    label: 'Public',
-                  },
-                  {
-                    value: true,
-                    icon: 'pixelarticons:hidden',
-                    label: 'Unlisted',
-                  },
-                ]"
-              />
-            </div>
+      </div>
+      <div class="xl:flex-1/3">
+        <div class="rounded-3xl border border-neutral-700">
+          <div class="flex items-center gap-2 border-b border-neutral-700 p-4">
+            <Icon name="memory:text-box" :size="28" />
+            <span class="h2"> General info </span>
+          </div>
+          <div class="space-y-4 p-4">
+            <ElementsFormInput
+              v-model="form.name"
+              label="Name"
+              description="The display name of your extension, should match the display name you defined in your extension's configuration."
+              name="extension_name"
+              type="text"
+              :rules="[
+                validationRules.minLength(3),
+                validationRules.maxLength(63),
+                validationRules.required(),
+              ]"
+              :required="true"
+              placeholder="My Extension"
+              :disabled="loading"
+              @validate="
+                (isValid: boolean) =>
+                  handleFieldValidation('extension_name', isValid)
+              "
+            />
+            <ElementsFormInput
+              v-model="form.identifier"
+              label="Identifier"
+              description="The identifier of your extension, should match the identifier you defined in your extension's configuration."
+              name="extension_identifier"
+              type="text"
+              :rules="[
+                validationRules.extensionIdentifier(),
+                validationRules.uniqueExtensionIdentifier(
+                  data.extension.identifier
+                ),
+                validationRules.required(),
+              ]"
+              :required="true"
+              placeholder="myextension"
+              :disabled="data.extension.status == 'approved' || loading"
+              @validate="
+                (isValid: boolean) =>
+                  handleFieldValidation('extension_identifier', isValid)
+              "
+            />
+            <ElementsFormInput
+              v-model="form.summary"
+              label="Summary"
+              description="A short description of your extension to display alongside your extension listing."
+              name="extension_summary"
+              type="text"
+              :rules="[
+                validationRules.minLength(3),
+                validationRules.maxLength(255),
+                validationRules.required(),
+              ]"
+              :required="true"
+              placeholder="This is my extension :)"
+              :disabled="loading"
+              @validate="
+                (isValid: boolean) =>
+                  handleFieldValidation('extension_summary', isValid)
+              "
+            />
+            <ElementsFormBinarytoggle
+              v-model="form.type"
+              label="Type"
+              description="Each extension falls under one of these two categories. If your extension moreso focuses on visual changes over functional changes, it's likely a theme."
+              :options="[
+                {
+                  value: 'extension',
+                  icon: 'memory:cube',
+                  label: 'Extension',
+                },
+                { value: 'theme', icon: 'memory:image', label: 'Theme' },
+              ]"
+            />
+            <ElementsFormBinarytoggle
+              v-model="form.unlisted"
+              label="Visibility"
+              description="Public extensions are discoverable through the platform, unlisted only available to users with access. If your extension is pending review, this setting will immediately apply after approval."
+              :options="[
+                {
+                  value: false,
+                  icon: 'pixelarticons:cloud',
+                  label: 'Public',
+                },
+                {
+                  value: true,
+                  icon: 'pixelarticons:hidden',
+                  label: 'Unlisted',
+                },
+              ]"
+            />
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="overflow-hidden rounded-3xl border border-neutral-700">
-        <div
-          class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
-        >
-          <div class="flex items-center gap-2">
-            <Icon name="memory:text-image" :size="28" />
-            <span class="h2"> Description </span>
-          </div>
-          <div>
-            <SvgIconMarkdown :size="32" class="text-neutral-500" />
+    <div class="overflow-hidden rounded-3xl border border-neutral-700">
+      <div
+        class="flex items-center justify-between gap-2 border-b border-neutral-700 p-4"
+      >
+        <div class="flex items-center gap-2">
+          <Icon name="memory:text-image" :size="28" />
+          <span class="h2"> Description </span>
+        </div>
+        <div>
+          <SvgIconMarkdown :size="32" class="text-neutral-500" />
+        </div>
+      </div>
+      <div
+        class="bg-stripes flex grid-cols-2 flex-col divide-y divide-neutral-700 overflow-hidden rounded-2xl xl:grid xl:divide-x xl:divide-y-0"
+      >
+        <div>
+          <div
+            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
+          >
+            <ElementsFormTextboxToolbar
+              :textarea-ref="descriptionBox"
+              :on-image="imagesModal?.handleOpen"
+            />
+            <ElementsFormTextbox
+              v-model="form.description"
+              ref="descriptionBox"
+              class="font-mono"
+              :supports-images="true"
+              :rows="10"
+              :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+              :richtext="true"
+            />
           </div>
         </div>
-        <div
-          class="bg-stripes flex grid-cols-2 flex-col divide-y divide-neutral-700 overflow-hidden rounded-2xl xl:grid xl:divide-x xl:divide-y-0"
-        >
-          <div>
-            <div
-              class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
-            >
-              <ElementsFormTextboxToolbar
-                :textarea-ref="descriptionBox"
-                :on-image="imagesModal?.handleOpen"
-              />
-              <ElementsFormTextbox
-                v-model="form.description"
-                ref="descriptionBox"
-                class="font-mono"
-                :supports-images="true"
-                :rows="10"
-                :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
-                :richtext="true"
-              />
-            </div>
-          </div>
-          <div>
-            <div
-              class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
-            >
-              <template v-if="!form.description || form.description == ''">
-                <p>(ﾉ*･_･)ﾉ</p>
-                <p><b>markdown</b> is supported</p>
-              </template>
+        <div>
+          <div
+            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
+          >
+            <template v-if="!form.description || form.description == ''">
+              <p>(ﾉ*･_･)ﾉ</p>
+              <p><b>markdown</b> is supported</p>
+            </template>
+            <client-only v-else>
               <MDC
-                v-else
                 class="prose-content"
                 :value="form.description"
                 :parser-options="{
                   rehype: { options: { allowDangerousHtml: false } },
                 }"
               />
-            </div>
+            </client-only>
           </div>
         </div>
       </div>
+    </div>
 
-      <ElementsModal
-        v-if="user?.admin"
-        :is-open="modalOpen.adminReject"
-        :closable="true"
-        title="Reject extension"
-        @close="modalOpen.adminReject = false"
-      >
-        <template #default>
-          <div class="space-y-4">
-            <ElementsFormTextbox
-              v-model="adminRejectForm.deny_reason"
-              :rows="4"
-              placeholder="Why did you reject this extension?"
-            />
+    <ElementsModal
+      v-if="user?.admin"
+      :is-open="modalOpen.adminReject"
+      :closable="true"
+      title="Reject extension"
+      @close="modalOpen.adminReject = false"
+    >
+      <template #default>
+        <div class="space-y-4">
+          <ElementsFormTextbox
+            v-model="adminRejectForm.deny_reason"
+            :rows="4"
+            placeholder="Why did you reject this extension?"
+          />
+        </div>
+      </template>
+
+      <template #footer>
+        <ElementsButton
+          label="Cancel"
+          class="w-full md:w-auto"
+          @click="modalOpen.adminReject = false"
+        />
+        <ElementsButton
+          label="Reject"
+          :disabled="loading"
+          @click="handleAdminReject"
+          type="submit"
+          class="order-first w-full md:order-[unset] md:w-auto"
+        />
+      </template>
+    </ElementsModal>
+
+    <ElementsModal
+      v-if="data.extension.status != 'approved'"
+      :is-open="modalOpen.delete"
+      :closable="true"
+      title="Delete extension draft"
+      @close="modalOpen.delete = false"
+    >
+      <template #default>
+        <div class="flex flex-col items-center py-4">
+          <div class="max-w-95 flex flex-col items-center gap-2">
+            <Icon name="pixelarticons:trash" :size="32" />
+            <p class="text-lg font-bold">Are you sure?</p>
+            <p class="text-default-font/60 text-center">
+              Deleting extension drafts is permanent, it cannot be undone.
+            </p>
           </div>
-        </template>
+        </div>
+      </template>
 
-        <template #footer>
-          <ElementsButton
-            label="Cancel"
-            class="w-full md:w-auto"
-            @click="modalOpen.adminReject = false"
-          />
-          <ElementsButton
-            label="Reject"
-            :disabled="loading"
-            @click="handleAdminReject"
-            type="submit"
-            class="order-first w-full md:order-[unset] md:w-auto"
-          />
-        </template>
-      </ElementsModal>
+      <template #footer>
+        <ElementsButton
+          label="Cancel"
+          class="w-full md:w-auto"
+          @click="modalOpen.delete = false"
+        />
+        <ElementsButton
+          :label="`Delete${deleteTimeout != 0 ? ' (' + deleteTimeout + ')' : ''}`"
+          color="danger"
+          :disabled="loading || deleteTimeout != 0"
+          @click="handleDelete"
+          type="submit"
+          class="order-first w-full md:order-[unset] md:w-auto"
+        />
+      </template>
+    </ElementsModal>
 
-      <ElementsModal
-        v-if="data.extension.status != 'approved'"
-        :is-open="modalOpen.delete"
-        :closable="true"
-        title="Delete extension draft"
-        @close="modalOpen.delete = false"
-      >
-        <template #default>
-          <div class="flex flex-col items-center py-4">
-            <div class="max-w-95 flex flex-col items-center gap-2">
-              <Icon name="pixelarticons:trash" :size="32" />
-              <p class="text-lg font-bold">Are you sure?</p>
-              <p class="text-default-font/60 text-center">
-                Deleting extension drafts is permanent, it cannot be undone.
-              </p>
-            </div>
-          </div>
-        </template>
+    <UiAppExtensionsPlatformsmodal
+      :is-open="modalOpen.platforms"
+      :platforms="form.platforms"
+      @close="modalOpen.platforms = false"
+      @save="handlePlatformsSave"
+    />
 
-        <template #footer>
-          <ElementsButton
-            label="Cancel"
-            class="w-full md:w-auto"
-            @click="modalOpen.delete = false"
-          />
-          <ElementsButton
-            :label="`Delete${deleteTimeout != 0 ? ' (' + deleteTimeout + ')' : ''}`"
-            color="danger"
-            :disabled="loading || deleteTimeout != 0"
-            @click="handleDelete"
-            type="submit"
-            class="order-first w-full md:order-[unset] md:w-auto"
-          />
-        </template>
-      </ElementsModal>
-
-      <UiAppExtensionsPlatformsmodal
-        :is-open="modalOpen.platforms"
-        :platforms="form.platforms"
-        @close="modalOpen.platforms = false"
-        @save="handlePlatformsSave"
-      />
-
-      <UiAppExtensionsImagesmodal
-        ref="imagesModal"
-        :extension="data.extension"
-        @insert="
-          (url: ExtensionImage['url']) => {
-            descriptionBox?.insertMarkdown('![', `](${url})`)
-          }
-        "
-      />
-    </template>
-  </client-only>
+    <UiAppExtensionsImagesmodal
+      ref="imagesModal"
+      :extension="data.extension"
+      @insert="
+        (url: ExtensionImage['url']) => {
+          descriptionBox?.insertMarkdown('![', `](${url})`)
+        }
+      "
+    />
+  </template>
 </template>
 
 <script setup lang="ts">

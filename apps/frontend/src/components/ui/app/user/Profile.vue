@@ -9,10 +9,7 @@
       </div>
       <div class="bg-stripes hidden h-full md:block" />
     </div>
-    <form
-      @submit.prevent="determineCaptcha"
-      class="divide-y divide-neutral-700"
-    >
+    <form @submit.prevent="updateProfile" class="divide-y divide-neutral-700">
       <div class="grid grid-cols-1 gap-4 p-4 xl:grid-cols-2">
         <ElementsFormInput
           v-model="profileForm.name"
@@ -96,39 +93,21 @@
     </form>
   </div>
 
-  <ElementsModal
-    :is-open="modalOpen.turnstile"
-    :closable="true"
-    title="Captcha"
-    @close="modalOpen.turnstile = false"
-  >
-    <template #default>
-      <p class="mb-5">
-        We need to know if you're human. Please complete the captcha below.
-      </p>
-      <div class="rounded-2xl border border-neutral-700 bg-neutral-900 py-4">
-        <div class="flex min-h-[65px] flex-col items-center">
-          <NuxtTurnstile v-model="accountForm.captcha" ref="turnstile" />
-        </div>
-      </div>
-    </template>
-
-    <template #footer>
-      <ElementsButton
-        label="Continue"
-        class="order-first w-full md:order-[unset] md:w-auto"
-        :disabled="loading"
-        @click="updateProfile"
-      />
-    </template>
-  </ElementsModal>
+  <ElementsTurnstilemodal
+    v-model="turnstileModal.captchaValue.value"
+    :is-open="turnstileModal.isOpen.value"
+    ref="turnstileRef"
+    @close="turnstileModal.close"
+  />
 </template>
 
 <script setup lang="ts">
 const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = useTemplateRef('turnstile')
+const turnstileModal = useTurnstileModal()
+const turnstileRef = useTemplateRef('turnstileRef')
+
 const modalOpen = ref({
   turnstile: false,
 })
@@ -152,25 +131,22 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
   fieldValidation.value[field] = isValid
 }
 
-const determineCaptcha = async () => {
-  if (accountForm.value.email != user.value?.email) {
-    modalOpen.value.turnstile = true
-    return
-  }
-
-  updateProfile()
-}
-
 const updateProfile = async () => {
   loading.value = true
 
   if (accountForm.value.email != user.value?.email) {
+    const result = await turnstileModal.show()
+    if (!result.confirmed) {
+      loading.value = false
+      return
+    }
+
     try {
       await $fetch('/api/user/email', {
         method: 'PATCH',
         body: {
           email: accountForm.value.email,
-          captcha: null,
+          captcha: turnstileModal.captchaValue.value,
         },
       })
       modalOpen.value.turnstile = false
@@ -178,7 +154,7 @@ const updateProfile = async () => {
       console.error(error)
       //@ts-expect-error
       errors.value.account = error
-      turnstile.value?.reset()
+      turnstileRef.value?.turnstile.reset()
     }
   }
 

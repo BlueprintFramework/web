@@ -30,9 +30,6 @@
         exists, we'll send you a password reset link.
       </span>
     </div>
-    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
-      <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
-    </div>
     <button
       :disabled="fieldValidation.email == false || loading"
       type="submit"
@@ -59,6 +56,13 @@
       </span>
     </div>
   </div>
+
+  <ElementsTurnstilemodal
+    v-model="turnstileModal.captchaValue.value"
+    :is-open="turnstileModal.isOpen.value"
+    ref="turnstileRef"
+    @close="turnstileModal.close"
+  />
 </template>
 
 <script setup lang="ts">
@@ -68,7 +72,9 @@ definePageMeta({
 
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = useTemplateRef('turnstile')
+const turnstileModal = useTurnstileModal()
+const turnstileRef = useTemplateRef('turnstileRef')
+
 const loading = ref(false)
 const error = ref(false)
 const success = ref(false)
@@ -87,6 +93,12 @@ const handleForgot = async () => {
   error.value = false
   success.value = false
 
+  const result = await turnstileModal.show()
+  if (!result.confirmed) {
+    loading.value = false
+    return
+  }
+
   try {
     await $fetch('/api/auth/password/forgot', {
       method: 'POST',
@@ -97,7 +109,7 @@ const handleForgot = async () => {
   } catch {
     error.value = true
     success.value = false
-    turnstile.value?.reset()
+    turnstileRef.value?.turnstile.reset()
   }
   loading.value = false
 }

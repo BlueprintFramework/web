@@ -14,7 +14,7 @@
             class="hover:text-brand-50 default underline"
             >prpl.wtf</NuxtLink
           >
-          <span>)</span>
+          <span>) and contributors</span>
         </span>
       </div>
     </div>

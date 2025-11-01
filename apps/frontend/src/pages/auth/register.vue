@@ -85,9 +85,6 @@
         <NuxtLink to="/legal/conduct" class="text-link">Code of Conduct</NuxtLink>
       </span>
     </div>
-    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
-      <NuxtTurnstile v-model="form.captcha" ref="turnstile" />
-    </div>
     <button
       :disabled="
         fieldValidation.displayName == false ||
@@ -105,6 +102,13 @@
       <Icon name="memory:chevron-right" mode="svg" :size="24" />
     </button>
   </form>
+
+  <ElementsTurnstilemodal
+    v-model="turnstileModal.captchaValue.value"
+    :is-open="turnstileModal.isOpen.value"
+    ref="turnstileRef"
+    @close="turnstileModal.close"
+  />
 </template>
 
 <script setup lang="ts">
@@ -117,7 +121,9 @@ const { register } = useAuth()
 const { rules: validationRules } = useFormValidation()
 const route = useRoute()
 
-const turnstile = useTemplateRef('turnstile')
+const turnstileModal = useTurnstileModal()
+const turnstileRef = useTemplateRef('turnstileRef')
+
 const loading = ref(false)
 const errors = ref()
 const fieldValidation = ref<Record<string, boolean>>({})
@@ -125,7 +131,6 @@ const form = ref({
   displayName: '',
   email: '',
   password: '',
-  captcha: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -134,17 +139,24 @@ const handleFieldValidation = (field: string, isValid: boolean) => {
 
 const handleRegister = async () => {
   loading.value = true
+
+  const result = await turnstileModal.show()
+  if (!result.confirmed) {
+    loading.value = false
+    return
+  }
+
   try {
     await register(
       form.value.email,
       form.value.password,
       form.value.displayName,
-      form.value.captcha
+      turnstileModal.captchaValue.value
     )
   } catch (error) {
     console.error(error)
     errors.value = error
-    turnstile.value?.reset()
+    turnstileRef.value?.turnstile.reset()
   } finally {
     loading.value = false
   }

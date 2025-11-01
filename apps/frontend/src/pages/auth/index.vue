@@ -79,9 +79,6 @@
         </NuxtLink>
       </span>
     </div>
-    <div class="bg-stripes turnstile-wrapper flex min-h-[65px] ps-4">
-      <NuxtTurnstile v-model="authForm.captcha" ref="turnstile" />
-    </div>
     <div
       class="flex flex-col divide-y divide-neutral-700 md:flex-row md:divide-x md:divide-y-0"
     >
@@ -119,6 +116,13 @@
       </NuxtLink>
     </div>
   </form>
+
+  <ElementsTurnstilemodal
+    v-model="turnstileModal.captchaValue.value"
+    :is-open="turnstileModal.isOpen.value"
+    ref="turnstileRef"
+    @close="turnstileModal.close"
+  />
 </template>
 
 <script setup lang="ts">
@@ -131,7 +135,9 @@ const route = useRoute()
 const { login, checkpoint, checkpointData } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = useTemplateRef('turnstile')
+const turnstileModal = useTurnstileModal()
+const turnstileRef = useTemplateRef('turnstileRef')
+
 const loading = ref(false)
 const errors = ref()
 const reset = ref(false)
@@ -139,7 +145,6 @@ const fieldValidation = ref<Record<string, boolean>>({})
 const authForm = ref({
   email: '',
   password: '',
-  captcha: '',
 })
 const checkpointForm = ref({
   code: '',
@@ -169,17 +174,23 @@ const handleLogin = async () => {
     return
   }
 
+  const result = await turnstileModal.show()
+  if (!result.confirmed) {
+    loading.value = false
+    return
+  }
+
   // [INFO] Sign in like normal
   try {
     await login(
       authForm.value.email,
       authForm.value.password,
-      authForm.value.captcha
+      turnstileModal.captchaValue.value
     )
   } catch (error) {
     console.error(error)
     errors.value = error
-    turnstile.value?.reset()
+    turnstileRef.value?.turnstile.reset()
   } finally {
     loading.value = false
   }

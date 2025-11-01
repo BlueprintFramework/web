@@ -120,9 +120,7 @@ export default defineNuxtConfig({
     ignoredHostnames: ['localhost'],
   },
   turnstile: {
-    siteKey: import.meta.dev
-      ? '1x00000000000000000000AA'
-      : '0x4AAAAAAB7bNfQex8uoMyq6',
+    siteKey: process.env.TURNSTILE_PUBLIC || '0x4AAAAAAB7bNfQex8uoMyq6',
   },
 
   hooks: {

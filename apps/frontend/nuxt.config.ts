@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/fonts',
     '@nuxt/image',
-    'nuxt-marquee',
     '@nuxt/content',
     '@nuxtjs/sitemap',
     '@nuxtjs/mdc',

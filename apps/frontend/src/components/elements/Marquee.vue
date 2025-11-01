@@ -1,7 +1,7 @@
 <template>
   <div
     ref="marqueeContainer"
-    class="relative overflow-hidden w-full"
+    class="relative w-full overflow-hidden"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousedown="handleMouseDown"
@@ -14,14 +14,12 @@
       :style="{
         transform: `translateX(${translateX}px)`,
         cursor: isDragging ? 'grabbing' : 'grab',
-        touchAction: 'pan-y' // Allow vertical scrolling but prevent horizontal on touch
+        touchAction: 'pan-y',
       }"
     >
-      <!-- First set of items -->
       <div class="flex">
         <slot />
       </div>
-      <!-- Duplicate set for seamless looping -->
       <div class="flex">
         <slot />
       </div>
@@ -41,11 +39,11 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   direction: 'left',
   speed: 20, // default 20 pixels per second
-  pauseOnHover: true
+  pauseOnHover: true,
 })
 
-const marqueeContainer = ref<HTMLElement | null>(null)
-const marqueeTrack = ref<HTMLElement | null>(null)
+const marqueeContainer = useTemplateRef('marqueeContainer')
+const marqueeTrack = useTemplateRef('marqueeTrack')
 
 const translateX = ref(0)
 const isHovered = ref(false)
@@ -139,7 +137,7 @@ const handleMouseMove = (e: MouseEvent) => {
 
   if (timeDelta > 0) {
     const moveDelta = e.clientX - lastMouseX
-    velocity.value = moveDelta / timeDelta * 16 // normalize to ~60fps
+    velocity.value = (moveDelta / timeDelta) * 16 // normalize to ~60fps
   }
 
   lastMouseX = e.clientX
@@ -198,7 +196,7 @@ const handleTouchMove = (e: TouchEvent) => {
 
   if (timeDelta > 0) {
     const moveDelta = touch.clientX - lastMouseX
-    velocity.value = moveDelta / timeDelta * 16 // normalize to ~60fps
+    velocity.value = (moveDelta / timeDelta) * 16 // normalize to ~60fps
   }
 
   lastMouseX = touch.clientX

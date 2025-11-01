@@ -68,9 +68,6 @@ importers:
       nuxt:
         specifier: ^4.2.0
         version: 4.2.0(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.9.2)(@vue/compiler-sfc@3.5.22)(better-sqlite3@12.4.1)(db0@0.3.4(better-sqlite3@12.4.1))(ioredis@5.8.2)(lightningcss@1.30.2)(magicast@0.5.1)(rollup@4.52.5)(terser@5.44.0)(typescript@5.9.3)(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
-      nuxt-marquee:
-        specifier: 1.0.4
-        version: 1.0.4(magicast@0.5.1)(vue@3.5.22(typescript@5.9.3))
       nuxt-og-image:
         specifier: 5.1.12
         version: 5.1.12(@unhead/vue@2.0.19(vue@3.5.22(typescript@5.9.3)))(h3@1.15.4)(magicast@0.5.1)(unstorage@1.17.2(@netlify/blobs@9.1.2)(db0@0.3.4(better-sqlite3@12.4.1))(ioredis@5.8.2))(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.22(typescript@5.9.3))
@@ -3471,9 +3468,6 @@ packages:
     version: 0.14.0
     hasBin: true
 
-  nuxt-marquee@1.0.4:
-    resolution: {integrity: sha512-FJ7uLhiLt7LQtmlcsJXq76aN+L1kHVLcJQPcUm0o4rW0bIda7LL4kZc4VB2t/VHiqzN7MRSq3lwXqUFV5zJ+wA==}
-
   nuxt-og-image@5.1.12:
     resolution: {integrity: sha512-BrQI7+g8Jqa7QtN+dDUPCs5WBCQM93YlnMJvyCtCOL0M5WKP7JMHyj51dvi9SxQklVvXpfc8FhUDm290K/OuYw==}
     engines: {node: '>=18.0.0'}
@@ -4831,11 +4825,6 @@ packages:
 
   vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
-
-  vue-fast-marquee@1.0.6:
-    resolution: {integrity: sha512-VMqaeuBSS3L55Q84EuLJPHZ4Zv4UVBDXmh+2hb1IBTLKt/FmurJnWVXv8BNnbQSupA4kHbPlWDLwp+kvEMOF7A==}
-    peerDependencies:
-      vue: '>=3.2.0'
 
   vue-router@4.6.3:
     resolution: {integrity: sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg==}
@@ -9166,14 +9155,6 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  nuxt-marquee@1.0.4(magicast@0.5.1)(vue@3.5.22(typescript@5.9.3)):
-    dependencies:
-      '@nuxt/kit': 3.20.0(magicast@0.5.1)
-      vue-fast-marquee: 1.0.6(vue@3.5.22(typescript@5.9.3))
-    transitivePeerDependencies:
-      - magicast
-      - vue
-
   nuxt-og-image@5.1.12(@unhead/vue@2.0.19(vue@3.5.22(typescript@5.9.3)))(h3@1.15.4)(magicast@0.5.1)(unstorage@1.17.2(@netlify/blobs@9.1.2)(db0@0.3.4(better-sqlite3@12.4.1))(ioredis@5.8.2))(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.22(typescript@5.9.3)):
     dependencies:
       '@nuxt/devtools-kit': 2.7.0(magicast@0.5.1)(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
@@ -10868,10 +10849,6 @@ snapshots:
   vue-component-type-helpers@3.1.2: {}
 
   vue-devtools-stub@0.1.0: {}
-
-  vue-fast-marquee@1.0.6(vue@3.5.22(typescript@5.9.3)):
-    dependencies:
-      vue: 3.5.22(typescript@5.9.3)
 
   vue-router@4.6.3(vue@3.5.22(typescript@5.9.3)):
     dependencies:

@@ -36,7 +36,7 @@ const handleClose = () => {
         We need to know if you're human. Please complete the captcha below.
       </p>
       <div class="rounded-2xl border border-neutral-700 bg-neutral-900 py-4">
-        <div class="flex min-h-[65px] flex-col items-center">
+        <div class="turnstile-wrapper flex min-h-[65px] flex-col items-center">
           <NuxtTurnstile v-model="captcha" ref="turnstileRef" />
         </div>
       </div>

@@ -81,7 +81,6 @@ const success = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const form = ref({
   email: '',
-  captcha: '',
 })
 
 const handleFieldValidation = (field: string, isValid: boolean) => {
@@ -95,6 +94,7 @@ const handleForgot = async () => {
 
   const result = await turnstileModal.show()
   if (!result.confirmed) {
+    turnstileRef.value?.turnstile.reset()
     loading.value = false
     return
   }
@@ -102,15 +102,19 @@ const handleForgot = async () => {
   try {
     await $fetch('/api/auth/password/forgot', {
       method: 'POST',
-      body: form.value,
+      body: {
+        email: form.value.email,
+        captcha: turnstileModal.captchaValue.value,
+      },
     })
     error.value = false
     success.value = true
   } catch {
     error.value = true
     success.value = false
-    turnstileRef.value?.turnstile.reset()
   }
+
+  turnstileRef.value?.turnstile.reset()
   loading.value = false
 }
 </script>

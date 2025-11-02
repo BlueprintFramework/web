@@ -128,6 +128,7 @@ const handleResend = async () => {
 
   const result = await turnstileModal.show()
   if (!result.confirmed) {
+    turnstileRef.value?.turnstile.reset()
     loading.value = false
     return
   }
@@ -144,9 +145,10 @@ const handleResend = async () => {
     console.error(error)
     errors.value.resendError = true
     loading.value = false
-    turnstileRef.value?.turnstile.reset()
   } finally {
     loading.value = false
   }
+
+  turnstileRef.value?.turnstile.reset()
 }
 </script>

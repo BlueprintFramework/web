@@ -137,6 +137,7 @@ const updateProfile = async () => {
   if (accountForm.value.email != user.value?.email) {
     const result = await turnstileModal.show()
     if (!result.confirmed) {
+      turnstileRef.value?.turnstile.reset()
       loading.value = false
       return
     }
@@ -154,8 +155,9 @@ const updateProfile = async () => {
       console.error(error)
       //@ts-expect-error
       errors.value.account = error
-      turnstileRef.value?.turnstile.reset()
     }
+
+    turnstileRef.value?.turnstile.reset()
   }
 
   try {

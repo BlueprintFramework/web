@@ -142,6 +142,7 @@ const handleRegister = async () => {
 
   const result = await turnstileModal.show()
   if (!result.confirmed) {
+    turnstileRef.value?.turnstile.reset()
     loading.value = false
     return
   }
@@ -156,9 +157,10 @@ const handleRegister = async () => {
   } catch (error) {
     console.error(error)
     errors.value = error
-    turnstileRef.value?.turnstile.reset()
   } finally {
     loading.value = false
   }
+
+  turnstileRef.value?.turnstile.reset()
 }
 </script>

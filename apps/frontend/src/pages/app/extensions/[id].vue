@@ -440,6 +440,7 @@ const submitting = ref(false)
 const uploading = ref(false)
 const errors = ref(false)
 const deleteTimeout = ref(10)
+const deleteInterval = ref()
 const data = ref<{ extension: FullExtension }>()
 const fieldValidation = ref<Record<string, boolean>>({})
 const modalOpen = ref({
@@ -578,9 +579,11 @@ const handleOpenDelete = async () => {
   deleteTimeout.value = 10
   modalOpen.value.delete = true
 
-  const interval = setInterval(() => {
+  if (deleteInterval.value) clearInterval(deleteInterval.value)
+
+  deleteInterval.value = setInterval(() => {
     if (deleteTimeout.value === 0) {
-      return clearInterval(interval)
+      return clearInterval(deleteInterval.value)
     }
     deleteTimeout.value--
   }, 1000)

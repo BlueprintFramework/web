@@ -614,7 +614,7 @@ const handleAdminApprove = async () => {
   errors.value = false
 
   try {
-    await $fetch(`/api/user/admin/extensions/${route.params.id}`, {
+    await $fetch(`/api/user/admin/extensions/${route.params.id}/ready`, {
       method: 'POST',
     })
     if (data.value) data.value.extension.status = 'approved'
@@ -629,7 +629,7 @@ const handleAdminReject = async () => {
   loading.value = true
 
   try {
-    await $fetch(`${basePath.value}/deny`, {
+    await $fetch(`/api/user/admin/extensions/${route.params.id}/deny`, {
       method: 'POST',
       body: adminRejectForm.value,
     })

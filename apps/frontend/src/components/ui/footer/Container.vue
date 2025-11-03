@@ -5,9 +5,7 @@
         <div class="border-b border-neutral-700 p-6">
           <UiFooterHeader />
         </div>
-        <div class="p-6">
-          <UiFooter />
-        </div>
+        <UiFooter />
       </div>
     </div>
   </div>

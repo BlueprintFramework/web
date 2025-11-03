@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2.5">
       <BrandEmblem class="text-brand-50" />
       <div class="flex items-center gap-1">
         <Icon name="memory:alpha-c" />

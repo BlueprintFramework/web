@@ -1,6 +1,6 @@
 ---
 title: Terms of Service
-updated: 10/6/2025 17:07 (CEDST)
+updated: 11/3/2025 16:32 (CET)
 ---
 
 By accessing or using [blueprint.zip](/) ("the Platform"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Platform.
@@ -32,6 +32,7 @@ You may not use the Platform to:
 - Impersonate others or misrepresent your affiliation with any person or entity
 - Publish content containing hate speech, explicit sexual content, or content promoting violence
 - Spam or engage in other disruptive behavior
+- Violate our [Code of Conduct](/legal/conduct)
 
 ## Intellectual Property
 

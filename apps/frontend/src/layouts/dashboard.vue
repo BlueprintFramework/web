@@ -1,4 +1,5 @@
 <template>
+  <NuxtLoadingIndicator color="#52A9FF" :height="1" />
   <div class="h-13 block w-full md:hidden">
     <div class="h-15 fixed left-0 top-4 z-50 w-full">
       <div class="container h-full">
@@ -170,5 +171,11 @@ const route = useRoute()
 
 .parent-focus:focus-within .apply-parent-focus {
   @apply divide-neutral-500 border-neutral-500;
+}
+</style>
+
+<style scoped>
+.nuxt-loading-indicator {
+  top: 0 !important;
 }
 </style>

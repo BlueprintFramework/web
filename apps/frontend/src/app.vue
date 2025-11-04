@@ -1,5 +1,4 @@
 <template>
-  <NuxtLoadingIndicator color="#52A9FF" :height="1" />
   <NuxtRouteAnnouncer />
   <NuxtLayout>
     <NuxtPage />

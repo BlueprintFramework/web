@@ -10,7 +10,7 @@
         @click="toggleAccordion(index)"
         @mousedown.prevent
       >
-        <h2>
+        <h2 class="text-start">
           {{ item.title }}
         </h2>
         <client-only>

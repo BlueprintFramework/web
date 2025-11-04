@@ -1,6 +1,10 @@
 <template>
-  <div class="flex divide-x divide-neutral-700">
-    <div class="grid w-[500px] grid-rows-2 gap-6 p-6">
+  <div
+    class="flex flex-col divide-neutral-700 max-lg:divide-y lg:flex-row lg:divide-x"
+  >
+    <div
+      class="grid grid-cols-1 gap-6 p-6 max-lg:w-full sm:grid-cols-2 lg:w-[500px] lg:grid-cols-1 lg:grid-rows-2"
+    >
       <NuxtLink
         to="/guides/admin/install"
         class="group relative block h-full cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:border-neutral-500 focus:border-neutral-500"
@@ -61,7 +65,9 @@
         </div>
       </NuxtLink>
     </div>
-    <div class="grid w-full grid-cols-4 gap-4 p-6">
+    <div
+      class="grid w-full grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-4"
+    >
       <div class="flex flex-col gap-1 text-neutral-400 decoration-transparent">
         <p class="text-default-font mb-2 text-xl font-bold">Blueprint</p>
         <NuxtLink to="/browse" class="text-link"> Extensions </NuxtLink>

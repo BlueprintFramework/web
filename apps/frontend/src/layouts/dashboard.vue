@@ -1,17 +1,17 @@
 <template>
-  <div v-if="!isDesktop" class="h-13 w-full">
+  <div class="h-13 block w-full md:hidden">
     <div class="h-15 fixed left-0 top-4 z-50 w-full">
       <div class="container h-full">
         <div
           class="flex h-full flex-row items-center justify-between rounded-full border border-neutral-700 bg-neutral-950 px-3"
         >
           <div class="ms-1">
-            <NuxtLink to="/" v-if="isXs" class="group">
+            <NuxtLink to="/" class="group block sm:hidden">
               <BrandEmblem
                 class="group-hover:text-brand-50 transition-colors"
               />
             </NuxtLink>
-            <BrandWordmark v-else />
+            <BrandWordmark class="hidden sm:block" />
           </div>
           <div class="flex flex-row">
             <div
@@ -68,7 +68,7 @@
   </div>
 
   <div class="flex gap-5">
-    <div v-if="isDesktop" class="w-17 py-4 pl-4">
+    <div class="w-17 hidden py-4 pl-4 md:block">
       <div
         class="w-15 parent-focus fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
       >
@@ -163,8 +163,6 @@
 <script setup lang="ts">
 const { user, logout } = useAuth()
 const route = useRoute()
-const isDesktop = useMediaQuery('(min-width: 768px)')
-const isXs = useMediaQuery('(max-width: 330px)')
 </script>
 
 <style scoped>

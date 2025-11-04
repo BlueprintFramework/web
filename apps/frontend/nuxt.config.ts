@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import type { NuxtPage } from 'nuxt/schema'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-20',
@@ -144,6 +145,20 @@ export default defineNuxtConfig({
           console.warn('og-image copy failed:', err)
         }
       }
+    },
+    'pages:extend'(pages) {
+      function setMiddleware(pages: NuxtPage[]) {
+        for (const page of pages) {
+          page.meta ||= {}
+          if (!page.meta.middleware) {
+            page.meta.middleware = ['default']
+          }
+          if (page.children) {
+            setMiddleware(page.children)
+          }
+        }
+      }
+      setMiddleware(pages)
     },
   },
 })

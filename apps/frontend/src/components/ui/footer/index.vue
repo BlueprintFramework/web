@@ -1,15 +1,15 @@
 <template>
   <div class="flex divide-x divide-neutral-700">
-    <div class="w-[500px] space-y-6 p-6">
+    <div class="grid w-[500px] grid-rows-2 gap-6 p-6">
       <NuxtLink
         to="/guides/admin/install"
-        class="group relative block h-20 w-full cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:border-neutral-500 focus:border-neutral-500"
+        class="group relative block h-full cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:border-neutral-500 focus:border-neutral-500"
         @mousedown.prevent
       >
         <NuxtImg
           src="/img/bluething.jpeg"
           :width="200"
-          :height="80"
+          :height="50"
           class="h-full w-full object-cover transition-all group-hover:scale-105 group-hover:opacity-75 group-focus:scale-105 group-focus:opacity-75"
         />
         <div
@@ -33,13 +33,13 @@
 
       <NuxtLink
         to="/releases"
-        class="group relative block h-20 w-full cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:border-neutral-500 focus:border-neutral-500"
+        class="group relative block h-full w-full cursor-pointer overflow-hidden rounded-2xl border border-neutral-700 outline-0 transition-colors hover:border-neutral-500 focus:border-neutral-500"
         @mousedown.prevent
       >
         <NuxtImg
           src="/img/releases/latest.png"
           :width="200"
-          :height="80"
+          :height="50"
           class="h-full w-full object-cover transition-all group-hover:scale-105 group-hover:opacity-75 group-focus:scale-105 group-focus:opacity-75"
         />
         <div
@@ -61,14 +61,31 @@
         </div>
       </NuxtLink>
     </div>
-    <div class="grid w-full grid-cols-3 gap-4 p-6">
+    <div class="grid w-full grid-cols-4 gap-4 p-6">
       <div class="flex flex-col gap-1 text-neutral-400 decoration-transparent">
         <p class="text-default-font mb-2 text-xl font-bold">Blueprint</p>
         <NuxtLink to="/browse" class="text-link"> Extensions </NuxtLink>
         <NuxtLink to="/guides" class="text-link"> Guides </NuxtLink>
         <NuxtLink to="/guides" class="text-link"> Documentation </NuxtLink>
+        <NuxtLink to="/releases" class="text-link"> Releases </NuxtLink>
         <NuxtLink to="/api" :external="true" class="text-link">
           API docs
+        </NuxtLink>
+      </div>
+
+      <div class="flex flex-col gap-1 text-neutral-400 decoration-transparent">
+        <p class="text-default-font mb-2 text-xl font-bold">Donate</p>
+        <NuxtLink
+          to="https://hcb.hackclub.com/donations/start/blueprint"
+          class="text-link"
+        >
+          Donate via HCB
+        </NuxtLink>
+        <NuxtLink to="https://github.com/sponsors/blueprint" class="text-link">
+          Donate via GitHub Sponsors
+        </NuxtLink>
+        <NuxtLink to="https://hcb.hackclub.com/blueprint" class="text-link">
+          Transparent finances
         </NuxtLink>
       </div>
 

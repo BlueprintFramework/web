@@ -12,7 +12,7 @@
         <p class="text-xl">Extensions</p>
       </div>
       <div
-        class="min-w-12 rounded-[13px] border border-neutral-700 bg-neutral-900 px-3 py-0.5 text-lg"
+        class="min-w-12 rounded-[13px] border border-neutral-700 bg-neutral-900 px-3 py-0.5 text-center text-lg"
       >
         <span>{{ data?.extensions.total || 0 }}</span>
       </div>

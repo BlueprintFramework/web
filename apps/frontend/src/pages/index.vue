@@ -32,7 +32,7 @@
   <UiMarketingMarquee />
   <UiMarketingHero />
   <UiMarketingRepositories />
-  <UiMarketingFaq />
+  <UiMarketingFaq id="faq" />
   <UiMarketingTestimonials v-if="!isMobile" class="hidden md:block" />
   <UiMarketingSponsors />
 

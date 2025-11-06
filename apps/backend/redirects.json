@@ -1,0 +1,184 @@
+{
+  "redirects": [
+    {
+      "from": "/docs?page=getting-started/Installation",
+      "to": "/guides/admin/install",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=getting-started/Managing-extensions",
+      "to": "/guides/admin/extensions",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=getting-started/Extension-development",
+      "to": "/guides/dev/quickstart",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=getting-started/Frequently-asked-questions",
+      "to": "/#faq",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=developing-extensions/Admin-views",
+      "to": "/guides/dev/adminpage",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=developing-extensions/Custom-controllers",
+      "to": "/guides/dev/admincontroller",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=developing-extensions/Admin-configuration",
+      "to": "https://legacy.blueprint.zip/docs?page=developing-extensions/Admin-configuration",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=developing-extensions/Custom-table-and-migrations",
+      "to": "https://legacy.blueprint.zip/docs?page=developing-extensions/Custom-table-and-migrations",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=developing-extensions/Dashboard-wrappers",
+      "to": "https://legacy.blueprint.zip/docs?page=developing-extensions/Dashboard-wrappers",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=developing-extensions/React-components",
+      "to": "/docs/configs/componentsyml#building-components",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=developing-extensions/Custom-web-routes",
+      "to": "/docs/concepts/routing",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=developing-extensions/Packaging-extensions",
+      "to": "/guides/dev/packaging",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/$blueprint",
+      "to": "/docs/lib/methods",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/confyml",
+      "to": "/docs/configs/confyml",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/componentsyml",
+      "to": "/docs/configs/componentsyml",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/consoleyml",
+      "to": "/docs/configs/consoleyml",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/placeholders",
+      "to": "/docs/concepts/placeholders",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/flags",
+      "to": "/docs/concepts/flags",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=documentation/scripts",
+      "to": "/docs/concepts/scripts",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/License",
+      "to": "https://github.com/BlueprintFramework/framework/blob/main/LICENSE.md",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=about/Branding",
+      "to": "https://legacy.blueprint.zip/docs?page=about/Branding",
+      "status": 302
+    },
+    {
+      "from": "/docs?page=about/Changelog",
+      "to": "/releases",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-2025-10",
+      "to": "/releases/beta-2025-10",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-2025-09",
+      "to": "/releases/beta-2025-09",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-2024-12",
+      "to": "/releases/beta-2024-12",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-2024-08",
+      "to": "/releases/beta-2024-08",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-2024-07",
+      "to": "/releases/beta-2024-07",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-F248",
+      "to": "/releases/beta-f248",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/beta-A428",
+      "to": "/releases/beta-a428",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-SLX",
+      "to": "/releases/alpha-slx",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-NLM",
+      "to": "/releases/alpha-nlm",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-3ZX",
+      "to": "/releases/alpha-3zx",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-IPS",
+      "to": "/releases/alpha-ips",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-XT1",
+      "to": "/releases/alpha-xt1",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-2N2",
+      "to": "/releases/alpha-2n2",
+      "status": 301
+    },
+    {
+      "from": "/docs?page=about/changelog/alpha-F0V",
+      "to": "/releases/alpha-f0v",
+      "status": 301
+    }
+  ]
+}

@@ -15,9 +15,16 @@ use axum::{
 use colored::Colorize;
 use include_dir::{Dir, include_dir};
 use sentry_tower::SentryHttpLayer;
+use serde::Deserialize;
 use serde_json::json;
 use sha2::Digest;
-use std::{net::SocketAddr, path::Path, sync::Arc, time::Instant};
+use std::{
+    collections::HashMap,
+    net::SocketAddr,
+    path::Path,
+    sync::{Arc, LazyLock},
+    time::Instant,
+};
 use tikv_jemallocator::Jemalloc;
 use tokio::sync::RwLock;
 use tower::Layer;
@@ -47,6 +54,28 @@ static ALLOC: Jemalloc = Jemalloc;
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const GIT_COMMIT: &str = env!("CARGO_GIT_COMMIT");
 const FRONTEND_ASSETS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/../frontend/.output/public");
+
+static REDIRECTS: LazyLock<HashMap<String, (StatusCode, String)>> = LazyLock::new(|| {
+    let mut redirects = HashMap::new();
+
+    #[derive(Deserialize)]
+    struct Redirect {
+        from: String,
+        to: String,
+        status: u16,
+    }
+
+    for redirect in
+        serde_json::from_str::<Vec<Redirect>>(include_str!("../redirects.json")).unwrap()
+    {
+        redirects.insert(
+            redirect.from,
+            (StatusCode::from_u16(redirect.status).unwrap(), redirect.to),
+        );
+    }
+
+    redirects
+});
 
 pub type GetIp = axum::extract::Extension<std::net::IpAddr>;
 
@@ -226,6 +255,16 @@ async fn main() {
                     .body(Body::from(
                         ApiError::new(&["route not found"]).to_value().to_string(),
                     ))
+                    .unwrap();
+            }
+
+            if let Some(path_and_query) = req.uri().path_and_query()
+                && let Some((status, location)) = REDIRECTS.get(path_and_query.as_str())
+            {
+                return Response::builder()
+                    .status(status)
+                    .header("Location", location)
+                    .body(Body::empty())
                     .unwrap();
             }
 

@@ -1,0 +1,7 @@
+[
+  {
+    "from": "/docs?page=getting-started/Installation",
+    "to": "/guides/admin/install",
+    "status": 301
+  }
+]

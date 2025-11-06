@@ -1,14 +1,19 @@
 import tailwindcss from '@tailwindcss/vite'
+import type { NuxtPage } from 'nuxt/schema'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-20',
   srcDir: 'src/',
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
+    },
+  },
   modules: [
     '@nuxt/icon',
     '@nuxt/fonts',
     '@nuxt/image',
-    'nuxt-marquee',
     '@nuxt/content',
     '@nuxtjs/sitemap',
     '@nuxtjs/mdc',
@@ -90,7 +95,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    url: 'https://api.blueprintframe.work',
+    url: 'https://blueprint.zip',
     name: 'Blueprint',
   },
   nitro: {
@@ -115,13 +120,13 @@ export default defineNuxtConfig({
     },
   },
   plausible: {
-    apiHost: '/yay/script.js',
+    apiHost: 'https://blueprint.zip/yay',
+    domain: 'blueprint.zip',
+    autoOutboundTracking: true,
     ignoredHostnames: ['localhost'],
   },
   turnstile: {
-    siteKey: import.meta.dev
-      ? '1x00000000000000000000AA'
-      : '0x4AAAAAAB7bNfQex8uoMyq6',
+    siteKey: process.env.TURNSTILE_PUBLIC || '0x4AAAAAAB7bNfQex8uoMyq6',
   },
 
   hooks: {
@@ -140,6 +145,20 @@ export default defineNuxtConfig({
           console.warn('og-image copy failed:', err)
         }
       }
+    },
+    'pages:extend'(pages) {
+      function setMiddleware(pages: NuxtPage[]) {
+        for (const page of pages) {
+          page.meta ||= {}
+          if (!page.meta.middleware) {
+            page.meta.middleware = ['default']
+          }
+          if (page.children) {
+            setMiddleware(page.children)
+          }
+        }
+      }
+      setMiddleware(pages)
     },
   },
 })

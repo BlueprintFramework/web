@@ -1,28 +1,15 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) return
 
-  const { user, isAuthenticated, isFetched } = useAuth()
+  const { user, isAuthenticated, initializeAuth } = useAuth()
 
-  if (!isFetched.value) {
-    await new Promise((resolve) => {
-      const unwatch = watch(
-        isAuthenticated,
-        (newValue) => {
-          if (isFetched.value) {
-            unwatch()
-            resolve(undefined)
-          }
-        },
-        { immediate: true }
-      )
-    })
-  }
+  await initializeAuth()
 
   if (!isAuthenticated.value) {
-    return navigateTo('/auth')
+    return navigateTo('/auth', { external: true })
   }
 
   if (user?.value?.email_pending == null) {
-    return navigateTo('/')
+    return navigateTo('/', { external: true })
   }
 })

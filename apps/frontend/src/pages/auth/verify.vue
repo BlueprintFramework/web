@@ -56,7 +56,7 @@
         <button
           :disabled="loading"
           @mousedown.prevent
-          @click="modalOpen.turnstile = true"
+          @click="handleResend"
           type="button"
           tabindex="-1"
           class="text-default-font group-focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer text-nowrap bg-neutral-950 px-4 py-3 text-left text-xl font-semibold transition-colors hover:bg-neutral-900 group-focus:bg-neutral-900 md:w-auto"
@@ -67,32 +67,12 @@
     </div>
   </form>
 
-  <ElementsModal
-    :is-open="modalOpen.turnstile"
-    :closable="true"
-    title="Captcha"
-    @close="modalOpen.turnstile = false"
-  >
-    <template #default>
-      <p class="mb-5">
-        We need to know if you're human. Please complete the captcha below.
-      </p>
-      <div class="rounded-2xl border border-neutral-700 bg-neutral-900 py-4">
-        <div class="flex min-h-[65px] flex-col items-center">
-          <NuxtTurnstile v-model="captchaToken" ref="turnstile" />
-        </div>
-      </div>
-    </template>
-
-    <template #footer>
-      <ElementsButton
-        label="Continue"
-        class="order-first w-full md:order-[unset] md:w-auto"
-        :disabled="loading"
-        @click="handleResend"
-      />
-    </template>
-  </ElementsModal>
+  <ElementsTurnstilemodal
+    v-model="turnstileModal.captchaValue.value"
+    :is-open="turnstileModal.isOpen.value"
+    ref="turnstileRef"
+    @close="turnstileModal.close"
+  />
 </template>
 
 <script setup lang="ts">
@@ -104,16 +84,14 @@ definePageMeta({
 const { user, initializeAuth } = useAuth()
 const { rules: validationRules } = useFormValidation()
 
-const turnstile = useTemplateRef('turnstile')
-const captchaToken = ref()
+const turnstileModal = useTurnstileModal()
+const turnstileRef = useTemplateRef('turnstileRef')
+
 const loading = ref(false)
 const fieldValidation = ref<Record<string, boolean>>({})
 const errors = ref({
   incorrect: false,
   resendError: false,
-})
-const modalOpen = ref({
-  turnstile: false,
 })
 const form = ref({
   token: '',
@@ -148,15 +126,21 @@ const handleResend = async () => {
   errors.value.incorrect = false
   errors.value.resendError = false
 
+  const result = await turnstileModal.show()
+  if (!result.confirmed) {
+    turnstileRef.value?.turnstile.reset()
+    loading.value = false
+    return
+  }
+
   try {
     await $fetch('/api/user/email', {
       method: 'PATCH',
       body: {
         email: user.value?.email_pending,
-        captcha: captchaToken.value,
+        captcha: turnstileModal.captchaValue.value,
       },
     })
-    modalOpen.value.turnstile = false
   } catch (error) {
     console.error(error)
     errors.value.resendError = true
@@ -164,5 +148,7 @@ const handleResend = async () => {
   } finally {
     loading.value = false
   }
+
+  turnstileRef.value?.turnstile.reset()
 }
 </script>

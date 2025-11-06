@@ -19,7 +19,7 @@ h3 {
 }
 
 :root {
-  --nav-offset: 3.25rem;
+  --nav-offset: 0;
   --extend-footer: 0;
 }
 

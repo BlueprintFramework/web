@@ -41,7 +41,6 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const slug = route.params.slug
 const path = `/legal/${route.params.slug}`
 
 const { data } = await useAsyncData(`legal-${path}`, () =>

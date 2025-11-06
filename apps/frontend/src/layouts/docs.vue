@@ -1,4 +1,6 @@
 <template>
+  <NuxtLoadingIndicator color="#52A9FF" :height="1" />
+
   <!-- Mobile overlay -->
   <client-only>
     <Transition
@@ -267,3 +269,9 @@ const filteredCategories = computed(() => {
 
 defineOgImageComponent('Large')
 </script>
+
+<style scoped>
+.nuxt-loading-indicator {
+  top: 0 !important;
+}
+</style>

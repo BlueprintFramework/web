@@ -13,15 +13,15 @@
         </p>
       </div>
       <div class="bg-stripes hidden h-full md:block" />
-      <client-only>
-        <div class="flex items-center justify-between">
-          <button
-            class="disabled:text-default-font/40 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 cursor-pointer border-r border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
-            :disabled="page > 1 ? false : true"
-            @click="page--"
-          >
-            <Icon name="memory:chevron-left" :size="24" mode="svg" />
-          </button>
+      <div class="flex items-center justify-between">
+        <button
+          class="disabled:text-default-font/40 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 cursor-pointer border-r border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
+          :disabled="page > 1 ? false : true"
+          @click="page--"
+        >
+          <Icon name="memory:chevron-left" :size="24" mode="svg" />
+        </button>
+        <client-only>
           <div class="overflow-auto p-4">
             <span class="text-nowrap">
               Sessions {{ pageFirstSession }}-{{ pageLastSession }}
@@ -29,76 +29,71 @@
               {{ data?.sessions?.total }}
             </span>
           </div>
-          <button
-            class="disabled:text-default-font/40 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 cursor-pointer border-l border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
-            :disabled="
-              (pageLastSession || 0) >= (data?.sessions?.total || 0)
-                ? true
-                : false
-            "
-            @click="page++"
-          >
-            <Icon name="memory:chevron-right" :size="24" mode="svg" />
-          </button>
-        </div>
-      </client-only>
-    </div>
-    <client-only>
-      <div
-        class="grid"
-        :class="`grid-rows-${sessionsCount == perPage ? perPage : sessionsCount + 1}`"
-      >
-        <div
-          v-for="session in data?.sessions?.data"
-          class="flex flex-col justify-center gap-2.5 overflow-hidden border-neutral-700 p-4 align-middle transition-colors"
-          :class="
-            (session.is_using
-              ? 'bg-neutral-900 '
-              : 'group cursor-pointer bg-neutral-950 ') +
-            (session != data?.sessions?.data.at(-1) ? 'border-b' : 'border-b-0')
+        </client-only>
+        <button
+          class="disabled:text-default-font/40 hover:not-disabled:text-brand-50 hover:not-disabled:bg-neutral-900 cursor-pointer border-l border-neutral-700 p-4 transition-colors disabled:cursor-not-allowed"
+          :disabled="
+            (pageLastSession || 0) >= (data?.sessions?.total || 0)
+              ? true
+              : false
           "
-          @click="!session.is_using && deleteSession(session.id)"
+          @click="page++"
         >
-          <div class="flex items-center justify-between gap-2">
-            <div
-              class="flex items-center gap-2"
-              :class="session.is_using ? 'text-brand-50 font-bold' : ''"
-            >
-              <Icon
-                :name="determineDeviceIcon(session.user_agent)"
-                :size="18"
-              />
-              <span class="transition-all hover:blur-none md:blur-[6px]">
-                {{ session.ip }}
-              </span>
-            </div>
-            <ElementsButtonSmall
-              v-if="!session.is_using"
-              label="Forget device"
-              class="group-hover:text-brand-50 group-hover:bg-neutral-800"
-            />
-          </div>
-          <p
-            class="monospace-body text-default-font/60 truncate transition-colors"
-          >
-            {{ session.user_agent }}
-          </p>
-          <p v-if="session.is_using" class="text-brand-50">
-            Your current session
-          </p>
-          <p v-else>
-            Last used <NuxtTime :datetime="session.last_used" relative />
-          </p>
-        </div>
-        <div
-          v-if="!data?.sessions?.data[perPage - 1]"
-          class="flex flex-col items-center justify-center gap-1 border-t border-neutral-700 p-4"
-        >
-          <Icon name="pixelarticons:devices" :size="32" />
-          <p>New devices will show up here..</p>
-        </div>
+          <Icon name="memory:chevron-right" :size="24" mode="svg" />
+        </button>
       </div>
-    </client-only>
+    </div>
+    <div
+      class="grid"
+      :class="`grid-rows-${sessionsCount == perPage ? perPage : sessionsCount + 1}`"
+    >
+      <div
+        v-for="session in data?.sessions?.data"
+        class="flex flex-col justify-center gap-2.5 overflow-hidden border-neutral-700 p-4 align-middle transition-colors"
+        :class="
+          (session.is_using
+            ? 'bg-neutral-900 '
+            : 'group cursor-pointer bg-neutral-950 ') +
+          (session != data?.sessions?.data.at(-1) ? 'border-b' : 'border-b-0')
+        "
+        @click="!session.is_using && deleteSession(session.id)"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <div
+            class="flex items-center gap-2"
+            :class="session.is_using ? 'text-brand-50 font-bold' : ''"
+          >
+            <Icon :name="determineDeviceIcon(session.user_agent)" :size="18" />
+            <span class="transition-all hover:blur-none md:blur-[6px]">
+              {{ session.ip }}
+            </span>
+          </div>
+          <ElementsButtonSmall
+            v-if="!session.is_using"
+            label="Forget device"
+            class="group-hover:text-brand-50 group-hover:bg-neutral-800"
+          />
+        </div>
+        <p
+          class="monospace-body text-default-font/60 truncate transition-colors"
+        >
+          {{ session.user_agent }}
+        </p>
+        <p v-if="session.is_using" class="text-brand-50">
+          Your current session
+        </p>
+        <p v-else>
+          Last used <NuxtTime :datetime="session.last_used" relative />
+        </p>
+      </div>
+      <div
+        v-if="!data?.sessions?.data[perPage - 1]"
+        class="flex flex-col items-center justify-center gap-1 border-t border-neutral-700 p-4"
+      >
+        <Icon name="pixelarticons:devices" :size="32" />
+        <p>New devices will show up here..</p>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -181,6 +181,7 @@
   </nav>
   <div class="h-13"></div>
 </template>
+
 <script setup lang="ts">
 const { isAuthenticated, user, logout } = useAuth()
 const route = useRoute()
@@ -195,3 +196,9 @@ watch(mobileNavigation, (isOpen) => {
   }
 })
 </script>
+
+<style>
+:root {
+  --nav-offset: 3.25rem;
+}
+</style>

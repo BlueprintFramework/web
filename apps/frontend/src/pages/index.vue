@@ -15,7 +15,7 @@
         <div
           class="group-hover:text-brand-50 group-focus:text-brand-50 flex items-center gap-1 border-s border-neutral-700 p-2 transition-colors group-focus:border-neutral-500 md:px-4 md:py-2"
         >
-          <span class="hidden md:inline"> Get started </span>
+          <span class="hidden md:inline"> Install now </span>
           <Icon name="memory:chevron-right" :size="20" />
         </div>
       </div>
@@ -33,12 +33,12 @@
   <UiMarketingHero />
   <UiMarketingRepositories />
   <UiMarketingFaq />
-  <UiMarketingTestimonials v-if="isDesktop" class="hidden md:block" />
+  <UiMarketingTestimonials v-if="!isMobile" class="hidden md:block" />
   <UiMarketingSponsors />
 
   <ElementsGridbackground />
 </template>
 
 <script setup lang="ts">
-const isDesktop = useMediaQuery('(min-width: 768px)')
+const isMobile = useMediaQuery('(max-width: 768px)')
 </script>

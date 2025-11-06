@@ -1,4 +1,5 @@
 <template>
+  <NuxtLoadingIndicator color="#52A9FF" :height="1" />
   <UiNavigation />
   <div class="container max-w-4xl px-0">
     <div
@@ -27,3 +28,9 @@
 <script setup lang="ts">
 defineOgImageComponent('Large')
 </script>
+
+<style scoped>
+.nuxt-loading-indicator {
+  top: var(--nav-offset) !important;
+}
+</style>

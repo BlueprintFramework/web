@@ -10,16 +10,18 @@
         @click="toggleAccordion(index)"
         @mousedown.prevent
       >
-        <h2>
+        <h2 class="text-start">
           {{ item.title }}
         </h2>
-        <Icon
-          name="memory:chevron-up"
-          :size="24"
-          :class="{ 'rotate-180': activeIndex !== index }"
-          mode="svg"
-          class="transition-transform"
-        />
+        <client-only>
+          <Icon
+            name="memory:chevron-up"
+            :size="24"
+            :class="{ 'rotate-180': activeIndex !== index }"
+            mode="svg"
+            class="transition-transform"
+          />
+        </client-only>
       </button>
       <div
         class="overflow-hidden transition-[max-height] duration-300 ease-in-out"

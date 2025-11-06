@@ -113,8 +113,8 @@ export const useFormValidation = () => {
         const identifierRegex = /^[a-z]+$/
         if (
           !identifierRegex.test(value) ||
-          value.length >= 48 ||
-          value.length <= 3
+          value.length > 48 ||
+          value.length < 3
         ) {
           return false
         }

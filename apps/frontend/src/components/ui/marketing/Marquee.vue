@@ -1,6 +1,6 @@
 <template>
   <div :class="props?.class" class="marquee h-32">
-    <NuxtMarquee :autoFill="true" :pauseOnHover="true" :speed="35">
+    <ElementsMarquee :direction="'left'" :speed="20" :pause-on-hover="true">
       <div
         v-for="(item, index) in items"
         :key="`item-${index}`"
@@ -30,7 +30,7 @@
           </div>
         </NuxtLink>
       </div>
-    </NuxtMarquee>
+    </ElementsMarquee>
   </div>
 </template>
 

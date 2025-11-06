@@ -1,4 +1,5 @@
 <template>
+  <NuxtLoadingIndicator color="#52A9FF" :height="1" />
   <UiNavigation />
   <div class="container">
     <div
@@ -23,3 +24,9 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.nuxt-loading-indicator {
+  top: var(--nav-offset) !important;
+}
+</style>

@@ -17,6 +17,22 @@ Define your Pterodactyl directory, we'll use this later in the guide. If your Pt
 export PTERODACTYL_DIRECTORY=/var/www/pterodactyl
 ```
 
+## Download and install Blueprint
+
+Download the latest version of Blueprint onto your server by either downloading the latest release [from GitHub](https://github.com/BlueprintFramework/framework/releases/latest) or running the commands below (which will save the file as `release.zip` and extract it).
+
+```bash
+# Install curl, wget and unzip if you haven't already
+sudo apt install -y curl wget unzip
+
+# Navigate to your Pterodactyl directory
+cd $PTERODACTYL_DIRECTORY
+
+# Download and unzip Blueprint's latest release
+wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O $PTERODACTYL_DIRECTORY/release.zip
+unzip -o release.zip
+```
+
 ## Dependencies
 
 Blueprint, just like Pterodactyl, relies on a few dependencies to function. Install them through the commands below.
@@ -32,22 +48,10 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 sudo apt update
 sudo apt install -y nodejs
 
-# Install yarn
+# cd into Pterodactyl, install yarn and node dependencies
+cd $PTERODACTYL_DIRECTORY
 npm i -g yarn
 yarn install
-```
-
-## Download and install Blueprint
-
-Download the latest version of Blueprint onto your server by either downloading the latest release [from GitHub](https://github.com/BlueprintFramework/framework/releases/latest) or running the commands below (which will save the file as `release.zip` and extract it).
-
-```bash
-# Navigate to your Pterodactyl directory
-cd $PTERODACTYL_DIRECTORY
-
-# Download and unzip Blueprint's latest release
-wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O $PTERODACTYL_DIRECTORY/release.zip
-unzip -o release.zip
 ```
 
 ## Configure Blueprint

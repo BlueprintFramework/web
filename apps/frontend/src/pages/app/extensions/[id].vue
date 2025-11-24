@@ -310,7 +310,7 @@
               class="font-mono"
               :supports-images="true"
               :rows="10"
-              :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+              :placeholder="`\`[  > <]\` \\\n**markdown** is supported`"
               :richtext="true"
             />
           </div>
@@ -320,7 +320,8 @@
             class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
           >
             <template v-if="!form.description || form.description == ''">
-              <p>(ﾉ*･_･)ﾉ</p>
+              <!-- prettier-ignore -->
+              <pre><ProseCode>[  > <]</ProseCode></pre>
               <p><b>markdown</b> is supported</p>
             </template>
             <client-only v-else>

@@ -144,6 +144,46 @@ export const useFormValidation = () => {
         message || 'Identifier is already taken by a published extension',
       trigger: 'blur',
     }),
+
+    platformUrl: (
+      platform: 'GITHUB' | 'BUILTBYBIT' | 'SOURCEXCHANGE',
+      message?: string
+    ): ValidationRule => ({
+      validator: (value: string) => {
+        if (!value) {
+          return false
+        }
+
+        try {
+          const url = new URL(value)
+          const hostname = url.hostname
+
+          switch (platform) {
+            case 'GITHUB':
+              return (
+                hostname === 'github.com' &&
+                url.pathname.split('/').filter(Boolean).length >= 2
+              )
+            case 'BUILTBYBIT':
+              return (
+                hostname === 'builtbybit.com' &&
+                /^\/resources\/[\w.-]+(\.\d+)?\/?$/.test(url.pathname)
+              )
+            case 'SOURCEXCHANGE':
+              return (
+                hostname === 'www.sourcexchange.net' &&
+                /^\/products\/[\w.-]+\/?$/.test(url.pathname)
+              )
+            default:
+              return false
+          }
+        } catch {
+          return false
+        }
+      },
+      message: message || 'Please enter a valid platform URL',
+      trigger: 'blur',
+    }),
   }
 
   const debounce = (func: Function, delay: number) => {

@@ -29,7 +29,11 @@
             label="Product URL"
             name="builtbybit_url"
             type="url"
-            :rules="[rules.required(), rules.url()]"
+            :rules="[
+              validationRules.required(),
+              validationRules.url(),
+              validationRules.platformUrl('BUILTBYBIT'),
+            ]"
             :required="localEnabled.BUILTBYBIT"
             placeholder="https://builtbybit.com/resources/..."
             class="mt-3"
@@ -62,7 +66,11 @@
             label="Product URL"
             name="sourcexchange_url"
             type="url"
-            :rules="[rules.required(), rules.url()]"
+            :rules="[
+              validationRules.required(),
+              validationRules.url(),
+              validationRules.platformUrl('SOURCEXCHANGE'),
+            ]"
             :required="localEnabled.SOURCEXCHANGE"
             placeholder="https://sourcexchange.net/products/..."
             class="mt-3"
@@ -95,7 +103,11 @@
             label="Repository URL"
             name="github_url"
             type="url"
-            :rules="[rules.required(), rules.url()]"
+            :rules="[
+              validationRules.required(),
+              validationRules.url(),
+              validationRules.platformUrl('GITHUB'),
+            ]"
             :required="localEnabled.GITHUB"
             placeholder="https://github.com/user/repo"
             class="mt-3"
@@ -118,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-const { rules } = useFormValidation()
+const { rules: validationRules } = useFormValidation()
 
 interface Props {
   isOpen: boolean
@@ -177,7 +189,9 @@ const handleClose = () => {
     localUrls.value.BUILTBYBIT &&
     fieldValidation.value.builtbybit_url !== false
   ) {
-    platforms.BUILTBYBIT = localUrls.value.BUILTBYBIT
+    platforms.BUILTBYBIT = localUrls.value.BUILTBYBIT.endsWith('/')
+      ? localUrls.value.BUILTBYBIT.slice(0, -1)
+      : localUrls.value.BUILTBYBIT
   }
 
   if (
@@ -185,7 +199,9 @@ const handleClose = () => {
     localUrls.value.SOURCEXCHANGE &&
     fieldValidation.value.sourcexchange_url !== false
   ) {
-    platforms.SOURCEXCHANGE = localUrls.value.SOURCEXCHANGE
+    platforms.SOURCEXCHANGE = localUrls.value.SOURCEXCHANGE.endsWith('/')
+      ? localUrls.value.SOURCEXCHANGE.slice(0, -1)
+      : localUrls.value.SOURCEXCHANGE
   }
 
   if (
@@ -193,7 +209,9 @@ const handleClose = () => {
     localUrls.value.GITHUB &&
     fieldValidation.value.github_url !== false
   ) {
-    platforms.GITHUB = localUrls.value.GITHUB
+    platforms.GITHUB = localUrls.value.GITHUB.endsWith('/')
+      ? localUrls.value.GITHUB.slice(0, -1)
+      : localUrls.value.GITHUB
   }
 
   emit('save', platforms)

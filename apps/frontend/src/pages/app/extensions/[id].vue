@@ -684,11 +684,8 @@ const handleDelete = async () => {
   }
 }
 
-const handlePlatformsSave = (platforms: ExtensionPlatforms) => {
+const handlePlatformsSave = (platforms: ExtensionPlatformUrls) => {
   form.value.platforms = platforms
-
-  if (platforms.GITHUB) {
-  }
 }
 
 const handleAdminApprove = async () => {

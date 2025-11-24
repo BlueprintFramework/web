@@ -122,13 +122,13 @@ const { rules } = useFormValidation()
 
 interface Props {
   isOpen: boolean
-  platforms: ExtensionPlatforms
+  platforms: ExtensionPlatformUrls
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
-  save: [platforms: ExtensionPlatforms]
+  save: [platforms: ExtensionPlatformUrls]
 }>()
 
 const fieldValidation = ref<Record<string, boolean>>({})
@@ -160,9 +160,9 @@ watch(
       }
 
       localUrls.value = {
-        BUILTBYBIT: props.platforms.BUILTBYBIT?.url || '',
-        SOURCEXCHANGE: props.platforms.SOURCEXCHANGE?.url || '',
-        GITHUB: props.platforms.GITHUB?.url || '',
+        BUILTBYBIT: props.platforms.BUILTBYBIT || '',
+        SOURCEXCHANGE: props.platforms.SOURCEXCHANGE || '',
+        GITHUB: props.platforms.GITHUB || '',
       }
     }
   },
@@ -170,18 +170,14 @@ watch(
 )
 
 const handleClose = () => {
-  const platforms: ExtensionPlatforms = {}
+  const platforms: ExtensionPlatformUrls = {}
 
   if (
     localEnabled.value.BUILTBYBIT &&
     localUrls.value.BUILTBYBIT &&
     fieldValidation.value.builtbybit_url !== false
   ) {
-    platforms.BUILTBYBIT = {
-      url: localUrls.value.BUILTBYBIT,
-      price: props.platforms.BUILTBYBIT?.price ?? 0,
-      currency: props.platforms.BUILTBYBIT?.currency ?? 'USD',
-    }
+    platforms.BUILTBYBIT = localUrls.value.BUILTBYBIT
   }
 
   if (
@@ -189,11 +185,7 @@ const handleClose = () => {
     localUrls.value.SOURCEXCHANGE &&
     fieldValidation.value.sourcexchange_url !== false
   ) {
-    platforms.SOURCEXCHANGE = {
-      url: localUrls.value.SOURCEXCHANGE,
-      price: props.platforms.SOURCEXCHANGE?.price ?? 0,
-      currency: props.platforms.SOURCEXCHANGE?.currency ?? 'USD',
-    }
+    platforms.SOURCEXCHANGE = localUrls.value.SOURCEXCHANGE
   }
 
   if (
@@ -201,11 +193,7 @@ const handleClose = () => {
     localUrls.value.GITHUB &&
     fieldValidation.value.github_url !== false
   ) {
-    platforms.GITHUB = {
-      url: localUrls.value.GITHUB,
-      price: props.platforms.GITHUB?.price ?? 0,
-      currency: props.platforms.GITHUB?.currency ?? 'USD',
-    }
+    platforms.GITHUB = localUrls.value.GITHUB
   }
 
   emit('save', platforms)

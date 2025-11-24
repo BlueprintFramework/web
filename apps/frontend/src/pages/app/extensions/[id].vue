@@ -517,7 +517,7 @@ const modalOpen = ref({
 const form = ref<{
   identifier: string
   name: string
-  platforms: ExtensionPlatforms
+  platforms: ExtensionPlatformUrls
   summary: string
   type: ExtensionType
   unlisted: boolean
@@ -568,12 +568,23 @@ watch(
       form.value = {
         identifier: newData.extension.identifier || '',
         name: newData.extension.name || '',
-        platforms: newData.extension.platforms || {},
+        platforms: form.value.platforms,
         summary: newData.extension.summary || '',
         type: newData.extension.type || 'extension',
         unlisted: newData.extension.unlisted,
         description: newData.extension.description || '',
       }
+
+      const urls: ExtensionPlatformUrls = {}
+      for (const key in newData.extension.platforms) {
+        if (
+          Object.prototype.hasOwnProperty.call(newData.extension.platforms, key)
+        ) {
+          urls[key] = newData.extension.platforms[key]?.url || ''
+        }
+      }
+
+      form.value.platforms = urls
     }
   },
   { immediate: true }
@@ -675,6 +686,9 @@ const handleDelete = async () => {
 
 const handlePlatformsSave = (platforms: ExtensionPlatforms) => {
   form.value.platforms = platforms
+
+  if (platforms.GITHUB) {
+  }
 }
 
 const handleAdminApprove = async () => {

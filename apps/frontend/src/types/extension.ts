@@ -40,6 +40,9 @@ export interface ExtensionFullPlatform extends ExtensionPlatform {
   rating?: number | null
 }
 
+export type ExtensionPlatformUrls = Record<string, ExtensionPlatformUrl>
+export type ExtensionPlatformUrl = string
+
 export interface ExtensionBanner {
   fullres: string
   lowres: string

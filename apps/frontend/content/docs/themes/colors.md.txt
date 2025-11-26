@@ -10,9 +10,4 @@ Dashboard color variables allow you to modify Pterodactyl's user-side dashboard 
 
 ## Default colors
 
-::color-preview
----
-rgb: 255 255 255
-aaa: eee
----
-::
+:prose-color{name="--blueprint-white" rgb="255 255 255"}

@@ -2,7 +2,7 @@
   <h1 :id="props.id" style="font-size: 38px" class="mb-4 mt-16">
     <a
       v-if="generate"
-      :href="`#${props.id}`"
+      :href="`#${$props.id}`"
       class="hover:text-brand-50 transition-colors"
     >
       <slot />
@@ -14,7 +14,13 @@
 <script setup lang="ts">
 import { computed, useRuntimeConfig } from '#imports'
 
-const props = defineProps<{ id?: string }>()
+const props = defineProps<{
+  id?: string
+
+  // Disable class and style props
+  class?: string
+  style?: string
+}>()
 
 const { headings } = useRuntimeConfig().public.mdc
 const generate = computed(

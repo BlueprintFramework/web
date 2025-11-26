@@ -1,7 +1,7 @@
 <template>
-  <tbody class="divide-y divide-neutral-700">
+  <ol class="my-2 list-decimal ps-4">
     <slot />
-  </tbody>
+  </ol>
 </template>
 
 <script setup lang="ts">

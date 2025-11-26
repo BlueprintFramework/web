@@ -1,7 +1,7 @@
 <template>
-  <tbody class="divide-y divide-neutral-700">
+  <p>
     <slot />
-  </tbody>
+  </p>
 </template>
 
 <script setup lang="ts">

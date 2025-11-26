@@ -4,4 +4,10 @@
 
 <script setup lang="ts">
 const isDev = import.meta.dev
+
+defineProps<{
+  // Disable class and style props
+  class?: string
+  style?: string
+}>()
 </script>

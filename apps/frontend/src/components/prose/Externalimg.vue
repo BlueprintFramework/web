@@ -17,24 +17,22 @@
 import { withTrailingSlash, withLeadingSlash, joinURL } from 'ufo'
 import ImageComponent from '#build/mdc-image-component.mjs'
 
-const props = defineProps({
-  src: {
-    type: String,
-    default: '',
-  },
-  alt: {
-    type: String,
-    default: '',
-  },
-  width: {
-    type: [String, Number],
-    default: undefined,
-  },
-  height: {
-    type: [String, Number],
-    default: undefined,
-  },
-})
+const props = withDefaults(
+  defineProps<{
+    src: string
+    alt: string
+    width?: string | number
+    height?: string | number
+
+    // Disable class and style props
+    class?: string
+    style?: string
+  }>(),
+  {
+    src: '',
+    alt: '',
+  }
+)
 
 const refinedSrc = computed(() => {
   const refinedUrl = new URL(props.src)

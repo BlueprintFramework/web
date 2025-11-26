@@ -1,7 +1,5 @@
 <template>
-  <tbody class="divide-y divide-neutral-700">
-    <slot />
-  </tbody>
+  <ProseDisabled />
 </template>
 
 <script setup lang="ts">

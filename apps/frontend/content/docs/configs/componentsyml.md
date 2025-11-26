@@ -20,13 +20,13 @@ Simply because Pterodactyl's frontend uses React. Blueprint's components impleme
 
 When referencing components in your Components.yml, Blueprint expects the component's relative (to the `dashboard:components` directory) file path without the file extension. It sounds complicated, but in practice it's quite easy, here are a few examples:
 
-| Path                                                        | Issues (if any)                                                                          |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| <code class="text-red-400">../Component.tsx</code>          | Path escapes the `dashboard:components` directory and ends with a file extension         |
-| <code class="text-red-400">@/Element</code>                 | Only components provided by the extension's `dashboard:components` directory can be used |
-| <code class="text-red-400">ExampleComponent.tsx</code>      | Path ends with with a file extension                                                     |
-| <code class="text-green-400">ExampleComponent</code>        | No issues                                                                                |
-| <code class="text-green-400">subdirectory/HelloWorld</code> | No issues                                                                                |
+| Path                                          | Issues (if any)                                                                          |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| :code{color="red"}[../Component.tsx]          | Path escapes the `dashboard:components` directory and ends with a file extension         |
+| :code{color="red"}[@/Element]                 | Only components provided by the extension's `dashboard:components` directory can be used |
+| :code{color="red"}[ExampleComponent.tsx]      | Path ends with with a file extension                                                     |
+| :code{color="green"}[ExampleComponent]        | No issues                                                                                |
+| :code{color="green"}[subdirectory/HelloWorld] | No issues                                                                                |
 
 ## Routes
 

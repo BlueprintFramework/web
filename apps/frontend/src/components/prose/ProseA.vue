@@ -1,29 +1,16 @@
 <template>
-  <NuxtLink :href="props.href" :target="props.target" class="text-link">
+  <NuxtLink :href="$props.href" :target="$props.target || ''" class="text-link">
     <slot />
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+defineProps<{
+  href: string
+  target?: '_blank' | '_parent' | '_self' | '_top'
 
-const props = defineProps({
-  href: {
-    type: String,
-    default: '',
-  },
-  target: {
-    type: String as PropType<
-      | '_blank'
-      | '_parent'
-      | '_self'
-      | '_top'
-      | (string & object)
-      | null
-      | undefined
-    >,
-    default: undefined,
-    required: false,
-  },
-})
+  // Disable class and style props
+  class?: string
+  style?: string
+}>()
 </script>

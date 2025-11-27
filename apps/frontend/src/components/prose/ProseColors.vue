@@ -1,0 +1,25 @@
+<template>
+  <div
+    class="my-4 grid grid-cols-4 gap-[1px] overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-700"
+  >
+    <template v-for="item in $props.content">
+      <ElementsProseExtraColor :name="item.name" :rgb="item.rgb" />
+    </template>
+    <div class="min-h-5 w-[calc(400%+3px)] bg-neutral-950">
+      <div class="bg-stripes h-full w-full" />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{
+  content: {
+    name: string
+    rgb: string
+  }[]
+
+  // Disable class and style props
+  class?: string
+  style?: string
+}>()
+</script>

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    color: 'brand' | 'green' | 'red'
+    color?: 'brand' | 'green' | 'red'
 
     // Disable class and style props
     class?: string

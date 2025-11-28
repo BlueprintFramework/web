@@ -12,10 +12,7 @@
       </span>
     </div>
     <div class="pt-3">
-      <div class="flex items-center justify-between gap-1 font-bold">
-        <span>{{ props.name }}</span>
-        <Icon name="pixelarticons:copy" />
-      </div>
+      <span>{{ props.name }}</span>
     </div>
   </div>
 </template>

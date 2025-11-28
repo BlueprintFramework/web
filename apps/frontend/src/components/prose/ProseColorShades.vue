@@ -1,13 +1,15 @@
 <template>
   <div
-    class="my-4 flex flex-col gap-[1px] overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-700"
+    class="my-4 flex flex-col gap-[1px] overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-700 max-lg:overflow-x-scroll"
   >
     <div
       v-for="colorFamily in content"
       :key="colorFamily.color"
       class="flex gap-[1px] bg-neutral-700"
     >
-      <div class="flex min-w-16 items-center bg-neutral-950 px-3 py-2">
+      <div
+        class="min-w-25 flex items-center justify-center bg-neutral-950 px-4 py-2"
+      >
         <span class="text-sm font-medium text-white">{{
           colorFamily.color
         }}</span>
@@ -16,7 +18,7 @@
       <div
         v-for="hue in colorFamily.hues"
         :key="hue.variant"
-        class="group relative flex flex-1 flex-col items-center justify-center bg-neutral-950 px-1 py-2 transition-colors hover:bg-neutral-900"
+        class="max-lg:min-w-25 group relative flex flex-1 flex-col items-center justify-center bg-neutral-950 px-1 py-2 transition-colors hover:bg-neutral-900"
         :style="
           validateRgb(hue.rgb)
             ? `background-color: rgb(${hue.rgb});`

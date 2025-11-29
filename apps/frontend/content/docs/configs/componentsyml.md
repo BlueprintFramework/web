@@ -80,7 +80,7 @@ import React from 'react'
 
 // Create a function and set it as the default
 // function for this file
-export default = () => {
+export default () => {
   // Return the component's contents
   return (
     <>

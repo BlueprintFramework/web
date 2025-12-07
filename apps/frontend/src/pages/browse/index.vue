@@ -17,7 +17,6 @@
             :rules="[]"
             leading-icon="memory:search"
             placeholder="Search.."
-            @validate="void"
           />
         </div>
         <div class="divide-y divide-neutral-700 transition-colors">
@@ -85,7 +84,6 @@
               :rules="[]"
               leading-icon="memory:search"
               placeholder="Search.."
-              @validate="void"
             />
           </div>
           <button

@@ -33,7 +33,7 @@ Latest commit is for development purposes only. No support will be provided and 
 # blueprintframework/framework repository by default
 blueprint -upgrade remote
 
-# Optionally, manually define the blueprintframework/framework
+# Optional: manually define the blueprintframework/framework
 # repository and update that way
 blueprint -upgrade remote blueprintframework/framework
 ```

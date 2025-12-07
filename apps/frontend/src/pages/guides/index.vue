@@ -20,7 +20,6 @@
           :rules="[]"
           leading-icon="memory:search"
           placeholder="Search.."
-          @validate="void"
         />
       </div>
     </div>

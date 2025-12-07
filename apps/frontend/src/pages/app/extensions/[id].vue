@@ -360,8 +360,9 @@
             <li class="ms-4">
               <p>
                 <b>No plain screenshots.</b> Plain screenshots often add
-                additional confusion to buyers and worsen the overal experience.
-                Add screenshots to the extension's description instead.
+                additional confusion to buyers and worsen the overall
+                experience. Add screenshots to the extension's description
+                instead.
               </p>
             </li>
             <li class="ms-4">

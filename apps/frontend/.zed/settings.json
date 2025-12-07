@@ -1,0 +1,27 @@
+{
+  "format_on_save": "on",
+  "tab_size": 2,
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "vue": "html",
+          "*.vue": "html"
+        },
+        "experimental": {
+          "classRegex": [
+            ["@apply\\s+([^;]*);", "([a-zA-Z0-9\\s\\-:]+)"],
+            "class=\"([^\"]*)",
+            "class={\"([^\"}]*)",
+            "class=format!({\"([^\"}]*)"
+          ]
+        }
+      }
+    }
+  },
+  "languages": {
+    "Vue.js": {
+      "language_servers": ["!typescript-language-server", "..."]
+    }
+  }
+}

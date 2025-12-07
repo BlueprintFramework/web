@@ -2,7 +2,7 @@
   <NuxtLoadingIndicator color="#52A9FF" :height="1" />
   <div class="flex min-h-screen flex-col">
     <UiNavigation />
-    <div class="container flex-grow space-y-12 py-12">
+    <div class="container grow space-y-12 py-12">
       <slot />
     </div>
     <UiFooterContainer />

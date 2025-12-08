@@ -11,6 +11,7 @@ export default defineContentConfig({
         description: z.string().optional(),
         category: z.string().default('uncategorized'),
         order: z.number().optional(),
+        unlisted: z.boolean().optional().default(false),
       }),
     }),
 

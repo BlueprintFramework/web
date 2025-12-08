@@ -195,7 +195,11 @@ const form = ref({
 })
 
 const { data: docs } = await useAsyncData('docs-sidebar', () => {
-  return queryCollection('docs').all()
+  return queryCollection('docs')
+    .orWhere((query) =>
+      query.where('unlisted', '=', false).where('unlisted', 'IS NULL')
+    )
+    .all()
 })
 
 // Group docs by category

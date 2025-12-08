@@ -41,7 +41,11 @@ definePageMeta({
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
 
 const { data: docs } = await useAsyncData('docs-index', () => {
-  return queryCollection('docs').all()
+  return queryCollection('docs')
+    .orWhere((query) =>
+      query.where('unlisted', '=', false).where('unlisted', 'IS NULL')
+    )
+    .all()
 })
 
 const categories = computed(() => {

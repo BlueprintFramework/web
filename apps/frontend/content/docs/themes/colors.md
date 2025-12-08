@@ -2,7 +2,12 @@
 title: Dashboard colors
 description: Default Tailwind colors for the user-side dashboard
 category: themes
+unlisted: true
 ---
+
+::card
+This document has been unlisted following [this blog post](/blog/update-on-themes). Theme color customization only applies to [beta-2025-11](/releases/beta-2025-11) and is no longer supported.
+::
 
 ::card
 A large amount of colors provided on this page originate from the [default Tailwind v3 color palette](https://v3.tailwindcss.com/docs/customizing-colors). We allow modifying these colors through CSS variables.

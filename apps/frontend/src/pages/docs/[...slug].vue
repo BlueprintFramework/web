@@ -2,19 +2,24 @@
   <div v-if="data" class="space-y-8">
     <div class="mb-12 space-y-1.5">
       <div>
-        <div
-          class="inline-block rounded-full border border-neutral-700 bg-neutral-950"
-        >
-          <div class="flex items-center">
-            <div class="px-2 py-1.5 pe-1.5">
-              <Icon :name="category?.icon || ''" mode="svg" :size="20" />
+        <div class="mb-1 flex items-center gap-2">
+          <div
+            class="inline-block rounded-full border border-neutral-700 bg-neutral-950"
+          >
+            <div class="flex items-center">
+              <div class="px-2 py-1.5 pe-1.5">
+                <Icon :name="category?.icon || ''" mode="svg" :size="20" />
+              </div>
+              <span
+                class="border-s border-neutral-700 px-2 py-1.5 ps-1.5 font-bold"
+              >
+                {{ category?.label }}
+              </span>
             </div>
-            <span
-              class="border-s border-neutral-700 px-2 py-1.5 ps-1.5 font-bold"
-            >
-              {{ category?.label }}
-            </span>
           </div>
+          <span v-if="data.unlisted" class="text-default-font/60">
+            Unlisted
+          </span>
         </div>
         <h1
           class="!display leading-14 md:leading-18 truncate !text-5xl !font-normal md:!text-6xl"
@@ -105,7 +110,11 @@ if (!data.value) {
 }
 
 const { data: allDocs } = await useAsyncData('all-docs-nav', () =>
-  queryCollection('docs').all()
+  queryCollection('docs')
+    .orWhere((query) =>
+      query.where('unlisted', '=', false).where('unlisted', 'IS NULL')
+    )
+    .all()
 )
 
 const category = computed(

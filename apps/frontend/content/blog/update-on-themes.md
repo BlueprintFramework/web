@@ -75,7 +75,7 @@ I spent the next week experimenting even more;
 
 None of these seemed to fix the "black graphs" bug, and when they did, I couldn't replicate the fix on other Pterodactyl installations.
 
-> I was generally just pushing buttons until something happened, with a large amount of the "fixes" coded by AI. The fixes listed above never made it to a release. I was pretty desperate to find a solution to have this **just work**, but after weeks of trying, it's time to admit defeat.
+> I was generally just pushing buttons until something happened, with a large amount of the "fixes" coded by AI listed above, that never made it to the release. I was pretty desperate to find a solution to have this **just work**, but after weeks of trying, it's time to admit defeat.
 
 ### A final decision
 

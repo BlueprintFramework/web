@@ -17,7 +17,7 @@
       </p>
     </div>
 
-    <div class="max-w-none border-b border-neutral-700 md:p-6">
+    <div class="max-w-none border-b border-neutral-700 p-4 md:p-6">
       <ContentRenderer :value="post" class="prose-content space-y-3" />
     </div>
   </template>

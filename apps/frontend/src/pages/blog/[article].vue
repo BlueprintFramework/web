@@ -26,7 +26,7 @@
         class="inline-flex flex-col divide-y divide-neutral-700 border-x border-neutral-700 md:flex-row md:divide-x md:divide-y-0"
       >
         <div
-          class="inline-flex items-center justify-center gap-1 px-5 py-3 max-md:w-[90vw] md:gap-3"
+          class="inline-flex items-center justify-center gap-1 px-5 py-3 max-md:w-[90vw] md:gap-3 md:px-7"
         >
           <Icon name="memory:account" :size="36" class="max-md:size-5!" />
           <div class="hidden md:block">
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div
-          class="inline-flex items-center justify-center gap-1.5 px-5 py-3 max-md:w-[90vw] md:gap-3"
+          class="inline-flex items-center justify-center gap-1.5 px-5 py-3 max-md:w-[90vw] md:gap-3 md:px-7"
         >
           <Icon name="memory:clock" :size="34" class="max-md:size-5!" />
           <div class="hidden md:block">

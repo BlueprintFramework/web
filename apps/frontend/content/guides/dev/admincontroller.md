@@ -128,9 +128,7 @@ We're assuming your `admin.view` file is called `view.blade.php`, but it can be 
 
 <!-- prettier-ignore -->
 ```html [view.blade.php]
-<p>
-  {{ $foo }}
-</p>
+<p> {{ $foo }} </p>
 ```
 
 Save your changes, install your extension and check out your admin view. There should be a paragraph element with 'bar' (the value of `$foo`) as it's content.

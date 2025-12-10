@@ -31,7 +31,7 @@ You can now open up your extension's admin view (the `view.blade.php` created ea
 A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP code and use special blade-template methods. You can read more about [Blade templates and it's directives in the Laravel documentation](https://laravel.com/docs/10.x/blade#blade-directives).
 ::
 
-```html
+```html [view.blade.php]
 <div style="background: black; padding: 5px;">
   <span style="color: white;"> The name of my extension is {name} </span>
 </div>

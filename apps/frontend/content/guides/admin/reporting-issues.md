@@ -70,3 +70,9 @@ If you make use of Blueprint and have a more technical question, please ask in o
 ### Support for Blueprint-forks
 
 We do not provide support for **users of Blueprint-forks**. Please search for support methods offered by each fork, then ask your question there.
+
+## Contacting extension developers
+
+Extension developers commonly (not always) provide support for their extensions. If you are experiencing issues (or want to report a bug) with a specific extension, look for their contact details and send them a message.
+
+> Unless mentioned otherwise, please don't send extension developers support requests on support channels like Discord DMs or other instant messaging apps. A lot of extension developers provide support over email or ticketing systems, and don't appreciate getting messaged on other platforms.

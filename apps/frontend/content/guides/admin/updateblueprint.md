@@ -4,7 +4,6 @@ description: Switch to the latest version of Blueprint within minutes
 author: Emma
 category: admin
 thumbnail: githubreleases.jpeg
-order:
 ---
 
 ::card

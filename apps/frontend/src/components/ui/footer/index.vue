@@ -72,7 +72,7 @@
         <p class="text-default-font mb-2 text-xl font-bold">Blueprint</p>
         <NuxtLink to="/browse" class="text-link"> Extensions </NuxtLink>
         <NuxtLink to="/guides" class="text-link"> Guides </NuxtLink>
-        <NuxtLink to="/guides" class="text-link"> Documentation </NuxtLink>
+        <NuxtLink to="/docs" class="text-link"> Documentation </NuxtLink>
         <NuxtLink to="/releases" class="text-link"> Releases </NuxtLink>
         <NuxtLink to="/blog" class="text-link"> Blog </NuxtLink>
       </div>

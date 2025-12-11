@@ -30,7 +30,7 @@
     "better-sqlite3": "^12.5.0",
     "debug": "^4.4.3",
     "file-saver": "^2.0.5",
-    "nuxt": "^4.2.1",
+    "nuxt": "^4.2.2",
     "nuxt-og-image": "^5.1.12",
     "nuxt-site-config": "^3.2.11",
     "qrcode": "^1.5.4",
@@ -38,16 +38,16 @@
     "ufo": "^1.6.1",
     "unstorage": "^1.17.3",
     "vue": "^3.5.25",
-    "vue-router": "^4.6.3"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.79",
+    "@iconify-json/lucide": "^1.2.80",
     "@iconify-json/memory": "^1.2.2",
     "@iconify-json/pixelarticons": "^1.2.2",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.6"
+    "vue-tsc": "^3.1.8"
   },
   "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d"
 }

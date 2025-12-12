@@ -20,6 +20,7 @@
         >
           <NuxtImg
             :src="props.extension.banner.lowres"
+            loading="lazy"
             class="h-full w-full transition-transform group-hover:scale-105 group-focus:scale-105"
           />
         </div>

@@ -59,7 +59,7 @@
       </div>
       <div class="flex items-center gap-2 max-md:flex-col">
         <ElementsButton
-          v-if="data.extension.status == 'approved'"
+          v-if="user?.admin && data.extension.status == 'approved'"
           @click="modalOpen.adminReject = true"
           class="max-md:w-full"
         >

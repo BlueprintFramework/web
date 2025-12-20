@@ -27,6 +27,36 @@
       </button>
     </div>
   </div>
+
+  <div
+    class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
+  >
+    <div class="flex items-center gap-1.5 p-2 font-bold transition-colors">
+      <Icon
+        name="memory:cash"
+        :size="22"
+        mode="svg"
+        class="block"
+      />
+      <span>Price</span>
+    </div>
+    <div class="space-y-2 p-2 transition-colors">
+      <button
+        v-for="priceOption in priceOptions"
+        :key="priceOption.value"
+        class="hover:text-brand-50 focus:text-brand-50 text-default-font/60 block w-full cursor-pointer text-start outline-0 transition-colors focus:font-bold"
+        tabindex="0"
+        :class="{
+          '!text-default-font': props.form.priceFilter === priceOption.value,
+        }"
+        @click="props.form.priceFilter = priceOption.value"
+        @mousedown.prevent
+      >
+        <span>{{ priceOption.label }}</span>
+      </button>
+    </div>
+  </div>
+
   <div class="group">
     <button
       class="focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer rounded-t-2xl border border-neutral-700 p-2 outline-0 transition-colors group-focus-within:border-neutral-500"
@@ -81,6 +111,7 @@ const props = defineProps<{
     sortBy: string
     showExtensions: boolean
     showThemes: boolean
+    priceFilter: string
   }
 }>()
 
@@ -88,5 +119,11 @@ const sortOptions = [
   { value: 'popularity', label: 'Most Popular' },
   { value: 'name', label: 'Name (A-Z)' },
   { value: 'created', label: 'Newest First' },
+]
+
+const priceOptions = [
+  { value: 'all', label: 'All Prices' },
+  { value: 'free', label: 'Free Only' },
+  { value: 'premium', label: 'Premium Only' },
 ]
 </script>

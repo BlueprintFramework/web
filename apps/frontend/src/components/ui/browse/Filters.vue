@@ -40,20 +40,19 @@
       />
       <span>Price</span>
     </div>
-    <div class="space-y-2 p-2 transition-colors">
-      <button
-        v-for="priceOption in priceOptions"
-        :key="priceOption.value"
-        class="hover:text-brand-50 focus:text-brand-50 text-default-font/60 block w-full cursor-pointer text-start outline-0 transition-colors focus:font-bold"
-        tabindex="0"
-        :class="{
-          '!text-default-font': props.form.priceFilter === priceOption.value,
-        }"
-        @click="props.form.priceFilter = priceOption.value"
-        @mousedown.prevent
-      >
-        <span>{{ priceOption.label }}</span>
-      </button>
+    <div class="space-y-3 p-4 transition-colors">
+      <input
+        type="range"
+        min="0"
+        max="1000"
+        step="1000"
+        v-model.number="props.form.maxPrice"
+        class="slider block w-full rounded-lg appearance-none cursor-pointer"
+      />
+      <div class="flex justify-between text-xs text-default-font/40">
+        <span>Free</span>
+        <span>Paid</span>
+      </div>
     </div>
   </div>
 
@@ -111,7 +110,7 @@ const props = defineProps<{
     sortBy: string
     showExtensions: boolean
     showThemes: boolean
-    priceFilter: string
+    maxPrice: number
   }
 }>()
 
@@ -120,10 +119,55 @@ const sortOptions = [
   { value: 'name', label: 'Name (A-Z)' },
   { value: 'created', label: 'Newest First' },
 ]
-
-const priceOptions = [
-  { value: 'all', label: 'All Prices' },
-  { value: 'free', label: 'Free Only' },
-  { value: 'premium', label: 'Premium Only' },
-]
 </script>
+
+<style scoped>
+.slider {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-moz-range-track {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6db7ff;
+  cursor: pointer;
+  border: 2px solid #6db7ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin-top: -6px;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6db7ff;
+  cursor: pointer;
+  border: 2px solid #6db7ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin-top: -6px;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+</style>

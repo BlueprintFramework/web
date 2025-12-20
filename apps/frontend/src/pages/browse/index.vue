@@ -151,7 +151,7 @@ const form = ref({
   sortBy: 'popularity',
   showExtensions: true,
   showThemes: true,
-  priceFilter: 'all',
+  maxPrice: 0,
 })
 
 const getMinPrice = (extension: Extension): number => {
@@ -191,15 +191,12 @@ const filteredAndSortedExtensions = computed(() => {
   })
 
   filtered = filtered.filter((extension) => {
-    switch (form.value.priceFilter) {
-      case 'free':
-        return isFree(extension)
-      case 'premium':
-        return !isFree(extension)
-      case 'all':
-      default:
-        return true
+    const minPrice = getMinPrice(extension)
+    if (form.value.maxPrice === 0) {
+      return minPrice === 0
     }
+    // any non-zero becomes paid-only
+    return minPrice > 0
   })
 
   switch (form.value.sortBy) {

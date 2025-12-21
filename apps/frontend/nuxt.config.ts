@@ -100,7 +100,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     devProxy: {
-      '/api': 'http://localhost:8000/api',
+      '/api': {
+        // Change to https://blueprint.zip/api to use the production API
+        // Local API is http://localhost:8000/api
+        target: 'http://localhost:8000/api',
+        changeOrigin: true,
+      },
       '/browse/sitemap.xml': 'http://localhost:8000/browse/sitemap.xml',
       '/yay': 'https://blueprint.zip/yay',
     },

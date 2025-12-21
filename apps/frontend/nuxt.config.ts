@@ -99,7 +99,7 @@ export default defineNuxtConfig({
     name: 'Blueprint',
   },
   nitro: {
-    // Allow switching dev API target via DEV_API_TARGET (https://blueprint.zip)
+    // Allow switching dev API target via DEV_API_TARGET (e.g., https://blueprint.zip)
     // Falls back to local backend when unset.
     devProxy: {
       '/api': {

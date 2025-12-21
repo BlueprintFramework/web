@@ -45,7 +45,7 @@
         type="range"
         min="0"
         max="1000"
-        step="1000"
+        step="10"
         v-model.number="props.form.maxPrice"
         class="slider block w-full rounded-lg appearance-none cursor-pointer"
       />

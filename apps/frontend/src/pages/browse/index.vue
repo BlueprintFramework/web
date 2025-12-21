@@ -195,8 +195,8 @@ const filteredAndSortedExtensions = computed(() => {
     if (form.value.maxPrice === 0) {
       return minPrice === 0
     }
-    // any non-zero becomes paid-only
-    return minPrice > 0
+    // any non-zero maxPrice shows all price tiers (free and paid)
+    return true
   })
 
   switch (form.value.sortBy) {

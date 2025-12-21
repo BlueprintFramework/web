@@ -151,6 +151,8 @@ const form = ref({
   sortBy: 'popularity',
   showExtensions: true,
   showThemes: true,
+  // Note: Despite the name, this is used as a pricing filter flag:
+  // 0 = show free only, non-zero = show paid only.
   maxPrice: 0,
 })
 

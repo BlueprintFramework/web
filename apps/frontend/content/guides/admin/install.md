@@ -23,13 +23,13 @@ Download the latest version of Blueprint onto your server by either downloading 
 
 ```bash
 # Install curl, wget and unzip if you haven't already
-sudo apt install -y curl wget unzip jq
+sudo apt install -y curl wget unzip
 
 # Navigate to your Pterodactyl directory
 cd $PTERODACTYL_DIRECTORY
 
 # Download and unzip Blueprint's latest release
-curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest \ | jq -r '.assets[] | select(.name=="release.zip") | .browser_download_url' \ | sudo wget -q -O "$PTERODACTYL_DIRECTORY/release.zip" -i -
+sudo wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)" -O "$PTERODACTYL_DIRECTORY/release.zip"
 unzip -o release.zip
 ```
 

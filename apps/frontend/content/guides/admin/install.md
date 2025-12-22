@@ -29,7 +29,7 @@ sudo apt install -y curl wget unzip
 cd $PTERODACTYL_DIRECTORY
 
 # Download and unzip Blueprint's latest release
-sudo wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)" -O "$PTERODACTYL_DIRECTORY/release.zip"
+wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)" -O "$PTERODACTYL_DIRECTORY/release.zip"
 unzip -o release.zip
 ```
 

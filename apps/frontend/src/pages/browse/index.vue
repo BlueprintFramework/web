@@ -89,6 +89,7 @@
           <button
             class="p-4 transition-colors hover:bg-neutral-900"
             @click="toggleDrawer"
+            @mousedown.prevent
           >
             <Icon
               name="memory:chevron-up"

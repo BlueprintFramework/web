@@ -32,7 +32,7 @@
           <div class="flex items-center gap-1">
             <Icon name="memory:alpha-c" />
             <span>
-              <span>2023-2025 Emma (</span>
+              <span>2023-2026 Emma (</span>
               <NuxtLink
                 to="https://prpl.wtf"
                 class="hover:text-brand-50 default underline transition-colors"

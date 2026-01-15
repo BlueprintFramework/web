@@ -7,6 +7,12 @@ thumbnail: cli.jpeg
 order: -1
 ---
 
+::card
+Blueprint is currently not _officially_ compatible with the latest version of Pterodactyl. Compatibility is coming sometime this week. In the meantime, join our [Discord community](https://discord.com/servers/blueprint-1063548024825057451) to get pinged when we release the update.
+
+You can track our progress by checking out [this issue](https://github.com/BlueprintFramework/framework/issues/191) and [this pull request](https://github.com/BlueprintFramework/framework/pull/197). If you'd like to donate towards development, you may do so on [HCB](https://hcb.hackclub.com/donations/start/blueprint) or [GitHub Sponsors](https://github.com/sponsors/blueprintframework).
+::
+
 ## Define Pterodactyl directory
 
 Define your Pterodactyl directory, we'll use this later in the guide. If your Pterodactyl webserver **is not** located in this directory, change the path.

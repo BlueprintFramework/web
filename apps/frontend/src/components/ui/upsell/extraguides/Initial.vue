@@ -1,10 +1,10 @@
 <template>
   <div
-    class="upsell-container group cursor-pointer border-neutral-700 bg-neutral-900 md:border-b"
+    class="upsell-container group cursor-pointer overflow-hidden rounded-3xl border-neutral-700 bg-neutral-900 max-md:mb-12 max-md:border md:rounded-none md:border-b"
     @click="link?.click()"
   >
     <div
-      class="bg-linear-to-r min-h-25 flex w-full flex-col gap-2 from-neutral-900 via-neutral-900 to-neutral-950/50 md:p-8"
+      class="bg-linear-to-r min-h-25 flex w-full flex-col gap-2 from-neutral-900 via-neutral-900 via-40% to-neutral-950/50 p-4 md:p-8"
     >
       <h2>The game-hosting industry builds on Blueprint</h2>
       <p>
@@ -26,8 +26,8 @@
 <style scoped>
 .upsell-container {
   background: url(/img/infoblur_alt.jpeg) no-repeat;
-  background-size: 50%;
-  background-position: center right;
+  background-size: cover;
+  background-position: right;
 }
 </style>
 

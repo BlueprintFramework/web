@@ -43,6 +43,7 @@
             </div>
           </div>
         </div>
+        <UiUpsellExtraguidesInitial v-if="data.category == 'extra'" />
         <div class="w-full md:p-8">
           <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>

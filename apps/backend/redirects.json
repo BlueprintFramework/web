@@ -183,5 +183,10 @@
     "from": "/docs?page=about/changelog/alpha-F0V",
     "to": "/releases/alpha-f0v",
     "status": 301
+  },
+  {
+    "from": "/guides/community/install-update-nodejs",
+    "to": "/guides/extra/install-update-nodejs",
+    "status": 301
   }
 ]

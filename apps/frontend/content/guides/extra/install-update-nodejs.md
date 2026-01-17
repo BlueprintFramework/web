@@ -2,7 +2,7 @@
 title: How to install Node.js on Ubuntu/Debian
 description: Install or update/downgrade Node.js to use it for Pterodactyl and Blueprint
 author: Emma
-category: community
+category: extra
 thumbnail: nodejs.jpeg
 ---
 

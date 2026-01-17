@@ -39,7 +39,7 @@ Blueprint, just like Pterodactyl, relies on a few dependencies to function. Inst
 
 ```bash
 # Install dependencies
-sudo apt install -y ca-certificates curl git gnupg unzip wget zip
+sudo apt install -y ca-certificates curl git gnupg unzip wget zip npm
 
 # Add Node.js apt repository
 sudo mkdir -p /etc/apt/keyrings

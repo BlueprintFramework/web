@@ -215,6 +215,8 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension.platforms.remove(&ExtensionPlatform::Builtbybit);
             }
 
             if let Some(url) = platforms.remove(&ExtensionPlatform::Sourcexchange) {
@@ -241,6 +243,10 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension
+                    .platforms
+                    .remove(&ExtensionPlatform::Sourcexchange);
             }
 
             if let Some(url) = platforms.remove(&ExtensionPlatform::Github) {
@@ -271,6 +277,8 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension.platforms.remove(&ExtensionPlatform::Github);
             }
         }
 

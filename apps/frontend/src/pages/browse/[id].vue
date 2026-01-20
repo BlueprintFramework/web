@@ -91,6 +91,8 @@
               iframe: 'ProseDisabled',
               object: 'ProseDisabled',
               embed: 'ProseDisabled',
+              pre: 'ProsePreSafe',
+              ProseVideoPlayer: 'ProseDisabled',
             }"
           />
         </template>

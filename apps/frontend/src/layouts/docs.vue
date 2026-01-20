@@ -59,7 +59,7 @@
                   <NuxtLink
                     to="/docs"
                     class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
-                    :class="{ '!text-default-font': route.path == '/docs' }"
+                    :class="{ 'text-default-font!': route.path == '/docs' }"
                   >
                     Docs
                   </NuxtLink>
@@ -71,7 +71,6 @@
                   :rules="[]"
                   leading-icon="memory:search"
                   placeholder="Search.."
-                  @validate="void"
                 />
               </div>
 
@@ -99,7 +98,7 @@
                     <NuxtLink
                       to="/docs"
                       class="hover:text-brand-50 text-default-font/50 text-lg transition-colors"
-                      :class="{ '!text-default-font': route.path == '/docs' }"
+                      :class="{ 'text-default-font!': route.path == '/docs' }"
                       @click="mobileVisible = false"
                     >
                       Docs
@@ -114,7 +113,6 @@
                     :rules="[]"
                     leading-icon="memory:search"
                     placeholder="Search.."
-                    @validate="void"
                   />
                 </div>
               </div>
@@ -143,7 +141,7 @@
                       :to="doc.path"
                       class="hover:text-brand-50 text-default-font/60 focus:text-brand-50 block w-full text-start outline-0 transition-colors focus:font-bold"
                       :class="{
-                        '!text-default-font': route.path == doc.path,
+                        'text-default-font!': route.path == doc.path,
                       }"
                       @click="mobileVisible = false"
                       @mousedown.prevent
@@ -159,7 +157,7 @@
       </client-only>
       <div class="hidden md:block">
         <div
-          class="bg-linear-to-b fixed h-full w-[1px] from-neutral-800 via-neutral-500 to-neutral-800"
+          class="bg-linear-to-b fixed h-full w-px from-neutral-800 via-neutral-500 to-neutral-800"
         />
       </div>
     </div>
@@ -171,13 +169,21 @@
   </div>
 
   <div
-    class="fixed inset-0 top-0 -z-10 h-[50vh] w-full bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:30px_30px] bg-[position:-5px_-5px]"
+    class="bg-size-[30px_30px] bg-position-[-5px_-5px] fixed inset-0 top-0 -z-10 h-[50vh] w-full bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)]"
   >
     <div class="bg-linear-to-b h-full w-full from-transparent to-neutral-950" />
   </div>
 </template>
 
 <script setup lang="ts">
+defineOgImageComponent('Large')
+
+useSeoMeta({
+  ogTitle: 'Blueprint',
+  ogDescription:
+    'The industry-leading modding platform for the Pterodactyl panel',
+})
+
 import { docsCategories, defaultCategory } from '~/assets/docs.config'
 
 const route = useRoute()
@@ -189,7 +195,11 @@ const form = ref({
 })
 
 const { data: docs } = await useAsyncData('docs-sidebar', () => {
-  return queryCollection('docs').all()
+  return queryCollection('docs')
+    .orWhere((query) =>
+      query.where('unlisted', '=', false).where('unlisted', 'IS NULL')
+    )
+    .all()
 })
 
 // Group docs by category

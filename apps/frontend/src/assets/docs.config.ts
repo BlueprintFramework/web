@@ -25,6 +25,11 @@ export const docsCategories: Record<string, CategoryConfig> = {
     label: 'Extension Library',
     order: 4,
   },
+  themes: {
+    icon: 'memory:image',
+    label: 'Themes',
+    order: 5,
+  },
 }
 
 export const defaultCategory: CategoryConfig = {

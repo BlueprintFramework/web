@@ -22,7 +22,7 @@
                 v-if="user?.email_pending == null"
                 to="/app"
                 class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
-                :class="{ '!text-default-font': route.path == '/app' }"
+                :class="{ 'text-default-font!': route.path == '/app' }"
               >
                 <Icon name="memory:apps" :size="20" mode="svg" />
               </NuxtLink>
@@ -30,7 +30,7 @@
                 to="/app/account"
                 class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
                 :class="{
-                  '!text-default-font':
+                  'text-default-font!':
                     route.path == '/app/account' ||
                     route.path.startsWith('/app/account/'),
                 }"
@@ -42,7 +42,7 @@
                 to="/app/extensions"
                 class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
                 :class="{
-                  '!text-default-font':
+                  'text-default-font!':
                     route.path == '/app/extensions' ||
                     route.path.startsWith('/app/extensions/'),
                 }"
@@ -54,7 +54,7 @@
                 to="/app/stats"
                 class="text-default-font/50 hover:text-brand-50 flex-col items-center p-2 transition-colors hover:bg-neutral-800"
                 :class="{
-                  '!text-default-font':
+                  'text-default-font!':
                     route.path == '/app/stats' ||
                     route.path.startsWith('/app/stats/'),
                 }"
@@ -71,7 +71,7 @@
   <div class="flex gap-5">
     <div class="w-17 hidden py-4 pl-4 md:block">
       <div
-        class="w-15 parent-focus fixed z-50 flex h-[calc(100%_-_2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
+        class="w-15 parent-focus fixed z-50 flex h-[calc(100%-2rem)] flex-col items-center divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-950 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
       >
         <!-- Emblem -->
         <NuxtLink
@@ -93,7 +93,7 @@
             v-if="user?.email_pending == null"
             to="/app"
             class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
-            :class="{ '!text-default-font': route.path == '/app' }"
+            :class="{ 'text-default-font!': route.path == '/app' }"
             @mousedown.prevent
           >
             <Icon name="memory:apps" :size="24" />
@@ -102,7 +102,7 @@
             to="/app/account"
             class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
-              '!text-default-font':
+              'text-default-font!':
                 route.path == '/app/account' ||
                 route.path.startsWith('/app/account/'),
             }"
@@ -115,7 +115,7 @@
             to="/app/extensions"
             class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
-              '!text-default-font':
+              'text-default-font!':
                 route.path == '/app/extensions' ||
                 route.path.startsWith('/app/extensions/'),
             }"
@@ -128,7 +128,7 @@
             to="/app/stats"
             class="text-default-font/50 hover:text-brand-50 focus:text-brand-50 flex w-full flex-col items-center py-4 outline-0 transition-colors hover:bg-neutral-900 focus:bg-neutral-900"
             :class="{
-              '!text-default-font':
+              'text-default-font!':
                 route.path == '/app/stats' ||
                 route.path.startsWith('/app/stats/'),
             }"

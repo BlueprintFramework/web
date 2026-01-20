@@ -4,7 +4,6 @@ description: Update Pterodactyl and Blueprint to the latest version
 author: Emma
 category: admin
 thumbnail: pterodactyldocs.jpeg
-order:
 ---
 
 ## Enter maintenance mode

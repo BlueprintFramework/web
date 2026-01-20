@@ -11,6 +11,7 @@ export default defineContentConfig({
         description: z.string().optional(),
         category: z.string().default('uncategorized'),
         order: z.number().optional(),
+        unlisted: z.boolean().optional().default(false),
       }),
     }),
 
@@ -50,6 +51,21 @@ export default defineContentConfig({
         supported: z.boolean().optional().default(false),
         latest: z.boolean().optional().default(false),
         num: z.number(),
+      }),
+    }),
+
+    // Blog posts
+    blog: defineCollection({
+      type: 'page',
+      source: 'blog/*.md',
+      schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        author: z.string().default('Blueprint'),
+        thumbnail: z.string().optional(),
+        date: z.string(),
+        num: z.number(),
+        unlisted: z.boolean().optional().default(false),
       }),
     }),
   },

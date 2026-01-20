@@ -17,7 +17,6 @@
             :rules="[]"
             leading-icon="memory:search"
             placeholder="Search.."
-            @validate="void"
           />
         </div>
         <div class="divide-y divide-neutral-700 transition-colors">
@@ -85,12 +84,12 @@
               :rules="[]"
               leading-icon="memory:search"
               placeholder="Search.."
-              @validate="void"
             />
           </div>
           <button
             class="p-4 transition-colors hover:bg-neutral-900"
             @click="toggleDrawer"
+            @mousedown.prevent
           >
             <Icon
               name="memory:chevron-up"

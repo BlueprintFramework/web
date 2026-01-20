@@ -104,8 +104,8 @@ mod get {
 mod patch {
     use crate::{
         models::extension::{
-            ExtensionPlatform, ExtensionPlatformData, ExtensionStatus, ExtensionType,
-            MinimalExtensionPlatformData,
+            ExtensionPlatform, ExtensionPlatformCurrency, ExtensionPlatformData, ExtensionStatus,
+            ExtensionType,
         },
         response::{ApiResponse, ApiResponseResult},
         routes::{ApiError, GetState, user::extensions::_extension_::GetExtension},
@@ -137,7 +137,8 @@ mod patch {
         #[validate(length(max = 1024))]
         #[schema(max_length = 1024)]
         description: Option<String>,
-        platforms: Option<BTreeMap<ExtensionPlatform, MinimalExtensionPlatformData>>,
+        #[schema(value_type = Option<BTreeMap<ExtensionPlatform, String>>)]
+        platforms: Option<BTreeMap<ExtensionPlatform, reqwest::Url>>,
     }
 
     #[derive(ToSchema, Serialize)]
@@ -174,12 +175,7 @@ mod patch {
             }
         }
         if let Some(mut platforms) = data.platforms {
-            if let Some(builtbybit) = platforms.remove(&ExtensionPlatform::Builtbybit) {
-                let url = match reqwest::Url::parse(&builtbybit.url) {
-                    Ok(url) => url,
-                    Err(_) => return ApiResponse::error("invalid builtbybit url").ok(),
-                };
-
+            if let Some(url) = platforms.remove(&ExtensionPlatform::Builtbybit) {
                 if url.host_str() != Some("builtbybit.com")
                     || !url.path().starts_with("/resources/")
                 {
@@ -206,16 +202,14 @@ mod patch {
 
                 if let Some(platform) = extension.platforms.get_mut(&ExtensionPlatform::Builtbybit)
                 {
-                    platform.url = builtbybit.url;
-                    platform.price = builtbybit.price;
-                    platform.currency = builtbybit.currency;
+                    platform.url = url.to_string();
                 } else {
                     extension.platforms.insert(
                         ExtensionPlatform::Builtbybit,
                         ExtensionPlatformData {
-                            url: builtbybit.url,
-                            price: builtbybit.price,
-                            currency: builtbybit.currency,
+                            url: url.to_string(),
+                            price: 0.0,
+                            currency: ExtensionPlatformCurrency::Usd,
                             reviews: None,
                             rating: None,
                         },
@@ -223,12 +217,7 @@ mod patch {
                 }
             }
 
-            if let Some(sourcexchange) = platforms.remove(&ExtensionPlatform::Sourcexchange) {
-                let url = match reqwest::Url::parse(&sourcexchange.url) {
-                    Ok(url) => url,
-                    Err(_) => return ApiResponse::error("invalid sourcexchange url").ok(),
-                };
-
+            if let Some(url) = platforms.remove(&ExtensionPlatform::Sourcexchange) {
                 if url.host_str() != Some("www.sourcexchange.net")
                     || !url.path().starts_with("/products/")
                 {
@@ -239,16 +228,14 @@ mod patch {
                     .platforms
                     .get_mut(&ExtensionPlatform::Sourcexchange)
                 {
-                    platform.url = sourcexchange.url;
-                    platform.price = sourcexchange.price;
-                    platform.currency = sourcexchange.currency;
+                    platform.url = url.to_string();
                 } else {
                     extension.platforms.insert(
                         ExtensionPlatform::Sourcexchange,
                         ExtensionPlatformData {
-                            url: sourcexchange.url,
-                            price: sourcexchange.price,
-                            currency: sourcexchange.currency,
+                            url: url.to_string(),
+                            price: 0.0,
+                            currency: ExtensionPlatformCurrency::Usd,
                             reviews: None,
                             rating: None,
                         },
@@ -256,12 +243,7 @@ mod patch {
                 }
             }
 
-            if let Some(github) = platforms.remove(&ExtensionPlatform::Github) {
-                let url = match reqwest::Url::parse(&github.url) {
-                    Ok(url) => url,
-                    Err(_) => return ApiResponse::error("invalid github url").ok(),
-                };
-
+            if let Some(url) = platforms.remove(&ExtensionPlatform::Github) {
                 if url.host_str() != Some("github.com") {
                     return ApiResponse::error("invalid github url").ok();
                 }
@@ -276,16 +258,14 @@ mod patch {
                 }
 
                 if let Some(platform) = extension.platforms.get_mut(&ExtensionPlatform::Github) {
-                    platform.url = github.url;
-                    platform.price = github.price;
-                    platform.currency = github.currency;
+                    platform.url = url.to_string();
                 } else {
                     extension.platforms.insert(
                         ExtensionPlatform::Github,
                         ExtensionPlatformData {
-                            url: github.url,
-                            price: github.price,
-                            currency: github.currency,
+                            url: url.to_string(),
+                            price: 0.0,
+                            currency: ExtensionPlatformCurrency::Usd,
                             reviews: None,
                             rating: None,
                         },

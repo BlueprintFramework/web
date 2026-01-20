@@ -59,7 +59,7 @@
       </div>
       <div class="flex items-center gap-2 max-md:flex-col">
         <ElementsButton
-          v-if="data.extension.status == 'approved'"
+          v-if="user?.admin && data.extension.status == 'approved'"
           @click="modalOpen.adminReject = true"
           class="max-md:w-full"
         >
@@ -165,7 +165,7 @@
                       @change="handleBannerUpload"
                     />
                     <ElementsButton
-                      @click="bannerInput?.click()"
+                      @click="modalOpen.uploadBanner = true"
                       :disabled="uploading"
                     >
                       <div class="flex items-center gap-1.5">
@@ -310,7 +310,7 @@
               class="font-mono"
               :supports-images="true"
               :rows="10"
-              :placeholder="`(ﾉ*･_･)ﾉ \\\n**markdown** is supported`"
+              :placeholder="`\`[  > <]\` \\\n**markdown** is supported`"
               :richtext="true"
             />
           </div>
@@ -320,7 +320,8 @@
             class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
           >
             <template v-if="!form.description || form.description == ''">
-              <p>(ﾉ*･_･)ﾉ</p>
+              <!-- prettier-ignore -->
+              <pre><ProseCode>[  > <]</ProseCode></pre>
               <p><b>markdown</b> is supported</p>
             </template>
             <client-only v-else>
@@ -336,6 +337,72 @@
         </div>
       </div>
     </div>
+
+    <ElementsModal
+      :is-open="modalOpen.uploadBanner"
+      :closable="true"
+      title="Banner guidelines"
+      @close="modalOpen.uploadBanner = false"
+    >
+      <template #default>
+        <div class="space-y-4">
+          <ElementsInlinecard>
+            If your extension fails to meet the quality guidelines for banners,
+            we may replace the banner or unlist/reject your extension.
+          </ElementsInlinecard>
+          <div class="space-y-2">
+            <li class="ms-4">
+              <p>
+                <b>AI-generated graphics are not allowed.</b> Avoid using any
+                AI-generated content in your extension graphics.
+              </p>
+            </li>
+            <li class="ms-4">
+              <p>
+                <b>No plain screenshots.</b> Plain screenshots often add
+                additional confusion to buyers and worsen the overall
+                experience. Add screenshots to the extension's description
+                instead.
+              </p>
+            </li>
+            <li class="ms-4">
+              <p>
+                <b>Anything is better than nothing.</b> Whether you use
+                Microsoft Paint, Canva or Photoshop, just try to make a quick
+                simple banner. Extensions with higher quality banners tend to
+                get more attention.
+              </p>
+            </li>
+            <li class="ms-4">
+              <p>
+                Follow our
+                <NuxtLink to="/legal/terms" class="text-link"
+                  >Terms of Service</NuxtLink
+                >
+                and
+                <NuxtLink to="/legal/conduct" class="text-link"
+                  >Code of Conduct</NuxtLink
+                >.
+              </p>
+            </li>
+          </div>
+        </div>
+      </template>
+
+      <template #footer>
+        <ElementsButton
+          label="Cancel"
+          class="w-full md:w-auto"
+          @click="modalOpen.uploadBanner = false"
+        />
+        <ElementsButton
+          label="Accept and upload"
+          class="flex w-full flex-col items-center md:w-auto"
+          :disabled="loading"
+          @click="bannerInput?.click()"
+        />
+      </template>
+    </ElementsModal>
 
     <ElementsModal
       v-if="user?.admin"
@@ -447,11 +514,12 @@ const modalOpen = ref({
   adminReject: false,
   platforms: false,
   delete: false,
+  uploadBanner: false,
 })
 const form = ref<{
   identifier: string
   name: string
-  platforms: ExtensionPlatforms
+  platforms: ExtensionPlatformUrls
   summary: string
   type: ExtensionType
   unlisted: boolean
@@ -502,12 +570,23 @@ watch(
       form.value = {
         identifier: newData.extension.identifier || '',
         name: newData.extension.name || '',
-        platforms: newData.extension.platforms || {},
+        platforms: form.value.platforms,
         summary: newData.extension.summary || '',
         type: newData.extension.type || 'extension',
         unlisted: newData.extension.unlisted,
         description: newData.extension.description || '',
       }
+
+      const urls: ExtensionPlatformUrls = {}
+      for (const key in newData.extension.platforms) {
+        if (
+          Object.prototype.hasOwnProperty.call(newData.extension.platforms, key)
+        ) {
+          urls[key] = newData.extension.platforms[key]?.url || ''
+        }
+      }
+
+      form.value.platforms = urls
     }
   },
   { immediate: true }
@@ -551,6 +630,7 @@ const handleBannerUpload = async (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
 
+  modalOpen.value.uploadBanner = false
   uploading.value = true
 
   try {
@@ -606,7 +686,7 @@ const handleDelete = async () => {
   }
 }
 
-const handlePlatformsSave = (platforms: ExtensionPlatforms) => {
+const handlePlatformsSave = (platforms: ExtensionPlatformUrls) => {
   form.value.platforms = platforms
 }
 

@@ -1,5 +1,10 @@
 [
   {
+    "from": "/install",
+    "to": "/guides/admin/install",
+    "status": 302
+  },
+  {
     "from": "/docs?page=getting-started/Installation",
     "to": "/guides/admin/install",
     "status": 301
@@ -177,6 +182,11 @@
   {
     "from": "/docs?page=about/changelog/alpha-F0V",
     "to": "/releases/alpha-f0v",
+    "status": 301
+  },
+  {
+    "from": "/guides/community/install-update-nodejs",
+    "to": "/guides/extra/install-update-nodejs",
     "status": 301
   }
 ]

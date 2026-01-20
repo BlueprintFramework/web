@@ -10,7 +10,7 @@
         class="w-full border-b border-neutral-700 object-cover"
       />
       <div class="space-y-3 p-4">
-        <h1 class="!text-4xl">{{ data.title || 'Untitled' }}</h1>
+        <h1 class="text-4xl!">{{ data.title || 'Untitled' }}</h1>
         <span class="opacity-75">
           {{ data.description }}
         </span>
@@ -33,7 +33,7 @@
             class="w-full border-b border-neutral-700 object-cover"
           />
           <div class="space-y-3 border-b border-neutral-700 p-4 md:p-8">
-            <h1 class="!text-4xl">{{ data.title || 'Untitled' }}</h1>
+            <h1 class="text-4xl!">{{ data.title || 'Untitled' }}</h1>
             <span class="opacity-75">
               {{ data.description }}
             </span>
@@ -43,6 +43,7 @@
             </div>
           </div>
         </div>
+        <UiUpsellExtraguidesInitial v-if="data.category == 'extra'" />
         <div class="w-full md:p-8">
           <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>

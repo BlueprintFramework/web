@@ -4,9 +4,9 @@
       :name="categoryConfig.icon"
       :size="48"
       mode="svg"
-      class="block !text-4xl md:!text-5xl"
+      class="text-4xl! md:text-5xl! block"
     />
-    <h1 class="!text-3xl md:!text-4xl">{{ categoryConfig.label }}</h1>
+    <h1 class="text-3xl! md:text-4xl!">{{ categoryConfig.label }}</h1>
   </div>
 
   <div

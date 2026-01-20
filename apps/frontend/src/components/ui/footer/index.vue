@@ -72,11 +72,9 @@
         <p class="text-default-font mb-2 text-xl font-bold">Blueprint</p>
         <NuxtLink to="/browse" class="text-link"> Extensions </NuxtLink>
         <NuxtLink to="/guides" class="text-link"> Guides </NuxtLink>
-        <NuxtLink to="/guides" class="text-link"> Documentation </NuxtLink>
+        <NuxtLink to="/docs" class="text-link"> Documentation </NuxtLink>
         <NuxtLink to="/releases" class="text-link"> Releases </NuxtLink>
-        <NuxtLink to="/api" :external="true" class="text-link">
-          API docs
-        </NuxtLink>
+        <NuxtLink to="/blog" class="text-link"> Blog </NuxtLink>
       </div>
 
       <div class="flex flex-col gap-1 text-neutral-400 decoration-transparent">
@@ -87,7 +85,7 @@
         >
           Donate via HCB
         </NuxtLink>
-        <NuxtLink to="https://github.com/sponsors/blueprint" class="text-link">
+        <NuxtLink to="https://github.com/sponsors/blueprintframework" class="text-link">
           Donate via GitHub Sponsors
         </NuxtLink>
         <NuxtLink to="https://hcb.hackclub.com/blueprint" class="text-link">
@@ -109,7 +107,7 @@
       </div>
 
       <div class="flex flex-col gap-1 text-neutral-400 decoration-transparent">
-        <p class="text-default-font mb-2 text-xl font-bold">Social</p>
+        <p class="text-default-font mb-2 text-xl font-bold">More</p>
         <NuxtLink
           to="https://discord.com/servers/blueprint-1063548024825057451"
           class="text-link"
@@ -121,6 +119,9 @@
         </NuxtLink>
         <NuxtLink to="https://github.com/blueprintframework" class="text-link">
           GitHub organization
+        </NuxtLink>
+        <NuxtLink to="/api" :external="true" class="text-link">
+          API documentation
         </NuxtLink>
       </div>
     </div>

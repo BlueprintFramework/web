@@ -1,6 +1,6 @@
 ---
 title: Privacy Policy
-updated: 10/6/2025 13:42 (CEDST)
+updated: 12/8/2025 20:00 (CEDST)
 ---
 
 ## Introduction
@@ -78,7 +78,7 @@ Specifically, we use your information to:
 
 We do not sell your personal information. We may share data with:
 
-- Infrastructure providers (OVHCloud, Pyro Inc., Cloudflare, Tailscale) as necessary to operate our services
+- Infrastructure providers (OVH SAS., Pyro Inc., BerryByte Limited, Cloudflare Inc., Tailscale Inc.) as necessary to operate our services
 - Legal authorities when required by law
 
 Published extensions and public profile information are publicly visible by design.

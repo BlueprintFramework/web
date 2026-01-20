@@ -74,8 +74,8 @@ const items = ref([
     identifier: 'lyrdyannounce',
   },
   {
-    name: 'Extension Manager',
-    identifier: 'extmanager',
+    name: 'Darkenate',
+    identifier: 'darkenate',
   },
   {
     name: 'PteroMonaco',

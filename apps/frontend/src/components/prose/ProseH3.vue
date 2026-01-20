@@ -14,7 +14,13 @@
 <script setup lang="ts">
 import { computed, useRuntimeConfig } from '#imports'
 
-const props = defineProps<{ id?: string }>()
+const props = defineProps<{
+  id?: string
+
+  // Disable class and style props
+  class?: string
+  style?: string
+}>()
 
 const { headings } = useRuntimeConfig().public.mdc
 const generate = computed(

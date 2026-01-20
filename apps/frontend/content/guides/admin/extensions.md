@@ -4,7 +4,6 @@ description: Install, remove, and configure Blueprint extensions
 author: Emma
 category: admin
 thumbnail: adminblueprint.jpeg
-order:
 ---
 
 ## Installing an extension

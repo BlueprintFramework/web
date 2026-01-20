@@ -31,40 +31,31 @@
       class="flex w-full rounded-b-2xl border border-t-0 border-neutral-700 bg-neutral-950"
     >
       <pre
-        :class="props.class"
         class="w-full min-w-0 overflow-x-auto p-2"
+        :class="props.class"
       ><slot /></pre>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    code: string
+    language?: string
+    filename?: string
+    highlights?: () => number[]
+    meta?: string
+    class?: string
+  }>(),
+  {
+    code: '',
+    highlights: () => [],
+  }
+)
+
 const copied = ref(false)
-const props = defineProps({
-  code: {
-    type: String,
-    default: '',
-  },
-  language: {
-    type: String,
-    default: null,
-  },
-  filename: {
-    type: String,
-    default: null,
-  },
-  highlights: {
-    type: Array as () => number[],
-    default: () => [],
-  },
-  meta: {
-    type: String,
-    default: null,
-  },
-  class: {
-    type: String,
-    default: null,
-  },
-})
+
 const copyPreContent = async () => {
   await navigator.clipboard.writeText(props.code)
   copied.value = true
@@ -73,6 +64,7 @@ const copyPreContent = async () => {
   }, 2000)
 }
 </script>
+
 <style scoped>
 pre code .line {
   display: block;

@@ -162,7 +162,7 @@ impl User {
             r#"
             SELECT {}
             FROM users
-            WHERE users.email = $1
+            WHERE lower(users.email) = lower($1)
             "#,
             Self::columns_sql(None, None)
         ))
@@ -214,7 +214,7 @@ impl User {
             r#"
             SELECT {}
             FROM users
-            WHERE users.email = $1 AND users.password = crypt($2, users.password)
+            WHERE lower(users.email) = lower($1) AND users.password = crypt($2, users.password)
             "#,
             Self::columns_sql(None, None)
         ))

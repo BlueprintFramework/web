@@ -4202,7 +4202,7 @@ dependencies = [
 
 [[package]]
 name = "web"
-version = "3.1.12"
+version = "3.1.13"
 dependencies = [
  "anyhow",
  "axum",

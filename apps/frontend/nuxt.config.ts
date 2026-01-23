@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     'nuxt-og-image',
     'nuxt-site-config',
     '@nuxt/scripts',
+    'nuxt-charts',
   ],
   css: ['~/assets/css/main.css'],
   app: {

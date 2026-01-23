@@ -88,3 +88,32 @@ h3 {
 .turnstile-wrapper div {
   display: flex !important;
 }
+
+:root {
+  --vis-color0: var(--color-brand-50) !important;
+  --vis-color1: var(--color-brand-300) !important;
+
+  --vis-tooltip-title-color: var(--color-neutral-100) !important;
+  --vis-tooltip-title-border-bottom: 1px solid var(--color-neutral-700) !important;
+  --vis-tooltip-title-padding: 0.5rem 0.75rem !important;
+  --vis-tooltip-label-color: var(--color-neutral-100) !important;
+  --vic-tooltip-value-color: var(--color-neutral-100) !important;
+
+  --vis-tooltip-padding: 0 0 0 0 !important;
+
+  --vis-axis-grid-color: var(--color-neutral-800) !important;
+
+  --vis-tooltip-background-color: var(--color-neutral-950) !important;
+  --vis-tooltip-border-color: var(--color-neutral-700) !important;
+  --vis-tooltip-border-radius: 14px !important;
+
+  --tooltip-label-color: rgba(255, 255, 255, 0.5);
+  --tooltip-value-color: rgba(255, 255, 255, 1);
+
+  --vis-tooltip-text-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-axis-tick-label-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-legend-label-color: rgba(255, 255, 255, 0.75) !important;
+
+  --vis-axis-label-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-legend-label-color: rgba(255, 255, 255, 0.5) !important;
+}

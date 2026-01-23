@@ -6,7 +6,7 @@
         class="flex items-center justify-between gap-1.5 border-b border-t-0 border-neutral-700 bg-neutral-950 p-3 md:border-x"
       >
         <BrandWordmark />
-        <div>
+        <div class="flex items-center gap-1.5">
           <NuxtLink href="/blog" tabindex="-1">
             <ElementsButtonSmall>Posts</ElementsButtonSmall>
           </NuxtLink>

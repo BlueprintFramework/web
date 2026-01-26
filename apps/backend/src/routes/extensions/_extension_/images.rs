@@ -58,7 +58,7 @@ mod get {
         let extension_images =
             ExtensionImage::all_by_extension_id(&state.database, extension.id).await?;
 
-        ApiResponse::json(
+        ApiResponse::new_serialized(
             extension_images
                 .into_iter()
                 .map(|extension_image| extension_image.into_api_object(&state.env))

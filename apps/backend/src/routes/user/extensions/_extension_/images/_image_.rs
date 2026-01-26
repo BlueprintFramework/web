@@ -38,7 +38,7 @@ mod delete {
 
         extension_image.delete(&state.database, &state.s3).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

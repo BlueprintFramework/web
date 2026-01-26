@@ -24,7 +24,7 @@ mod get {
         let releases = state.github_releases.read().await;
 
         if let Some(first) = releases.first() {
-            ApiResponse::json(Response {
+            ApiResponse::new_serialized(Response {
                 name: first,
                 history: &releases[1..],
             })

@@ -44,3 +44,6 @@ urlencoding = "2.1.3"
 rust-s3 = { version = "0.37.0", default-features = false, features = ["tokio-rustls-tls"] }
 image = "0.25.5"
 futures-util = "0.3.31"
+rmp-serde = "1.3.1"
+accept-header = "0.2.3"
+mime = "0.3.17"

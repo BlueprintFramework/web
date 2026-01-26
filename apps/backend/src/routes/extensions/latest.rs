@@ -29,7 +29,7 @@ mod get {
             }
         }
 
-        ApiResponse::json(latest_versions).ok()
+        ApiResponse::new_serialized(latest_versions).ok()
     }
 }
 

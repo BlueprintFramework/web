@@ -63,7 +63,7 @@ mod get {
             })
             .await?;
 
-        ApiResponse::json(versions).ok()
+        ApiResponse::new_serialized(versions).ok()
     }
 }
 

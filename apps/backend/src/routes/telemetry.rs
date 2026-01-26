@@ -29,7 +29,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                             .ok();
                     }
 
-                    ApiResponse::json(json!({})).ok()
+                    ApiResponse::new_serialized(json!({})).ok()
                 },
             ),
         )

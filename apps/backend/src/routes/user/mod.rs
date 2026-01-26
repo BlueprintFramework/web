@@ -163,7 +163,7 @@ mod get {
         .fetch_one(state.database.read())
         .await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             user: user.0.into_api_full_object(),
             extensions: ResponseExtensions {
                 total: data.total.unwrap_or_default(),
@@ -214,10 +214,10 @@ mod patch {
     pub async fn route(
         state: GetState,
         user: GetUser,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
@@ -234,7 +234,7 @@ mod patch {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

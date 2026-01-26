@@ -45,10 +45,10 @@ mod post {
         ip: crate::GetIp,
         headers: axum::http::HeaderMap,
         cookies: Cookies,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
@@ -86,7 +86,7 @@ mod post {
                 user_totp_secret: secret.clone(),
             })?;
 
-            ApiResponse::json(Response::TwoFactorRequired { token }).ok()
+            ApiResponse::new_serialized(Response::TwoFactorRequired { token }).ok()
         } else {
             let key = UserSession::create(
                 &state.database,
@@ -112,7 +112,7 @@ mod post {
                     .build(),
             );
 
-            ApiResponse::json(Response::Completed {
+            ApiResponse::new_serialized(Response::Completed {
                 user: user.into_api_full_object(),
             })
             .ok()

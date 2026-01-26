@@ -82,7 +82,7 @@ mod get {
             );
         }
 
-        ApiResponse::json(versions).ok()
+        ApiResponse::new_serialized(versions).ok()
     }
 }
 

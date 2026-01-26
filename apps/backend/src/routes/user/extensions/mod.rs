@@ -39,7 +39,7 @@ mod get {
         Query(params): Query<PaginationParams>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&params) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
                 .ok();
         }
@@ -52,7 +52,7 @@ mod get {
         )
         .await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extensions: Pagination {
                 total: extensions.total,
                 per_page: extensions.per_page,
@@ -118,7 +118,7 @@ mod post {
         axum::Json(mut data): axum::Json<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
@@ -254,7 +254,7 @@ mod post {
             }
         }
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

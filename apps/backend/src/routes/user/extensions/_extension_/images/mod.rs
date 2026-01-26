@@ -33,7 +33,7 @@ mod get {
         Query(params): Query<PaginationParams>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&params) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
                 .ok();
         }
@@ -41,7 +41,7 @@ mod get {
         let extension_images =
             ExtensionImage::all_by_extension_id(&state.database, extension.id).await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension_images: extension_images
                 .into_iter()
                 .map(|extension_image| extension_image.into_api_object(&state.env))
@@ -104,7 +104,7 @@ mod post {
         let extension_image =
             ExtensionImage::create(&state.database, &state.s3, &extension, image).await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension_image: extension_image.into_api_object(&state.env),
         })
         .ok()

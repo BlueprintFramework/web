@@ -52,7 +52,7 @@ mod post {
         ip: crate::GetIp,
         headers: axum::http::HeaderMap,
         cookies: Cookies,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         let payload: TwoFactorRequiredJwt = match state.jwt.verify(&data.confirmation_token) {
             Ok(payload) => payload,
@@ -139,7 +139,7 @@ mod post {
                 .build(),
         );
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             user: user.into_api_full_object(),
         })
         .ok()

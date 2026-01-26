@@ -89,7 +89,7 @@ mod get {
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
     pub async fn route(state: GetState, extension: GetExtension) -> ApiResponseResult {
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension: extension.0.into_api_full_object(&state.env),
         })
         .ok()
@@ -148,7 +148,7 @@ mod patch {
     pub async fn route(
         state: GetState,
         mut extension: GetExtension,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Some(name) = data.name {
             extension.name = name;
@@ -337,7 +337,7 @@ mod patch {
         transaction.commit().await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 
@@ -375,7 +375,7 @@ mod delete {
         extension.delete(&state.database, &state.s3).await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

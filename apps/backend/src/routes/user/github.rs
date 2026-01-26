@@ -26,7 +26,7 @@ mod get {
                 .ok();
         }
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             redirect_url: format!("https://github.com/login/oauth/authorize?client_id={}&state=add&redirect_uri={}/api/auth/github/callback&scope=read:user", state.env.github_client_id, state.env.app_url)
         })
         .ok()
@@ -67,7 +67,7 @@ mod delete {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

@@ -1,8 +1,10 @@
 use crate::env::RedisMode;
 use colored::Colorize;
-use rustis::client::Client;
-use rustis::commands::{GenericCommands, SetCondition, SetExpiration, StringCommands};
-use rustis::resp::cmd;
+use rustis::{
+    client::Client,
+    commands::{GenericCommands, SetCondition, SetExpiration, StringCommands},
+    resp::{BulkString, cmd},
+};
 use serde::{Serialize, de::DeserializeOwned};
 use std::future::Future;
 
@@ -57,6 +59,7 @@ impl Cache {
         instance
     }
 
+    #[tracing::instrument(skip(self, fn_compute))]
     pub async fn cached<T, F, Fut>(
         &self,
         key: &str,
@@ -68,18 +71,17 @@ impl Cache {
         F: FnOnce() -> Fut,
         Fut: Future<Output = Result<T, anyhow::Error>>,
     {
-        let cached_value: Option<String> = self.client.get(key).await?;
+        let cached_value: Option<BulkString> = self.client.get(key).await?;
 
-        match cached_value {
-            Some(value) => {
-                let result: T = serde_json::from_str(&value)?;
-
-                Ok(result)
-            }
+        match cached_value.and_then(|v| rmp_serde::from_slice::<T>(&v).ok()) {
+            Some(value) => Ok(value),
             None => {
-                let result = fn_compute().await?;
+                let result = match fn_compute().await {
+                    Ok(result) => result,
+                    Err(err) => return Err(err),
+                };
 
-                let serialized = serde_json::to_string(&result)?;
+                let serialized = rmp_serde::to_vec(&result)?;
                 self.client
                     .set_with_options(
                         key,

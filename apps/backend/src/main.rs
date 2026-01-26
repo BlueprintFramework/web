@@ -41,12 +41,15 @@ mod extract;
 mod jwt;
 mod mail;
 mod models;
+mod payload;
 mod response;
 mod routes;
 mod s3;
 mod schedules;
 mod telemetry;
 mod utils;
+
+pub use payload::Payload;
 
 #[global_allocator]
 static ALLOC: Jemalloc = Jemalloc;
@@ -100,7 +103,11 @@ async fn handle_request(
         .bright_cyan()
     );
 
-    Ok(next.run(req).await)
+    Ok(crate::response::ACCEPT_HEADER
+        .scope(crate::response::accept_from_headers(req.headers()), async {
+            next.run(req).await
+        })
+        .await)
 }
 
 async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {

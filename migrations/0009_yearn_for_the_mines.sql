@@ -1,1 +1,0 @@
-ALTER TABLE "extensions" ADD COLUMN "versions" jsonb NOT NULL DEFAULT '[]'::jsonb;

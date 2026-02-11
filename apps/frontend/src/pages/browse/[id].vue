@@ -93,6 +93,9 @@
               embed: 'ProseDisabled',
               pre: 'ProsePreSafe',
               ProseVideoPlayer: 'ProseDisabled',
+              'prose-video-player': 'ProseDisabled',
+              'prose-pre': 'ProsePreSafe',
+              'prose-img': 'Externalimg',
             }"
           />
         </template>
@@ -409,6 +412,8 @@ import type { MDCParserResult } from '@nuxtjs/mdc'
 const route = useRoute()
 const { user } = useAuth()
 
+const isPaid = ref(false)
+
 const platformConfig = {
   BUILTBYBIT: {
     name: 'BuiltByBit',
@@ -528,6 +533,7 @@ const formatPrice = (price: number, currency: string): string => {
   if (price === 0) {
     return 'Free'
   }
+  isPaid.value = true
   return `${price.toFixed(2)} ${currency}`
 }
 

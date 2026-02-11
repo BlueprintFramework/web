@@ -26,7 +26,8 @@ nestify::nest! {
             flags: #[derive(Deserialize, Serialize)] struct Flags {
                 disable_attribution: bool,
                 is_developer: bool,
-                show_in_sidebar: bool
+                show_in_sidebar: bool,
+                introduction_dismissed: bool
             },
 
             extensions: Vec<#[derive(Deserialize, Serialize)] struct Extension {

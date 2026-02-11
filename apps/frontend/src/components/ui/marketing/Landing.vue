@@ -6,7 +6,7 @@
       >
         <div class="container">
           <div
-            class="xl:max-h-140 xl:min-h-125 md:bg-linear-to-tl from-brand-600 max-md:min-h-100 max-xl:min-h-180 relative grid h-[40vh] items-center overflow-hidden border-neutral-700 to-neutral-950 to-50% max-xl:grid-rows-2 max-md:grid-rows-1 md:border-x md:pt-12 lg:pt-6 xl:grid-cols-2 xl:pt-0"
+            class="xl:max-h-140 xl:min-h-125 md:bg-linear-to-tl from-brand-600 max-md:min-h-100 max-xl:min-h-200 relative grid h-[40vh] items-center overflow-hidden border-neutral-700 to-neutral-950 to-50% max-xl:grid-rows-2 max-md:grid-rows-1 md:border-x md:pt-12 lg:pt-6 xl:grid-cols-2 xl:pt-0"
           >
             <div class="space-y-7 max-xl:pb-6 max-md:pt-2 md:p-12 xl:pe-6">
               <p class="md:display h1 -mt-2">

@@ -1,5 +1,10 @@
 [
   {
+    "from": "/donate",
+    "to": "https://hcb.hackclub.com/donations/start/blueprint",
+    "status": 302
+  },
+  {
     "from": "/install",
     "to": "/guides/admin/install",
     "status": 302
@@ -188,25 +193,5 @@
     "from": "/guides/community/install-update-nodejs",
     "to": "/guides/extra/install-update-nodejs",
     "status": 301
-  },
-  {
-    "from": "/donate",
-    "to": "https://hcb.hackclub.com/donations/start/blueprint",
-    "status": 302
-  },
-  {
-    "from": "/donate/coffee",
-    "to": "https://hcb.hackclub.com/donations/start/blueprint/tiers/411",
-    "status": 302
-  },
-  {
-    "from": "/donate/sponsorship",
-    "to": "https://hcb.hackclub.com/donations/start/blueprint/tiers/392",
-    "status": 302
-  },
-  {
-    "from": "/donate/gold_sponsorship",
-    "to": "https://hcb.hackclub.com/donations/start/blueprint/tiers/416",
-    "status": 302
   }
 ]

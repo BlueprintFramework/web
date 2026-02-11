@@ -181,8 +181,8 @@
             </div>
             <div v-if="moodmeter == 'unknown'" class="p-2">
               <span class="text-default-font/60">
-                This extension does not have enough reviews for a Moodmeter
-                rating.
+                This extension does not have enough reviews or active users for
+                a Moodmeter rating.
               </span>
             </div>
             <div v-if="moodmeter != 'unknown'" class="p-2">

@@ -27,7 +27,8 @@ nestify::nest! {
                 disable_attribution: bool,
                 is_developer: bool,
                 show_in_sidebar: bool,
-                introduction_dismissed: bool
+                #[serde(default)]
+                introduction_dismissed: bool,
             },
 
             extensions: Vec<#[derive(Deserialize, Serialize)] struct Extension {

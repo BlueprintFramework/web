@@ -1,6 +1,6 @@
 ---
 title: Code of Conduct
-updated: 2/20/2025 15:02 (CEST)
+updated: 2/20/2026 15:02 (CEST)
 ---
 
 ::card

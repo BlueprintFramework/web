@@ -14,7 +14,7 @@ env:
 jobs:
   build-frontend:
     name: Build Frontend
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -77,7 +77,7 @@ jobs:
           - build: aarch64-linux
             os: ubuntu-24.04
             rust: stable
-            target: aarch64-unknown-linux-musl
+            target: blacksmith-4vcpu-ubuntu-2404-arm
             cross: true
 
     steps:
@@ -161,7 +161,7 @@ jobs:
   create-multiarch-image:
     name: Create multi-arch Docker image
     needs: [dist]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: read
       packages: write

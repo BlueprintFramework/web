@@ -1,6 +1,6 @@
 ---
 title: Code of Conduct
-updated: 10/6/2025 17:07 (CEDST)
+updated: 2/20/2025 15:02 (CEST)
 ---
 
 ::card
@@ -68,6 +68,10 @@ These actions are explicitly forbidden in Blueprint spaces:
 - Bullying or systematic harassment.
 - Unwelcome sexual or romantic advances.
 - Incitement to any of these.
+
+## Age minimum
+
+You have to be 16 years or older to participate in Blueprint's spaces. You may be removed from a space if you are found to be below that age. This also applies to on-site accounts, [as mentioned in our Terms of Service](https://blueprint.zip/legal/terms#accounts-on-the-platform).
 
 ## Moderation
 

@@ -1,8 +1,9 @@
-use crate::env::RedisMode;
+use crate::{env::RedisMode, response::ApiResponse};
+use axum::http::StatusCode;
 use colored::Colorize;
 use rustis::{
     client::Client,
-    commands::{GenericCommands, SetCondition, SetExpiration, StringCommands},
+    commands::{GenericCommands, SetExpiration, StringCommands},
     resp::{BulkString, cmd},
 };
 use serde::{Serialize, de::DeserializeOwned};
@@ -59,6 +60,43 @@ impl Cache {
         instance
     }
 
+    pub async fn ratelimit(
+        &self,
+        limit_identifier: impl AsRef<str>,
+        limit: u64,
+        limit_window: u64,
+        client: impl AsRef<str>,
+    ) -> Result<(), ApiResponse> {
+        let key = format!(
+            "ratelimit::{}::{}",
+            limit_identifier.as_ref(),
+            client.as_ref()
+        );
+
+        let now = chrono::Utc::now().timestamp();
+        let expiry = self.client.expiretime(&key).await.unwrap_or_default();
+        let expire_unix: u64 = if expiry > now + 2 {
+            expiry as u64
+        } else {
+            now as u64 + limit_window
+        };
+
+        let limit_used = self.client.get::<u64>(&key).await.unwrap_or_default() + 1;
+        self.client
+            .set_with_options(key, limit_used, None, SetExpiration::Exat(expire_unix))
+            .await?;
+
+        if limit_used >= limit {
+            return Err(ApiResponse::error(&format!(
+                "you are ratelimited, retry in {}s",
+                expiry - now
+            ))
+            .with_status(StatusCode::TOO_MANY_REQUESTS));
+        }
+
+        Ok(())
+    }
+
     #[tracing::instrument(skip(self, fn_compute))]
     pub async fn cached<T, F, Fut>(
         &self,
@@ -83,13 +121,7 @@ impl Cache {
 
                 let serialized = rmp_serde::to_vec(&result)?;
                 self.client
-                    .set_with_options(
-                        key,
-                        serialized,
-                        SetCondition::None,
-                        SetExpiration::Ex(ttl),
-                        false,
-                    )
+                    .set_with_options(key, serialized, None, SetExpiration::Ex(ttl))
                     .await?;
 
                 Ok(result)

@@ -65,7 +65,7 @@ pub struct Env {
     pub bind: String,
     pub port: u16,
 
-    pub telemetry_ratelimit_per_day: i64,
+    pub telemetry_ratelimit_per_day: u64,
 
     pub update_prices: bool,
     pub sxc_token: Option<String>,

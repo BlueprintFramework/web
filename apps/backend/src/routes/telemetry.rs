@@ -22,12 +22,9 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                         }
                     };
 
-                    let telemetry = state.telemetry.log(ip, data).await;
-                    if telemetry.is_none() {
-                        return ApiResponse::error("too many requests")
-                            .with_status(StatusCode::TOO_MANY_REQUESTS)
-                            .ok();
-                    }
+                    state.cache.ratelimit("telemetry", state.env.telemetry_ratelimit_per_day, 24 * 60 * 60, ip.to_string()).await?;
+
+                    state.telemetry.log(ip, data).await;
 
                     ApiResponse::new_serialized(json!({})).ok()
                 },

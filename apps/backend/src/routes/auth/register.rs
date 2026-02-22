@@ -57,6 +57,11 @@ mod post {
                 .ok();
         }
 
+        state
+            .cache
+            .ratelimit("register", 2, 5 * 60, ip.to_string())
+            .await?;
+
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
                 .with_status(StatusCode::BAD_REQUEST)

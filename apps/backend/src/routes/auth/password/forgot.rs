@@ -66,9 +66,9 @@ mod post {
             };
 
             let mail = crate::mail::MAIL_PASSWORD_RESET
-                .replace("{{user_name}}", &user.name)
+                .replace("{{{user_name}}}", &user.name)
                 .replace(
-                    "{{reset_link}}",
+                    "{{{reset_link}}}",
                     &format!(
                         "{}/auth/reset?token={}",
                         state.env.app_url,

@@ -61,8 +61,8 @@ mod patch {
         .await?;
 
         let mail = crate::mail::MAIL_VERIFY_EMAIL
-            .replace("{{user_name}}", &user.name)
-            .replace("{{verification_code}}", &email_verification);
+            .replace("{{{user_name}}}", &user.name)
+            .replace("{{{verification_code}}}", &email_verification);
 
         state.mail.send(
             data.email,

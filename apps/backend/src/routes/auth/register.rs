@@ -97,8 +97,8 @@ mod post {
         .await?;
 
         let mail = crate::mail::MAIL_ACCOUNT_CREATED
-            .replace("{{user_name}}", &user.name)
-            .replace("{{verification_code}}", &email_verification);
+            .replace("{{{user_name}}}", &user.name)
+            .replace("{{{verification_code}}}", &email_verification);
 
         state
             .mail

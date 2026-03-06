@@ -3,7 +3,7 @@ use axum::http::StatusCode;
 use colored::Colorize;
 use rustis::{
     client::Client,
-    commands::{GenericCommands, SetExpiration, StringCommands},
+    commands::{GenericCommands, SetCondition, SetExpiration, StringCommands},
     resp::{BulkString, cmd},
 };
 use serde::{Serialize, de::DeserializeOwned};
@@ -83,7 +83,13 @@ impl Cache {
 
         let limit_used = self.client.get::<u64>(&key).await.unwrap_or_default() + 1;
         self.client
-            .set_with_options(key, limit_used, None, SetExpiration::Exat(expire_unix))
+            .set_with_options(
+                key,
+                limit_used,
+                SetCondition::None,
+                SetExpiration::Exat(expire_unix),
+                false,
+            )
             .await?;
 
         if limit_used >= limit {
@@ -121,7 +127,13 @@ impl Cache {
 
                 let serialized = rmp_serde::to_vec(&result)?;
                 self.client
-                    .set_with_options(key, serialized, None, SetExpiration::Ex(ttl))
+                    .set_with_options(
+                        key,
+                        serialized,
+                        SetCondition::None,
+                        SetExpiration::Ex(ttl),
+                        false,
+                    )
                     .await?;
 
                 Ok(result)

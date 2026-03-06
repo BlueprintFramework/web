@@ -9,7 +9,6 @@ pub struct TwoFactorRequiredJwt {
     pub base: BasePayload,
 
     pub user_id: i32,
-    pub user_totp_secret: String,
 }
 
 mod post {
@@ -69,14 +68,32 @@ mod post {
                 .ok();
         }
 
+        let user = match User::by_id(&state.database, payload.user_id).await? {
+            Some(user) => user,
+            None => {
+                return ApiResponse::error("user not found")
+                    .with_status(StatusCode::NOT_FOUND)
+                    .ok();
+            }
+        };
+
         match data.code.len() {
             6 => {
+                let user_totp_secret = match &user.totp_secret {
+                    Some(secret) => secret.clone(),
+                    None => {
+                        return ApiResponse::error("invalid confirmation code")
+                            .with_status(StatusCode::BAD_REQUEST)
+                            .ok();
+                    }
+                };
+
                 let totp = totp_rs::TOTP::new(
                     totp_rs::Algorithm::SHA1,
                     6,
                     1,
                     30,
-                    totp_rs::Secret::Encoded(payload.user_totp_secret).to_bytes()?,
+                    totp_rs::Secret::Encoded(user_totp_secret).to_bytes()?,
                 )?;
 
                 if !totp.check_current(&data.code).is_ok_and(|valid| valid) {
@@ -105,15 +122,6 @@ mod post {
                     .ok();
             }
         }
-
-        let user = match User::by_id(&state.database, payload.user_id).await? {
-            Some(user) => user,
-            None => {
-                return ApiResponse::error("user not found")
-                    .with_status(StatusCode::NOT_FOUND)
-                    .ok();
-            }
-        };
 
         let key = UserSession::create(
             &state.database,

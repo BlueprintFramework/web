@@ -1,6 +1,6 @@
 [package]
 name = "web"
-version = "3.1.19"
+version = "3.1.20"
 edition = "2024"
 
 [dependencies]
@@ -14,7 +14,7 @@ axum = "0.8.1"
 colored = "3.0.0"
 sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring-webpki", "postgres", "chrono", "ipnetwork", "uuid"] }
 dotenvy = "0.15.7"
-rustis = "0.16.1"
+rustis = "0.19.1"
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = { version = "1.0.140", features = ["preserve_order"] }
 tokio = { version = "1.43.0", features = ["full"] }

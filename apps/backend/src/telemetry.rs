@@ -1,6 +1,5 @@
 use chrono::NaiveDateTime;
 use colored::Colorize;
-use rustis::commands::{ExpireOption, GenericCommands, StringCommands};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use sqlx::types::Uuid;
@@ -101,24 +100,7 @@ impl TelemetryLogger {
     }
 
     #[inline]
-    pub async fn log(&self, ip: IpAddr, telemetry: TelemetryData) -> Option<()> {
-        let mut processing = self.processing.lock().await;
-
-        let ratelimit_key = format!("blueprint_api::ratelimit::{ip}");
-
-        let count = self.cache.client.incr(&ratelimit_key).await.ok()?;
-        if count == 1 {
-            self.cache
-                .client
-                .expire(&ratelimit_key, 86400, ExpireOption::None)
-                .await
-                .ok()?;
-        }
-
-        if count > self.env.telemetry_ratelimit_per_day {
-            return None;
-        }
-
+    pub async fn log(&self, ip: IpAddr, telemetry: TelemetryData) {
         let data = Telemetry {
             panel_id: telemetry.id,
             telemetry_version: telemetry.telemetry_version as i16,
@@ -129,9 +111,7 @@ impl TelemetryLogger {
             created: chrono::Utc::now().naive_utc(),
         };
 
-        processing.push(data);
-
-        Some(())
+        self.processing.lock().await.push(data);
     }
 
     #[inline]

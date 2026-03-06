@@ -53,6 +53,11 @@ mod post {
                 .ok();
         }
 
+        state
+            .cache
+            .ratelimit("login", 5, 60, ip.to_string())
+            .await?;
+
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
                 .with_status(StatusCode::BAD_REQUEST)
@@ -69,9 +74,7 @@ mod post {
                 }
             };
 
-        if user.totp_enabled
-            && let Some(secret) = &user.totp_secret
-        {
+        if user.totp_enabled {
             let token = state.jwt.create(&TwoFactorRequiredJwt {
                 base: BasePayload {
                     issuer: "panel".into(),
@@ -83,7 +86,6 @@ mod post {
                     jwt_id: user.id.to_string(),
                 },
                 user_id: user.id,
-                user_totp_secret: secret.clone(),
             })?;
 
             ApiResponse::new_serialized(Response::TwoFactorRequired { token }).ok()

@@ -25,7 +25,7 @@ That said, quality issues likely apply to the rest of their product library as w
 ### Introduction
 
 SAGA creates loads of modifications for the Pterodactyl panel.
-They over standalone Pterodactyl modifications, but also Blueprint extensions.
+They offer standalone Pterodactyl modifications, but also Blueprint extensions.
 These modifications are sold on a platform called BuiltByBit.
 
 BuiltByBit often does not conduct code-review in their product review process, hence why extensions like SAGAs often show up on their platform.

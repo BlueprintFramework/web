@@ -4619,7 +4619,7 @@ dependencies = [
 
 [[package]]
 name = "web"
-version = "3.1.20"
+version = "3.1.21"
 dependencies = [
  "accept-header",
  "anyhow",

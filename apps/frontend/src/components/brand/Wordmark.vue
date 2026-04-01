@@ -23,11 +23,16 @@
 </template>
 
 <script setup lang="ts">
-const today = new Date()
-const showWordart = today.getMonth() === 3 && today.getDate() === 1
-
 const emblemClass = ref('')
 const emblemAnimating = ref(false)
+const showWordart = ref(false)
+
+onMounted(() => {
+  const today = new Date()
+  if (today.getMonth() === 3 && today.getDate() === 1) {
+    showWordart.value = true
+  }
+})
 
 const emblemHover = () => {
   if (!emblemAnimating.value) {

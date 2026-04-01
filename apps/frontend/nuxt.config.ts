@@ -125,7 +125,7 @@ export default defineNuxtConfig({
     },
   },
   plausible: {
-    apiHost: 'https://blueprint.zip/yay',
+    apiHost: 'https://plausible.prpl.wtf',
     domain: 'blueprint.zip',
     autoOutboundTracking: true,
     ignoredHostnames: ['localhost'],

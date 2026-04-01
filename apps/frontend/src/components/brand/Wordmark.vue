@@ -5,7 +5,7 @@
     class="hover:rotate-13 focus:rotate-13 transition-transform duration-300 hover:scale-110"
     @mousedown.prevent
   >
-    <NuxtImg src="/img/blueprint_wordart.png" :height="28" />
+    <img src="/img/blueprint_wordart_28.png" :height="28" />
   </NuxtLink>
   <div v-else class="w-min">
     <NuxtLink

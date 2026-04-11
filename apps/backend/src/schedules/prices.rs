@@ -5,7 +5,6 @@ use crate::{
     },
     routes::State,
 };
-use colored::Colorize;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -106,7 +105,7 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
                 .ok_or_else(|| {
                     std::io::Error::new(
                         std::io::ErrorKind::InvalidData,
-                        format!("Invalid BBB URL: {}", key.url.bright_cyan()),
+                        format!("Invalid BBB URL: {}", key.url),
                     )
                 })?
                 .trim_end_matches(|c: char| !c.is_ascii_digit())
@@ -353,8 +352,9 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
     }
 
     tracing::info!(
-        "product prices refreshed {}",
-        format!("({} prices, {}ms)", count, start.elapsed().as_millis()).bright_black()
+        "product prices refreshed ({} prices, {}ms)",
+        count,
+        start.elapsed().as_millis()
     );
 
     Ok(())

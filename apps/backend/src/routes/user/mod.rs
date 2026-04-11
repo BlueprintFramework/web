@@ -131,10 +131,10 @@ mod get {
         response::{ApiResponse, ApiResponseResult},
         routes::{GetState, user::GetUser},
     };
-    use serde::Serialize;
+    use serde::{Deserialize, Serialize};
     use utoipa::ToSchema;
 
-    #[derive(ToSchema, Serialize)]
+    #[derive(ToSchema, Serialize, Deserialize)]
     struct ResponseExtensions {
         total: i64,
         unlisted: i64,
@@ -154,21 +154,32 @@ mod get {
         ("api_key" = [])
     ))]
     pub async fn route(state: GetState, user: GetUser) -> ApiResponseResult {
-        let data = sqlx::query!(
-            "SELECT COUNT(*) AS total, SUM(unlisted::int) AS unlisted
-            FROM extensions
-            WHERE extensions.author_id = $1",
-            user.id
-        )
-        .fetch_one(state.database.read())
-        .await?;
+        let extensions = state
+            .cache
+            .cached(
+                &format!("user::{}::extensions_stats", user.id),
+                300,
+                || async {
+                    let row = sqlx::query!(
+                        "SELECT COUNT(*) AS total, SUM(unlisted::int) AS unlisted
+                        FROM extensions
+                        WHERE extensions.author_id = $1",
+                        user.id
+                    )
+                    .fetch_one(state.database.read())
+                    .await?;
+
+                    Ok(ResponseExtensions {
+                        total: row.total.unwrap_or_default(),
+                        unlisted: row.unlisted.unwrap_or_default(),
+                    })
+                },
+            )
+            .await?;
 
         ApiResponse::new_serialized(Response {
             user: user.0.into_api_full_object(),
-            extensions: ResponseExtensions {
-                total: data.total.unwrap_or_default(),
-                unlisted: data.unlisted.unwrap_or_default(),
-            },
+            extensions,
         })
         .ok()
     }
@@ -210,6 +221,11 @@ mod patch {
 
     #[utoipa::path(patch, path = "/", responses(
         (status = OK, body = inline(Response)),
+    ), params(
+        (
+            "user" = i32,
+            description = "the id of the user"
+        ),
     ), request_body = inline(Payload))]
     pub async fn route(
         state: GetState,

@@ -1,5 +1,4 @@
 use crate::routes::State;
-use colored::Colorize;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -24,13 +23,9 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
         .collect();
 
     tracing::info!(
-        "github releases refreshed {}",
-        format!(
-            "({} releases, {}ms)",
-            state.github_releases.read().await.len(),
-            start.elapsed().as_millis()
-        )
-        .bright_black()
+        "github releases refreshed ({} releases, {}ms)",
+        state.github_releases.read().await.len(),
+        start.elapsed().as_millis()
     );
 
     Ok(())

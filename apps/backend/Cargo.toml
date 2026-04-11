@@ -1,6 +1,6 @@
 [package]
 name = "web"
-version = "3.1.22"
+version = "3.1.23"
 edition = "2024"
 
 [dependencies]
@@ -11,7 +11,6 @@ sentry = { version = "0.46.0", default-features = false, features = ["rustls", "
 sentry-tower = { version = "0.46.0", features = ["http", "axum-matched-path"] }
 sentry-anyhow = "0.46.0"
 axum = "0.8.1"
-colored = "3.0.0"
 sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring-webpki", "postgres", "chrono", "ipnetwork", "uuid"] }
 dotenvy = "0.15.7"
 rustis = "0.17.0"

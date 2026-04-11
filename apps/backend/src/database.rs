@@ -1,4 +1,3 @@
-use colored::Colorize;
 use sqlx::postgres::PgPoolOptions;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::Mutex;
@@ -52,14 +51,9 @@ impl Database {
             .unwrap();
 
         tracing::info!(
-            "{} connected {}",
-            "database".bright_cyan(),
-            format!(
-                "(postgres@{}, {}ms)",
-                version.0[..version.0.len() - 1].bright_black(),
-                start.elapsed().as_millis()
-            )
-            .bright_black()
+            "database connected (postgres@{}, {}ms)",
+            &version.0[..version.0.len() - 1],
+            start.elapsed().as_millis()
         );
 
         tokio::spawn({
@@ -71,11 +65,7 @@ impl Database {
 
                     let mut actions = batch_actions.lock().await;
                     for (key, action) in actions.drain() {
-                        tracing::debug!(
-                            "executing batch action for {}:{}",
-                            key.0.bright_cyan(),
-                            key.1
-                        );
+                        tracing::debug!("executing batch action for {}:{}", key.0, key.1);
                         Box::into_pin(action).await;
                     }
                 }

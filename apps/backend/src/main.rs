@@ -12,7 +12,6 @@ use axum::{
     response::Response,
     routing::get,
 };
-use colored::Colorize;
 use include_dir::{Dir, include_dir};
 use sentry_tower::SentryHttpLayer;
 use serde::Deserialize;
@@ -92,15 +91,10 @@ async fn handle_request(
     req.extensions_mut().insert(ip);
 
     tracing::info!(
-        "http {} {}{}",
+        path = req.uri().path(),
+        query = req.uri().query().unwrap_or_default(),
+        "http {}",
         req.method().to_string().to_lowercase(),
-        req.uri().path().cyan(),
-        if let Some(query) = req.uri().query() {
-            format!("?{query}")
-        } else {
-            "".to_string()
-        }
-        .bright_cyan()
     );
 
     Ok(crate::response::ACCEPT_HEADER
@@ -174,7 +168,7 @@ async fn main() {
         jwt,
         cache: cache.clone(),
         s3,
-        telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),
+        telemetry: telemetry::TelemetryLogger::new(database),
         env: env.clone(),
         mail: Arc::new(mail::Mail::new(env.clone())),
         captcha: Arc::new(captcha::Captcha::new(env)),
@@ -466,15 +460,10 @@ async fn main() {
         .unwrap();
 
     tracing::info!(
-        "{} listening on {} {}",
-        "http server".bright_red(),
-        state.env.bind.cyan(),
-        format!(
-            "(app@{}, {}ms)",
-            VERSION,
-            state.start_time.elapsed().as_millis()
-        )
-        .bright_black()
+        "http server listening on {} (app@{}, {}ms)",
+        state.env.bind,
+        VERSION,
+        state.start_time.elapsed().as_millis()
     );
 
     let (router, mut openapi) = app.split_for_parts();

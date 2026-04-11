@@ -1,5 +1,4 @@
 use chrono::NaiveDateTime;
-use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use sqlx::types::Uuid;
@@ -74,23 +73,15 @@ pub struct Telemetry {
 pub struct TelemetryLogger {
     processing: Mutex<Vec<Telemetry>>,
     database: Arc<crate::database::Database>,
-    cache: Arc<crate::cache::Cache>,
-    env: Arc<crate::env::Env>,
 
     client: reqwest::Client,
 }
 
 impl TelemetryLogger {
-    pub fn new(
-        database: Arc<crate::database::Database>,
-        cache: Arc<crate::cache::Cache>,
-        env: Arc<crate::env::Env>,
-    ) -> Self {
+    pub fn new(database: Arc<crate::database::Database>) -> Self {
         Self {
             processing: Mutex::new(Vec::new()),
             database,
-            cache,
-            env,
 
             client: reqwest::Client::builder()
                 .user_agent("Blueprint API https://blueprint.zip")
@@ -247,10 +238,7 @@ impl TelemetryLogger {
             }
         }
 
-        tracing::info!(
-            "processed {} telemetry entries",
-            telemetry.len().to_string().cyan()
-        );
+        tracing::info!("processed {} telemetry entries", telemetry.len());
 
         Ok(())
     }

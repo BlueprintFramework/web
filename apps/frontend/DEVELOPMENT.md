@@ -2,7 +2,8 @@
 
 Thanks for contributing to Blueprint's web platform, this is how you get a development environment up and running.
 
-> [!INFO] Need help? [We'll be happy to help through one of our support channels.](https://blueprint.zip/guides/admin/reporting-issues)
+> [!TIP]
+> Need help? [We'll be happy to help through one of our support channels.](https://blueprint.zip/guides/admin/reporting-issues)
 
 ## Things you need
 
@@ -27,9 +28,11 @@ cp .env.example .env
 
 The frontend is built with Nuxt, among other dependencies. We need those to be installed.
 
-> [!IMPORTANT] We require dependency releases to be at least 1 day old in when building for production. This is defined in your [`pnpm-workspace.yaml`](./pnpm-workspace.yaml). It's recommended to keep this setting as-is.
+> [!TIP]
+> We require dependency releases to be at least 1 day old in when building for production. This is defined in our [`pnpm-workspace.yaml`](./pnpm-workspace.yaml).
 
-> [!INFO] Please do not update frontend dependencies unless it's the sole purpose of your PR.
+> [!NOTE]
+> Please do not update frontend dependencies unless it's the sole purpose of your PR.
 
 Use the following command to install node dependencies for this project. Make sure you are in the `apps/frontend/` directory.
 

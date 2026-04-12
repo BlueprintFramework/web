@@ -1,0 +1,9 @@
+# Default pnpm-workspace.yaml config for working on Blueprint's website
+
+minimumReleaseAge: 1440
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - better-sqlite3
+  - esbuild
+  - maplibre-gl
+  - sharp

@@ -106,8 +106,11 @@ export default defineNuxtConfig({
         target: 'http://localhost:8000/api',
         changeOrigin: true,
       },
+      // You shouldn't really need the sitemap in development, but if you
+      // really want it, and can't be arsed to make it accurate, you may
+      // change this to https://blueprint.zip/browse/sitemap.xml, though
+      // make sure to set "changeOrigin" to true.
       '/browse/sitemap.xml': 'http://localhost:8000/browse/sitemap.xml',
-      '/yay': 'https://blueprint.zip/yay',
     },
     routeRules: {
       '/api/**': {

@@ -21,14 +21,13 @@ Copy the example files to their correct paths. Please inspect these files before
 
 ```bash
 cp .env.example .env
-cp pnpm-workspace.example.yaml pnpm-workspace.yaml
 ```
 
 ### Install node dependencies
 
 The frontend is built with Nuxt, among other dependencies. We need those to be installed.
 
-> [!IMPORTANT] We require dependency releases to be at least 1 day old in when building for production. This is defined in your [`pnpm-workspace.yaml`](./pnpm-workspace.example.yaml). It's recommended to keep this setting as-is.
+> [!IMPORTANT] We require dependency releases to be at least 1 day old in when building for production. This is defined in your [`pnpm-workspace.yaml`](./pnpm-workspace.yaml). It's recommended to keep this setting as-is.
 
 > [!INFO] Please do not update frontend dependencies unless it's the sole purpose of your PR.
 

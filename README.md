@@ -4,7 +4,7 @@
 
 Blueprint's new website, made with Nuxt and Rust.
 
-[`apps/frontend`](/apps/frontend) - The application frontend\
+[`apps/frontend`](/apps/frontend) ([`DEVELOPMENT.md`](/apps/frontend/DEVELOPMENT.md)) - The application frontend\
 [`apps/backend`](/apps/backend) - The application backend
 
 ## Why a rewrite?

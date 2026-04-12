@@ -28,8 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-
 interface Props {
   direction?: 'left' | 'right'
   speed?: number // pixels per second

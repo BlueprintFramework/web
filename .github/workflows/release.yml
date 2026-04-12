@@ -47,6 +47,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd ./apps/frontend
+          rm pnpm-workspace.yaml
           pnpm install
 
       - name: Build frontend

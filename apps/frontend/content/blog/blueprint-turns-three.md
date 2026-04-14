@@ -61,10 +61,11 @@ Blueprint doesn't work without your support. Consider donating [on our donation 
 
 #### Special thank you-s
 
-I'd like to give a special thank you to a few organizations for their financial support over the past few years:
+I'd like to give a special thank you to a few organizations and people for their support over the past few years:
 
 - **[UltraServers](https://ultraservers.com) has supported us ever since we went nonprofit, donating $1200 to date.**
 - [HostEZ](https://hostez.io/) for donating a one-off $250 when we started accepting donations in Q1 2024.
+- Everyone who made an extension with Blueprint, or used it to manage extensions on their own panel.
 
 #### Donations this year
 

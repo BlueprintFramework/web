@@ -128,7 +128,7 @@ const allTestimonials = [
       rating: 5,
     },
     {
-      name: 'amogusreal69',
+      name: 'Lumi',
       content:
         "Before, you had to modify files from Pterodactyl itself, but with Blueprint, all I need is run a command, and that's all.",
       rating: 5,

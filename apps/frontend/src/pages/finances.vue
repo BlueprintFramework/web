@@ -9,4 +9,8 @@
     For any questions regarding our finances, you may contact
     <code>emma [@] blueprint [.] zip</code> directly over email.
   </p>
+  <a href="https://hcb.hackclub.com/blueprint" class="text-link">
+    You can double check the status of the public page here. (if it says that it
+    doesn't exist, then it's still private)
+  </a>
 </template>

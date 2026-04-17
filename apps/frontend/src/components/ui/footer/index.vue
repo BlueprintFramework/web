@@ -85,10 +85,13 @@
         >
           Donate via HCB
         </NuxtLink>
-        <NuxtLink to="https://github.com/sponsors/blueprintframework" class="text-link">
+        <NuxtLink
+          to="https://github.com/sponsors/blueprintframework"
+          class="text-link"
+        >
           Donate via GitHub Sponsors
         </NuxtLink>
-        <NuxtLink to="https://hcb.hackclub.com/blueprint" class="text-link">
+        <NuxtLink to="/finances" class="text-link">
           Transparent finances
         </NuxtLink>
       </div>

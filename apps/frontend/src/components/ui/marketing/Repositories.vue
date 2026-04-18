@@ -1,7 +1,7 @@
 <template>
   <div
     :class="props.class"
-    class="grid gap-[1px] overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 transition-colors focus-within:border-neutral-500 focus-within:bg-neutral-500 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+    class="grid gap-px overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-700 transition-colors focus-within:border-neutral-500 focus-within:bg-neutral-500 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
   >
     <NuxtLink
       to="https://github.com/blueprintframework/framework"

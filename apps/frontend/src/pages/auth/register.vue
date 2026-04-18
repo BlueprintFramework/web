@@ -4,7 +4,7 @@
     class="w-full divide-y divide-neutral-700 border-y border-neutral-700"
   >
     <div class="p-4">
-      <h1 class="!text-4xl">Hi there!</h1>
+      <h1 class="text-4xl!">Hi there!</h1>
     </div>
     <div class="space-y-4 p-4">
       <ElementsInlinecard

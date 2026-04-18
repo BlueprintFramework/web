@@ -4,14 +4,14 @@
       <div
         v-for="(item, index) in items"
         :key="`item-${index}`"
-        class="mx-4 inline h-[128px] w-[256px]"
+        class="mx-4 inline h-32 w-64"
       >
         <NuxtLink :to="`/browse/${item.identifier}`" tabindex="-1">
           <div
             class="overflow-hidden rounded-2xl transition-transform hover:scale-95"
           >
             <div
-              class="absolute h-[128px] w-[256px] bg-neutral-950/50 opacity-0 transition-all hover:opacity-100"
+              class="absolute h-32 w-64 bg-neutral-950/50 opacity-0 transition-all hover:opacity-100"
             >
               <Icon
                 name="memory:arrow-up-right-box"
@@ -25,7 +25,7 @@
               :height="128"
               :width="256"
               :alt="item.name"
-              class="aspect-[2/1] bg-neutral-800 object-cover"
+              class="aspect-2/1 bg-neutral-800 object-cover"
             />
           </div>
         </NuxtLink>

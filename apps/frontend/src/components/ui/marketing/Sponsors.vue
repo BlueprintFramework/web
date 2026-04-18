@@ -31,7 +31,7 @@
       </div>
     </div>
     <div
-      class="flex items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] bg-[size:40px_40px] bg-[position:-8px_-8px] md:min-h-44"
+      class="bg-site-[40px_40px] bg-position-[-8px_-8px] flex items-center bg-[linear-gradient(to_right,var(--color-neutral-800)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-800)_1px,transparent_1px)] md:min-h-44"
     >
       <div
         class="flex w-full flex-col items-start justify-center gap-4 p-4 md:flex-row md:items-center md:gap-12 md:p-6"

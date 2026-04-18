@@ -18,7 +18,7 @@
         class="hover:text-brand-50 focus:text-brand-50 text-default-font/60 block w-full cursor-pointer text-start outline-0 transition-colors focus:font-bold"
         tabindex="0"
         :class="{
-          '!text-default-font': props.form.sortBy === sortOption.value,
+          'text-default-font!': props.form.sortBy === sortOption.value,
         }"
         @click="props.form.sortBy = sortOption.value"
         @mousedown.prevent

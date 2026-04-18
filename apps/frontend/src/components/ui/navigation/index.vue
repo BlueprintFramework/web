@@ -121,7 +121,7 @@
           <client-only>
             <div
               v-if="isAuthenticated"
-              class="w-[calc(100vw_-_2rem)] max-w-80 divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
+              class="w-[calc(100vw-2rem)] max-w-80 divide-y divide-neutral-700 rounded-2xl border border-neutral-700"
             >
               <div class="flex items-center gap-1.5 p-2 font-bold">
                 <Icon name="memory:account" />
@@ -173,9 +173,9 @@
       </Transition>
     </div>
     <div
-      class="bg-linear-to-r relative top-0 h-[1px] w-full from-neutral-800 via-neutral-500 to-neutral-800 transition-all duration-500 md:static"
+      class="bg-linear-to-r relative top-0 h-px w-full from-neutral-800 via-neutral-500 to-neutral-800 transition-all duration-500 md:static"
       :class="{
-        'top-[calc(100dvh_-_var(--nav-offset))]': mobileNavigation,
+        'top-[calc(100dvh-var(--nav-offset))]': mobileNavigation,
       }"
     />
   </nav>

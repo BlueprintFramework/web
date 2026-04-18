@@ -39,7 +39,7 @@
         class="aspect-video h-full w-full object-cover"
       />
     </div>
-    <div class="order-last border-neutral-700 lg:order-none lg:border-e">
+    <div class="lg:order-0 order-last border-neutral-700 lg:border-e">
       <video
         width="1280"
         height="1024"

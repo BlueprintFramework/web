@@ -15,7 +15,7 @@
         >
           <div class="p-4 transition-colors">
             <div class="flex justify-between gap-2">
-              <h1 class="truncate !text-2xl lg:!text-3xl">
+              <h1 class="text-2xl! lg:text-3xl! truncate">
                 {{ extension.name }}
               </h1>
               <NuxtLink

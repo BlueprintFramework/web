@@ -22,7 +22,7 @@
           </span>
         </div>
         <h1
-          class="!display leading-14 md:leading-18 truncate !text-5xl !font-normal md:!text-6xl"
+          class="display! leading-14 md:leading-18 text-5xl! font-normal! md:text-6xl! truncate"
         >
           {{ data.title || 'Untitled' }}
         </h1>

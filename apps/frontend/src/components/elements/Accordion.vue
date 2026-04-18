@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-[1px]">
+  <div class="flex flex-col gap-px">
     <div
       v-for="(item, index) in props.items"
       :key="index"

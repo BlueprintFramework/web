@@ -117,7 +117,7 @@ Navigation:
     - { Name: 'Security keys', Path: '/securitykeys', Type: 'account', Component: 'sections/SecurityKeysSection', AdminOnly: 'false' }
 
 Account:
-  Overfiew:
+  Overview:
     BeforeContent: 'UserGreeterComponent'
     AfterContent: 'HelloWorldComponent' #you can use the same component in multiple places!
 ```

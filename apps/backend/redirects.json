@@ -5,6 +5,11 @@
     "status": 302
   },
   {
+    "from": "/finances",
+    "to": "https://hcb.hackclub.com/blueprint",
+    "status": 302
+  },
+  {
     "from": "/install",
     "to": "/guides/admin/install",
     "status": 302

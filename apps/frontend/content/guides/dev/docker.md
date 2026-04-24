@@ -61,12 +61,12 @@ TIMEZONE=Europe/Amsterdam
 
 # Application environment. Can be either 'production' or
 # 'testing'
-APP_ENV=production
+APP_ENV=testing
 
 # Port to host the panel on. To use another port, allocate
 # one in your docker-compose.yml and assign it here. We recommend
 # using Cloudflare DNS and enabling automatic redirection to https.
-PANEL_PORT=443
+PANEL_PORT=80
 ```
 
 ### Captcha
@@ -176,6 +176,14 @@ In this step, we are using the `$WINGS_PORT` and `$WINGS_SFTP_PORT` environment 
 export $WINGS_SCHEME="http" #Can be either http or https
 export $WINGS_FQDN="localhost"
 
+# Determine how much memory and disk space to allocate. The snippet below includes overhead, allocating 80% of free memory & disk on bigger systems, and 95% on systems with less resources.
+MEM_FREE=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo)
+DISK_FREE=$(df -m . | awk 'NR==2 {print $4}')
+[ "$MEM_FREE" -lt 5120 ] && MEM_PCT=95 || MEM_PCT=80
+[ "$DISK_FREE" -lt 25600 ] && DISK_PCT=95 || DISK_PCT=80
+MEM_FREE=$(( MEM_FREE * MEM_PCT / 100 ))
+DISK_FREE=$(( DISK_FREE * DISK_PCT / 100 ))
+
 # Creates a new node on the panel
 docker compose exec panel php artisan p:node:make \
   --name="Node" \
@@ -186,9 +194,9 @@ docker compose exec panel php artisan p:node:make \
   --scheme="$WINGS_SCHEME" \
   --proxy=0 \
   --maintenance=0 \
-  --maxMemory=4096 \
+  --maxMemory=$MEM_FREE \
   --overallocateMemory=0 \
-  --maxDisk=10240 \
+  --maxDisk=$DISK_FREE \
   --overallocateDisk=0 \
   --uploadSize=100 \
   --daemonListeningPort=$WINGS_PORT \

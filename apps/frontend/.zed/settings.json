@@ -6,22 +6,22 @@
       "settings": {
         "includeLanguages": {
           "vue": "html",
-          "*.vue": "html"
+          "*.vue": "html",
         },
         "experimental": {
           "classRegex": [
             ["@apply\\s+([^;]*);", "([a-zA-Z0-9\\s\\-:]+)"],
             "class=\"([^\"]*)",
             "class={\"([^\"}]*)",
-            "class=format!({\"([^\"}]*)"
-          ]
-        }
-      }
-    }
+            "class=format!({\"([^\"}]*)",
+          ],
+        },
+      },
+    },
   },
   "languages": {
     "Vue.js": {
-      "language_servers": ["!typescript-language-server", "..."]
-    }
-  }
+      "language_servers": ["!tsgo", "!typescript-language-server", "..."],
+    },
+  },
 }

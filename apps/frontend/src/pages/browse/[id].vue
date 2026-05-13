@@ -398,7 +398,7 @@
                     </span>
                   </div>
 
-                  <div class="flex justify-center">
+                  <div class="flex justify-center text-center">
                     <span>
                       Member since
                       <NuxtTime

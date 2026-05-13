@@ -18,10 +18,10 @@
         >
           <div class="bg-stripes h-15.5 relative border-b border-neutral-700">
             <div
-              class="bg-brand-50 h-25 w-25 absolute left-3 top-3 aspect-square rounded-full border border-neutral-700"
+              class="bg-brand-700 h-25 w-25 absolute left-3 top-3 aspect-square rounded-full border border-neutral-700"
             >
               <div class="flex h-full items-center justify-center">
-                <span class="text-brand-900 text-5xl font-bold">
+                <span class="text-brand-50 text-5xl font-bold">
                   {{ publicUser.user.name.charAt(0) }}
                 </span>
               </div>

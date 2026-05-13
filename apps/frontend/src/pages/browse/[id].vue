@@ -125,16 +125,11 @@
             </div>
             <div class="p-2">
               <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:user" />
-                <div>
-                  Created by
-                  <span class="text-default-font/60 font-normal">
-                    {{ extension.author.name }}
-                  </span>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:chart-bar" />
+                <Icon
+                  name="pixelarticons:chart-bar"
+                  :size="16"
+                  class="min-w-4"
+                />
                 <div>
                   Used by
                   <span class="text-default-font/60 font-normal">
@@ -142,8 +137,32 @@
                   </span>
                 </div>
               </div>
+              <div
+                v-if="extension.versions[0] && extension.versions[1]"
+                class="flex items-center gap-1 font-bold"
+              >
+                <Icon
+                  name="pixelarticons:git-commit"
+                  :size="16"
+                  class="min-w-4"
+                />
+                <div>
+                  Updated
+                  <span class="text-default-font/60 font-normal">
+                    <NuxtTime
+                      :datetime="extension.versions[0]?.created"
+                      :relative="true"
+                    />
+                    ({{ extension.versions[0]?.name }})
+                  </span>
+                </div>
+              </div>
               <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:calendar-month" />
+                <Icon
+                  name="pixelarticons:calendar-month"
+                  :size="16"
+                  class="min-w-4"
+                />
                 <div>
                   Released
                   <span class="text-default-font/60 font-normal">
@@ -341,6 +360,66 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <div
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
+          >
+            <div
+              class="flex items-center justify-between gap-2 p-2 text-lg transition-colors"
+            >
+              <span>About the creator</span>
+              <Icon name="pixelarticons:user" />
+            </div>
+            <!-- grid background -->
+            <div
+              class="bg-[linear-gradient(to_right,var(--color-neutral-700)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-700)_1px,transparent_1px)] bg-[size:15px_15px]"
+              style="background-position: -5px -5px"
+            >
+              <div class="inset-0 h-full w-full">
+                <div
+                  class="bg-linear-to-b h-full w-full space-y-2 from-transparent to-neutral-950 px-2 py-4"
+                >
+                  <!-- profile card content -->
+                  <div class="flex items-center justify-center gap-2">
+                    <div
+                      class="bg-brand-50 text-brand-900 aspect-square h-10 w-10 rounded-full border"
+                    >
+                      <div class="flex h-full items-center justify-center">
+                        <span class="text-lg font-bold">
+                          {{ extension.author.name.charAt(0) }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span class="text-xl font-bold">
+                      {{ extension.author.name }}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-center">
+                    <span>
+                      Member since
+                      <NuxtTime
+                        :datetime="extension.author.created"
+                        :relative="true"
+                      />
+                    </span>
+                  </div>
+
+                  <div class="flex justify-center">
+                    <NuxtLink
+                      :to="`/profiles/${extension.author.id}`"
+                      tabindex="-1"
+                    >
+                      <ElementsButton @mousedown.prevent>
+                        View profile
+                      </ElementsButton>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

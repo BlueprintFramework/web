@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     sitemapsPathPrefix: '/',
+    zeroRuntime: true,
   },
   ogImage: {
     fonts: [

@@ -4,6 +4,7 @@ description: Set up Blueprint Docker for local development
 author: Loki and Emma
 category: dev
 thumbnail: blueprintdockerdev.jpg
+order: -1
 ---
 
 ::card

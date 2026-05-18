@@ -4,6 +4,7 @@ description: Render your admin view using a custom controller
 author: Emma
 category: dev
 thumbnail: controller.jpeg
+order: 3
 ---
 
 ## Introduction
@@ -178,3 +179,7 @@ class {identifier}ExtensionController extends Controller {
   }
 }
 ```
+
+## Going further
+
+You've got your controller, but your extension admin page is still like.. boring.. and lacking configuration options. Let's fix that. Let's build [your second admin page](/guides/dev/secondadminpage).

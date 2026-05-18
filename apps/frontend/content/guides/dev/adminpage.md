@@ -4,7 +4,7 @@ description: Learn how to build a simple admin page for your extension
 author: Emma
 category: dev
 thumbnail: adminpage.jpeg
-order: -1
+order: 2
 ---
 
 ## Introduction
@@ -23,7 +23,7 @@ admin:
   view: 'view.blade.php'
 ```
 
-### Adding content
+## Adding content
 
 You can now open up your extension's admin view (the `view.blade.php` created earlier) and add content to it.
 
@@ -40,3 +40,7 @@ A `.blade.php` file is _basically_ just HTML, but with the ability to run PHP co
 Save the file and run `blueprint -build` to apply your changes. Open your Blueprint extension list (Admin > Extensions) in your Pterodactyl admin panel, click on your extension and see your changes in action.
 
 ![](/img/guides/simpleadminview.jpeg)
+
+## Going further
+
+Now that you've got a basic admin page, it's time to add :sparkles: configuration options :sparkles:. Before we can get to that, however, you should make an [admin controller](/guides/dev/admincontroller).

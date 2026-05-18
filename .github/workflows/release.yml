@@ -49,7 +49,7 @@ jobs:
           cd ./apps/frontend
           rm pnpm-workspace.yaml
           pnpm install
-          pnpm approve-builds --all
+          pnpm approve-builds @parcel/watcher better-sqlite3 esbuild sharp
 
       - name: Build frontend
         run: |

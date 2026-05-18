@@ -49,6 +49,7 @@ jobs:
           cd ./apps/frontend
           rm pnpm-workspace.yaml
           pnpm install
+          pnpm approve-builds --all
 
       - name: Build frontend
         run: |

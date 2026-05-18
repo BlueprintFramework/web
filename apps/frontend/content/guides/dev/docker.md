@@ -142,6 +142,13 @@ Once your done filling out everything, start your stack through Docker Compose.
 docker compose up -d
 ```
 
+Once the panel container is up, the webroot, which you'll need access to if developing extensions, will be located in ``/var/lib/docker/volumes/pterodactyl_app/_data``. If you'd rather give it a more memorable name and location, you can make a symlink:
+```
+ln -s /var/lib/docker/volumes/pterodactyl_app/_data /srv/pterodactyl/webroot
+```
+
+If you are modifying this guide as you go to run the panel as a non-root user, see the more in-depth documentation at https://github.com/BlueprintFramework/docker/blob/Master/README.md#if-logged-in-as-a-non-root-user.
+
 ## Connect Wings
 
 Before we can _run anything_ in Pterodactyl, we'll have to "create a node", where your node in this case is Wings. Before we can do that, though, we'll have to make a location too.

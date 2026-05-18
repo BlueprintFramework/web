@@ -97,7 +97,7 @@ const items = [
         h(
           'span',
           {},
-          'Yeah! Our source code is largely under a MIT license and available on '
+          'Yeah! Our software is open-source under the MIT license and available on '
         ),
         h(
           NuxtLink,
@@ -107,6 +107,11 @@ const items = [
             target: '_blank',
           },
           () => 'our GitHub organization.'
+        ),
+        h(
+          'span',
+          {},
+          ' The source code of our web platform uses a AGPL-3.0 license.'
         ),
       ]
     },

@@ -42,15 +42,16 @@
                     </button>
                   </a>
                   <a
-                    href="https://github.com/blueprintframework/framework"
+                    href="https://discord.com/invite/NFe72XK5Wr"
                     tabindex="-1"
                     class="hidden md:block"
+                    target="_blank"
                   >
                     <button
                       class="text-brand-50 flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 font-bold transition-colors hover:bg-white/10"
                     >
-                      <SvgGithub :size="22" />
-                      <span> Star on GitHub </span>
+                      <SvgDiscord :size="22" />
+                      <span> Join Discord </span>
                     </button>
                   </a>
                 </div>

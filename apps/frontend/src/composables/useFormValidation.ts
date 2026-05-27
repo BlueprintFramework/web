@@ -164,15 +164,15 @@ export const useFormValidation = () => {
                 hostname === 'github.com' &&
                 url.pathname.split('/').filter(Boolean).length >= 2
               )
-            case 'BUILTBYBIT':
-              return (
-                hostname === 'builtbybit.com' &&
-                /^\/resources\/[\w.-]+(\.\d+)?\/?$/.test(url.pathname)
-              )
             case 'SOURCEXCHANGE':
               return (
                 hostname === 'www.sourcexchange.net' &&
                 /^\/products\/[\w.-]+\/?$/.test(url.pathname)
+              )
+            case 'BUILTBYBIT':
+              return (
+                hostname === 'builtbybit.com' &&
+                /^\/resources\/[\w.-]+(\.\d+)?\/?$/.test(url.pathname)
               )
             default:
               return false

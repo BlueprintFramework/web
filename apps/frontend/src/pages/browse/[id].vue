@@ -494,13 +494,13 @@ const { user } = useAuth()
 const isPaid = ref(false)
 
 const platformConfig = {
-  BUILTBYBIT: {
-    name: 'BuiltByBit',
-    icon: resolveComponent('SvgBuiltbybit'),
-  },
   SOURCEXCHANGE: {
     name: 'sourceXchange',
     icon: resolveComponent('SvgSourcexchange'),
+  },
+  BUILTBYBIT: {
+    name: 'BuiltByBit',
+    icon: resolveComponent('SvgBuiltbybit'),
   },
   GITHUB: {
     name: 'GitHub',

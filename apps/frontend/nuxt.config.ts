@@ -31,6 +31,11 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en',
       },
+      script: [
+        {
+          src: 'https://tally.so/widgets/embed.js',
+        },
+      ],
     },
   },
   sitemap: {

@@ -18,4 +18,13 @@ const isMobile = useMediaQuery('(max-width: 768px)')
 definePageMeta({
   layout: 'default-landing',
 })
+
+onMounted(() => {
+  if (document.referrer.includes('baidu.com')) {
+    Tally.openPopup('NpdAeG', {
+      doNotShowAfterSubmit: false,
+      hideTitle: true,
+    })
+  }
+})
 </script>

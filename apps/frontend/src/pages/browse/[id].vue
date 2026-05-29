@@ -527,17 +527,13 @@ const availablePlatforms = computed(() => {
     return []
   }
 
-  return Object.entries(extension.value.platforms)
-    .filter(([_, platformData]) => platformData)
-    .map(([platformKey, platformData]) => ({
+  return Object.entries(platformConfig)
+    .filter(([platformKey]) => extension.value.platforms[platformKey])
+    .map(([platformKey, platformConfig]) => ({
       key: platformKey,
-      name:
-        platformConfig[platformKey as keyof typeof platformConfig]?.name ||
-        platformKey,
-      icon:
-        platformConfig[platformKey as keyof typeof platformConfig]?.icon ||
-        resolveComponent('SvgGithub'),
-      data: platformData,
+      name: platformConfig.name,
+      icon: platformConfig.icon,
+      data: extension.value.platforms[platformKey],
     }))
 })
 

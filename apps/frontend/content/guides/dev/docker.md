@@ -115,7 +115,7 @@ export WINGS_PORT=8080
 export WINGS_SFTP_PORT=2022
 
 # Write environment variables to .env
-echo "WINGS_PORT=$WINGS_PORT\nWINGS_SFTP_PORT=$WINGS_SFTP_PORT" >> .env
+echo -e "WINGS_PORT=$WINGS_PORT\nWINGS_SFTP_PORT=$WINGS_SFTP_PORT" >> .env
 ```
 
 ::card
@@ -142,7 +142,8 @@ Once your done filling out everything, start your stack through Docker Compose.
 docker compose up -d
 ```
 
-Once the panel container is up, the webroot, which you'll need access to if developing extensions, will be located in ``/var/lib/docker/volumes/pterodactyl_app/_data``. If you'd rather give it a more memorable name and location, you can make a symlink:
+Once the panel container is up, the webroot, which you'll need access to if developing extensions, will be located in `/var/lib/docker/volumes/pterodactyl_app/_data`. If you'd rather give it a more memorable name and location, you can make a symlink:
+
 ```
 ln -s /var/lib/docker/volumes/pterodactyl_app/_data /srv/pterodactyl/webroot
 ```

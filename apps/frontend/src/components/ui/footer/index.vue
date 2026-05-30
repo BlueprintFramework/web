@@ -41,7 +41,7 @@
         @mousedown.prevent
       >
         <NuxtImg
-          src="/img/releases/latest.png"
+          src="/img/ogbg-alt.jpg"
           :width="200"
           :height="50"
           class="h-full w-full object-cover transition-all group-hover:scale-105 group-hover:opacity-75 group-focus:scale-105 group-focus:opacity-75"

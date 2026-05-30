@@ -24,6 +24,11 @@ onMounted(() => {
     Tally.openPopup('NpdAeG', {
       doNotShowAfterSubmit: false,
       hideTitle: true,
+      overlay: true,
+      emoji: {
+        text: '💖',
+        animation: 'heart-beat',
+      },
     })
   }
 })

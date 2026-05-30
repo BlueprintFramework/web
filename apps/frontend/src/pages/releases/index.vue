@@ -26,7 +26,7 @@
       class="min-h-20 overflow-hidden border-neutral-700 transition-colors group-focus:border-neutral-500 max-lg:order-first max-lg:border-b"
     >
       <div
-        class="h-full w-full bg-[url(/img/releases/latest.png)] bg-top transition-all duration-300 group-hover:scale-105"
+        class="h-full w-full bg-[url(/img/bluesdark.png)] bg-cover bg-top transition-all duration-300 group-hover:scale-105"
       />
       <div
         class="relative -top-[100%] flex h-full w-full flex-col items-center justify-center p-6 lg:px-12"

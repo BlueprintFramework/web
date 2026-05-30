@@ -88,3 +88,7 @@ h3 {
 .turnstile-wrapper div {
   display: flex !important;
 }
+
+.tally-popup[class*='tally-form-'] div {
+  border-radius: 16px;
+}

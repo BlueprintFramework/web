@@ -20,8 +20,11 @@ definePageMeta({
 })
 
 onMounted(() => {
-  if (document.referrer.includes('baidu.com')) {
-    Tally.openPopup('NpdAeG', {
+  if (
+    document.referrer.includes('baidu.com') ||
+    document.referrer.includes('bilibili.com')
+  ) {
+    Tally.openPopup('b5vK71', {
       doNotShowAfterSubmit: false,
       hideTitle: true,
       overlay: true,

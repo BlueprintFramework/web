@@ -79,7 +79,7 @@
                 >
                   <NuxtImg
                     ref="mascot"
-                    src="/img/mascot/image.png"
+                    src="/img/blu/image.png"
                     :width="100"
                     class="left-27 absolute -top-8"
                   />

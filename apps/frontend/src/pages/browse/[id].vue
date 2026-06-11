@@ -44,7 +44,7 @@
               v-for="platform in availablePlatforms"
               :key="platform.key"
               :href="
-                platform.data.url +
+                platform.data?.url +
                 (platform.key == 'BUILTBYBIT' ? '?ref=581299&' : '?') +
                 `utm_source=blueprint.zip&utm_medium=listing&utm_content=blueprint_${extension.identifier}`
               "
@@ -60,7 +60,12 @@
                 </div>
               </div>
               <p class="text-default-font/60">
-                {{ formatPrice(platform.data.price, platform.data.currency) }}
+                {{
+                  formatPrice(
+                    platform.data?.price || 0,
+                    platform.data?.currency || 'USD'
+                  )
+                }}
               </p>
             </a>
           </div>
@@ -528,12 +533,12 @@ const availablePlatforms = computed(() => {
   }
 
   return Object.entries(platformConfig)
-    .filter(([platformKey]) => extension.value.platforms[platformKey])
+    .filter(([platformKey]) => extension.value?.platforms[platformKey])
     .map(([platformKey, platformConfig]) => ({
       key: platformKey,
       name: platformConfig.name,
       icon: platformConfig.icon,
-      data: extension.value.platforms[platformKey],
+      data: extension.value?.platforms[platformKey],
     }))
 })
 

@@ -24,6 +24,7 @@ onMounted(() => {
     document.referrer.includes('baidu.com') ||
     document.referrer.includes('bilibili.com')
   ) {
+    // @ts-expect-error
     Tally.openPopup('b5vK71', {
       doNotShowAfterSubmit: false,
       hideTitle: true,

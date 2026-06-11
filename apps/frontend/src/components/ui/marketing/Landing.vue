@@ -69,13 +69,26 @@
                 </div>
               </div>
             </div>
-            <div class="hidden h-full overflow-hidden md:block xl:ps-6">
+            <div
+              class="hidden h-full flex-col items-end justify-end overflow-hidden md:flex xl:ps-6"
+            >
+              <div class="relative z-10"></div>
               <div class="perspective-distant relative h-full w-full">
-                <NuxtImg
-                  src="/img/pterodactyl2.jpeg"
-                  :width="800"
-                  class="xl:-bottom-1/12 max-xl:top-1/12 max-xl:rotate-x-7 xl:rotate-x-12 -rotate-y-15 xl:left-1/12 absolute rounded-2xl border-2 border-neutral-700 max-lg:left-6 lg:left-14"
-                />
+                <div
+                  class="xl:-bottom-1/12 max-xl:top-1/12 max-xl:rotate-x-7 xl:rotate-x-12 -rotate-y-15 xl:left-1/12 absolute w-[800px] max-lg:left-6 lg:left-14"
+                >
+                  <NuxtImg
+                    ref="mascot"
+                    src="/img/mascot/image.png"
+                    :width="100"
+                    class="left-27 absolute -top-8"
+                  />
+                  <NuxtImg
+                    ref="image"
+                    src="/img/pterodactyl2_edited.jpeg"
+                    class="rounded-2xl border-2 border-neutral-700"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -93,6 +106,7 @@ onMounted(async () => {
     method: 'GET',
   })
 
+  // @ts-expect-error
   panelcount.value = data.total
 })
 </script>

@@ -23,7 +23,7 @@ We're now at Hydrodactyl v6, and we're introducing it with an amazing redesign:
 
 ![](/img/blog/hydrodactyl_firstlook.jpeg)
 
-[Amy](https://he3als.xyz/) made concepts for this redesign a while ago, but it was never greenlighted by Pyro. We're bringing it to you anyways, because honestly, it looks really good.
+[Amy](https://he3als.xyz/) made concepts for this redesign a while ago, but it was never greenlit by Pyro. We're bringing it to you anyways, because honestly, it looks really good.
 
 ![](/img/blog/hydrodactyl_secondlook.jpeg)
 

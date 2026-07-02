@@ -19,6 +19,8 @@ definePageMeta({
   layout: 'default-landing',
 })
 
+/* tally survey embed code
+
 onMounted(() => {
   if (
     document.referrer.includes('baidu.com') ||
@@ -36,4 +38,5 @@ onMounted(() => {
     })
   }
 })
+*/
 </script>

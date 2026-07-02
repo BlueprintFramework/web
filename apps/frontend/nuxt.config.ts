@@ -109,7 +109,7 @@ export default defineNuxtConfig({
       '/api': {
         // Change to https://blueprint.zip/api to use the production API
         // Local API is http://localhost:8000/api
-        target: 'http://localhost:8000/api',
+        target: 'https://blueprint.zip/api',
         changeOrigin: true,
       },
       // You shouldn't really need the sitemap in development, but if you

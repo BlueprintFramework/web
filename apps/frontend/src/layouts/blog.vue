@@ -26,6 +26,45 @@
         <div class="h-5" />
       </div>
       <div
+        class="border-b-0 border-t border-neutral-700 bg-[url(/img/blurredhome2.jpeg)] bg-cover bg-center md:border-x"
+      >
+        <div
+          class="bg-linear-to-r h-full w-full from-neutral-950 to-neutral-950/25 p-6"
+        >
+          <div class="flex items-center">
+            <div class="w-3/5 space-y-2">
+              <div class="flex h-full items-center gap-2">
+                <Icon name="pixelarticons:heart" mode="svg" :size="24" />
+                <h2>Sponsors</h2>
+              </div>
+              <p>
+                Support our mission to keep the game-hosting community open and
+                fair.
+                <NuxtLink to="https://bpfw.io/donate" class="text-link">
+                  Donate to Blueprint
+                </NuxtLink>
+              </p>
+            </div>
+            <div class="flex w-2/5 justify-end">
+              <div class="space-y-2">
+                <p class="text-default-font/70 text-justify font-bold">
+                  SPONSORED BY
+                </p>
+                <NuxtLink
+                  to="https://ultraservers.com"
+                  target="_blank"
+                  class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors first:gap-2"
+                  @mousedown.prevent
+                >
+                  <SvgUltraservers size="32" />
+                  <span class="h2 text-[1.6rem]">UltraServers</span>
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
         class="border-b-0 border-t border-neutral-700 bg-neutral-950 p-4 md:border-x"
       >
         <div class="flex flex-col items-center">

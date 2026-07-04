@@ -29,10 +29,10 @@
         class="border-b-0 border-t border-neutral-700 bg-[url(/img/blurredhome2.jpeg)] bg-cover bg-center md:border-x"
       >
         <div
-          class="bg-linear-to-r h-full w-full from-neutral-950 to-neutral-950/25 p-6"
+          class="bg-linear-to-b md:bg-linear-to-r h-full w-full from-neutral-950 via-neutral-950 to-neutral-950/25 p-6"
         >
-          <div class="flex items-center">
-            <div class="w-3/5 space-y-2">
+          <div class="flex flex-col gap-5 md:flex-row md:items-center md:gap-0">
+            <div class="space-y-2 md:w-3/5">
               <div class="flex h-full items-center gap-2">
                 <Icon name="pixelarticons:heart" mode="svg" :size="24" />
                 <h2>Sponsors</h2>
@@ -45,7 +45,7 @@
                 </NuxtLink>
               </p>
             </div>
-            <div class="flex w-2/5 justify-end">
+            <div class="flex md:w-2/5 md:justify-end">
               <div class="space-y-2">
                 <p class="text-default-font/70 text-justify font-bold">
                   SPONSORED BY

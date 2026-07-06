@@ -12,7 +12,7 @@ mod get {
 
     #[derive(ToSchema, Serialize)]
     struct Response<'a> {
-        name: &'a str,
+        version: &'a str,
         history: &'a [String],
     }
 
@@ -21,11 +21,11 @@ mod get {
         (status = NOT_FOUND, body = ApiError),
     ))]
     pub async fn route(state: GetState) -> ApiResponseResult {
-        let releases = state.github_releases.read().await;
+        let releases = state.hydrodactyl_github_releases.read().await;
 
         if let Some(first) = releases.first() {
             ApiResponse::new_serialized(Response {
-                name: first,
+                version: first,
                 history: &releases[1..],
             })
             .ok()

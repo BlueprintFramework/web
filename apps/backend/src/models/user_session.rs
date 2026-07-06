@@ -59,7 +59,7 @@ impl UserSession {
         let mut hash = sha2::Sha256::new();
         hash.update(chrono::Utc::now().timestamp().to_be_bytes());
         hash.update(user_id.to_be_bytes());
-        let hash = format!("{:x}", hash.finalize());
+        let hash = hex::encode(hash.finalize());
 
         sqlx::query(
             r#"
@@ -83,14 +83,14 @@ impl UserSession {
         user_id: i32,
         id: i32,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM user_sessions
             WHERE user_sessions.user_id = $1 AND user_sessions.id = $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(user_id)
         .bind(id)
         .fetch_optional(database.read())
@@ -107,7 +107,7 @@ impl UserSession {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM user_sessions
@@ -116,7 +116,7 @@ impl UserSession {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(user_id)
         .bind(per_page)
         .bind(offset)

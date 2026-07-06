@@ -35,7 +35,8 @@ pub struct AppState {
     pub start_time: Instant,
     pub version: String,
 
-    pub github_releases: RwLock<Vec<String>>,
+    pub blueprint_github_releases: RwLock<Vec<String>>,
+    pub hydrodactyl_github_releases: RwLock<Vec<String>>,
     pub client: reqwest::Client,
 
     pub database: Arc<crate::database::Database>,

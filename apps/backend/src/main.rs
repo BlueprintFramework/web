@@ -114,7 +114,7 @@ async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {
     let body_bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
 
     hash.update(body_bytes.as_ref());
-    let hash = format!("{:x}", hash.finalize());
+    let hash = hex::encode(hash.finalize());
 
     parts.headers.insert("ETag", hash.parse().unwrap());
 
@@ -158,7 +158,8 @@ async fn main() {
         start_time: Instant::now(),
         version: format!("{VERSION}:{GIT_COMMIT}"),
 
-        github_releases: RwLock::new(Vec::new()),
+        blueprint_github_releases: RwLock::new(Vec::new()),
+        hydrodactyl_github_releases: RwLock::new(Vec::new()),
         client: reqwest::Client::builder()
             .user_agent(format!("github.com/BlueprintFramework/web {}", VERSION))
             .build()

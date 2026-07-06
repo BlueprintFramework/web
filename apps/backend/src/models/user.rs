@@ -98,14 +98,14 @@ impl User {
     ) -> Result<(Self, String), sqlx::Error> {
         let email_verification = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 16);
 
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             INSERT INTO users (name, email, email_verification, password)
             VALUES ($1, $2, $3, crypt($4, gen_salt('bf', 8)))
             RETURNING {}
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(name)
         .bind(email)
         .bind(&email_verification)
@@ -120,14 +120,14 @@ impl User {
         database: &crate::database::Database,
         id: i32,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM users
             WHERE users.id = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(id)
         .fetch_optional(database.read())
         .await?;
@@ -139,14 +139,14 @@ impl User {
         database: &crate::database::Database,
         github_id: i64,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM users
             WHERE users.github_id = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(github_id)
         .fetch_optional(database.read())
         .await?;
@@ -158,14 +158,14 @@ impl User {
         database: &crate::database::Database,
         email: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM users
             WHERE lower(users.email) = lower($1)
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(email)
         .fetch_optional(database.read())
         .await?;
@@ -182,7 +182,7 @@ impl User {
             None => return Ok(None),
         };
 
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, {}
             FROM users
@@ -191,7 +191,7 @@ impl User {
             "#,
             Self::columns_sql(None, None),
             super::user_session::UserSession::columns_sql(Some("session_"), None)
-        ))
+        )))
         .bind(key_id)
         .bind(key)
         .fetch_optional(database.read())
@@ -210,14 +210,14 @@ impl User {
         email: &str,
         password: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM users
             WHERE lower(users.email) = lower($1) AND users.password = crypt($2, users.password)
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(email)
         .bind(password)
         .fetch_optional(database.read())
@@ -231,14 +231,14 @@ impl User {
         database: &crate::database::Database,
         password: &str,
     ) -> Result<bool, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM users
             WHERE users.id = $1 AND users.password = crypt($2, users.password)
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(self.id)
         .bind(password)
         .fetch_optional(database.read())

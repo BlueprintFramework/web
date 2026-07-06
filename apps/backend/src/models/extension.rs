@@ -225,7 +225,7 @@ impl Extension {
     }
 
     pub async fn all(database: &crate::database::Database) -> Result<Vec<Self>, sqlx::Error> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -235,7 +235,7 @@ impl Extension {
             ORDER BY id ASC
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .fetch_all(database.read())
         .await?;
 
@@ -249,7 +249,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -259,7 +259,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -280,7 +280,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -291,7 +291,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -312,7 +312,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -323,7 +323,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -344,7 +344,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -355,7 +355,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -377,7 +377,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -388,7 +388,7 @@ impl Extension {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(author_id)
         .bind(per_page)
         .bind(offset)
@@ -407,7 +407,7 @@ impl Extension {
         database: &crate::database::Database,
         identifier: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -416,7 +416,7 @@ impl Extension {
             WHERE extensions.identifier = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(identifier)
         .fetch_optional(database.read())
         .await?;
@@ -428,7 +428,7 @@ impl Extension {
         database: &crate::database::Database,
         id: i32,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -437,7 +437,7 @@ impl Extension {
             WHERE extensions.id = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(id)
         .fetch_optional(database.read())
         .await?;

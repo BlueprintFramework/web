@@ -6,7 +6,7 @@ struct GithubRelease {
     pub tag_name: String,
 }
 
-async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
+async fn run_blueprint_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
     let releases = state
@@ -17,14 +17,39 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
         .json::<Vec<GithubRelease>>()
         .await?;
 
-    *state.github_releases.write().await = releases
+    *state.blueprint_github_releases.write().await = releases
         .into_iter()
         .map(|release| release.tag_name)
         .collect();
 
     tracing::info!(
-        "github releases refreshed ({} releases, {}ms)",
-        state.github_releases.read().await.len(),
+        "blueprint github releases refreshed ({} releases, {}ms)",
+        state.blueprint_github_releases.read().await.len(),
+        start.elapsed().as_millis()
+    );
+
+    Ok(())
+}
+
+async fn run_hydrodactyl_inner(state: &State) -> Result<(), anyhow::Error> {
+    let start = std::time::Instant::now();
+
+    let releases = state
+        .client
+        .get("https://api.github.com/repos/BlueprintFramework/Hydrodactyl/releases")
+        .send()
+        .await?
+        .json::<Vec<GithubRelease>>()
+        .await?;
+
+    *state.hydrodactyl_github_releases.write().await = releases
+        .into_iter()
+        .map(|release| release.tag_name)
+        .collect();
+
+    tracing::info!(
+        "hydrodactyl github releases refreshed ({} releases, {}ms)",
+        state.hydrodactyl_github_releases.read().await.len(),
         start.elapsed().as_millis()
     );
 
@@ -33,8 +58,13 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
 
 pub async fn run(state: State) {
     loop {
-        if let Err(err) = run_inner(&state).await {
-            tracing::error!("failed to update github releases: {:#?}", err);
+        if let Err(err) = run_blueprint_inner(&state).await {
+            tracing::error!("failed to update blueprint github releases: {:#?}", err);
+            sentry_anyhow::capture_anyhow(&err);
+        }
+
+        if let Err(err) = run_hydrodactyl_inner(&state).await {
+            tracing::error!("failed to update hydrodactyl github releases: {:#?}", err);
             sentry_anyhow::capture_anyhow(&err);
         }
 

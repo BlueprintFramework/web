@@ -88,7 +88,7 @@ impl UserPasswordReset {
         database: &crate::database::Database,
         token: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, {} FROM user_password_resets
             JOIN users ON users.id = user_password_resets.user_id
@@ -98,7 +98,7 @@ impl UserPasswordReset {
             "#,
             Self::columns_sql(None, None),
             super::user::User::columns_sql(Some("user_"), None)
-        ))
+        )))
         .bind(token)
         .fetch_optional(database.read())
         .await?;

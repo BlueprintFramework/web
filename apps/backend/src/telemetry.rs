@@ -175,7 +175,7 @@ impl TelemetryLogger {
                 t.country = Some(country.clone());
             }
 
-            t.ip = format!("{:x}", sha2::Sha256::digest(t.ip.as_bytes()));
+            t.ip = hex::encode(sha2::Sha256::digest(t.ip.as_bytes()));
         }
 
         let panels = telemetry

@@ -13,11 +13,12 @@ use axum::{
     routing::get,
 };
 use include_dir::{Dir, include_dir};
-use sentry_tower::SentryHttpLayer;
+use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use serde::Deserialize;
 use serde_json::json;
 use sha2::Digest;
 use std::{
+    borrow::Cow,
     collections::HashMap,
     net::SocketAddr,
     path::Path,
@@ -140,12 +141,14 @@ async fn main() {
 
     let _guard = sentry::init((
         env.sentry_url.clone(),
-        sentry::ClientOptions {
-            server_name: env.server_name.clone().map(|s| s.into()),
-            release: Some(format!("{VERSION}:{GIT_COMMIT}").into()),
-            traces_sample_rate: 1.0,
-            ..Default::default()
-        },
+        sentry::ClientOptions::default()
+            .release(format!("{VERSION}:{GIT_COMMIT}"))
+            .server_name(
+                env.server_name
+                    .clone()
+                    .map_or(Cow::Borrowed("blueprint-api"), |s| s.into()),
+            )
+            .traces_sample_rate(1.0),
     ));
 
     let s3 = Arc::new(s3::S3::new(&env).await);
@@ -226,7 +229,7 @@ async fn main() {
                             sitemap.push_str(&format!(
                                 r#"<url><loc>{}/browse/{}</loc><changefreq>weekly</changefreq></url>
 "#,
-                                &state.env.app_url, extension.identifier
+                                state.env.app_url, extension.identifier
                             ));
                         }
 
@@ -454,9 +457,10 @@ async fn main() {
         .layer(CookieManagerLayer::new())
         .route_layer(axum::middleware::from_fn(handle_etag))
         .route_layer(SentryHttpLayer::new().enable_transaction())
+        .route_layer(NewSentryLayer::<Request>::new_from_top())
         .with_state(state.clone());
 
-    let listener = tokio::net::TcpListener::bind(format!("{}:{}", &state.env.bind, state.env.port))
+    let listener = tokio::net::TcpListener::bind(format!("{}:{}", state.env.bind, state.env.port))
         .await
         .unwrap();
 

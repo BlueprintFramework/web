@@ -1,15 +1,15 @@
 [package]
 name = "web"
-version = "3.1.24"
+version = "3.1.25"
 edition = "2024"
 
 [dependencies]
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["chrono"] }
 tracing-appender = "0.2.3"
-sentry = { version = "0.48.0", default-features = false, features = ["rustls", "reqwest", "backtrace", "contexts", "debug-images", "panic"] }
-sentry-tower = { version = "0.48.0", features = ["http", "axum-matched-path"] }
-sentry-anyhow = "0.48.0"
+sentry = { version = "0.49.0", default-features = false, features = ["rustls", "reqwest", "backtrace", "contexts", "debug-images", "panic"] }
+sentry-tower = { version = "0.49.0", features = ["http", "axum-matched-path"] }
+sentry-anyhow = "0.49.0"
 axum = "0.8.1"
 sqlx = { version = "0.9", features = ["runtime-tokio", "tls-rustls-ring-webpki", "postgres", "chrono", "ipnetwork", "uuid"] }
 dotenvy = "0.15.7"
@@ -20,7 +20,7 @@ tokio = { version = "1.43.0", features = ["full"] }
 utoipa = { version = "5.3.1", features = ["axum_extras", "preserve_order", "chrono", "indexmap"] }
 utoipa-axum = "0.2.0"
 totp-rs = { version = "5.7.0", features = ["gen_secret"] }
-jsonwebtoken = { version = "10.3.0", features = ["aws_lc_rs"] }
+jsonwebtoken = { version = "11.0.0", features = ["aws_lc_rs"] }
 chrono = { version = "0.4.40", features = ["serde"] }
 indexmap = { version = "2.7.1", features = ["serde"] }
 tower-http = { version = "0.7.0", features = ["catch-panic", "cors", "normalize-path"] }
@@ -30,9 +30,9 @@ sha2 = "0.11.0"
 sha1 = "0.11.0"
 tower = "0.5.2"
 include_dir = "0.7.4"
-infer = "0.19.0"
+infer = "0.22.0"
 rand = "0.10.0"
-validator = { version = "0.20.0", features = ["derive"] }
+validator = { version = "0.21.0", features = ["derive"] }
 tower-cookies = "0.11.0"
 lettre = { version = "0.11.17", default-features = false, features = ["builder", "pool", "smtp-transport", "tokio1-rustls-tls", "tokio1"] }
 tikv-jemallocator = "0.6.0"

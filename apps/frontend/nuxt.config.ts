@@ -31,10 +31,16 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en',
       },
+      script: [
+        {
+          src: 'https://tally.so/widgets/embed.js',
+        },
+      ],
     },
   },
   sitemap: {
     sitemapsPathPrefix: '/',
+    zeroRuntime: true,
   },
   ogImage: {
     fonts: [
@@ -103,6 +109,7 @@ export default defineNuxtConfig({
     // Falls back to local backend when unset.
     devProxy: {
       '/api': {
+        // Local API was previously at http://localhost:8000/api — keep behaviour by stripping trailing slash from DEV_API_TARGET when set.
         target: process.env.DEV_API_TARGET?.replace(/\/$/, '') || 'http://localhost:8000',
         changeOrigin: true,
       },
@@ -128,7 +135,7 @@ export default defineNuxtConfig({
     },
   },
   plausible: {
-    apiHost: 'https://blueprint.zip/yay',
+    apiHost: 'https://plausible.prpl.wtf',
     domain: 'blueprint.zip',
     autoOutboundTracking: true,
     ignoredHostnames: ['localhost'],

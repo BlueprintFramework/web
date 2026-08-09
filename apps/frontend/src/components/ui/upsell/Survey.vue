@@ -13,17 +13,17 @@
       class="w-100 bg-linear-to-br to-brand-800 drop-shadow-neutral-950 fixed bottom-0 right-0 rounded-tl-3xl border-l border-t border-neutral-600 from-neutral-950 drop-shadow-2xl max-md:hidden"
     >
       <div class="relative">
-        <NuxtImg
+        <img
           src="/img/stickers/blu_stretch.png"
           class="-top-15 hover:rotate-20 absolute -left-10 rotate-12 transition-transform hover:scale-105"
           width="150"
         />
-        <NuxtImg
+        <img
           src="/img/stickers/blueprinter.png"
           class="left-23 -top-17 hover:-rotate-20 absolute -rotate-12 transition-transform hover:scale-105"
           width="150"
         />
-        <NuxtImg
+        <img
           src="/img/stickers/shift.png"
           class="left-55 hover:rotate-8 absolute -top-7 rotate-0 transition-transform hover:scale-105"
           width="200"

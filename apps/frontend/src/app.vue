@@ -3,6 +3,7 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <UiUpsellSurvey />
 </template>
 
 <script setup lang="ts">

@@ -70,5 +70,6 @@ useSeoMeta({
 defineOgImage('Descriptive.satori', {
   scope: 'Releases',
   description64: btoa(`${release.value?.summary}`),
+  description: '',
 })
 </script>

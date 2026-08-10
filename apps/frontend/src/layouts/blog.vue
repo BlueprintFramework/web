@@ -106,7 +106,7 @@ useSeoMeta({
     'Articles from the industry-leading modding platform for Pterodactyl',
 })
 
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 </script>
 
 <style>

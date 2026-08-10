@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 
 useSeoMeta({
   ogTitle: 'Blueprint',

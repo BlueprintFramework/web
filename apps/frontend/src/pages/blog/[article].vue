@@ -96,7 +96,7 @@ definePageMeta({
   layout: 'blog',
 })
 
-defineOgImageComponent('Descriptive', {
+defineOgImage('Descriptive.satori', {
   scope: 'Blog',
 })
 </script>

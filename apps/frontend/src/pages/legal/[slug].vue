@@ -65,7 +65,7 @@ definePageMeta({
   layout: 'legal',
 })
 
-defineOgImageComponent('Descriptive', {
+defineOgImage('Descriptive.satori', {
   scope: 'Agreements',
 })
 </script>

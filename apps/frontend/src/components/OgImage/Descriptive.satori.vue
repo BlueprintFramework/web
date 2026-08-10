@@ -19,12 +19,12 @@ withDefaults(
     style="background-image: url(/img/ogbg.jpeg); background-size: cover"
   >
     <div class="flex flex-col">
-      <div class="flex items-center gap-6">
+      <div class="flex items-center">
         <BrandLimitedemblem fill="white" :size="64" />
-        <span class="text-6xl text-white">
-          <span class="font-bold" style="font-family: 'Roboto'">Blueprint</span>
-        </span>
-        <span class="text-6xl text-white" style="font-family: 'Roboto'">
+        <span
+          class="text-6xl text-white"
+          style="font-family: 'Roboto'; padding-left: 20px"
+        >
           {{ scope }}
         </span>
       </div>
@@ -38,7 +38,7 @@ withDefaults(
       </p>
       <p
         class="truncate text-nowrap text-4xl text-white"
-        style="font-family: 'Roboto'"
+        style="font-family: 'Roboto'; padding-left: 5px"
         v-if="description"
       >
         {{ description }}

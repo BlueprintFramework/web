@@ -88,7 +88,7 @@ useSeoMeta({
   ogDescription: data.value?.description,
 })
 
-defineOgImageComponent('Descriptive', {
+defineOgImage('Descriptive.satori', {
   scope: 'Guides',
 })
 </script>

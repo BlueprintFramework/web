@@ -44,13 +44,21 @@ export default defineNuxtConfig({
     zeroRuntime: true,
   },
   ogImage: {
-    fonts: [
-      'Roboto:400',
-      'Roboto:700',
-      'Funnel+Display:400',
-      'Funnel+Display:700',
-    ],
     zeroRuntime: true,
+  },
+  fonts: {
+    families: [
+      {
+        name: 'Roboto',
+        global: true,
+        provider: 'google',
+      },
+      {
+        name: 'Funnel Display',
+        global: true,
+        provider: 'google',
+      },
+    ],
   },
   icon: {
     localApiEndpoint: '/__nuxt_icon',
@@ -145,22 +153,6 @@ export default defineNuxtConfig({
   },
 
   hooks: {
-    'nitro:build:public-assets': async (nitro) => {
-      if (nitro.options.preset === 'static') {
-        const { promises: fs } = await import('fs')
-        const { join } = await import('path')
-
-        const publicDir = nitro.options.output.publicDir
-        const srcPath = join(publicDir, '__og-image__', 'static')
-        const destPath = join(publicDir, '__og-image__', 'image')
-
-        try {
-          await fs.cp(srcPath, destPath, { recursive: true })
-        } catch (err) {
-          console.warn('og-image copy failed:', err)
-        }
-      }
-    },
     'pages:extend'(pages) {
       function setMiddleware(pages: NuxtPage[]) {
         for (const page of pages) {

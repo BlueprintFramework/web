@@ -1,7 +1,9 @@
 minimumReleaseAge: 1440
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - better-sqlite3
   - esbuild
   - maplibre-gl
   - sharp
+  - vue-demi

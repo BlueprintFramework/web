@@ -67,5 +67,5 @@ useSeoMeta({
   ogDescription: release.value?.summary,
 })
 
-defineOgImageComponent('Descriptive', { scope: 'Releases' })
+defineOgImage('Descriptive.satori', { scope: 'Releases' })
 </script>

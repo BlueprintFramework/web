@@ -13,14 +13,18 @@ withDefaults(
 
 <template>
   <div
-    class="flex h-full w-full flex-col justify-center gap-8 bg-cover p-16"
+    class="flex h-full w-full flex-col justify-center gap-24 bg-cover p-16"
     style="background-image: url(/img/ogbg.jpeg); background-size: cover"
   >
     <div class="flex flex-col items-center">
-      <div class="flex items-center gap-6">
+      <div class="flex items-center">
         <BrandLimitedemblem fill="white" :size="64" />
         <span class="text-6xl text-white">
-          <span class="font-bold" style="font-family: 'Roboto'">Blueprint</span>
+          <span
+            class="font-bold"
+            style="font-family: 'Roboto'; padding-left: 20px"
+            >Blueprint</span
+          >
         </span>
       </div>
     </div>

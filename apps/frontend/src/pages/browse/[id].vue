@@ -77,33 +77,11 @@
       class="flex flex-col divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:flex-row lg:divide-x"
     >
       <div class="w-full border-b border-neutral-700 lg:border-b-0">
-        <template v-if="description?.body">
-          <MDCRenderer
-            class="prose-content p-4"
-            :body="description?.body"
-            :data="description?.data"
-            :components="{
-              card: 'Card',
-              h1: 'ProseH2',
-              h2: 'ProseH3',
-              h3: 'ProseH4',
-              h4: 'ProseH5',
-              h5: 'ProseH6',
-              h6: 'ProseH6',
-              img: 'Externalimg',
-              script: 'ProseDisabled',
-              style: 'ProseDisabled',
-              iframe: 'ProseDisabled',
-              object: 'ProseDisabled',
-              embed: 'ProseDisabled',
-              pre: 'ProsePreSafe',
-              ProseVideoPlayer: 'ProseDisabled',
-              'prose-video-player': 'ProseDisabled',
-              'prose-pre': 'ProsePreSafe',
-              'prose-img': 'Externalimg',
-            }"
-          />
-        </template>
+        <ElementsExtensionDescription
+          v-if="extension.description"
+          :markdown="extension.description"
+          class="p-4"
+        />
         <template v-else>
           <div
             class="flex h-full w-full items-center justify-center align-middle"
@@ -490,9 +468,6 @@
 </template>
 
 <script setup lang="ts">
-import { parseMarkdown } from '@nuxtjs/mdc/runtime'
-import type { MDCParserResult } from '@nuxtjs/mdc'
-
 const route = useRoute()
 const { user } = useAuth()
 
@@ -616,30 +591,6 @@ const formatPrice = (price: number, currency: string): string => {
   isPaid.value = true
   return `${price.toFixed(2)} ${currency}`
 }
-
-const { data: description } = await useAsyncData(
-  `description-${route.params.id}`,
-  async (): Promise<MDCParserResult | null> => {
-    if (!extension.value?.description) return null
-
-    try {
-      const parsed = await parseMarkdown(extension.value.description, {
-        rehype: { options: { allowDangerousHtml: false } },
-      })
-      return {
-        ...parsed,
-        body: parsed.body,
-      }
-    } catch (error) {
-      console.warn('Failed to parse markdown:', error)
-      return null
-    }
-  },
-  {
-    watch: [() => extension.value?.description],
-    immediate: !!extension.value?.description,
-  }
-)
 </script>
 
 <style scoped>

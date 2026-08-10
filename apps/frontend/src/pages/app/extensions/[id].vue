@@ -325,13 +325,7 @@
               <p><b>markdown</b> is supported</p>
             </template>
             <client-only v-else>
-              <MDC
-                class="prose-content"
-                :value="form.description"
-                :parser-options="{
-                  rehype: { options: { allowDangerousHtml: false } },
-                }"
-              />
+              <ElementsExtensionDescription :markdown="form.description" />
             </client-only>
           </div>
         </div>

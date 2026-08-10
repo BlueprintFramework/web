@@ -1,16 +1,25 @@
 <script setup lang="ts">
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title?: string
     description?: string
+    description64?: string
     scope?: string
   }>(),
   {
     title: 'title',
     description: '',
+    description64: '',
     scope: '',
   }
 )
+
+const decodedDescription = computed(() => {
+  if (props?.description64 != '') {
+    return atob(props.description64)
+  }
+  return props?.description
+})
 </script>
 
 <template>
@@ -39,9 +48,9 @@ withDefaults(
       <p
         class="truncate text-nowrap text-4xl text-white"
         style="font-family: 'Roboto'; padding-left: 5px"
-        v-if="description"
+        v-if="decodedDescription"
       >
-        {{ description }}
+        {{ decodedDescription }}
       </p>
     </div>
   </div>

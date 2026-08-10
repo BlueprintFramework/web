@@ -19,6 +19,12 @@ mod get {
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
     pub async fn route(state: GetState, Path(extension): Path<String>) -> ApiResponseResult {
+        if !Extension::valid_lookup(&extension) {
+            return ApiResponse::error("extension not found")
+                .with_status(StatusCode::NOT_FOUND)
+                .ok();
+        }
+
         let extension = state
             .cache
             .cached(&format!("extensions::{extension}"), 300, || async {

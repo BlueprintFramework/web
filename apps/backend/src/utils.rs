@@ -24,6 +24,35 @@ pub fn extract_ip(headers: &HeaderMap) -> Option<IpAddr> {
 }
 
 #[inline]
+pub fn image_limits() -> image::Limits {
+    let mut limits = image::Limits::default();
+
+    limits.max_alloc = Some(64 * 1024 * 1024);
+    limits.max_image_width = Some(10_000);
+    limits.max_image_height = Some(10_000);
+
+    limits
+}
+
+#[inline]
+pub fn escape_html(data: &str) -> String {
+    let mut escaped = String::with_capacity(data.len());
+
+    for char in data.chars() {
+        match char {
+            '&' => escaped.push_str("&amp;"),
+            '<' => escaped.push_str("&lt;"),
+            '>' => escaped.push_str("&gt;"),
+            '"' => escaped.push_str("&quot;"),
+            '\'' => escaped.push_str("&#39;"),
+            _ => escaped.push(char),
+        }
+    }
+
+    escaped
+}
+
+#[inline]
 pub fn slice_up_to(s: &str, max_len: usize) -> &str {
     if max_len >= s.len() || s.is_empty() {
         return s;

@@ -229,7 +229,8 @@ async fn main() {
                             sitemap.push_str(&format!(
                                 r#"<url><loc>{}/browse/{}</loc><changefreq>weekly</changefreq></url>
 "#,
-                                state.env.app_url, extension.identifier
+                                state.env.app_url,
+                                crate::utils::escape_html(&extension.identifier)
                             ));
                         }
 
@@ -291,6 +292,14 @@ async fn main() {
                     .get_file("404.html")
                     .and_then(|f| f.contents_utf8())
             {
+                if !Extension::valid_lookup(extension) {
+                    return Response::builder()
+                        .status(StatusCode::NOT_FOUND)
+                        .header("Content-Type", "text/html")
+                        .body(Body::from(content))
+                        .unwrap();
+                }
+
                 let extension = match state
                     .cache
                     .cached(&format!("extensions::{extension}"), 300, || async {
@@ -372,6 +381,8 @@ async fn main() {
                     },
                 });
 
+                let json_ld = json_ld.to_string().replace('<', "\\u003c");
+
                 let head = format!(
                     r#"<head>
 <script type="application/ld+json">{json_ld}</script>
@@ -382,12 +393,12 @@ async fn main() {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{img_url}">
 <meta name="twitter:image:src" content="{img_url}">"#,
-                    extension.name,
-                    extension.summary,
-                    img_url = format!(
+                    crate::utils::escape_html(&extension.name),
+                    crate::utils::escape_html(&extension.summary),
+                    img_url = crate::utils::escape_html(&format!(
                         "{}/extensions/lowres/{}",
                         state.env.s3_url, extension.banner
-                    ),
+                    )),
                 );
 
                 return Response::builder()

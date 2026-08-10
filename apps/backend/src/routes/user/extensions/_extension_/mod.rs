@@ -33,6 +33,12 @@ pub async fn auth(
                 .into_response());
         }
     };
+    if !Extension::valid_lookup(extension) {
+        return Ok(ApiResponse::error("extension not found")
+            .with_status(StatusCode::NOT_FOUND)
+            .into_response());
+    }
+
     let extension = match state
         .cache
         .cached(&format!("extensions::{extension}"), 30, || async {
@@ -155,6 +161,12 @@ mod patch {
         mut extension: GetExtension,
         crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
+        if let Err(errors) = crate::utils::validate_data(&data) {
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
+                .with_status(StatusCode::BAD_REQUEST)
+                .ok();
+        }
+
         if let Some(name) = data.name {
             extension.name = name;
         }

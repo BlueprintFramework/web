@@ -8,7 +8,9 @@ use utoipa_axum::{
 mod post {
     use crate::{
         response::{ApiResponse, ApiResponseResult},
-        routes::{ApiError, GetState, user::admin::extensions::_extension_::GetExtension},
+        routes::{
+            ApiError, GetState, user::GetUser, user::admin::extensions::_extension_::GetExtension,
+        },
     };
     use axum::{body::Bytes, http::StatusCode};
     use image::{ImageReader, codecs::jpeg::JpegEncoder, imageops::FilterType};
@@ -27,10 +29,16 @@ mod post {
     ), request_body = String)]
     pub async fn route(
         state: GetState,
+        user: GetUser,
         extension: GetExtension,
         image: Bytes,
     ) -> ApiResponseResult {
-        let image = match ImageReader::new(std::io::Cursor::new(image)).with_guessed_format() {
+        state
+            .cache
+            .ratelimit("extension_banner", 10, 60, user.id.to_string())
+            .await?;
+
+        let mut image = match ImageReader::new(std::io::Cursor::new(image)).with_guessed_format() {
             Ok(reader) => reader,
             Err(_) => {
                 return ApiResponse::error("image: unable to decode")
@@ -38,6 +46,8 @@ mod post {
                     .ok();
             }
         };
+
+        image.limits(crate::utils::image_limits());
 
         let image = match tokio::task::spawn_blocking(move || image.decode()).await? {
             Ok(image) => image,

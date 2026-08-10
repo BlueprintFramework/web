@@ -140,6 +140,37 @@ impl Cache {
         }
     }
 
+    pub async fn get<T: DeserializeOwned>(&self, key: &str) -> Result<Option<T>, anyhow::Error> {
+        let cached_value: Option<BulkString> = self.client.get(key).await?;
+
+        Ok(cached_value.and_then(|value| rmp_serde::from_slice::<T>(&value).ok()))
+    }
+
+    pub async fn set<T: Serialize + Send + Sync>(
+        &self,
+        key: &str,
+        ttl: u64,
+        value: &T,
+    ) -> Result<(), anyhow::Error> {
+        self.client
+            .set_with_options(
+                key,
+                rmp_serde::to_vec(value)?,
+                SetCondition::None,
+                SetExpiration::Ex(ttl),
+                false,
+            )
+            .await?;
+
+        Ok(())
+    }
+
+    pub async fn invalidate(&self, key: &str) -> Result<(), anyhow::Error> {
+        self.client.del(key).await?;
+
+        Ok(())
+    }
+
     #[inline]
     pub async fn clear_extension(
         &self,

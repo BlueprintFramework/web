@@ -1,6 +1,6 @@
 use super::BaseModel;
 use crate::routes::user::{AuthMethod, GetAuthMethod};
-use rand::distr::SampleString;
+use rand::{RngExt, distr::SampleString};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use sqlx::{Row, postgres::PgRow};
@@ -59,6 +59,7 @@ impl UserSession {
         let mut hash = sha2::Sha256::new();
         hash.update(chrono::Utc::now().timestamp().to_be_bytes());
         hash.update(user_id.to_be_bytes());
+        hash.update(rand::rng().random::<[u8; 32]>());
         let hash = hex::encode(hash.finalize());
 
         sqlx::query(

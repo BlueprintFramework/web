@@ -53,6 +53,11 @@ mod post {
         cookies: Cookies,
         crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
+        state
+            .cache
+            .ratelimit("login_checkpoint", 5, 60, ip.to_string())
+            .await?;
+
         let payload: TwoFactorRequiredJwt = match state.jwt.verify(&data.confirmation_token) {
             Ok(payload) => payload,
             Err(_) => {
@@ -67,6 +72,11 @@ mod post {
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
+
+        state
+            .cache
+            .ratelimit("login_checkpoint_user", 5, 300, payload.user_id.to_string())
+            .await?;
 
         let user = match User::by_id(&state.database, payload.user_id).await? {
             Some(user) => user,

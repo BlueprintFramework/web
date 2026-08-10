@@ -4,7 +4,7 @@ use tokio::sync::RwLock;
 use utoipa::ToSchema;
 use utoipa_axum::router::OpenApiRouter;
 
-mod auth;
+pub mod auth;
 mod extensions;
 mod latest;
 mod stats;

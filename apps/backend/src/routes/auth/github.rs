@@ -9,6 +9,7 @@ use axum::{
     http::{HeaderMap, StatusCode},
     routing::get,
 };
+use rand::distr::SampleString;
 use serde::Deserialize;
 use serde_json::json;
 use tower_cookies::{Cookie, Cookies};
@@ -17,23 +18,75 @@ use utoipa_axum::router::OpenApiRouter;
 #[derive(Deserialize)]
 struct Params {
     code: String,
-    state: Option<String>,
+    state: String,
+}
+
+pub const STATE_MODE_LOGIN: u16 = 0;
+pub const STATE_MODE_ADD: u16 = 1;
+
+const STATE_COOKIE: &str = "blueprint_oauth_state";
+const STATE_TTL: u64 = 10 * 60;
+
+pub async fn create_state(
+    state: &crate::routes::State,
+    cookies: &Cookies,
+    mode: u16,
+) -> Result<String, anyhow::Error> {
+    let csrf_state = rand::distr::Alphanumeric.sample_string(&mut rand::rng(), 32);
+
+    state
+        .cache
+        .set(&format!("oauth_state::{csrf_state}"), STATE_TTL, &mode)
+        .await?;
+
+    cookies.add(
+        Cookie::build((STATE_COOKIE, csrf_state.clone()))
+            .http_only(true)
+            .same_site(tower_cookies::cookie::SameSite::Lax)
+            .secure(state.env.app_url.starts_with("https://"))
+            .path("/api/auth/github")
+            .max_age(tower_cookies::cookie::time::Duration::seconds(
+                STATE_TTL as i64,
+            ))
+            .build(),
+    );
+
+    Ok(csrf_state)
 }
 
 pub fn router(state: &State) -> OpenApiRouter<State> {
     OpenApiRouter::new()
         .route(
             "/",
-            get(|state: GetState| async move {
+            get(|state: GetState, cookies: Cookies| async move {
+                let csrf_state = create_state(&state, &cookies, STATE_MODE_LOGIN).await?;
+
                 ApiResponse::new("")
                     .with_status(StatusCode::FOUND)
-                    .with_header("Location", &format!("https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}/api/auth/github/callback&scope=read:user", state.env.github_client_id, state.env.app_url))
+                    .with_header("Location", &format!("https://github.com/login/oauth/authorize?client_id={}&redirect_uri={}/api/auth/github/callback&scope=read:user&state={csrf_state}", state.env.github_client_id, state.env.app_url))
                     .ok()
             }),
         )
         .route(
             "/callback",
             get(|state: GetState, ip: crate::GetIp, headers: HeaderMap, cookies: Cookies, params: Query<Params>| async move {
+                let state_cookie = cookies.get(STATE_COOKIE).map(|cookie| cookie.value().to_owned());
+                cookies.remove(Cookie::build(STATE_COOKIE).path("/api/auth/github").build());
+
+                let cache_key = format!("oauth_state::{}", params.state);
+                let mode = state.cache.get::<u16>(&cache_key).await?;
+
+                let mode = match mode {
+                    Some(mode) if state_cookie.as_deref() == Some(params.state.as_str()) => mode,
+                    _ => {
+                        return ApiResponse::error("oauth csrf state not found, please try again")
+                            .with_status(StatusCode::UNAUTHORIZED)
+                            .ok();
+                    }
+                };
+
+                state.cache.invalidate(&cache_key).await?;
+
                 let user = state.client
                     .post("https://github.com/login/oauth/access_token")
                     .header("Accept", "application/json")
@@ -75,7 +128,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     id: i64,
                 }
 
-                if params.state.as_ref().is_some_and(|s| s == "add") {
+                if mode == STATE_MODE_ADD {
                     if let Some(session_id) = cookies.get("blueprint_session") {
                         if session_id.value().len() != 81 {
                             return ApiResponse::error("invalid authorization cookie")

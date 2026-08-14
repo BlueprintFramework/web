@@ -62,6 +62,9 @@ export default defineNuxtConfig({
   },
   icon: {
     localApiEndpoint: '/__nuxt_icon',
+    clientBundle: {
+      scan: true,
+    },
   },
   imports: {
     dirs: ['types/**/*.ts', 'types/**/*.d.ts'],
@@ -118,7 +121,7 @@ export default defineNuxtConfig({
       '/api': {
         // Change to https://blueprint.zip/api to use the production API
         // Local API is http://localhost:8000/api
-        target: 'http://localhost:8000/api',
+        target: process.env.API_URL || 'http://localhost:8000/api',
         changeOrigin: true,
       },
       // You shouldn't really need the sitemap in development, but if you

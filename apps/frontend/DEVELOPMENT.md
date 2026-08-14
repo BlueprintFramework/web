@@ -53,18 +53,13 @@ The easiest option, but also the most limiting. You can choose to use the produc
 - You may be unable to perform actions that require a captcha.
 - API paths return the same data as they do on the production site, which is good if you want to preview changes to the extension browser, for example.
 
-To set this up, change the following in [`nuxt.config.ts`](./nuxt.config.ts). Please do not commit these changes in your PRs.
+To set this up, copy [`.env.example`](./.env.example) to `.env` and uncomment the following lines:
 
 ```diff
-nitro: {
-  devProxy: {
-    '/api': {
--     target: 'http://localhost:8000/api',
-+     target: 'https://blueprint.zip/api',
-      changeOrigin: true,
-    },
-  },
-},
+  # API url for development, uses localhost:8000/api by default, uncomment
+  # to use production API.
+- # API_URL="https://blueprint.zip/api"
++ API_URL="https://blueprint.zip/api"
 ```
 
 Now you can move onto the next step!

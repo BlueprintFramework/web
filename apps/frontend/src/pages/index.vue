@@ -16,7 +16,7 @@
 const isMobile = useMediaQuery('(max-width: 768px)')
 
 definePageMeta({
-  layout: 'default-novpadding',
+  layout: 'default-novhpadding',
 })
 
 /* tally survey embed code

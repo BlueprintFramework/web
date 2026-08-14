@@ -1,4 +1,4 @@
-<!-- Based on the default layout, specifically for the landing page(s) -->
+<!-- Based on the default layout, specifically for pages with no vertical padding -->
 
 <template>
   <NuxtLoadingIndicator color="#52A9FF" :height="1" />

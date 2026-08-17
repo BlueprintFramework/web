@@ -37,9 +37,17 @@
         class="flex w-full flex-col items-start justify-center gap-4 p-4 md:flex-row md:items-center md:gap-12 md:p-6"
       >
         <NuxtLink
+          to="https://senko.digital"
+          target="_blank"
+          class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors"
+          @mousedown.prevent
+        >
+          <SvgSenkodigital size="24" />
+        </NuxtLink>
+        <NuxtLink
           to="https://ultraservers.com"
           target="_blank"
-          class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors first:gap-2"
+          class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center gap-2 rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors"
           @mousedown.prevent
         >
           <SvgUltraservers size="32" />

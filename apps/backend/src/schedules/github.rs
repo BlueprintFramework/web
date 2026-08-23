@@ -9,13 +9,29 @@ struct GithubRelease {
 async fn run_blueprint_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
-    let releases = state
+    let mut request = state
         .client
         .get("https://api.github.com/repos/BlueprintFramework/framework/releases")
-        .send()
-        .await?
-        .json::<Vec<GithubRelease>>()
-        .await?;
+        .header("Accept", "application/vnd.github+json");
+
+    if let Some(github_token) = &state.env.github_token {
+        request = request.header("Authorization", format!("Bearer {github_token}"));
+    }
+
+    let response = request.send().await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+
+        return Err(anyhow::anyhow!(
+            "github returned {} for blueprint releases: {}",
+            status,
+            crate::utils::slice_up_to(body.trim(), 512)
+        ));
+    }
+
+    let releases = response.json::<Vec<GithubRelease>>().await?;
 
     *state.blueprint_github_releases.write().await = releases
         .into_iter()
@@ -34,13 +50,29 @@ async fn run_blueprint_inner(state: &State) -> Result<(), anyhow::Error> {
 async fn run_hydrodactyl_inner(state: &State) -> Result<(), anyhow::Error> {
     let start = std::time::Instant::now();
 
-    let releases = state
+    let mut request = state
         .client
         .get("https://api.github.com/repos/BlueprintFramework/Hydrodactyl/releases")
-        .send()
-        .await?
-        .json::<Vec<GithubRelease>>()
-        .await?;
+        .header("Accept", "application/vnd.github+json");
+
+    if let Some(github_token) = &state.env.github_token {
+        request = request.header("Authorization", format!("Bearer {github_token}"));
+    }
+
+    let response = request.send().await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+
+        return Err(anyhow::anyhow!(
+            "github returned {} for hydrodactyl releases: {}",
+            status,
+            crate::utils::slice_up_to(body.trim(), 512)
+        ));
+    }
+
+    let releases = response.json::<Vec<GithubRelease>>().await?;
 
     *state.hydrodactyl_github_releases.write().await = releases
         .into_iter()

@@ -278,14 +278,33 @@ async fn run_inner(state: &State) -> Result<(), anyhow::Error> {
         if let Some(key) = extension.platforms.get_mut(&ExtensionPlatform::Github) {
             let repo = key.url.split('/').collect::<Vec<_>>()[3..5].join("/");
 
-            match state
+            let mut request = state
                 .client
                 .get(format!("https://api.github.com/repos/{repo}/releases"))
-                .send()
-                .await?
-                .json::<Vec<GithubRelease>>()
-                .await
-            {
+                .header("Accept", "application/vnd.github+json");
+
+            if let Some(github_token) = &state.env.github_token {
+                request = request.header("Authorization", format!("Bearer {github_token}"));
+            }
+
+            let response = request.send().await?;
+            let releases = if response.status().is_success() {
+                response
+                    .json::<Vec<GithubRelease>>()
+                    .await
+                    .map_err(anyhow::Error::from)
+            } else {
+                let status = response.status();
+                let body = response.text().await.unwrap_or_default();
+
+                Err(anyhow::anyhow!(
+                    "github returned {} ({})",
+                    status,
+                    crate::utils::slice_up_to(body.trim(), 512)
+                ))
+            };
+
+            match releases {
                 Ok(releases) => {
                     let mut versions: Vec<ExtensionVersion> = releases
                         .into_iter()

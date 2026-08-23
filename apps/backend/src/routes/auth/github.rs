@@ -115,13 +115,36 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
                     access_token: String,
                 }
 
-                let data = state.client
+                let response = state.client
                     .get("https://api.github.com/user")
                     .header("Accept", "application/vnd.github+json")
                     .header("Authorization", format!("Bearer {}", user.access_token))
                     .send()
-                    .await?
-                    .json::<UserResponse>().await?;
+                    .await?;
+
+                if !response.status().is_success() {
+                    let status = response.status();
+                    let body = response.text().await.unwrap_or_default();
+
+                    tracing::warn!(
+                        "failed to fetch github user: {} {}",
+                        status,
+                        crate::utils::slice_up_to(body.trim(), 512)
+                    );
+
+                    return ApiResponse::error("unable to retrieve github user, please try again")
+                        .with_status(StatusCode::BAD_REQUEST)
+                        .ok();
+                }
+
+                let data = match response.json::<UserResponse>().await {
+                    Ok(data) => data,
+                    Err(_) => {
+                        return ApiResponse::error("unable to retrieve github user, please try again")
+                            .with_status(StatusCode::BAD_REQUEST)
+                            .ok();
+                    }
+                };
 
                 #[derive(Deserialize)]
                 struct UserResponse {

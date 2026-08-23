@@ -51,7 +51,7 @@
                   SPONSORED BY
                 </p>
                 <NuxtLink
-                  to="https://senko.digital"
+                  to="https://aka.bpfw.io/sponsor-senkodigital"
                   target="_blank"
                   class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors"
                   @mousedown.prevent
@@ -59,7 +59,7 @@
                   <SvgSenkodigital size="24" />
                 </NuxtLink>
                 <NuxtLink
-                  to="https://ultraservers.com"
+                  to="https://aka.bpfw.io/sponsor-ultraservers"
                   target="_blank"
                   class="hover:text-brand-50 focus:text-brand-50 focus:outline-brand-50 flex items-center gap-2 rounded-sm outline-1 outline-offset-8 outline-transparent transition-colors"
                   @mousedown.prevent

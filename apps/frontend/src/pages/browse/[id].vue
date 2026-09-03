@@ -15,7 +15,7 @@
         >
           <div class="p-4 transition-colors">
             <div class="flex justify-between gap-2">
-              <h1 class="truncate !text-2xl lg:!text-3xl">
+              <h1 class="text-2xl! lg:text-3xl! truncate">
                 {{ extension.name }}
               </h1>
               <NuxtLink
@@ -44,7 +44,7 @@
               v-for="platform in availablePlatforms"
               :key="platform.key"
               :href="
-                platform.data.url +
+                platform.data?.url +
                 (platform.key == 'BUILTBYBIT' ? '?ref=581299&' : '?') +
                 `utm_source=blueprint.zip&utm_medium=listing&utm_content=blueprint_${extension.identifier}`
               "
@@ -60,7 +60,12 @@
                 </div>
               </div>
               <p class="text-default-font/60">
-                {{ formatPrice(platform.data.price, platform.data.currency) }}
+                {{
+                  formatPrice(
+                    platform.data?.price || 0,
+                    platform.data?.currency || 'USD'
+                  )
+                }}
               </p>
             </a>
           </div>
@@ -72,30 +77,11 @@
       class="flex flex-col divide-neutral-700 overflow-hidden rounded-3xl border border-neutral-700 bg-neutral-950 lg:flex-row lg:divide-x"
     >
       <div class="w-full border-b border-neutral-700 lg:border-b-0">
-        <template v-if="description?.body">
-          <MDCRenderer
-            class="prose-content p-4"
-            :body="description?.body"
-            :data="description?.data"
-            :components="{
-              card: 'Card',
-              h1: 'ProseH2',
-              h2: 'ProseH3',
-              h3: 'ProseH4',
-              h4: 'ProseH5',
-              h5: 'ProseH6',
-              h6: 'ProseH6',
-              img: 'Externalimg',
-              script: 'ProseDisabled',
-              style: 'ProseDisabled',
-              iframe: 'ProseDisabled',
-              object: 'ProseDisabled',
-              embed: 'ProseDisabled',
-              pre: 'ProsePreSafe',
-              ProseVideoPlayer: 'ProseDisabled',
-            }"
-          />
-        </template>
+        <ElementsExtensionDescription
+          v-if="extension.description"
+          :markdown="extension.description"
+          class="p-4"
+        />
         <template v-else>
           <div
             class="flex h-full w-full items-center justify-center align-middle"
@@ -122,16 +108,11 @@
             </div>
             <div class="p-2">
               <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:user" />
-                <div>
-                  Created by
-                  <span class="text-default-font/60 font-normal">
-                    {{ extension.author.name }}
-                  </span>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:chart-bar" />
+                <Icon
+                  name="pixelarticons:chart-bar"
+                  :size="16"
+                  class="min-w-4"
+                />
                 <div>
                   Used by
                   <span class="text-default-font/60 font-normal">
@@ -139,8 +120,32 @@
                   </span>
                 </div>
               </div>
+              <div
+                v-if="extension.versions[0] && extension.versions[1]"
+                class="flex items-center gap-1 font-bold"
+              >
+                <Icon
+                  name="pixelarticons:git-commit"
+                  :size="16"
+                  class="min-w-4"
+                />
+                <div>
+                  Updated
+                  <span class="text-default-font/60 font-normal">
+                    <NuxtTime
+                      :datetime="extension.versions[0]?.created"
+                      :relative="true"
+                    />
+                    ({{ extension.versions[0]?.name }})
+                  </span>
+                </div>
+              </div>
               <div class="flex items-center gap-1 font-bold">
-                <Icon name="pixelarticons:calendar-month" />
+                <Icon
+                  name="pixelarticons:calendar-month"
+                  :size="16"
+                  class="min-w-4"
+                />
                 <div>
                   Released
                   <span class="text-default-font/60 font-normal">
@@ -181,8 +186,8 @@
             </div>
             <div v-if="moodmeter == 'unknown'" class="p-2">
               <span class="text-default-font/60">
-                This extension does not have enough reviews for a Moodmeter
-                rating.
+                This extension does not have enough reviews or active users for
+                a Moodmeter rating.
               </span>
             </div>
             <div v-if="moodmeter != 'unknown'" class="p-2">
@@ -347,6 +352,66 @@
             <div
               class="flex items-center justify-between gap-2 p-2 text-lg transition-colors"
             >
+              <span>About the creator</span>
+              <Icon name="pixelarticons:user" />
+            </div>
+            <!-- grid background -->
+            <div
+              class="bg-[linear-gradient(to_right,var(--color-neutral-700)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-neutral-700)_1px,transparent_1px)] bg-[size:15px_15px]"
+              style="background-position: -5px -5px"
+            >
+              <div class="inset-0 h-full w-full">
+                <div
+                  class="bg-linear-to-b h-full w-full space-y-2 from-transparent to-neutral-950 px-2 py-4"
+                >
+                  <!-- profile card content -->
+                  <div class="flex items-center justify-center gap-2">
+                    <div
+                      class="bg-brand-50 text-brand-900 aspect-square h-10 w-10 rounded-full border"
+                    >
+                      <div class="flex h-full items-center justify-center">
+                        <span class="text-lg font-bold">
+                          {{ extension.author.name.charAt(0) }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span class="text-xl font-bold">
+                      {{ extension.author.name }}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-center text-center">
+                    <span>
+                      Member since
+                      <NuxtTime
+                        :datetime="extension.author.created"
+                        :relative="true"
+                      />
+                    </span>
+                  </div>
+
+                  <div class="flex justify-center">
+                    <NuxtLink
+                      :to="`/profiles/${extension.author.id}`"
+                      tabindex="-1"
+                    >
+                      <ElementsButton @mousedown.prevent>
+                        View profile
+                      </ElementsButton>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="divide-y divide-neutral-700 overflow-hidden rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
+          >
+            <div
+              class="flex items-center justify-between gap-2 p-2 text-lg transition-colors"
+            >
               <span>Version history</span>
               <Icon name="pixelarticons:git-pull-request" />
             </div>
@@ -403,20 +468,19 @@
 </template>
 
 <script setup lang="ts">
-import { parseMarkdown } from '@nuxtjs/mdc/runtime'
-import type { MDCParserResult } from '@nuxtjs/mdc'
-
 const route = useRoute()
 const { user } = useAuth()
 
+const isPaid = ref(false)
+
 const platformConfig = {
-  BUILTBYBIT: {
-    name: 'BuiltByBit',
-    icon: resolveComponent('SvgBuiltbybit'),
-  },
   SOURCEXCHANGE: {
     name: 'sourceXchange',
     icon: resolveComponent('SvgSourcexchange'),
+  },
+  BUILTBYBIT: {
+    name: 'BuiltByBit',
+    icon: resolveComponent('SvgBuiltbybit'),
   },
   GITHUB: {
     name: 'GitHub',
@@ -443,17 +507,13 @@ const availablePlatforms = computed(() => {
     return []
   }
 
-  return Object.entries(extension.value.platforms)
-    .filter(([_, platformData]) => platformData)
-    .map(([platformKey, platformData]) => ({
+  return Object.entries(platformConfig)
+    .filter(([platformKey]) => extension.value?.platforms[platformKey])
+    .map(([platformKey, platformConfig]) => ({
       key: platformKey,
-      name:
-        platformConfig[platformKey as keyof typeof platformConfig]?.name ||
-        platformKey,
-      icon:
-        platformConfig[platformKey as keyof typeof platformConfig]?.icon ||
-        resolveComponent('SvgGithub'),
-      data: platformData,
+      name: platformConfig.name,
+      icon: platformConfig.icon,
+      data: extension.value?.platforms[platformKey],
     }))
 })
 
@@ -528,32 +588,9 @@ const formatPrice = (price: number, currency: string): string => {
   if (price === 0) {
     return 'Free'
   }
+  isPaid.value = true
   return `${price.toFixed(2)} ${currency}`
 }
-
-const { data: description } = await useAsyncData(
-  `description-${route.params.id}`,
-  async (): Promise<MDCParserResult | null> => {
-    if (!extension.value?.description) return null
-
-    try {
-      const parsed = await parseMarkdown(extension.value.description, {
-        rehype: { options: { allowDangerousHtml: false } },
-      })
-      return {
-        ...parsed,
-        body: parsed.body,
-      }
-    } catch (error) {
-      console.warn('Failed to parse markdown:', error)
-      return null
-    }
-  },
-  {
-    watch: [() => extension.value?.description],
-    immediate: !!extension.value?.description,
-  }
-)
 </script>
 
 <style scoped>

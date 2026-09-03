@@ -40,7 +40,7 @@ mod delete {
 
         UserSession::delete_by_id(&state.database, session.id).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

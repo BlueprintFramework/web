@@ -176,7 +176,7 @@
 </template>
 
 <script setup lang="ts">
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 
 useSeoMeta({
   ogTitle: 'Blueprint',
@@ -277,7 +277,7 @@ const filteredCategories = computed(() => {
   return filtered
 })
 
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 </script>
 
 <style scoped>

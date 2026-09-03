@@ -6,7 +6,7 @@
     "parameters": {
       "Left": [
         "Int4",
-        "Varchar"
+        "Text"
       ]
     },
     "nullable": []

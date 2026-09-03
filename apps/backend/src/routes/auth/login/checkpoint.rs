@@ -9,7 +9,6 @@ pub struct TwoFactorRequiredJwt {
     pub base: BasePayload,
 
     pub user_id: i32,
-    pub user_totp_secret: String,
 }
 
 mod post {
@@ -52,8 +51,13 @@ mod post {
         ip: crate::GetIp,
         headers: axum::http::HeaderMap,
         cookies: Cookies,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
+        state
+            .cache
+            .ratelimit("login_checkpoint", 5, 60, ip.to_string())
+            .await?;
+
         let payload: TwoFactorRequiredJwt = match state.jwt.verify(&data.confirmation_token) {
             Ok(payload) => payload,
             Err(_) => {
@@ -69,14 +73,37 @@ mod post {
                 .ok();
         }
 
+        state
+            .cache
+            .ratelimit("login_checkpoint_user", 5, 300, payload.user_id.to_string())
+            .await?;
+
+        let user = match User::by_id(&state.database, payload.user_id).await? {
+            Some(user) => user,
+            None => {
+                return ApiResponse::error("user not found")
+                    .with_status(StatusCode::NOT_FOUND)
+                    .ok();
+            }
+        };
+
         match data.code.len() {
             6 => {
+                let user_totp_secret = match &user.totp_secret {
+                    Some(secret) => secret.clone(),
+                    None => {
+                        return ApiResponse::error("invalid confirmation code")
+                            .with_status(StatusCode::BAD_REQUEST)
+                            .ok();
+                    }
+                };
+
                 let totp = totp_rs::TOTP::new(
                     totp_rs::Algorithm::SHA1,
                     6,
                     1,
                     30,
-                    totp_rs::Secret::Encoded(payload.user_totp_secret).to_bytes()?,
+                    totp_rs::Secret::Encoded(user_totp_secret).to_bytes()?,
                 )?;
 
                 if !totp.check_current(&data.code).is_ok_and(|valid| valid) {
@@ -106,15 +133,6 @@ mod post {
             }
         }
 
-        let user = match User::by_id(&state.database, payload.user_id).await? {
-            Some(user) => user,
-            None => {
-                return ApiResponse::error("user not found")
-                    .with_status(StatusCode::NOT_FOUND)
-                    .ok();
-            }
-        };
-
         let key = UserSession::create(
             &state.database,
             user.id,
@@ -139,7 +157,7 @@ mod post {
                 .build(),
         );
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             user: user.into_api_full_object(),
         })
         .ok()

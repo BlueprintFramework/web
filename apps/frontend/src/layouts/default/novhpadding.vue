@@ -1,4 +1,4 @@
-<!-- Based on the default layout, specifically for the landing page(s) -->
+<!-- Based on the default layout, specifically for pages with no vh padding -->
 
 <template>
   <NuxtLoadingIndicator color="#52A9FF" :height="1" />
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 
 useSeoMeta({
   ogTitle: 'Blueprint',

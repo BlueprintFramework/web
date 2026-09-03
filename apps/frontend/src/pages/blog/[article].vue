@@ -12,7 +12,9 @@
       </p>
       <p>{{ post.description || 'No description provided' }}</p>
       <p class="text-default-font/60">
-        <NuxtTime :datetime="post?.date" :relative="true" />
+        <client-only>
+          <NuxtTime :datetime="post?.date" :relative="true" />
+        </client-only>
         (<NuxtTime :datetime="post?.date" />)
       </p>
     </div>
@@ -94,7 +96,7 @@ definePageMeta({
   layout: 'blog',
 })
 
-defineOgImageComponent('Descriptive', {
+defineOgImage('Descriptive.satori', {
   scope: 'Blog',
 })
 </script>

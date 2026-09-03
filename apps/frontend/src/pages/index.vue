@@ -16,6 +16,27 @@
 const isMobile = useMediaQuery('(max-width: 768px)')
 
 definePageMeta({
-  layout: 'default-landing',
+  layout: 'default-novhpadding',
 })
+
+/* tally survey embed code
+
+onMounted(() => {
+  if (
+    document.referrer.includes('baidu.com') ||
+    document.referrer.includes('bilibili.com')
+  ) {
+    // @ts-expect-error
+    Tally.openPopup('b5vK71', {
+      doNotShowAfterSubmit: false,
+      hideTitle: true,
+      overlay: true,
+      emoji: {
+        text: '💖',
+        animation: 'heart-beat',
+      },
+    })
+  }
+})
+*/
 </script>

@@ -31,13 +31,22 @@ mod post {
     pub async fn route(
         state: GetState,
         ip: crate::GetIp,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
+
+        state
+            .cache
+            .ratelimit("password_forgot", 2, 5 * 60, ip.to_string())
+            .await?;
+        state
+            .cache
+            .ratelimit("password_forgot", 2, 5 * 60, &data.email)
+            .await?;
 
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
@@ -48,7 +57,7 @@ mod post {
         let user = match User::by_email(&state.database, &data.email).await? {
             Some(user) => user,
             None => {
-                return ApiResponse::json(Response {}).ok();
+                return ApiResponse::new_serialized(Response {}).ok();
             }
         };
 
@@ -66,9 +75,9 @@ mod post {
             };
 
             let mail = crate::mail::MAIL_PASSWORD_RESET
-                .replace("{{user_name}}", &user.name)
+                .replace("{{{user_name}}}", &user.name)
                 .replace(
-                    "{{reset_link}}",
+                    "{{{reset_link}}}",
                     &format!(
                         "{}/auth/reset?token={}",
                         state.env.app_url,
@@ -81,7 +90,7 @@ mod post {
                 .send(user.email, "Blueprint - Password Reset".to_string(), mail);
         });
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

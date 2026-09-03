@@ -33,7 +33,7 @@ mod get {
         Query(params): Query<PaginationParams>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&params) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
                 .ok();
         }
@@ -41,7 +41,7 @@ mod get {
         let extension_images =
             ExtensionImage::all_by_extension_id(&state.database, extension.id).await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension_images: extension_images
                 .into_iter()
                 .map(|extension_image| extension_image.into_api_object(&state.env))
@@ -55,7 +55,7 @@ mod post {
     use crate::{
         models::extension_image::ExtensionImage,
         response::{ApiResponse, ApiResponseResult},
-        routes::{GetState, user::admin::extensions::_extension_::GetExtension},
+        routes::{GetState, user::GetUser, user::admin::extensions::_extension_::GetExtension},
     };
     use axum::{body::Bytes, http::StatusCode};
     use image::ImageReader;
@@ -74,10 +74,16 @@ mod post {
     ), request_body = String)]
     pub async fn route(
         state: GetState,
+        user: GetUser,
         extension: GetExtension,
         image: Bytes,
     ) -> ApiResponseResult {
-        let image = match ImageReader::new(std::io::Cursor::new(image)).with_guessed_format() {
+        state
+            .cache
+            .ratelimit("extension_image", 10, 60, user.id.to_string())
+            .await?;
+
+        let mut image = match ImageReader::new(std::io::Cursor::new(image)).with_guessed_format() {
             Ok(reader) => reader,
             Err(_) => {
                 return ApiResponse::error("image: unable to decode")
@@ -85,6 +91,8 @@ mod post {
                     .ok();
             }
         };
+
+        image.limits(crate::utils::image_limits());
 
         let image = match tokio::task::spawn_blocking(move || image.decode()).await? {
             Ok(image) => image,
@@ -98,7 +106,7 @@ mod post {
         let extension_image =
             ExtensionImage::create(&state.database, &state.s3, &extension, image).await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension_image: extension_image.into_api_object(&state.env),
         })
         .ok()

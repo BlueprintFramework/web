@@ -22,7 +22,7 @@ mod get {
             })
             .await?;
 
-        ApiResponse::json(
+        ApiResponse::new_serialized(
             data.into_iter()
                 .map(|extension| extension.into_api_object(&state.env))
                 .collect::<Vec<_>>(),

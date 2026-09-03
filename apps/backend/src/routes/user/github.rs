@@ -8,6 +8,7 @@ mod get {
     };
     use axum::http::StatusCode;
     use serde::Serialize;
+    use tower_cookies::Cookies;
     use utoipa::ToSchema;
 
     #[derive(ToSchema, Serialize)]
@@ -19,15 +20,22 @@ mod get {
         (status = OK, body = inline(Response)),
         (status = CONFLICT, body = ApiError),
     ))]
-    pub async fn route(state: GetState, user: GetUser) -> ApiResponseResult {
+    pub async fn route(state: GetState, cookies: Cookies, user: GetUser) -> ApiResponseResult {
         if user.github_id.is_some() {
             return ApiResponse::error("github account is already linked")
                 .with_status(StatusCode::CONFLICT)
                 .ok();
         }
 
-        ApiResponse::json(Response {
-            redirect_url: format!("https://github.com/login/oauth/authorize?client_id={}&state=add&redirect_uri={}/api/auth/github/callback&scope=read:user", state.env.github_client_id, state.env.app_url)
+        let csrf_state = crate::routes::auth::github::create_state(
+            &state,
+            &cookies,
+            crate::routes::auth::github::STATE_MODE_ADD,
+        )
+        .await?;
+
+        ApiResponse::new_serialized(Response {
+            redirect_url: format!("https://github.com/login/oauth/authorize?client_id={}&state={csrf_state}&redirect_uri={}/api/auth/github/callback&scope=read:user", state.env.github_client_id, state.env.app_url)
         })
         .ok()
     }
@@ -67,7 +75,7 @@ mod delete {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

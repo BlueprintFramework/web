@@ -55,14 +55,14 @@
             >
               <div class="flex justify-between gap-2">
                 <ElementsButtonSmall
-                  class="min-w-auto hover:text-brand-50 !rounded-lg py-1 !transition-all hover:bg-neutral-800 group-hover:!rounded-sm group-hover:py-2"
+                  class="min-w-auto hover:text-brand-50 rounded-lg! transition-all! group-hover:rounded-sm! py-1 hover:bg-neutral-800 group-hover:py-2"
                   @click="handleInsert(image)"
                 >
                   <Icon name="pixelarticons:plus" mode="svg" />
                 </ElementsButtonSmall>
                 <ElementsButtonSmall
                   color="danger"
-                  class="min-w-auto !rounded-lg rounded-2xl py-1 !transition-all group-hover:!rounded-sm group-hover:py-2"
+                  class="min-w-auto rounded-lg! transition-all! group-hover:rounded-sm! py-1 group-hover:py-2"
                   @click="handleDelete(image)"
                 >
                   <Icon name="pixelarticons:trash" mode="svg" />

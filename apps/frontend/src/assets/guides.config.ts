@@ -21,6 +21,11 @@ export const guidesCategories: Record<string, CategoryConfig> = {
     label: 'Community Guides',
     order: 3,
   },
+  extra: {
+    icon: 'memory:dagger',
+    label: 'Extra Guides',
+    order: 4,
+  },
 }
 
 export const defaultCategory: CategoryConfig = {

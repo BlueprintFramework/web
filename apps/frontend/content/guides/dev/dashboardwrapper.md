@@ -4,6 +4,7 @@ description: Extend the Pterodactyl user dashboard using the Laravel blade wrapp
 author: Emma
 category: dev
 thumbnail: dashboard.jpeg
+order: 50
 ---
 
 ::card

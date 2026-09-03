@@ -42,7 +42,7 @@ mod get {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             otp_url: format!(
                 "otpauth://totp/{name}:{}?secret={}&issuer={name}",
                 urlencoding::encode(&user.email),
@@ -90,7 +90,7 @@ mod post {
     pub async fn route(
         state: GetState,
         user: GetUser,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if user.totp_enabled {
             return ApiResponse::error("two-factor authentication is already enabled")
@@ -108,7 +108,7 @@ mod post {
         };
 
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
@@ -147,7 +147,7 @@ mod post {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response { recovery_codes }).ok()
+        ApiResponse::new_serialized(Response { recovery_codes }).ok()
     }
 }
 
@@ -184,7 +184,7 @@ mod delete {
     pub async fn route(
         state: GetState,
         mut user: GetUser,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if !user.totp_enabled {
             return ApiResponse::error("two-factor authentication is not enabled")
@@ -193,7 +193,7 @@ mod delete {
         }
 
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
@@ -251,7 +251,7 @@ mod delete {
         .execute(state.database.write())
         .await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

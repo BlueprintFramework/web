@@ -42,7 +42,7 @@ mod post {
         .await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

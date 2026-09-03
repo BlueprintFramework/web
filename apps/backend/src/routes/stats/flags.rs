@@ -68,7 +68,7 @@ mod get {
             })
             .await?;
 
-        ApiResponse::json(flags).ok()
+        ApiResponse::new_serialized(flags).ok()
     }
 }
 

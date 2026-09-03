@@ -67,7 +67,7 @@ mod get {
             })
             .await?;
 
-        ApiResponse::json(response).ok()
+        ApiResponse::new_serialized(response).ok()
     }
 }
 

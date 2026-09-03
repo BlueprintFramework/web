@@ -90,14 +90,14 @@ impl ExtensionImage {
 
         let mut transaction = database.write().begin().await?;
 
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             INSERT INTO extension_images (extension_id, width, height, size, location, created)
             VALUES ($1, $2, $3, $4, $5, NOW())
             RETURNING {}
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(extension.id)
         .bind(width)
         .bind(height)
@@ -148,7 +148,7 @@ impl ExtensionImage {
         database: &crate::database::Database,
         extension_id: i32,
     ) -> Result<Vec<Self>, sqlx::Error> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extension_images
@@ -156,7 +156,7 @@ impl ExtensionImage {
             ORDER BY extension_images.id
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(extension_id)
         .fetch_all(database.read())
         .await?;
@@ -169,14 +169,14 @@ impl ExtensionImage {
         extension_id: i32,
         id: i32,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extension_images
             WHERE extension_id = $1 AND extension_images.id = $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(extension_id)
         .bind(id)
         .fetch_optional(database.read())

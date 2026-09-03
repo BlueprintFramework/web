@@ -18,7 +18,7 @@ Simply because Pterodactyl's frontend uses React. Blueprint's components impleme
 
 ## Component paths
 
-When referencing components in your Components.yml, Blueprint expects the component's relative (to the `dashboard:components` directory) file path without the file extension. It sounds complicated, but in practice it's quite easy, here are a few examples:
+When referencing components in your Components.yml, Blueprint expects the component's relative (to the `dashboard.components` directory) file path without the file extension. It sounds complicated, but in practice it's quite easy, here are a few examples:
 
 | Path                                          | Issues (if any)                                                                          |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -117,7 +117,7 @@ Navigation:
     - { Name: 'Security keys', Path: '/securitykeys', Type: 'account', Component: 'sections/SecurityKeysSection', AdminOnly: 'false' }
 
 Account:
-  Overfiew:
+  Overview:
     BeforeContent: 'UserGreeterComponent'
     AfterContent: 'HelloWorldComponent' #you can use the same component in multiple places!
 ```

@@ -44,7 +44,7 @@
             class="h1"
             :class="
               data.extension.status == 'approved'
-                ? 'text-link !decoration-transparent'
+                ? 'text-link decoration-transparent!'
                 : ''
             "
           >
@@ -298,7 +298,7 @@
       >
         <div>
           <div
-            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
+            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-0.5 xl:border-b"
           >
             <ElementsFormTextboxToolbar
               :textarea-ref="descriptionBox"
@@ -317,7 +317,7 @@
         </div>
         <div>
           <div
-            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-[2px] xl:border-b"
+            class="border-neutral-700 bg-neutral-950 p-4 xl:-mb-0.5 xl:border-b"
           >
             <template v-if="!form.description || form.description == ''">
               <!-- prettier-ignore -->
@@ -325,13 +325,7 @@
               <p><b>markdown</b> is supported</p>
             </template>
             <client-only v-else>
-              <MDC
-                class="prose-content"
-                :value="form.description"
-                :parser-options="{
-                  rehype: { options: { allowDangerousHtml: false } },
-                }"
-              />
+              <ElementsExtensionDescription :markdown="form.description" />
             </client-only>
           </div>
         </div>

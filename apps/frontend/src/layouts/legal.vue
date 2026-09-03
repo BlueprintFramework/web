@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-defineOgImageComponent('Large')
+defineOgImage('Large.satori')
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
 
 env:
   BIN_NAME: web
@@ -14,30 +14,30 @@ env:
 jobs:
   build-frontend:
     name: Build Frontend
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v6
         with:
-          version: 8
+          version: 11
           run_install: false
 
       - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
         run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -70,22 +70,22 @@ jobs:
         build: [x86_64-linux, aarch64-linux]
         include:
           - build: x86_64-linux
-            os: ubuntu-24.04
+            os: blacksmith-2vcpu-ubuntu-2404
             rust: stable
             target: x86_64-unknown-linux-musl
             cross: true
           - build: aarch64-linux
-            os: ubuntu-24.04
+            os: blacksmith-2vcpu-ubuntu-2404
             rust: stable
             target: aarch64-unknown-linux-musl
             cross: true
 
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download frontend build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: frontend-build
           path: apps/frontend/.output/public
@@ -132,15 +132,15 @@ jobs:
   publish:
     name: Publish
     needs: [dist]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     permissions:
       contents: write
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: ${{ env.BIN_NAME }}*
@@ -161,7 +161,7 @@ jobs:
   create-multiarch-image:
     name: Create multi-arch Docker image
     needs: [dist]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: read
       packages: write

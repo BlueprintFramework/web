@@ -19,16 +19,7 @@
         class="min-h-20 overflow-hidden border-neutral-700 transition-colors group-focus:border-neutral-500 max-lg:order-first max-lg:border-b"
       >
         <div
-          class="h-full w-full"
-          :class="[
-            release.latest ? 'bg-[url(/img/releases/latest.png)] bg-top' : '',
-            release.supported && !release.latest
-              ? 'bg-[url(/img/releases/release.png)] bg-bottom'
-              : '',
-            !release.supported && !release.latest
-              ? 'bg-[url(/img/releases/unsupported.png)] bg-bottom'
-              : '',
-          ]"
+          class="h-full w-full bg-[url(/img/bluesdark.png)] bg-cover bg-bottom"
         />
         <div
           class="relative -top-[100%] flex h-full w-full flex-col items-center justify-center p-6 lg:px-12"
@@ -76,5 +67,9 @@ useSeoMeta({
   ogDescription: release.value?.summary,
 })
 
-defineOgImageComponent('Descriptive', { scope: 'Releases' })
+defineOgImage('Descriptive.satori', {
+  scope: 'Releases',
+  description64: btoa(`${release.value?.summary}`),
+  description: '',
+})
 </script>

@@ -45,13 +45,18 @@ mod post {
         ip: crate::GetIp,
         headers: axum::http::HeaderMap,
         cookies: Cookies,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
+
+        state
+            .cache
+            .ratelimit("login", 5, 60, ip.to_string())
+            .await?;
 
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
@@ -69,9 +74,7 @@ mod post {
                 }
             };
 
-        if user.totp_enabled
-            && let Some(secret) = &user.totp_secret
-        {
+        if user.totp_enabled {
             let token = state.jwt.create(&TwoFactorRequiredJwt {
                 base: BasePayload {
                     issuer: "panel".into(),
@@ -83,10 +86,9 @@ mod post {
                     jwt_id: user.id.to_string(),
                 },
                 user_id: user.id,
-                user_totp_secret: secret.clone(),
             })?;
 
-            ApiResponse::json(Response::TwoFactorRequired { token }).ok()
+            ApiResponse::new_serialized(Response::TwoFactorRequired { token }).ok()
         } else {
             let key = UserSession::create(
                 &state.database,
@@ -112,7 +114,7 @@ mod post {
                     .build(),
             );
 
-            ApiResponse::json(Response::Completed {
+            ApiResponse::new_serialized(Response::Completed {
                 user: user.into_api_full_object(),
             })
             .ok()

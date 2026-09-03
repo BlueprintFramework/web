@@ -12,13 +12,13 @@ use axum::{
     response::Response,
     routing::get,
 };
-use colored::Colorize;
 use include_dir::{Dir, include_dir};
-use sentry_tower::SentryHttpLayer;
+use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use serde::Deserialize;
 use serde_json::json;
 use sha2::Digest;
 use std::{
+    borrow::Cow,
     collections::HashMap,
     net::SocketAddr,
     path::Path,
@@ -41,12 +41,15 @@ mod extract;
 mod jwt;
 mod mail;
 mod models;
+mod payload;
 mod response;
 mod routes;
 mod s3;
 mod schedules;
 mod telemetry;
 mod utils;
+
+pub use payload::Payload;
 
 #[global_allocator]
 static ALLOC: Jemalloc = Jemalloc;
@@ -89,18 +92,17 @@ async fn handle_request(
     req.extensions_mut().insert(ip);
 
     tracing::info!(
-        "http {} {}{}",
+        path = req.uri().path(),
+        query = req.uri().query().unwrap_or_default(),
+        "http {}",
         req.method().to_string().to_lowercase(),
-        req.uri().path().cyan(),
-        if let Some(query) = req.uri().query() {
-            format!("?{query}")
-        } else {
-            "".to_string()
-        }
-        .bright_cyan()
     );
 
-    Ok(next.run(req).await)
+    Ok(crate::response::ACCEPT_HEADER
+        .scope(crate::response::accept_from_headers(req.headers()), async {
+            next.run(req).await
+        })
+        .await)
 }
 
 async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {
@@ -113,7 +115,7 @@ async fn handle_etag(req: Request, next: Next) -> Result<Response, StatusCode> {
     let body_bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
 
     hash.update(body_bytes.as_ref());
-    let hash = format!("{:x}", hash.finalize());
+    let hash = hex::encode(hash.finalize());
 
     parts.headers.insert("ETag", hash.parse().unwrap());
 
@@ -139,12 +141,14 @@ async fn main() {
 
     let _guard = sentry::init((
         env.sentry_url.clone(),
-        sentry::ClientOptions {
-            server_name: env.server_name.clone().map(|s| s.into()),
-            release: Some(format!("{VERSION}:{GIT_COMMIT}").into()),
-            traces_sample_rate: 1.0,
-            ..Default::default()
-        },
+        sentry::ClientOptions::default()
+            .release(format!("{VERSION}:{GIT_COMMIT}"))
+            .server_name(
+                env.server_name
+                    .clone()
+                    .map_or(Cow::Borrowed("blueprint-api"), |s| s.into()),
+            )
+            .traces_sample_rate(1.0),
     ));
 
     let s3 = Arc::new(s3::S3::new(&env).await);
@@ -157,7 +161,8 @@ async fn main() {
         start_time: Instant::now(),
         version: format!("{VERSION}:{GIT_COMMIT}"),
 
-        github_releases: RwLock::new(Vec::new()),
+        blueprint_github_releases: RwLock::new(Vec::new()),
+        hydrodactyl_github_releases: RwLock::new(Vec::new()),
         client: reqwest::Client::builder()
             .user_agent(format!("github.com/BlueprintFramework/web {}", VERSION))
             .build()
@@ -167,7 +172,7 @@ async fn main() {
         jwt,
         cache: cache.clone(),
         s3,
-        telemetry: telemetry::TelemetryLogger::new(database, cache, env.clone()),
+        telemetry: telemetry::TelemetryLogger::new(database),
         env: env.clone(),
         mail: Arc::new(mail::Mail::new(env.clone())),
         captcha: Arc::new(captcha::Captcha::new(env)),
@@ -224,7 +229,8 @@ async fn main() {
                             sitemap.push_str(&format!(
                                 r#"<url><loc>{}/browse/{}</loc><changefreq>weekly</changefreq></url>
 "#,
-                                &state.env.app_url, extension.identifier
+                                state.env.app_url,
+                                crate::utils::escape_html(&extension.identifier)
                             ));
                         }
 
@@ -286,6 +292,14 @@ async fn main() {
                     .get_file("404.html")
                     .and_then(|f| f.contents_utf8())
             {
+                if !Extension::valid_lookup(extension) {
+                    return Response::builder()
+                        .status(StatusCode::NOT_FOUND)
+                        .header("Content-Type", "text/html")
+                        .body(Body::from(content))
+                        .unwrap();
+                }
+
                 let extension = match state
                     .cache
                     .cached(&format!("extensions::{extension}"), 300, || async {
@@ -367,6 +381,8 @@ async fn main() {
                     },
                 });
 
+                let json_ld = json_ld.to_string().replace('<', "\\u003c");
+
                 let head = format!(
                     r#"<head>
 <script type="application/ld+json">{json_ld}</script>
@@ -377,12 +393,12 @@ async fn main() {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{img_url}">
 <meta name="twitter:image:src" content="{img_url}">"#,
-                    extension.name,
-                    extension.summary,
-                    img_url = format!(
+                    crate::utils::escape_html(&extension.name),
+                    crate::utils::escape_html(&extension.summary),
+                    img_url = crate::utils::escape_html(&format!(
                         "{}/extensions/lowres/{}",
                         state.env.s3_url, extension.banner
-                    ),
+                    )),
                 );
 
                 return Response::builder()
@@ -452,22 +468,18 @@ async fn main() {
         .layer(CookieManagerLayer::new())
         .route_layer(axum::middleware::from_fn(handle_etag))
         .route_layer(SentryHttpLayer::new().enable_transaction())
+        .route_layer(NewSentryLayer::<Request>::new_from_top())
         .with_state(state.clone());
 
-    let listener = tokio::net::TcpListener::bind(format!("{}:{}", &state.env.bind, state.env.port))
+    let listener = tokio::net::TcpListener::bind(format!("{}:{}", state.env.bind, state.env.port))
         .await
         .unwrap();
 
     tracing::info!(
-        "{} listening on {} {}",
-        "http server".bright_red(),
-        state.env.bind.cyan(),
-        format!(
-            "(app@{}, {}ms)",
-            VERSION,
-            state.start_time.elapsed().as_millis()
-        )
-        .bright_black()
+        "http server listening on {} (app@{}, {}ms)",
+        state.env.bind,
+        VERSION,
+        state.start_time.elapsed().as_millis()
     );
 
     let (router, mut openapi) = app.split_for_parts();

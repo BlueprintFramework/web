@@ -11,7 +11,7 @@
         @mousedown.prevent
       >
         <NuxtImg
-          src="/img/bluething.jpeg"
+          src="/img/blues.jpg"
           :width="200"
           :height="50"
           class="h-full w-full object-cover transition-all group-hover:scale-105 group-hover:opacity-75 group-focus:scale-105 group-focus:opacity-75"
@@ -41,7 +41,7 @@
         @mousedown.prevent
       >
         <NuxtImg
-          src="/img/releases/latest.png"
+          src="/img/ogbg-alt.jpg"
           :width="200"
           :height="50"
           class="h-full w-full object-cover transition-all group-hover:scale-105 group-hover:opacity-75 group-focus:scale-105 group-focus:opacity-75"
@@ -85,7 +85,10 @@
         >
           Donate via HCB
         </NuxtLink>
-        <NuxtLink to="https://github.com/sponsors/blueprintframework" class="text-link">
+        <NuxtLink
+          to="https://github.com/sponsors/blueprintframework"
+          class="text-link"
+        >
           Donate via GitHub Sponsors
         </NuxtLink>
         <NuxtLink to="https://hcb.hackclub.com/blueprint" class="text-link">

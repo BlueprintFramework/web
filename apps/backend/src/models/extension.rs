@@ -9,6 +9,11 @@ use utoipa::ToSchema;
 pub static IDENTIFIER_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[a-z]+$").expect("Failed to compile identifier regex"));
 
+pub static IDENTIFIER_LOOKUP_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^[a-z]{3,48}(:[a-zA-Z0-9]{8})?$")
+        .expect("Failed to compile identifier lookup regex")
+});
+
 #[derive(ToSchema, Serialize, Deserialize, Type, Clone, Copy)]
 #[serde(rename_all = "lowercase")]
 #[schema(rename_all = "lowercase")]
@@ -175,6 +180,14 @@ impl BaseModel for Extension {
 }
 
 impl Extension {
+    #[inline]
+    pub fn valid_lookup(identifier: &str) -> bool {
+        match identifier.parse::<i32>() {
+            Ok(id) => id >= 1,
+            Err(_) => IDENTIFIER_LOOKUP_REGEX.is_match(identifier),
+        }
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub async fn create(
         database: &crate::database::Database,
@@ -225,7 +238,7 @@ impl Extension {
     }
 
     pub async fn all(database: &crate::database::Database) -> Result<Vec<Self>, sqlx::Error> {
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -235,7 +248,7 @@ impl Extension {
             ORDER BY id ASC
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .fetch_all(database.read())
         .await?;
 
@@ -249,7 +262,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -259,7 +272,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -280,7 +293,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -291,7 +304,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -312,7 +325,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -323,7 +336,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -344,7 +357,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -355,7 +368,7 @@ impl Extension {
             LIMIT $1 OFFSET $2
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(per_page)
         .bind(offset)
         .fetch_all(database.read())
@@ -377,7 +390,7 @@ impl Extension {
     ) -> Result<super::Pagination<Self>, sqlx::Error> {
         let offset = (page - 1) * per_page;
 
-        let rows = sqlx::query(&format!(
+        let rows = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}, COUNT(*) OVER() AS total_count
             FROM extensions
@@ -388,7 +401,7 @@ impl Extension {
             LIMIT $2 OFFSET $3
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(author_id)
         .bind(per_page)
         .bind(offset)
@@ -407,7 +420,7 @@ impl Extension {
         database: &crate::database::Database,
         identifier: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -416,7 +429,7 @@ impl Extension {
             WHERE extensions.identifier = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(identifier)
         .fetch_optional(database.read())
         .await?;
@@ -428,7 +441,7 @@ impl Extension {
         database: &crate::database::Database,
         id: i32,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             SELECT {}
             FROM extensions
@@ -437,7 +450,7 @@ impl Extension {
             WHERE extensions.id = $1
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(id)
         .fetch_optional(database.read())
         .await?;
@@ -494,19 +507,17 @@ impl Extension {
     }
 
     #[inline]
-    pub fn into_api_object(mut self, env: &crate::env::Env) -> ApiExtension {
+    pub fn into_api_object(self, env: &crate::env::Env) -> ApiExtension {
         ApiExtension {
             id: self.id,
             author: self.author.into_api_object(),
             r#type: self.r#type,
             name: self.name,
-            identifier: if self.identifier.contains(":") {
-                self.identifier.truncate(self.identifier.len() - 9);
-
-                self.identifier
-            } else {
-                self.identifier
-            },
+            identifier: self
+                .identifier
+                .rsplit_once(':')
+                .map(|(identifier, _)| identifier.to_string())
+                .unwrap_or(self.identifier),
             summary: self.summary,
             description: self.description,
             platforms: self.platforms,
@@ -522,7 +533,7 @@ impl Extension {
     }
 
     #[inline]
-    pub fn into_api_full_object(mut self, env: &crate::env::Env) -> ApiFullExtension {
+    pub fn into_api_full_object(self, env: &crate::env::Env) -> ApiFullExtension {
         ApiFullExtension {
             id: self.id,
             author: self.author.into_api_object(),
@@ -531,13 +542,11 @@ impl Extension {
             deny_reason: self.deny_reason,
             unlisted: self.unlisted,
             name: self.name,
-            identifier: if self.identifier.contains(":") {
-                self.identifier.truncate(self.identifier.len() - 9);
-
-                self.identifier
-            } else {
-                self.identifier
-            },
+            identifier: self
+                .identifier
+                .rsplit_once(':')
+                .map(|(identifier, _)| identifier.to_string())
+                .unwrap_or(self.identifier),
             summary: self.summary,
             description: self.description,
             platforms: self.platforms,

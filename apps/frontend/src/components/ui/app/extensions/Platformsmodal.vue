@@ -7,43 +7,6 @@
   >
     <template #default>
       <div class="space-y-4">
-        <!-- BuiltByBit -->
-        <div class="rounded-lg border border-neutral-700 p-4">
-          <div
-            class="flex items-center justify-between"
-            @click="localEnabled.BUILTBYBIT = !localEnabled.BUILTBYBIT"
-          >
-            <div class="flex items-center gap-2">
-              <SvgBuiltbybit :size="20" />
-              <span class="font-semibold">BuiltByBit</span>
-            </div>
-            <input
-              v-model="localEnabled.BUILTBYBIT"
-              type="checkbox"
-              class="h-4 w-4"
-            />
-          </div>
-          <ElementsFormInput
-            v-if="localEnabled.BUILTBYBIT"
-            v-model="localUrls.BUILTBYBIT"
-            label="Product URL"
-            name="builtbybit_url"
-            type="url"
-            :rules="[
-              validationRules.required(),
-              validationRules.url(),
-              validationRules.platformUrl('BUILTBYBIT'),
-            ]"
-            :required="localEnabled.BUILTBYBIT"
-            placeholder="https://builtbybit.com/resources/..."
-            class="mt-3"
-            @validate="
-              (isValid: boolean) =>
-                handleFieldValidation('builtbybit_url', isValid)
-            "
-          />
-        </div>
-
         <!-- sourceXchange -->
         <div class="rounded-lg border border-neutral-700 p-4">
           <div
@@ -77,6 +40,43 @@
             @validate="
               (isValid: boolean) =>
                 handleFieldValidation('sourcexchange_url', isValid)
+            "
+          />
+        </div>
+
+        <!-- BuiltByBit -->
+        <div class="rounded-lg border border-neutral-700 p-4">
+          <div
+            class="flex items-center justify-between"
+            @click="localEnabled.BUILTBYBIT = !localEnabled.BUILTBYBIT"
+          >
+            <div class="flex items-center gap-2">
+              <SvgBuiltbybit :size="20" />
+              <span class="font-semibold">BuiltByBit</span>
+            </div>
+            <input
+              v-model="localEnabled.BUILTBYBIT"
+              type="checkbox"
+              class="h-4 w-4"
+            />
+          </div>
+          <ElementsFormInput
+            v-if="localEnabled.BUILTBYBIT"
+            v-model="localUrls.BUILTBYBIT"
+            label="Product URL"
+            name="builtbybit_url"
+            type="url"
+            :rules="[
+              validationRules.required(),
+              validationRules.url(),
+              validationRules.platformUrl('BUILTBYBIT'),
+            ]"
+            :required="localEnabled.BUILTBYBIT"
+            placeholder="https://builtbybit.com/resources/..."
+            class="mt-3"
+            @validate="
+              (isValid: boolean) =>
+                handleFieldValidation('builtbybit_url', isValid)
             "
           />
         </div>
@@ -146,14 +146,14 @@ const emit = defineEmits<{
 const fieldValidation = ref<Record<string, boolean>>({})
 
 const localEnabled = ref<Record<string, boolean>>({
-  BUILTBYBIT: false,
   SOURCEXCHANGE: false,
+  BUILTBYBIT: false,
   GITHUB: false,
 })
 
 const localUrls = ref<Record<string, string>>({
-  BUILTBYBIT: '',
   SOURCEXCHANGE: '',
+  BUILTBYBIT: '',
   GITHUB: '',
 })
 
@@ -166,14 +166,14 @@ watch(
   (isOpen) => {
     if (isOpen) {
       localEnabled.value = {
-        BUILTBYBIT: !!props.platforms.BUILTBYBIT,
         SOURCEXCHANGE: !!props.platforms.SOURCEXCHANGE,
+        BUILTBYBIT: !!props.platforms.BUILTBYBIT,
         GITHUB: !!props.platforms.GITHUB,
       }
 
       localUrls.value = {
-        BUILTBYBIT: props.platforms.BUILTBYBIT || '',
         SOURCEXCHANGE: props.platforms.SOURCEXCHANGE || '',
+        BUILTBYBIT: props.platforms.BUILTBYBIT || '',
         GITHUB: props.platforms.GITHUB || '',
       }
     }

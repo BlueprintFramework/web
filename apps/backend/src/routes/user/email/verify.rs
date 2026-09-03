@@ -27,10 +27,10 @@ mod post {
     pub async fn route(
         state: GetState,
         user: GetUser,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
                 .ok();
         }
@@ -51,7 +51,7 @@ mod post {
                 .ok();
         }
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

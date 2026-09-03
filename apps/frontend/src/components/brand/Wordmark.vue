@@ -5,7 +5,7 @@
     class="hover:rotate-13 focus:rotate-13 transition-transform duration-300 hover:scale-110"
     @mousedown.prevent
   >
-    <NuxtImg src="/img/blueprint_wordart.png" :height="28" />
+    <img src="/img/blueprint_wordart_28.png" :height="28" />
   </NuxtLink>
   <div v-else class="w-min">
     <NuxtLink
@@ -23,11 +23,16 @@
 </template>
 
 <script setup lang="ts">
-const today = new Date()
-const showWordart = today.getMonth() === 3 && today.getDate() === 1
-
 const emblemClass = ref('')
 const emblemAnimating = ref(false)
+const showWordart = ref(false)
+
+onMounted(() => {
+  const today = new Date()
+  if (today.getMonth() === 3 && today.getDate() === 1) {
+    showWordart.value = true
+  }
+})
 
 const emblemHover = () => {
   if (!emblemAnimating.value) {

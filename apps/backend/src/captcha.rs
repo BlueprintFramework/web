@@ -56,8 +56,8 @@ impl Captcha {
             }
             crate::env::CaptchaProvider::Recaptcha { v3, secret_key, .. } => {
                 let response = CLIENT
-                    .get("https://www.google.com/recaptcha/api/siteverify")
-                    .query(&[
+                    .post("https://www.google.com/recaptcha/api/siteverify")
+                    .form(&[
                         ("secret", secret_key),
                         ("response", &captcha),
                         ("remoteip", &ip.to_string()),

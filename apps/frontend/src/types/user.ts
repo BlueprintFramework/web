@@ -7,6 +7,13 @@ export interface AuthState {
   }
 }
 
+export interface PublicUser {
+  user: User
+  extensions: {
+    total: number
+  }
+}
+
 export interface User {
   admin: boolean
   created: string

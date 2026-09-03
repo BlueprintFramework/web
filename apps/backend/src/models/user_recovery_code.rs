@@ -71,14 +71,14 @@ impl UserRecoveryCode {
         user_id: i32,
         code: &str,
     ) -> Result<Option<Self>, sqlx::Error> {
-        let row = sqlx::query(&format!(
+        let row = sqlx::query(sqlx::AssertSqlSafe(format!(
             r#"
             DELETE FROM user_recovery_codes
             WHERE user_recovery_codes.user_id = $1 AND user_recovery_codes.code = $2
             RETURNING {}
             "#,
             Self::columns_sql(None, None)
-        ))
+        )))
         .bind(user_id)
         .bind(code)
         .fetch_optional(database.write())

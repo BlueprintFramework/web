@@ -89,6 +89,7 @@
           <button
             class="p-4 transition-colors hover:bg-neutral-900"
             @click="toggleDrawer"
+            @mousedown.prevent
           >
             <Icon
               name="memory:chevron-up"
@@ -151,8 +152,7 @@ const form = ref({
   sortBy: 'popularity',
   showExtensions: true,
   showThemes: true,
-  // Note: Despite the name, this is used as a pricing filter flag:
-  // 0 = show free only, non-zero = show paid only.
+  // Pricing filter flag (slider): 0 = show free only, non-zero = show paid only.
   maxPrice: 0,
 })
 
@@ -193,12 +193,8 @@ const filteredAndSortedExtensions = computed(() => {
   })
 
   filtered = filtered.filter((extension) => {
-    const minPrice = getMinPrice(extension)
-    if (form.value.maxPrice === 0) {
-      return minPrice === 0
-    }
-    // any non-zero maxPrice shows all price tiers (free and paid)
-    return true
+    // Slider at 0 -> free only; anywhere above 0 -> paid only.
+    return form.value.maxPrice === 0 ? isFree(extension) : !isFree(extension)
   })
 
   switch (form.value.sortBy) {

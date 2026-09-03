@@ -1,5 +1,4 @@
-use hmac::digest::KeyInit;
-use jwt::{SignWithKey, VerifyWithKey};
+use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 #[derive(Deserialize, Serialize)]
@@ -51,23 +50,36 @@ impl BasePayload {
 }
 
 pub struct Jwt {
-    pub key: hmac::Hmac<sha2::Sha256>,
+    encoding_key: EncodingKey,
+    decoding_key: DecodingKey,
+    validation: Validation,
 }
 
 impl Jwt {
     pub fn new(env: &crate::env::Env) -> Self {
+        let secret = env.app_encryption_key.as_bytes();
+        let mut validation = Validation::new(Algorithm::HS256);
+        validation.validate_exp = false;
+        validation.validate_aud = false;
+        validation.required_spec_claims.clear();
         Self {
-            key: hmac::Hmac::new_from_slice(env.app_encryption_key.as_bytes()).unwrap(),
+            encoding_key: EncodingKey::from_secret(secret),
+            decoding_key: DecodingKey::from_secret(secret),
+            validation,
         }
     }
 
     #[inline]
-    pub fn verify<T: DeserializeOwned>(&self, token: &str) -> Result<T, jwt::Error> {
-        token.verify_with_key(&self.key)
+    pub fn verify<T: DeserializeOwned>(
+        &self,
+        token: &str,
+    ) -> Result<T, jsonwebtoken::errors::Error> {
+        let data = jsonwebtoken::decode::<T>(token, &self.decoding_key, &self.validation)?;
+        Ok(data.claims)
     }
 
     #[inline]
-    pub fn create<T: Serialize>(&self, payload: &T) -> Result<String, jwt::Error> {
-        payload.sign_with_key(&self.key)
+    pub fn create<T: Serialize>(&self, payload: &T) -> Result<String, jsonwebtoken::errors::Error> {
+        jsonwebtoken::encode(&Header::new(Algorithm::HS256), payload, &self.encoding_key)
     }
 }

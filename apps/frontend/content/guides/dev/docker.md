@@ -4,6 +4,7 @@ description: Set up Blueprint Docker for local development
 author: Loki and Emma
 category: dev
 thumbnail: blueprintdockerdev.jpg
+order: -1
 ---
 
 ::card
@@ -61,12 +62,12 @@ TIMEZONE=Europe/Amsterdam
 
 # Application environment. Can be either 'production' or
 # 'testing'
-APP_ENV=production
+APP_ENV=testing
 
 # Port to host the panel on. To use another port, allocate
 # one in your docker-compose.yml and assign it here. We recommend
 # using Cloudflare DNS and enabling automatic redirection to https.
-PANEL_PORT=443
+PANEL_PORT=80
 ```
 
 ### Captcha
@@ -114,7 +115,7 @@ export WINGS_PORT=8080
 export WINGS_SFTP_PORT=2022
 
 # Write environment variables to .env
-echo "WINGS_PORT=$WINGS_PORT\nWINGS_SFTP_PORT=$WINGS_SFTP_PORT" >> .env
+echo -e "WINGS_PORT=$WINGS_PORT\nWINGS_SFTP_PORT=$WINGS_SFTP_PORT" >> .env
 ```
 
 ::card
@@ -140,6 +141,14 @@ Once your done filling out everything, start your stack through Docker Compose.
 # Starts the stack
 docker compose up -d
 ```
+
+Once the panel container is up, the webroot, which you'll need access to if developing extensions, will be located in `/var/lib/docker/volumes/pterodactyl_app/_data`. If you'd rather give it a more memorable name and location, you can make a symlink:
+
+```
+ln -s /var/lib/docker/volumes/pterodactyl_app/_data /srv/pterodactyl/webroot
+```
+
+If you are modifying this guide as you go to run the panel as a non-root user, see the more in-depth documentation at https://github.com/BlueprintFramework/docker/blob/Master/README.md#if-logged-in-as-a-non-root-user.
 
 ## Connect Wings
 
@@ -176,6 +185,14 @@ In this step, we are using the `$WINGS_PORT` and `$WINGS_SFTP_PORT` environment 
 export $WINGS_SCHEME="http" #Can be either http or https
 export $WINGS_FQDN="localhost"
 
+# Determine how much memory and disk space to allocate. The snippet below includes overhead, allocating 80% of free memory & disk on bigger systems, and 95% on systems with less resources.
+MEM_FREE=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo)
+DISK_FREE=$(df -m . | awk 'NR==2 {print $4}')
+[ "$MEM_FREE" -lt 5120 ] && MEM_PCT=95 || MEM_PCT=80
+[ "$DISK_FREE" -lt 25600 ] && DISK_PCT=95 || DISK_PCT=80
+MEM_FREE=$(( MEM_FREE * MEM_PCT / 100 ))
+DISK_FREE=$(( DISK_FREE * DISK_PCT / 100 ))
+
 # Creates a new node on the panel
 docker compose exec panel php artisan p:node:make \
   --name="Node" \
@@ -186,9 +203,9 @@ docker compose exec panel php artisan p:node:make \
   --scheme="$WINGS_SCHEME" \
   --proxy=0 \
   --maintenance=0 \
-  --maxMemory=4096 \
+  --maxMemory=$MEM_FREE \
   --overallocateMemory=0 \
-  --maxDisk=10240 \
+  --maxDisk=$DISK_FREE \
   --overallocateDisk=0 \
   --uploadSize=100 \
   --daemonListeningPort=$WINGS_PORT \

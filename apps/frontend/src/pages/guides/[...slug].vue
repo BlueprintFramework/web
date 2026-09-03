@@ -43,6 +43,7 @@
             </div>
           </div>
         </div>
+        <UiUpsellGuides :data="data" />
         <div class="w-full md:p-8">
           <ContentRenderer :value="data" class="prose-content space-y-2" />
         </div>
@@ -87,7 +88,7 @@ useSeoMeta({
   ogDescription: data.value?.description,
 })
 
-defineOgImageComponent('Descriptive', {
+defineOgImage('Descriptive.satori', {
   scope: 'Guides',
 })
 </script>

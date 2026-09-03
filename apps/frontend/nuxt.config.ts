@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     'nuxt-og-image',
     'nuxt-site-config',
     '@nuxt/scripts',
+    '@comark/nuxt',
   ],
   css: ['~/assets/css/main.css'],
   app: {
@@ -43,16 +44,27 @@ export default defineNuxtConfig({
     zeroRuntime: true,
   },
   ogImage: {
-    fonts: [
-      'Roboto:400',
-      'Roboto:700',
-      'Funnel+Display:400',
-      'Funnel+Display:700',
-    ],
     zeroRuntime: true,
+  },
+  fonts: {
+    families: [
+      {
+        name: 'Roboto',
+        global: true,
+        provider: 'google',
+      },
+      {
+        name: 'Funnel Display',
+        global: true,
+        provider: 'google',
+      },
+    ],
   },
   icon: {
     localApiEndpoint: '/__nuxt_icon',
+    clientBundle: {
+      scan: true,
+    },
   },
   imports: {
     dirs: ['types/**/*.ts', 'types/**/*.d.ts'],
@@ -105,19 +117,18 @@ export default defineNuxtConfig({
     name: 'Blueprint',
   },
   nitro: {
-    // Allow switching dev API target via DEV_API_TARGET (e.g., https://blueprint.zip)
-    // Falls back to local backend when unset.
     devProxy: {
       '/api': {
-        // Local API was previously at http://localhost:8000/api — keep behaviour by stripping trailing slash from DEV_API_TARGET when set.
-        target: process.env.DEV_API_TARGET?.replace(/\/$/, '') || 'http://localhost:8000',
+        // Change to https://blueprint.zip/api to use the production API
+        // Local API is http://localhost:8000/api
+        target: process.env.API_URL || 'http://localhost:8000/api',
         changeOrigin: true,
       },
-      '/browse/sitemap.xml': {
-        target: process.env.DEV_API_TARGET?.replace(/\/$/, '') || 'http://localhost:8000',
-        changeOrigin: true,
-      },
-      '/yay': 'https://blueprint.zip/yay',
+      // You shouldn't really need the sitemap in development, but if you
+      // really want it, and can't be arsed to make it accurate, you may
+      // change this to https://blueprint.zip/browse/sitemap.xml, though
+      // make sure to set "changeOrigin" to true.
+      '/browse/sitemap.xml': 'http://localhost:8000/browse/sitemap.xml',
     },
     routeRules: {
       '/api/**': {
@@ -145,22 +156,6 @@ export default defineNuxtConfig({
   },
 
   hooks: {
-    'nitro:build:public-assets': async (nitro) => {
-      if (nitro.options.preset === 'static') {
-        const { promises: fs } = await import('fs')
-        const { join } = await import('path')
-
-        const publicDir = nitro.options.output.publicDir
-        const srcPath = join(publicDir, '__og-image__', 'static')
-        const destPath = join(publicDir, '__og-image__', 'image')
-
-        try {
-          await fs.cp(srcPath, destPath, { recursive: true })
-        } catch (err) {
-          console.warn('og-image copy failed:', err)
-        }
-      }
-    },
     'pages:extend'(pages) {
       function setMiddleware(pages: NuxtPage[]) {
         for (const page of pages) {

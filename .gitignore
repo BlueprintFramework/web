@@ -2,3 +2,4 @@
 /logs
 .env
 dump.rdb
+.wakatime-project

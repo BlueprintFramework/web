@@ -49,13 +49,18 @@ mod post {
         ip: crate::GetIp,
         headers: axum::http::HeaderMap,
         cookies: Cookies,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::BAD_REQUEST)
                 .ok();
         }
+
+        state
+            .cache
+            .ratelimit("register", 2, 5 * 60, ip.to_string())
+            .await?;
 
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
@@ -92,8 +97,8 @@ mod post {
         .await?;
 
         let mail = crate::mail::MAIL_ACCOUNT_CREATED
-            .replace("{{user_name}}", &user.name)
-            .replace("{{verification_code}}", &email_verification);
+            .replace("{{{user_name}}}", &user.name)
+            .replace("{{{verification_code}}}", &email_verification);
 
         state
             .mail
@@ -112,7 +117,7 @@ mod post {
                 .build(),
         );
 
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             user: user.into_api_full_object(),
         })
         .ok()

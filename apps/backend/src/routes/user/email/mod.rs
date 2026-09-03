@@ -33,13 +33,22 @@ mod patch {
         state: GetState,
         ip: crate::GetIp,
         user: GetUser,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
         if let Err(errors) = crate::utils::validate_data(&data) {
-            return ApiResponse::json(ApiError::new_strings_value(errors))
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
                 .with_status(StatusCode::UNAUTHORIZED)
                 .ok();
         }
+
+        state
+            .cache
+            .ratelimit("update_email", 3, 5 * 60, ip.to_string())
+            .await?;
+        state
+            .cache
+            .ratelimit("update_email", 2, 5 * 60, user.id.to_string())
+            .await?;
 
         if let Err(error) = state.captcha.verify(ip, data.captcha).await {
             return ApiResponse::error(&error)
@@ -61,8 +70,8 @@ mod patch {
         .await?;
 
         let mail = crate::mail::MAIL_VERIFY_EMAIL
-            .replace("{{user_name}}", &user.name)
-            .replace("{{verification_code}}", &email_verification);
+            .replace("{{{user_name}}}", &user.name)
+            .replace("{{{verification_code}}}", &email_verification);
 
         state.mail.send(
             data.email,
@@ -70,7 +79,7 @@ mod patch {
             mail,
         );
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

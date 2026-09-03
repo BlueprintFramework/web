@@ -10,9 +10,12 @@ mod post {
     use axum::http::StatusCode;
     use serde::{Deserialize, Serialize};
     use utoipa::ToSchema;
+    use validator::Validate;
 
-    #[derive(ToSchema, Deserialize)]
+    #[derive(ToSchema, Validate, Deserialize)]
     pub struct Payload {
+        #[validate(length(min = 1, max = 4096))]
+        #[schema(min_length = 1, max_length = 4096)]
         deny_reason: String,
     }
 
@@ -28,8 +31,14 @@ mod post {
     pub async fn route(
         state: GetState,
         extension: GetExtension,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
+        if let Err(errors) = crate::utils::validate_data(&data) {
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
+                .with_status(StatusCode::UNAUTHORIZED)
+                .ok();
+        }
+
         if extension.status == ExtensionStatus::Pending {
             return ApiResponse::error("unable to mark pending extension as denied")
                 .with_status(StatusCode::CONFLICT)
@@ -47,7 +56,7 @@ mod post {
         .await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

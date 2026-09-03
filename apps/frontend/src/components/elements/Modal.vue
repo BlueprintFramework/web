@@ -21,62 +21,69 @@
       leave-to-class="opacity-0 scale-95 translate-y-4"
     >
       <div v-if="isOpen" class="z-100 fixed inset-0 transform overflow-y-auto">
-        <div
-          class="flex min-h-full items-center justify-center p-4"
-          @click="handleBackdropClick"
-        >
-          <div v-if="$slots.modal">
-            <slot name="modal" />
-          </div>
+        <dialog style="all: unset">
           <div
-            v-else
-            ref="modalRef"
-            class="relative w-full max-w-lg transform divide-y divide-neutral-700 rounded-3xl border border-neutral-700 bg-neutral-950"
-            role="dialog"
-            :aria-labelledby="titleId"
-            :aria-describedby="descriptionId"
-            aria-modal="true"
-            @click.stop
+            class="flex min-h-full items-center justify-center p-4"
+            @click="handleBackdropClick"
           >
+            <div v-if="$slots.modal">
+              <slot name="modal" />
+            </div>
             <div
-              v-if="title || $slots.header"
-              ref="titleRef"
-              class="flex items-center justify-between p-4"
+              v-else
+              ref="modalRef"
+              class="relative w-full max-w-lg transform divide-y divide-neutral-700 rounded-3xl border border-neutral-700 bg-neutral-950"
+              role="dialog"
+              :aria-labelledby="titleId"
+              :aria-describedby="descriptionId"
+              aria-modal="true"
+              @click.stop
             >
-              <div v-if="$slots.header">
-                <slot name="header" />
-              </div>
-              <h2 v-else-if="title" :id="titleId" class="text-xl font-semibold">
-                {{ title }}
-              </h2>
-
-              <button
-                v-if="closable"
-                type="button"
-                class="hover:text-brand-50 cursor-pointer rounded-full border border-neutral-700 bg-neutral-900 p-1 transition-colors hover:bg-neutral-800"
-                @click="closeModal"
+              <div
+                v-if="title || $slots.header"
+                ref="titleRef"
+                class="flex items-center justify-between p-4"
               >
-                <span class="sr-only">Close modal</span>
-                <Icon name="pixelarticons:close" :size="24" mode="svg" />
-              </button>
-            </div>
+                <div v-if="$slots.header">
+                  <slot name="header" />
+                </div>
+                <h2
+                  v-else-if="title"
+                  :id="titleId"
+                  class="text-xl font-semibold"
+                >
+                  {{ title }}
+                </h2>
 
-            <div
-              class="scrollbar-none overflow-y-scroll p-4"
-              :style="`max-height: calc(100vh - ${combinedHeight}px - 48px)`"
-            >
-              <slot />
-            </div>
+                <button
+                  v-if="closable"
+                  autofocus
+                  type="button"
+                  class="hover:text-brand-50 cursor-pointer rounded-full border border-neutral-700 bg-neutral-900 p-1 transition-colors hover:bg-neutral-800"
+                  @click="closeModal"
+                >
+                  <span class="sr-only">Close modal</span>
+                  <Icon name="pixelarticons:close" :size="24" mode="svg" />
+                </button>
+              </div>
 
-            <div
-              v-if="$slots.footer"
-              ref="footerRef"
-              class="flex flex-col items-center justify-end gap-2 p-4 md:flex-row"
-            >
-              <slot name="footer" />
+              <div
+                class="scrollbar-none overflow-y-scroll p-4"
+                :style="`max-height: calc(100vh - ${combinedHeight}px - 48px)`"
+              >
+                <slot />
+              </div>
+
+              <div
+                v-if="$slots.footer"
+                ref="footerRef"
+                class="flex flex-col items-center justify-end gap-2 p-4 md:flex-row"
+              >
+                <slot name="footer" />
+              </div>
             </div>
           </div>
-        </div>
+        </dialog>
       </div>
     </Transition>
   </Teleport>
@@ -129,57 +136,18 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 }
 
-const focusableElements = computed(() => {
-  if (!modalRef.value) return []
-
-  const selector =
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  return Array.from(modalRef.value.querySelectorAll(selector)) as HTMLElement[]
-})
-
-const firstFocusableElement = computed(() => focusableElements.value[0])
-const lastFocusableElement = computed(
-  () => focusableElements.value[focusableElements.value.length - 1]
-)
-
-const handleTabKey = (event: KeyboardEvent) => {
-  if (event.key !== 'Tab') return
-
-  if (focusableElements.value.length === 0) {
-    event.preventDefault()
-    return
-  }
-
-  if (event.shiftKey) {
-    if (document.activeElement === firstFocusableElement.value) {
-      event.preventDefault()
-      lastFocusableElement.value?.focus()
-    }
-  } else {
-    if (document.activeElement === lastFocusableElement.value) {
-      event.preventDefault()
-      firstFocusableElement.value?.focus()
-    }
-  }
-}
-
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
-  document.addEventListener('keydown', handleTabKey)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
-  document.removeEventListener('keydown', handleTabKey)
 })
 
 watch(
   () => props.isOpen,
   (isOpen) => {
     if (isOpen) {
-      nextTick(() => {
-        firstFocusableElement.value?.focus() || modalRef.value?.focus()
-      })
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''

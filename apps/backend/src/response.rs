@@ -1,7 +1,21 @@
+use std::str::FromStr;
+
 use crate::routes::ApiError;
+use accept_header::Accept;
 use axum::response::IntoResponse;
 
 pub type ApiResponseResult = Result<ApiResponse, ApiResponse>;
+
+tokio::task_local! {
+    pub static ACCEPT_HEADER: Option<Accept>;
+}
+
+pub fn accept_from_headers(headers: &axum::http::HeaderMap) -> Option<Accept> {
+    let header_value = headers.get(axum::http::header::ACCEPT)?;
+    let header_str = header_value.to_str().ok()?;
+
+    Accept::from_str(header_str).ok()
+}
 
 pub struct ApiResponse {
     pub body: axum::body::Body,
@@ -19,21 +33,69 @@ impl ApiResponse {
         }
     }
 
-    #[inline]
-    pub fn json(body: impl serde::Serialize) -> Self {
+    pub fn new_serialized(body: impl serde::Serialize) -> Self {
+        let accept_header = ACCEPT_HEADER.try_with(|h| h.clone()).ok().flatten();
+
+        const AVAILABLE_SERIALIZERS: &[mime::Mime] =
+            &[mime::APPLICATION_JSON, mime::APPLICATION_MSGPACK];
+
+        let negotiated = accept_header
+            .as_ref()
+            .and_then(|accept| accept.negotiate(AVAILABLE_SERIALIZERS).ok())
+            .unwrap_or(mime::APPLICATION_JSON);
+
+        let (content_type, body) = match negotiated {
+            m if m.essence_str() == mime::APPLICATION_MSGPACK.essence_str() => {
+                let mut bytes = Vec::new();
+                let mut se = rmp_serde::Serializer::new(&mut bytes)
+                    .with_struct_map()
+                    .with_human_readable();
+                if let Err(err) = body.serialize(&mut se) {
+                    tracing::error!(
+                        "failed to serialize response body to MessagePack: {:?}",
+                        err
+                    );
+
+                    (
+                        axum::http::HeaderValue::from_static("application/json"),
+                        axum::body::Body::from("{}"),
+                    )
+                } else {
+                    (
+                        axum::http::HeaderValue::from_static("application/msgpack"),
+                        axum::body::Body::from(bytes),
+                    )
+                }
+            }
+            _ => {
+                let bytes = serde_json::to_vec(&body).unwrap_or_else(|err| {
+                    tracing::error!("failed to serialize response body to JSON: {:?}", err);
+                    b"{}".to_vec()
+                });
+
+                (
+                    axum::http::HeaderValue::from_static("application/json"),
+                    axum::body::Body::from(bytes),
+                )
+            }
+        };
+
         Self {
-            body: axum::body::Body::from(serde_json::to_string(&body).unwrap()),
+            body,
             status: axum::http::StatusCode::OK,
-            headers: axum::http::HeaderMap::from_iter([(
-                axum::http::header::CONTENT_TYPE,
-                axum::http::HeaderValue::from_static("application/json"),
-            )]),
+            headers: axum::http::HeaderMap::from_iter([
+                (axum::http::header::CONTENT_TYPE, content_type),
+                (
+                    axum::http::header::VARY,
+                    axum::http::HeaderValue::from_static("Accept"),
+                ),
+            ]),
         }
     }
 
     #[inline]
     pub fn error(err: &str) -> Self {
-        Self::json(ApiError::new(&[err])).with_status(axum::http::StatusCode::BAD_REQUEST)
+        Self::new_serialized(ApiError::new(&[err])).with_status(axum::http::StatusCode::BAD_REQUEST)
     }
 
     #[inline]
@@ -68,7 +130,7 @@ where
         tracing::error!("a request error occurred: {:#?}", err);
         sentry_anyhow::capture_anyhow(&err);
 
-        ApiResponse::json(ApiError::new(&["internal server error"]))
+        ApiResponse::new_serialized(ApiError::new(&["internal server error"]))
             .with_status(axum::http::StatusCode::INTERNAL_SERVER_ERROR)
     }
 }

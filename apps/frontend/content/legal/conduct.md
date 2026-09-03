@@ -1,6 +1,6 @@
 ---
 title: Code of Conduct
-updated: 10/6/2025 17:07 (CEDST)
+updated: 6/18/2026 23:00 (CEDST)
 ---
 
 ::card
@@ -31,6 +31,7 @@ Explicit enforcement of the Code of Conduct applies to the official spaces opera
 
 - The Blueprint website.
 - The [Blueprint community](https://discord.com/servers/blueprint-1063548024825057451) on Discord.
+- The [Hydrodactyl community](https://discord.gg/sK686yHdaK) on Discord.
 - The official Blueprint [GitHub projects](https://github.com/blueprintframework) (and [GitHub discussions](https://github.com/orgs/blueprintframework/discussions)).
 
 Other Blueprint groups (such as conferences, meetups, and other unofficial forums) are encouraged to adopt this Code of Conduct. Those groups must provide their own moderators and/or working group (see below).
@@ -68,6 +69,10 @@ These actions are explicitly forbidden in Blueprint spaces:
 - Bullying or systematic harassment.
 - Unwelcome sexual or romantic advances.
 - Incitement to any of these.
+
+## Age minimum
+
+You have to be 16 years or older to participate in Blueprint's spaces. You may be removed from a space if you are found to be below that age. This also applies to on-site accounts, [as mentioned in our Terms of Service](https://blueprint.zip/legal/terms#accounts-on-the-platform).
 
 ## Moderation
 

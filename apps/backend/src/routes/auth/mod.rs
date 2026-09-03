@@ -8,7 +8,7 @@ use axum::{
 };
 use utoipa_axum::router::OpenApiRouter;
 
-mod github;
+pub mod github;
 mod login;
 mod password;
 mod register;

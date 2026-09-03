@@ -4,12 +4,13 @@ use tokio::sync::RwLock;
 use utoipa::ToSchema;
 use utoipa_axum::router::OpenApiRouter;
 
-mod auth;
+pub mod auth;
 mod extensions;
 mod latest;
 mod stats;
 mod telemetry;
 pub mod user;
+mod users;
 
 #[derive(ToSchema, Serialize)]
 pub struct ApiError<'a> {
@@ -34,7 +35,8 @@ pub struct AppState {
     pub start_time: Instant,
     pub version: String,
 
-    pub github_releases: RwLock<Vec<String>>,
+    pub blueprint_github_releases: RwLock<Vec<String>>,
+    pub hydrodactyl_github_releases: RwLock<Vec<String>>,
     pub client: reqwest::Client,
 
     pub database: Arc<crate::database::Database>,
@@ -57,6 +59,7 @@ pub fn router(state: &State) -> OpenApiRouter<State> {
         .nest("/extensions", extensions::router(state))
         .nest("/stats", stats::router(state))
         .nest("/user", user::router(state))
+        .nest("/users", users::router(state))
         .nest("/auth", auth::router(state))
         .with_state(state.clone())
 }

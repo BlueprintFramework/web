@@ -33,6 +33,12 @@ pub async fn auth(
                 .into_response());
         }
     };
+    if !Extension::valid_lookup(extension) {
+        return Ok(ApiResponse::error("extension not found")
+            .with_status(StatusCode::NOT_FOUND)
+            .into_response());
+    }
+
     let extension = match state
         .cache
         .cached(&format!("extensions::{extension}"), 30, || async {
@@ -94,7 +100,7 @@ mod get {
         ("extension" = String, Path, description = "the extension identifier or id")
     ))]
     pub async fn route(state: GetState, extension: GetExtension) -> ApiResponseResult {
-        ApiResponse::json(Response {
+        ApiResponse::new_serialized(Response {
             extension: extension.0.into_api_full_object(&state.env),
         })
         .ok()
@@ -153,8 +159,14 @@ mod patch {
     pub async fn route(
         state: GetState,
         mut extension: GetExtension,
-        axum::Json(data): axum::Json<Payload>,
+        crate::Payload(data): crate::Payload<Payload>,
     ) -> ApiResponseResult {
+        if let Err(errors) = crate::utils::validate_data(&data) {
+            return ApiResponse::new_serialized(ApiError::new_strings_value(errors))
+                .with_status(StatusCode::BAD_REQUEST)
+                .ok();
+        }
+
         if let Some(name) = data.name {
             extension.name = name;
         }
@@ -215,6 +227,8 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension.platforms.remove(&ExtensionPlatform::Builtbybit);
             }
 
             if let Some(url) = platforms.remove(&ExtensionPlatform::Sourcexchange) {
@@ -241,6 +255,10 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension
+                    .platforms
+                    .remove(&ExtensionPlatform::Sourcexchange);
             }
 
             if let Some(url) = platforms.remove(&ExtensionPlatform::Github) {
@@ -271,6 +289,8 @@ mod patch {
                         },
                     );
                 }
+            } else {
+                extension.platforms.remove(&ExtensionPlatform::Github);
             }
         }
 
@@ -334,7 +354,7 @@ mod patch {
         transaction.commit().await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 
@@ -367,7 +387,7 @@ mod delete {
         extension.delete(&state.database, &state.s3).await?;
         state.cache.clear_extension(&extension).await?;
 
-        ApiResponse::json(Response {}).ok()
+        ApiResponse::new_serialized(Response {}).ok()
     }
 }
 

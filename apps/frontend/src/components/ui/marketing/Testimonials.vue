@@ -11,7 +11,7 @@
         <div
           v-for="(testimonial, index) in testimonials"
           :key="`item-${index}`"
-          class="w-100 mx-2 h-40 overflow-hidden rounded-3xl border border-neutral-700"
+          class="w-100 mx-2 h-40 overflow-hidden rounded-2xl border border-neutral-700"
         >
           <div class="flex h-full w-full flex-col divide-y divide-neutral-700">
             <div class="flex items-center justify-between">
@@ -128,7 +128,7 @@ const allTestimonials = [
       rating: 5,
     },
     {
-      name: 'amogusreal69',
+      name: 'Lumi',
       content:
         "Before, you had to modify files from Pterodactyl itself, but with Blueprint, all I need is run a command, and that's all.",
       rating: 5,

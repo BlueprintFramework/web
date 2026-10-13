@@ -1,4 +1,5 @@
 <template>
+  <UiMarketingNotice />
   <UiMarketingLanding />
 
   <div class="container grow space-y-12 py-12">

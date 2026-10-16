@@ -27,6 +27,35 @@
       </button>
     </div>
   </div>
+
+  <div
+    class="divide-y divide-neutral-700 rounded-2xl border border-neutral-700 transition-colors focus-within:divide-neutral-500 focus-within:border-neutral-500"
+  >
+    <div class="flex items-center gap-1.5 p-2 font-bold transition-colors">
+      <Icon
+        name="memory:cash"
+        :size="22"
+        mode="svg"
+        class="block"
+      />
+      <span>Price</span>
+    </div>
+    <div class="space-y-3 p-4 transition-colors">
+      <input
+        type="range"
+        min="0"
+        max="1000"
+        step="10"
+        v-model.number="props.form.maxPrice"
+        class="slider block w-full rounded-lg appearance-none cursor-pointer"
+      />
+      <div class="flex justify-between text-xs text-default-font/40">
+        <span>Free</span>
+        <span>Paid</span>
+      </div>
+    </div>
+  </div>
+
   <div class="group">
     <button
       class="focus:text-brand-50 hover:text-brand-50 w-full cursor-pointer rounded-t-2xl border border-neutral-700 p-2 outline-0 transition-colors group-focus-within:border-neutral-500"
@@ -81,6 +110,7 @@ const props = defineProps<{
     sortBy: string
     showExtensions: boolean
     showThemes: boolean
+    maxPrice: number
   }
 }>()
 
@@ -90,3 +120,54 @@ const sortOptions = [
   { value: 'created', label: 'Newest First' },
 ]
 </script>
+
+<style scoped>
+.slider {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-moz-range-track {
+  background: white;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6db7ff;
+  cursor: pointer;
+  border: 2px solid #6db7ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin-top: -6px;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6db7ff;
+  cursor: pointer;
+  border: 2px solid #6db7ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin-top: -6px;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+</style>
